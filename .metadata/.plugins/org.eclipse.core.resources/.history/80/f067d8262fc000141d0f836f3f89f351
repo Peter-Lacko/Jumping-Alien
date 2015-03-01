@@ -1,0 +1,158 @@
+import be.kuleuven.cs.som.annotate.*;
+
+
+/**
+ * @author Peter Lacko, Sander Switsers
+ *
+ */
+public class Mazub {
+	
+	/**
+	 * Return the number of coordinates ascribed to this character.
+	 * @throws NullPointerException
+	 * 			Null is not a valid array for the Position
+	 * 			| this.Position == null
+	 */
+	@Basic @Immutable
+	//er staat als coding rule dat dit erbij moet, maar Position heeft altijd lengte 2?
+	public int getNbPosition() throws NullPointerException {
+	// Dit moet defensief zijn. Als Position null is, zal het een NullPointerException gooien.
+		return Position.length;
+	}
+	
+	/**
+	 * Check whether the number of coordinates is valid for any character.
+	 * 
+	 * @param nbPosition
+	 * 			The number of coordinates to check.
+	 * @return True if and only if the given number of coordinates is 2 (the game takes place in a 2D plane)
+	 * 			| result == (nbPosition == 2)
+	 */
+	public static boolean isValidNbPosition(int nbPosition){
+		return (nbPosition == 2);
+	}
+	
+	/**
+	 * Return the position for this Mazub character.
+	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
+	 */
+	@Basic
+	public int[] getPosition() {
+		return this.Position.clone();
+	}
+	
+	/**
+	 * Return the coordinate ascribed to this character at the given index.
+	 * @param index
+	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
+	 * 			the second index)
+	 * @throws ArrayIndexOutOfBoundsException
+	 * 			The given index must be positive and may not be bigger than 2.
+	 * 			| (index <= 0) || (index > 2)
+	 */
+	public int getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
+		return Position[index-1];
+	}
+	
+	/**
+	 * Check whether the character can have the given coordinate at the given index.
+	 * @param coordinate
+	 * 			The coordinate to check
+	 * @param index
+	 * 			The index for the coordinate to check
+	 * @return True if it is an X-coordinate in the correct range or a Y-coordinate in the correct range
+	 * 			(between X_MIN, X_MAX or Y_MIN, Y_MAX respectively)
+	 * 			| if ((index == 1) && (coordinate >= X_MIN) && (coordinate <= X_MAX))
+	 * 			|	then result == true
+	 * 			| else if ((index ==2) && (coordinate >= Y_MIN) && (coordinate <= Y_MAX))
+	 * 			|	then result == true
+	 * 			| else result == false
+	 */
+	public static boolean isValidPositionAt (int coordinate, int index) {
+		if ((index == 1) && (coordinate >= X_MIN) && (coordinate <= X_MAX))
+			return true;
+		if ((index ==2) && (coordinate >= Y_MIN) && (coordinate <= Y_MAX))
+			return true;
+		return false;			
+	}
+	
+	/**
+	 * Set the coordinate ascribed to this character at the given index to the given coordinate
+	 * 
+	 * @param coordinate
+	 * 			The coordinate to register
+	 * @param index
+	 * 			The index for the coordinate to register
+	 * @throws ArrayIndexOutOfBoundsException
+	 * 			The index must be positive and may not be greater than 2
+	 * 			| (index <= 0) || (index > 2)
+	 * @throws IllegalArgumentException
+	 * 			The given coordinate must be a valid coordinate at the given index.
+	 * 			| (! isValidPositionAt(coordinate, index))
+	 * @post
+	 */
+	// bij throws (2de): moeten we ArgumentException vervangen door zelfgemaakte IllegalCoordinateException?
+	public void setPositionAt(int coordinate, int index) throws ArrayIndexOutOfBoundsException, 
+	IllegalArgumentException{
+		if (! isValidPositionAt(coordinate, index))
+			throw new IllegalArgumentException();
+		this.Position[index-1] = coordinate;
+	}
+		
+	/**
+	 * Variable registering the position of the bottom left corner of the Mazub Sprite.
+	 */
+	private int[] Position = new int[2];
+	
+	private static final int[] FIELD_SIZE = {1024, 768};
+	
+	private static final int X_MAX = FIELD_SIZE[0]-1;
+	
+	private static final int Y_MAX = FIELD_SIZE[1]-1;
+	
+	private static final int X_MIN = 0;
+	
+	private static final int Y_MIN = 0;
+	/**
+	 * Return the orientation of the Mazub character.
+	 * 	The orientation is the direction Mazub is facing or moving.
+	 */
+	@Basic
+	public String getOrientation() {
+		return this.Orientation;
+	}
+	
+	/**
+	 * Variable registering the orientation of the Mazub character.
+	 */
+	private String Orientation;
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Double getHorizontalVelocity() {
+		return this.HorizontalVelocity;
+	}
+	
+	private Double HorizontalVelocity;
+	
+	public Double getHorizontalAcceleration() {
+		return this.HORIZONTAL_ACCELERATION;
+	}
+	
+	//moeten deze public of private zijn?
+	public final Double INIT_HORIZONTAL_VELOCITY = 1.0;
+	
+	public final Double MAX_HORIZONTAL_VELOCITY = 3.0;
+	
+	public static final Double HORIZONTAL_ACCELERATION = 0.9;
+	
+	public void startMove(String direction) {
+		int direction_number = 1;
+		if (direction == "left")
+			direction_number = -1;
+		
+	}
+
+}
