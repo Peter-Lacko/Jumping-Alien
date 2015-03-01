@@ -33,6 +33,15 @@ public class Mazub {
 	}
 	
 	/**
+	 * Return the position for this Mazub character.
+	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
+	 */
+	@Basic
+	public int[] getPosition() {
+		return this.Position.clone();
+	}
+	
+	/**
 	 * Return the coordinate ascribed to this character at the given index.
 	 * @param index
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
@@ -41,71 +50,16 @@ public class Mazub {
 	 * 			The given index must be positive and may not be bigger than 2.
 	 * 			| (index <= 0) || (index > 2)
 	 */
-	@Basic
 	public int getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
 		return Position[index-1];
 	}
 	
-	/**
-	 * Check whether the character can have the given coordinate at the given index.
-	 * @param coordinate
-	 * 			The coordinate to check
-	 * @param index
-	 * 			The index for the coordinate to check
-	 * @return True if it is an X-coordinate in the correct range or a Y-coordinate in the correct range
-	 * 			(between X_MIN, X_MAX or Y_MIN, Y_MAX respectively)
-	 * 			| if ((index == 1) && (coordinate >= X_MIN) && (coordinate <= X_MAX))
-	 * 			|	then result == true
-	 * 			| else if ((index ==2) && (coordinate >= Y_MIN) && (coordinate <= Y_MAX))
-	 * 			|	then result == true
-	 * 			| else result == false
-	 */
 	public static boolean isValidPositionAt (int coordinate, int index) {
 		if ((index == 1) && (coordinate >= X_MIN) && (coordinate <= X_MAX))
 			return true;
 		if ((index ==2) && (coordinate >= Y_MIN) && (coordinate <= Y_MAX))
 			return true;
 		return false;			
-	}
-	
-	/**
-	 * Set the coordinate ascribed to this character at the given index to the given coordinate
-	 * 
-	 * @param coordinate
-	 * 			The coordinate to register
-	 * @param index
-	 * 			The index for the coordinate to register
-	 * @throws ArrayIndexOutOfBoundsException
-	 * 			The index must be positive and may not be greater than 2
-	 * 			| (index <= 0) || (index > 2)
-	 * @throws IllegalArgumentException
-	 * 			The given coordinate must be a valid coordinate at the given index.
-	 * 			| (! isValidPositionAt(coordinate, index))
-	 * @post This character has the given coordinate as its coordinate at the given index.
-	 * 			| new.getPositionAt(index) == coordinate
-	 */
-	// bij throws (2de): moeten we ArgumentException vervangen door zelfgemaakte IllegalCoordinateException?
-	public void setPositionAt(int coordinate, int index) throws ArrayIndexOutOfBoundsException, 
-	IllegalArgumentException{
-		if (! isValidPositionAt(coordinate, index))
-			throw new IllegalArgumentException();
-		this.Position[index-1] = coordinate;
-	}
-	
-	
-	/**
-	 * Return the position for this Mazub character.
-	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
-	 * @return The length of the resulting array is equal to the number of coordinates ascribed to this 
-	 * 			character (2).
-	 * 			| result.length == getNbPosition()
-	 * @return Each element in the resulting array is equal to the coordinate ascribed to this character
-	 * 			at the corresponding index.
-	 * 			| for each I in 0..result.length-1:
-	 * 			|	result[I].equals(getPositionAt(I+1))
-	 */
-	public int[] getPosition() {
-		return this.Position.clone();
 	}
 		
 	/**

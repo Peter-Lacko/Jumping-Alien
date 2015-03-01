@@ -33,6 +33,15 @@ public class Mazub {
 	}
 	
 	/**
+	 * Return the position for this Mazub character.
+	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
+	 */
+	@Basic
+	public int[] getPosition() {
+		return this.Position.clone();
+	}
+	
+	/**
 	 * Return the coordinate ascribed to this character at the given index.
 	 * @param index
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
@@ -41,7 +50,6 @@ public class Mazub {
 	 * 			The given index must be positive and may not be bigger than 2.
 	 * 			| (index <= 0) || (index > 2)
 	 */
-	@Basic
 	public int getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
 		return Position[index-1];
 	}
@@ -81,8 +89,7 @@ public class Mazub {
 	 * @throws IllegalArgumentException
 	 * 			The given coordinate must be a valid coordinate at the given index.
 	 * 			| (! isValidPositionAt(coordinate, index))
-	 * @post This character has the given coordinate as its coordinate at the given index.
-	 * 			| new.getPositionAt(index) == coordinate
+	 * @post
 	 */
 	// bij throws (2de): moeten we ArgumentException vervangen door zelfgemaakte IllegalCoordinateException?
 	public void setPositionAt(int coordinate, int index) throws ArrayIndexOutOfBoundsException, 
@@ -90,22 +97,6 @@ public class Mazub {
 		if (! isValidPositionAt(coordinate, index))
 			throw new IllegalArgumentException();
 		this.Position[index-1] = coordinate;
-	}
-	
-	
-	/**
-	 * Return the position for this Mazub character.
-	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
-	 * @return The length of the resulting array is equal to the number of coordinates ascribed to this 
-	 * 			character (2).
-	 * 			| result.length == getNbPosition()
-	 * @return Each element in the resulting array is equal to the coordinate ascribed to this character
-	 * 			at the corresponding index.
-	 * 			| for each I in 0..result.length-1:
-	 * 			|	result[I].equals(getPositionAt(I+1))
-	 */
-	public int[] getPosition() {
-		return this.Position.clone();
 	}
 		
 	/**
