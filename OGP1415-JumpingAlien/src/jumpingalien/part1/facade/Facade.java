@@ -3,36 +3,35 @@ package jumpingalien.part1.facade;
 import jumpingalien.model.Mazub;
 import jumpingalien.util.Sprite;
 
-public class Facade {
+public class Facade implements IFacade{
 	
+	// try catch voor exeptions (zie worms facade)
 	public void createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites){
 		
-		Mazub myMazub = Mazub(pixelLeftX,pixelBottomY,sprites);
-		
+			return new Mazub(pixelLeftX,pixelBottomY,sprites);
+
 	}
 	
-	public int[] getLocation(){
-		int[] loc={myMazub.loc_x,myMazub.loc_y};
-		return loc;
+	public int[] getLocation(Mazub mazub){
+		return mazub.getPosition();
 	}
 	
-	public double[] getVelocity(){
-		double[] vel = {myMazub.vx,myMazub.vy};
+	public double[] getVelocity(Mazub mazub){
+		double[] vel = {mazub.getHorizontalVelocity(),mazub.getVerticalVelocity()};
 		return vel;
 	}
 	
-	public double[] getAcceleration(){
-		double[] acc = {myMazub.ax,myMazub.ay};
+	public double[] getAcceleration(Mazub mazub){
+		double[] acc = {mazub.getHorizontalAcceleration(),mazub.getVerticalAcceleration()};
 		return acc;
 	}
 	
 	public int[] getSize(){
-		int[] size = {myMazub.width,myMazub.height};
-		return size;
+		return Mazub.getSize();
 	} 
 	
 	public Sprite getCurrentSprite(){
-		return myMazub.sprite;
+		return Mazub.getCurrentSprite();
 	}
 	
 
