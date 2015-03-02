@@ -175,14 +175,6 @@ public class Mazub {
 		return this.HORIZONTAL_ACCELERATION;
 	}
 	
-	public Double getMaxHorizontalVelocity() {
-		return this.maxHorizontalVelocity;
-	}
-	
-	public Double getInitHorizontalVelocity() {
-		return this.INIT_HORIZONTAL_VELOCITY;
-	}
-	
 	//moeten deze public of private zijn?
 	/**
 	 * Constant reflecting the initial velocity of a character.
@@ -202,21 +194,6 @@ public class Mazub {
 	 * 			| return == 0.9
 	 */
 	private static final Double HORIZONTAL_ACCELERATION = 0.9;
-	
-	/**
-	 * method that returns the value of the variable isAccelerating
-	 */
-	@Basic
-	public boolean isAccelerating(){
-		return this.isAccelerating;
-	}
-	
-	
-	/**
-	 * value stating whether the character is accelerating
-	 */
-	private boolean isAccelerating;
-	
 	
 	/**
 	 * Initiate or speed up movement in a given direction.
@@ -242,33 +219,12 @@ public class Mazub {
 	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
 	 * 			|	then (new.getHorizontalVelocity == 
 	 * 			|	directionModifier*Math.min(getHorizontalVelocity()+duration*getHorizontalAcceleration(),getMaxHorizontalVelocity()))
-	 * @post	if the character's horizontal velocity is between 0 and the maximum horizontal velocity then the character is accelerating
-	 * 				otherwise he is not.
-	 * 			| If ((new.getHorizontalVelocity != 0) && (new.getHorizontalVelocity < getMaxHorizontalVelocity())
-	 * 			|	then new.isAccelerating == true
-	 * 			| Else
-	 * 			|	new.isAccelerating == false
 	 */
 	public void startMove(String direction, Double duration) {
 		int directionModifier = 1;
 		if (direction == "left")
 			directionModifier = -1;
-		Double newVelocity;
-		if (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity()){
-			newVelocity = getInitHorizontalVelocity() + duration*getHorizontalAcceleration();
-			newVelocity = Math.min(newVelocity,getMaxHorizontalVelocity());
-			setHorizontalVelocity(directionModifier*newVelocity);
-		}
-		else {
-			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
-			newVelocity = Math.min(newVelocity,getMaxHorizontalVelocity());
-			setHorizontalVelocity(directionModifier*newVelocity);
-		}
-		if ((newVelocity != 0) && (newVelocity < getMaxHorizontalVelocity())){
-			this.isAccelerating = true;
-		}
-		else{ this.isAccelerating = false;
-		}
+		
 	}
 	
 	/**
@@ -281,19 +237,8 @@ public class Mazub {
 	}
 	
 	/**
-	 * Terminates the horizontal movement of the character
-	 * @post	the new horizontal velocity of the character is zero
-	 * 			| new.getHorizontalVelocity() == 0.0
-	 */
-	public void endMove(){
-		setHorizontalVelocity(0.0);
-	}
-	
-	/**
 	 * A variable reflecting the current horizontal velocity.
 	 */
 	private Double currHorizontalVelocity;
-	
-	
 
 }
