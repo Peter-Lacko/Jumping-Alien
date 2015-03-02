@@ -217,8 +217,8 @@ public class Mazub {
 	 */
 	private boolean isAccelerating;
 	
-	// change name to "computeHorizontalVelocity" and check documentation! (needs to be total programming!)
-	// startMove is just a method that changes the boolean variable isMovingRight or isMovingLeft (maybe more), SAME FOR endMove!
+	// change name to "computeHorizontalVelocity"
+	// startMove is just a method that changes the boolean variable isMovingRight or isMovingLeft
 	/**
 	 * Initiate or speed up movement in a given direction.
 	 * @pre The given direction must be left or right.

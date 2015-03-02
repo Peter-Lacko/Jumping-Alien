@@ -217,8 +217,7 @@ public class Mazub {
 	 */
 	private boolean isAccelerating;
 	
-	// change name to "computeHorizontalVelocity" and check documentation! (needs to be total programming!)
-	// startMove is just a method that changes the boolean variable isMovingRight or isMovingLeft (maybe more), SAME FOR endMove!
+	
 	/**
 	 * Initiate or speed up movement in a given direction.
 	 * @pre The given direction must be left or right.
@@ -295,19 +294,6 @@ public class Mazub {
 	 */
 	private Double currHorizontalVelocity;
 	
-	/**
-	 * A method to calculate the new position and horizontal velocity after a given duration of time.
-	 * @param duration
-	 * 			The duration of time that passes.
-	 * @throws IllegalArgumentException
-	 * 			The given duration is an invalid duration of time.
-	 * 			| ((duration < 0.0) || (duration >= 0.2))
-	 */
-	public void AdvanceTime (Double duration) throws IllegalArgumentException {
-		if ((duration < 0.0) || (duration >= 0.2)){
-			throw new IllegalArgumentException();
-		}
-		
-	}
+	
 
 }
