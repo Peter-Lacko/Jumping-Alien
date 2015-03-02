@@ -214,9 +214,9 @@ public class Mazub {
 	// change name to "computeHorizontalVelocity" and check documentation! (needs to be total programming!)
 	// startMove is just a method that changes the boolean variable isMovingRight or isMovingLeft (maybe more), SAME FOR endMove!
 	/**
-	 * Compute the new horizontal velocity after a given duration
+	 * Initiate or speed up movement in a given direction.
 	 * @param duration
-	 * 			the duration after which to calculate the new horizontal velocity.
+	 * 			the duration after which to calculate the new time.
 	 * @post	If the character is moving:
 	 * 			| If (this.isMovingLeft() || this.isMovingRight()) then:
 	 * 				If the absolute value of the current speed is lower than the initial speed, the new speed is calculated as the smallest value between 
@@ -364,7 +364,6 @@ public class Mazub {
 	 * A method to calculate the new position and horizontal velocity after a given duration of time.
 	 * @param duration
 	 * 			The duration of time that passes.
-	 * @effect
 	 * @throws IllegalArgumentException
 	 * 			The given duration is an invalid duration of time.
 	 * 			| ((duration < 0.0) || (duration >= 0.2))
@@ -373,16 +372,6 @@ public class Mazub {
 		if ((duration < 0.0) || (duration >= 0.2)){
 			throw new IllegalArgumentException();
 		}
-		
-	}
-	
-	/**
-	 * Compute the new horizontal position after a given duration.
-	 * @param duration
-	 * 			The duration after after which to calculate the new horizontal position.
-	 * @post 
-	 */
-	public void computeHorizontalPositionAfter(Double duration) {
 		
 	}
 

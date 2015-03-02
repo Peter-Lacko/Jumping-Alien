@@ -140,7 +140,7 @@
         <tags>EditorStack</tags>
         <tags>active</tags>
         <children xsi:type="basic:Part" xmi:id="_e_H3GsD2EeSQuOnpEwYx3w" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="Mazub.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.gif" closeable="true">
-          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;Mazub.java&quot; partName=&quot;Mazub.java&quot; title=&quot;Mazub.java&quot; tooltip=&quot;OGP1415-JumpingAlien/src/jumpingalien/model/Mazub.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/OGP1415-JumpingAlien/src/jumpingalien/model/Mazub.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;7180&quot; selectionTopPixel=&quot;4115&quot;/>&#xD;&#xA;&lt;/editor>"/>
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;Mazub.java&quot; partName=&quot;Mazub.java&quot; title=&quot;Mazub.java&quot; tooltip=&quot;OGP1415-JumpingAlien/src/jumpingalien/model/Mazub.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/OGP1415-JumpingAlien/src/jumpingalien/model/Mazub.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;12909&quot; selectionTopPixel=&quot;7135&quot;/>&#xD;&#xA;&lt;/editor>"/>
           <tags>Editor</tags>
           <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
           <tags>removeOnHide</tags>
@@ -240,7 +240,7 @@
           </menus>
         </children>
         <children xsi:type="basic:Part" xmi:id="_raXHMMD5EeSoM9EPVcbDkw" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="IFacade.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.gif" closeable="true">
-          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;IFacade.java&quot; partName=&quot;IFacade.java&quot; title=&quot;IFacade.java&quot; tooltip=&quot;OGP1415-JumpingAlien/src-provided/jumpingalien/part1/facade/IFacade.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/OGP1415-JumpingAlien/src-provided/jumpingalien/part1/facade/IFacade.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;0&quot; selectionTopPixel=&quot;2995&quot;/>&#xD;&#xA;&lt;/editor>"/>
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;IFacade.java&quot; partName=&quot;IFacade.java&quot; title=&quot;IFacade.java&quot; tooltip=&quot;OGP1415-JumpingAlien/src-provided/jumpingalien/part1/facade/IFacade.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/OGP1415-JumpingAlien/src-provided/jumpingalien/part1/facade/IFacade.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;0&quot; selectionTopPixel=&quot;3115&quot;/>&#xD;&#xA;&lt;/editor>"/>
           <tags>Editor</tags>
           <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
           <tags>removeOnHide</tags>
@@ -435,7 +435,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_e_H34cD2EeSQuOnpEwYx3w" elementId="org.eclipse.ui.workbench.file">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_bMnYIMD3EeSoM9EPVcbDkw" elementId="print" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" enabled="false" command="_e_H_MsD2EeSQuOnpEwYx3w"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_2f4VMMEcEeSlLc9VaBZ2ow" elementId="print" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" enabled="false" command="_e_H_MsD2EeSQuOnpEwYx3w"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_e_H378D2EeSQuOnpEwYx3w" elementId="additions" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -459,7 +459,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_e_H4TcD2EeSQuOnpEwYx3w" elementId="org.eclipse.ui.workbench.navigate">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_bM2osMD3EeSoM9EPVcbDkw" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_e_H-rMD2EeSQuOnpEwYx3w"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_2f4VOsEcEeSlLc9VaBZ2ow" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_e_H-rMD2EeSQuOnpEwYx3w"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_e_H4WMD2EeSQuOnpEwYx3w" elementId="group.editor" toBeRendered="false">
         <tags>toolbarSeparator</tags>
