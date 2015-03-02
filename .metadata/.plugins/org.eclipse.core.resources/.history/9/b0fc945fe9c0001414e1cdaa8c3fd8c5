@@ -148,7 +148,6 @@ public class Mazub {
 	 * 			| result == 0
 	 */
 	private static final int Y_MIN = 0;
-	
 	/**
 	 * Return the orientation of the Mazub character.
 	 * 	The orientation is the direction Mazub is facing or moving.
@@ -164,81 +163,31 @@ public class Mazub {
 	private String Orientation;
 	
 	/**
-	 * Return the current horizontal velocity.
+	 * 
+	 * @return
 	 */
-	@Basic
 	public Double getHorizontalVelocity() {
-		return this.currHorizontalVelocity;
+		return this.HorizontalVelocity;
 	}
+	
+	private Double HorizontalVelocity;
 	
 	public Double getHorizontalAcceleration() {
 		return this.HORIZONTAL_ACCELERATION;
 	}
 	
 	//moeten deze public of private zijn?
-	/**
-	 * Constant reflecting the initial velocity of a character.
-	 * @return The initial velocity for a character is 1 m/s.
-	 * 			| return == 1.0
-	 */
-	private final Double INIT_HORIZONTAL_VELOCITY = 1.0;
+	public final Double INIT_HORIZONTAL_VELOCITY = 1.0;
 	
-	/**
-	 * Variable reflecting the maximal horizontal velocity of a character.
-	 */
-	private Double maxHorizontalVelocity;
+	public final Double MAX_HORIZONTAL_VELOCITY = 3.0;
 	
-	/**
-	 * Constant reflecting the horizontal acceleration of a character.
-	 * @return The horizontal acceleration for all characters is 0.9m/s²
-	 * 			| return == 0.9
-	 */
-	private static final Double HORIZONTAL_ACCELERATION = 0.9;
+	public static final Double HORIZONTAL_ACCELERATION = 0.9;
 	
-	/**
-	 * Initiate or speed up movement in a given direction.
-	 * @pre The given direction must be left or right.
-	 * 		| (direction == "left") || (direction == "right")
-	 * @pre The given duration must be larger than zero.
-	 * 		| duration > 0
-	 * @param direction
-	 * 			The direction of movement
-	 * @post	If the absolute value of the current speed is lower than the initial speed, the new speed is calculated as the smallest value between 
-	 * 				1) the initial horizontal velocity plus the duration times horizontal acceleration. 
-	 * 				or 2) the maximal horizontal velocity.
-	 * 			Otherwise, the new speed is calculated as the smallest value between 
-	 * 				1) the current horizontal velocity plus the duration times horizontal acceleration. 
-	 * 				or 2) the maximal horizontal velocity.
-	 * 			This velocity is then multiplied by -1 if the given direction is left.
-	 * 			| If (direction == "left")
-	 * 			|	then directionModifier == -1
-	 * 			| Else directionModifier == 1
-	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
-	 * 			|	then (new.getHorizontalVelocity == 
-	 * 			|	directionModifier*Math.min(getInitHorizontalVelocity()+duration*getHorizontalAcceleration(),getMaxHorizontalVelocity()))
-	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
-	 * 			|	then (new.getHorizontalVelocity == 
-	 * 			|	directionModifier*Math.min(getHorizontalVelocity()+duration*getHorizontalAcceleration(),getMaxHorizontalVelocity()))
-	 */
-	public void startMove(String direction, Double duration) {
-		int directionModifier = 1;
+	public void startMove(String direction) {
+		int direction_number = 1;
 		if (direction == "left")
-			directionModifier = -1;
+			direction_number = -1;
 		
 	}
-	
-	/**
-	 * Set the horizontal velocity to the given velocity.
-	 * @post The new horizontal velocity is the given velocity.
-	 * 			| new.getHorizontalVelocity == velocity
-	 */
-	public void setHorizontalVelocity(Double velocity) {
-		this.currHorizontalVelocity = velocity;
-	}
-	
-	/**
-	 * A variable reflecting the current horizontal velocity.
-	 */
-	private Double currHorizontalVelocity;
 
 }
