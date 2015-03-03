@@ -185,7 +185,7 @@ public class MazubSander {
 	}
 	
 	public double getHorizontalAcceleration() {
-		return this.HORIZONTAL_ACCELERATION;
+		return Mazub.HORIZONTAL_ACCELERATION;
 	}
 	
 	public double getMaxHorizontalVelocity() {

@@ -35,7 +35,7 @@ public class MazubSander {
 	}
 	
 	/**
-	 * Return the actual coordinate (in the form of a double) ascribed to this character at the given index.
+	 * Return the coordinate ascribed to this character at the given index.
 	 * @param index
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
@@ -44,20 +44,8 @@ public class MazubSander {
 	 * 			| (index <= 0) || (index > 2)
 	 */
 	@Basic
-	public double getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
+	public int getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
 		return Position[index-1];
-	}
-	
-	/**
-	 * Return the rounded down coordinate (in the form of an int) ascribed to this character at the given index.
-	 * @param index
-	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
-	 * 			the second index)
-	 * @effect	Rounds down the position at the requested index and converts to an int type.
-	 * 			| (int)getPositionAt(index)
-	 */
-	public int getIntPositionAt(int index) throws ArrayIndexOutOfBoundsException{
-		return (int)Position[index-1];
 	}
 	
 	/**
@@ -67,10 +55,10 @@ public class MazubSander {
 	 * @param index
 	 * 			The index for the coordinate to check
 	 * @return True if it is an X-coordinate in the correct range or a Y-coordinate in the correct range
-	 * 			(the rounded down value must be between X_MIN, X_MAX or Y_MIN, Y_MAX respectively)
-	 * 			| if ((index == 1) && ((int)coordinate >= X_MIN) && ((int)coordinate <= X_MAX))
+	 * 			(between X_MIN, X_MAX or Y_MIN, Y_MAX respectively)
+	 * 			| if ((index == 1) && (coordinate >= X_MIN) && (coordinate <= X_MAX))
 	 * 			|	then result == true
-	 * 			| else if ((index ==2) && ((int)coordinate >= Y_MIN) && ((int)coordinate <= Y_MAX))
+	 * 			| else if ((index ==2) && (coordinate >= Y_MIN) && (coordinate <= Y_MAX))
 	 * 			|	then result == true
 	 * 			| else result == false
 	 */
@@ -118,14 +106,14 @@ public class MazubSander {
 	 * 			| for each I in 0..result.length-1:
 	 * 			|	result[I].equals(getPositionAt(I+1))
 	 */
-	public double[] getPosition() {
+	public int[] getPosition() {
 		return this.Position.clone();
 	}
 		
 	/**
 	 * Variable registering the position of the bottom left corner of the Mazub Sprite.
 	 */
-	private double[] Position = new double[2];
+	private int[] Position = new int[2];
 	
 	/**
 	 * Constant reflecting the size of the playing field.
@@ -180,19 +168,19 @@ public class MazubSander {
 	 * Return the current horizontal velocity.
 	 */
 	@Basic
-	public double getHorizontalVelocity() {
+	public Double getHorizontalVelocity() {
 		return this.currHorizontalVelocity;
 	}
 	
-	public double getHorizontalAcceleration() {
+	public Double getHorizontalAcceleration() {
 		return this.HORIZONTAL_ACCELERATION;
 	}
 	
-	public double getMaxHorizontalVelocity() {
+	public Double getMaxHorizontalVelocity() {
 		return this.maxHorizontalVelocity;
 	}
 	
-	public double getInitHorizontalVelocity() {
+	public Double getInitHorizontalVelocity() {
 		return this.INIT_HORIZONTAL_VELOCITY;
 	}
 	
@@ -202,19 +190,19 @@ public class MazubSander {
 	 * @return The initial velocity for a character is 1 m/s.
 	 * 			| return == 1.0
 	 */
-	private final double INIT_HORIZONTAL_VELOCITY = 1.0;
+	private final Double INIT_HORIZONTAL_VELOCITY = 1.0;
 	
 	/**
 	 * Variable reflecting the maximal horizontal velocity of a character.
 	 */
-	private double maxHorizontalVelocity;
+	private Double maxHorizontalVelocity;
 	
 	/**
 	 * Constant reflecting the horizontal acceleration of a character.
 	 * @return The horizontal acceleration for all characters is 0.9m/s²
 	 * 			| return == 0.9
 	 */
-	private static final double HORIZONTAL_ACCELERATION = 0.9;
+	private static final Double HORIZONTAL_ACCELERATION = 0.9;
 	
 	/**
 	 * method that returns the value of the variable isAccelerating
@@ -257,14 +245,14 @@ public class MazubSander {
 	 * 			| Else
 	 * 			|	new.isAccelerating == false
 	 */
-	public void computeHorizontalVelocityAfter(double duration) {
-		double newVelocity;
+	public void computeHorizontalVelocityAfter(Double duration) {
+		Double newVelocity;
 		if (isMovingLeft() || isMovingRight()){
 			int directionModifier = 1;
 			if (isMovingLeft()){
 				directionModifier  = -1;
 			}
-			if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), getInitHorizontalVelocity())){
+			if (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity()){
 				newVelocity = getInitHorizontalVelocity() + duration*getHorizontalAcceleration();
 				newVelocity = Math.min(newVelocity,getMaxHorizontalVelocity());
 				setHorizontalVelocity(directionModifier*newVelocity);
@@ -279,7 +267,7 @@ public class MazubSander {
 			newVelocity = 0.0;
 			setHorizontalVelocity(newVelocity);
 		}
-		if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (newVelocity < getMaxHorizontalVelocity())){
+		if ((newVelocity != 0) && (newVelocity < getMaxHorizontalVelocity())){
 			this.isAccelerating = true;
 		}
 		else{ this.isAccelerating = false;
@@ -296,14 +284,14 @@ public class MazubSander {
 	 * @post The new horizontal velocity is the given velocity.
 	 * 			| new.getHorizontalVelocity == velocity
 	 */
-	public void setHorizontalVelocity(double velocity) {
+	public void setHorizontalVelocity(Double velocity) {
 		this.currHorizontalVelocity = velocity;
 	}
 	
 	/**
 	 * A variable reflecting the current horizontal velocity.
 	 */
-	private double currHorizontalVelocity;
+	private Double currHorizontalVelocity;
 	
 	/**
 	 * Start moving the character in the given direction
@@ -377,20 +365,16 @@ public class MazubSander {
 	 * A method to calculate the new position and horizontal velocity after a given duration of time.
 	 * @param duration
 	 * 			The duration of time that passes.
-	 * @effect computes the new horizontal position after the given duration.
-	 * 			| computeHorizontalPositionAfter(duration)
-	 * @effect computes the new horizontal velocity after the given duration.
-	 * 			| computeHorizontalVelocityAfter(duration)
+	 * @effect
 	 * @throws IllegalArgumentException
 	 * 			The given duration is an invalid duration of time.
 	 * 			| ((duration < 0.0) || (duration >= 0.2))
 	 */
-	public void AdvanceTime (double duration) throws IllegalArgumentException {
-		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2))){
+	public void AdvanceTime (Double duration) throws IllegalArgumentException {
+		if ((duration < 0.0) || (duration >= 0.2)){
 			throw new IllegalArgumentException();
 		}
-		this.computeHorizontalPositionAfter(duration);
-		this.computeHorizontalVelocityAfter(duration);
+		
 	}
 	
 	/**
@@ -398,34 +382,10 @@ public class MazubSander {
 	 * @param duration
 	 * 			The duration after after which to calculate the new horizontal position.
 	 * @post 
-	 * 			| if (isValidPositionAt(new.getPositionAt(1),1))
-	 * 			|	then if (this.isAccelerating())
-	 * 			|			then new.getPositionAt(1) == this.getPositionAt(1) + duration*this.getHorizontalVelocity() 
-	 * 			|			+ 0.5*this.getHorizontalAcceleration()*duration²
-	 * 			|		else
-	 * 			|			new.getPositionAt(1) == this.getPositionAt(1) + duration*this.getHorizontalVelocity()
-	 * 			| else if (new.getIntPositionAt(1) < X_MIN)
-	 * 			|	then new.getPositionAt(1) == (double)X_MIN
-	 * 			| else new.getPositionAt(1) == (double)X_MAX
 	 */
-	public void computeHorizontalPositionAfter(double duration) {
-		double newPosition;
-		newPosition = this.getPositionAt(1) + duration*this.getHorizontalVelocity();
-		if (this.isAccelerating()){
-			newPosition += 0.5*getHorizontalAcceleration()*duration*duration;
-		}
-		if (isValidPositionAt(newPosition,1)){
-			this.setPositionAt(newPosition, 1);
-		}
-		else if ((int)newPosition < X_MIN){
-			this.setPositionAt((double)X_MIN, 1);
-		}
-		else {
-			this.setPositionAt((double)X_MAX, 1);
-		}
+	public void computeHorizontalPositionAfter(Double duration) {
 		
 	}
-
 	// vanaf hier zijn het nieuwe functies
 	
 	
