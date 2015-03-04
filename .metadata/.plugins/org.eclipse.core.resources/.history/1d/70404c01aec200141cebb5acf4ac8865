@@ -1,5 +1,5 @@
 package jumpingalien.model;
-import jumpingalien.util.*;
+import jumpingalien.util.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 
@@ -324,7 +324,6 @@ public class MazubSander {
 		else {
 			this.isMovingRight = true;
 		}
-		this.timeSinceEndMove = 0;
 	}
 	
 	/**
@@ -392,10 +391,6 @@ public class MazubSander {
 		}
 		this.computeHorizontalPositionAfter(duration);
 		this.computeHorizontalVelocityAfter(duration);
-		
-		if (getHorizontalVelocity() == 0){
-			timeSinceEndMove += duration;
-		}
 	}
 	
 	/**
@@ -632,33 +627,6 @@ public class MazubSander {
 	public void endDuck(){
 		this.isDucked = false;
 		this.maxHorizontalVelocity = 3.0;
-	}
-	
-	/**
-	 * an Array of Sprites for the character
-	 */
-	public Sprite[] images;
-	
-	public double timeSinceEndMove;
-	
-	public double prevTimeSinceEndMove;
-	
-	public Sprite leftOrRightSprite(int n){
-		if (isMovingRight()){
-			return images[n];
-		}
-		if (isMovingLeft()){
-			return images[n+1];
-		}
-	}
-	
-	public Sprite getCurrentSprite(){
-		if ((isJumping) && (! isDucked)){
-			return leftOrRightSprite(4);
-		} if (isDucked){
-			return leftOrRightSprite(6);
-		} 
-		
 	}
 	
 	
