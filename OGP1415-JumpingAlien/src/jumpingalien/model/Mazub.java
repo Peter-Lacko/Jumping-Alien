@@ -54,10 +54,22 @@ public class Mazub {
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
 	 * @effect	Rounds down the position at the requested index and converts to an int type.
-	 * 			| (int)getPositionAt(index)
+	 * 			| result == (int)getPositionAt(index)
 	 */
 	public int getIntPositionAt(int index) throws ArrayIndexOutOfBoundsException{
 		return (int)Position[index-1];
+	}
+	
+	/**
+	 * Return the position of the character, rounded down to the nearest integer value.
+	 * @effect Returns both rounded down positions (as an integer) in one array.
+	 * 			| result == {getIntPositionAt(1), getIntPositionAt(2)}
+	 */
+	public int[] getIntPosition() throws ArrayIndexOutOfBoundsException {
+		int position1 = this.getIntPositionAt(1);
+		int position2 = this.getIntPositionAt(2);
+		int[] positions = {position1, position2};
+		return positions;
 	}
 	
 	/**
@@ -320,9 +332,11 @@ public class Mazub {
 	public void startMove (String direction) {
 		if (direction == "left") {
 			this.isMovingLeft = true;
+			this.isMovingRight = false;
 		}
-		else {
+		if (direction == "right") {
 			this.isMovingRight = true;
+			this.isMovingLeft = false;
 		}
 	}
 	
@@ -342,7 +356,7 @@ public class Mazub {
 		if (direction == "left") {
 			this.isMovingLeft = false;
 		}
-		else {
+		if (direction == "right") {
 			this.isMovingRight = false;
 		}
 	}
@@ -390,7 +404,9 @@ public class Mazub {
 			throw new IllegalArgumentException();
 		}
 		this.computeHorizontalPositionAfter(duration);
+		this.computeVerticalPositionAfter(duration);
 		this.computeHorizontalVelocityAfter(duration);
+		this.computeVerticalVelocityAfter(duration);
 	}
 	
 	/**
@@ -425,5 +441,181 @@ public class Mazub {
 		}
 		
 	}
+	
+	
+	/**
+	 * Return the current vertical velocity.
+	 */
+	@Basic
+	public double getVerticalVelocity() {
+		return this.currVerticalVelocity;
+	}
+	
+	/**
+	 * Set the vertical velocity to the given velocity.
+	 * @post The new vertical velocity is the given velocity.
+	 * 			| new.getVerticalVelocity == velocity
+	 */
+	public void setVerticalVelocity(double velocity) {
+		this.currVerticalVelocity = velocity;
+	}
+	
+	
+	/**
+	 * A variable reflecting the current vertical velocity.
+	 */
+	private double currVerticalVelocity;
+	
+	/**
+	 * Return the speed with which the character starts jumping
+	 */
+	public double getInitVerticalVelocity() {
+		return this.INIT_VERTICAL_VELOCITY;
+	}
+	
+	
+	/**
+	 * Constant reflecting the initial jumping velocity of a character.
+	 * @return The initial jumping velocity for a character is 8 m/s.
+	 * 			| return == 8.0 m/s
+	 */
+	private final double INIT_VERTICAL_VELOCITY = 8.0;
+	
+	/**
+	 * Constant reflecting the vertical acceleration of a character.
+	 * @return The vertical acceleration for all characters is 0.9m/s²
+	 * 			| return == -10 m/s²
+	 */
+	private static final double VERTICAL_ACCELERATION = -10.0;
+	
+	
+	/**
+	 * Return the current vertical velocity.
+	 */
+	@Basic
+	public double getVerticalAcceleration() {
+		return Mazub.VERTICAL_ACCELERATION;
+	}
+	
+	
+	/**
+	 * A variable that returns whether a character is in the air or not.
+	 * @return	true if the character is in the air
+	 * 			else false
+	 * 			| if this.getPosition()[1] > 0:
+	 * 			| 	return true
+	 * 			|
+	 */
+	public boolean isInAir(){
+		if (! Util.fuzzyGreaterThanOrEqualTo(0,this.getPositionAt(2))){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * A method that stops the character's jump
+	 */
+	public void endJump(){
+		this.isJumping = false;
+	}
+	
+	/**
+	 * A method that starts the character's jump
+	 */
+	public void startJump(){
+		this.isJumping = true;
+	}
+	
+	
+	/**
+	 * value stating whether the character is jumping
+	 */
+	private boolean isJumping;
+	
+	
+	/**
+	 * Compute the new vertical speed and position after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical position.
+	 * @post    if the character is in the air and and loc_Y + v_Y*dt + 0.5*a_Y*dt*dt is 
+	 * 			a possible height then that is the new height. if it's to high the new
+	 * 			height is the maximal height. if it's to low the new height is the minimal 
+	 * 			height. if the character is not in the air but it is jumping, the new height
+	 * 			is oc_Y + v_Y*dt.
+	 * 			|if isInAir()
+	 * 			|	then newYPosition = loc_Y + v_Y*dt + 0.5*a_Y*dt²
+	 * 			|	if isValidPosition(newYPosition)
+	 * 			|		then new.verticalPosition = newYPosition
+	 * 			|	else if newYPosition < Y_min
+	 * 			|		then new.verticalPosition = Y_min
+	 *			|	else
+	 *			|		then new.verticalPosition = Y_max
+	 *			|else
+	 *			|	if isJumping
+	 *			|		then new.verticalPosition = loc_Y + v_Y*dt +0.5*a_Y*dt²
+	 */
+	public void computeVerticalPositionAfter(double duration){
+		double newYPosition;
+		if (isInAir()){
+			newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity() + 0.5*this.getVerticalAcceleration()*duration*duration;
+			if (isValidPositionAt(newYPosition,2)){
+				this.setPositionAt(newYPosition, 2);
+			}
+			else if ((int)newYPosition < Y_MIN){
+				this.setPositionAt((double)Y_MIN, 2);
+			}
+			else {
+				this.setPositionAt((double)Y_MAX, 2);
+			}
+		}
+		else{
+			if (isJumping == true){
+				newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity() + 0.5*this.getVerticalAcceleration()*duration*duration;
+				this.setPositionAt(newYPosition, 2);
+			}
+		}
+	}
+	
+	/**
+	 * Compute the new vertical speed after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical speed.
+	 * @post	if the character is in the air and is going upward but no longer jumping the new vertical
+	 * 			velocity is zero otherwise the new vertical velocity is the old one plus the acceleration
+	 * 			times the duration
+	 * 			if the character is on the ground and jumping the new velocity is the initial velocity of
+	 * 			the character if it's not jumping the new velocity is zero
+	 * 			| if isInAir()
+	 * 			|	if not isJumping && getVertivalVelocity > 0
+	 * 			|		then new.verticalVelocity = 0
+	 * 			|	else new.verticalVelocity = getVerticalVelocity()+getVerticalAcceleration()*duration
+	 * 			| else 
+	 * 			|	if isJumping
+	 * 			|		then new.verticalVelocity = INIT_VERTICAL_VELOCITY
+	 * 			|	else new.verticalVelocity = 0
+	 */
+	public void computeVerticalVelocityAfter(double duration){
+		if (isInAir() == true){
+			if ((isJumping == false) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
+				setVerticalVelocity(0.0);
+			}
+			else{
+				setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
+			}
+		}
+		else{
+			if (isJumping == true){
+				setVerticalVelocity(INIT_VERTICAL_VELOCITY);
+			}
+			else{
+				setVerticalVelocity(0.0);
+			}
+		}
+	}
+	
+}
 
 }
