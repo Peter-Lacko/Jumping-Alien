@@ -602,33 +602,4 @@ public class MazubSander {
 		}
 	}
 	
-	/**
-	 * a boolean stating whether the character is ducked
-	 */
-	public boolean isDucked;
-
-	/**
-	 * A method that starts the character's duck
-	 * @post	the character is ducking and its max horizantal velocity is reduced to 1
-	 * 			| new.isDucked = true
-	 * 			| new.maxHorizontalVelocity = 1
-	 */
-	public void startDuck(){
-		this.isDucked = true;
-		this.maxHorizontalVelocity = 1.0;
-	}
-	
-	/**
-	 * A method that ends the character's duck
-	 * @post	the character is no longer ducking and its max horizantal velocity is back to original
-	 * 			| new.isDucked = false
-	 * 			| new.maxHorizontalVelocity = 3
-	 */
-	public void endDuck(){
-		this.isDucked = false;
-		this.maxHorizontalVelocity = 3.0;
-	}
-	
-	
-	
 }

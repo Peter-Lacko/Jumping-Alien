@@ -601,34 +601,45 @@ public class MazubSander {
 			}
 		}
 	}
+	/**
+	 * a variable containing the height of the character
+	 */
+	public int height = 11;
+	/**
+	 * a variable containing the width of the character
+	 */
+	public int width = 6;
 	
 	/**
 	 * a boolean stating whether the character is ducked
 	 */
 	public boolean isDucked;
-
+	
 	/**
-	 * A method that starts the character's duck
-	 * @post	the character is ducking and its max horizantal velocity is reduced to 1
-	 * 			| new.isDucked = true
-	 * 			| new.maxHorizontalVelocity = 1
+	 * a methode for getting the height of the character
 	 */
-	public void startDuck(){
-		this.isDucked = true;
-		this.maxHorizontalVelocity = 1.0;
+	@Basic
+	public int getHeight(){
+		return this.height;
 	}
 	
 	/**
-	 * A method that ends the character's duck
-	 * @post	the character is no longer ducking and its max horizantal velocity is back to original
-	 * 			| new.isDucked = false
-	 * 			| new.maxHorizontalVelocity = 3
+	 * a methode for getting the width of the character
 	 */
-	public void endDuck(){
-		this.isDucked = false;
-		this.maxHorizontalVelocity = 3.0;
+	@Basic
+	public int getWidth(){
+		return this.width;
 	}
 	
+	/**
+	 * 
+	 * @param height
+	 */
+	public void setHeight(int height){
+		this.height = height;
+	}
 	
-	
+	public void setWidth(int width){
+		this.width = width;
+	}
 }
