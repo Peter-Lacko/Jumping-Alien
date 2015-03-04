@@ -433,7 +433,7 @@ public class MazubSander {
 	 * Return the current vertical velocity.
 	 */
 	@Basic
-	public Double getVerticalVelocity() {
+	public double getVerticalVelocity() {
 		return this.currVerticalVelocity;
 	}
 	
@@ -442,7 +442,7 @@ public class MazubSander {
 	 * @post The new vertical velocity is the given velocity.
 	 * 			| new.getVerticalVelocity == velocity
 	 */
-	public void setVerticalVelocity(Double velocity) {
+	public void setVerticalVelocity(double velocity) {
 		this.currVerticalVelocity = velocity;
 	}
 	
@@ -450,12 +450,12 @@ public class MazubSander {
 	/**
 	 * A variable reflecting the current vertical velocity.
 	 */
-	private Double currVerticalVelocity;
+	private double currVerticalVelocity;
 	
 	/**
 	 * Return the speed with wich the character starts jumping
 	 */
-	public Double getInitVerticalVelocity() {
+	public double getInitVerticalVelocity() {
 		return this.INIT_VERTICAL_VELOCITY;
 	}
 	
@@ -463,29 +463,29 @@ public class MazubSander {
 	/**
 	 * Constant reflecting the initial jumping velocity of a character.
 	 * @return The initial jumping velocity for a character is 8 m/s.
-	 * 			| return == 8.0
+	 * 			| return == 8.0 m/s
 	 */
-	private final Double INIT_VERTICAL_VELOCITY = 8.0;
+	private final double INIT_VERTICAL_VELOCITY = 8.0;
 	
 	/**
 	 * Constant reflecting the vertical acceleration of a character.
 	 * @return The vertical acceleration for all characters is 0.9m/s²
-	 * 			| return == -10
+	 * 			| return == -10 m/s²
 	 */
-	private static final Double VERTICAL_ACCELERATION = -10.0;
+	private static final double VERTICAL_ACCELERATION = -10.0;
 	
 	
 	/**
 	 * Return the current vertical velocity.
 	 */
 	@Basic
-	public Double getVerticalAcceleration() {
+	public double getVerticalAcceleration() {
 		return this.VERTICAL_ACCELERATION;
 	}
 	
 	
 	/**
-	 * A variable that returns whether a character is in the air or not
+	 * A variable that returns whether a character is in the air or not.
 	 * @return	true if the character is in the air
 	 * 			else false
 	 * 			| if this.getPosition()[1] > 0:
@@ -493,7 +493,7 @@ public class MazubSander {
 	 * 			|
 	 */
 	public boolean isInAir(){
-		if (! Util.fuzzyGreaterThanOrEqualTo(0,this.getPosition()[1])){
+		if (! Util.fuzzyGreaterThanOrEqualTo(0,this.getPositionAt(2))){
 			return true;
 		}
 		else {
@@ -523,16 +523,16 @@ public class MazubSander {
 	
 	
 	/**
-	 * Compute the new vertical speedposition after a given duration.
+	 * Compute the new vertical speed and position after a given duration.
 	 * @param duration
 	 * 			The duration after after which to calculate the new vertical position.
 	 * @post    if the character is in the air and and loc_Y + v_Y*dt + 0.5*a_Y*dt*dt is 
-	 * 			a posible height then that is the new height. if it's to high the new
+	 * 			a possible height then that is the new height. if it's to high the new
 	 * 			height is the maximal height. if it's to low the new height is the minimal 
 	 * 			height. if the character is not in the air but it is jumping, the new height
 	 * 			is oc_Y + v_Y*dt.
 	 * 			|if isInAir()
-	 * 			|	then newYPosition = loc_Y + v_Y*dt + 0.5*a_Y*dt*dt
+	 * 			|	then newYPosition = loc_Y + v_Y*dt + 0.5*a_Y*dt²
 	 * 			|	if isValidPosition(newYPosition)
 	 * 			|		then new.verticalPosition = newYPosition
 	 * 			|	else if newYPosition < Y_min
@@ -541,12 +541,12 @@ public class MazubSander {
 	 *			|		then new.verticalPosition = Y_max
 	 *			|else
 	 *			|	if isJumping
-	 *			|		then new.verticalPosition = loc_Y + v_Y*dt
+	 *			|		then new.verticalPosition = loc_Y + v_Y*dt +0.5*a_Y*dt²
 	 */
 	public void computeNewVerticalPosition(double duration){
 		double newYPosition;
 		if (isInAir()){
-			newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity() + 0.5*getVerticalAcceleration()*duration*duration;
+			newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity() + 0.5*this.getVerticalAcceleration()*duration*duration;
 			if (isValidPositionAt(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
 			}
@@ -559,7 +559,7 @@ public class MazubSander {
 		}
 		else{
 			if (isJumping == true){
-				newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity();
+				newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity() + 0.5*this.getVerticalAcceleration()*duration*duration;
 				this.setPositionAt(newYPosition, 2);
 			}
 		}
@@ -585,7 +585,7 @@ public class MazubSander {
 	 */
 	public void computeNewVerticalSpeed(double duration){
 		if (isInAir() == true){
-			if ((isJumping ==false) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
+			if ((isJumping == false) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
 				setVerticalVelocity(0.0);
 			}
 			else{
