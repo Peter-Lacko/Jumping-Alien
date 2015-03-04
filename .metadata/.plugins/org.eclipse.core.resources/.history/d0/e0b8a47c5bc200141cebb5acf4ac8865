@@ -522,27 +522,7 @@ public class MazubSander {
 	private boolean isJumping;
 	
 	
-	/**
-	 * Compute the new vertical speedposition after a given duration.
-	 * @param duration
-	 * 			The duration after after which to calculate the new vertical position.
-	 * @post    if the character is in the air and and loc_Y + v_Y*dt + 0.5*a_Y*dt*dt is 
-	 * 			a posible height then that is the new height. if it's to high the new
-	 * 			height is the maximal height. if it's to low the new height is the minimal 
-	 * 			height. if the character is not in the air but it is jumping, the new height
-	 * 			is oc_Y + v_Y*dt.
-	 * 			|if isInAir()
-	 * 			|	then newYPosition = loc_Y + v_Y*dt + 0.5*a_Y*dt*dt
-	 * 			|	if isValidPosition(newYPosition)
-	 * 			|		then new.verticalPosition = newYPosition
-	 * 			|	else if newYPosition < Y_min
-	 * 			|		then new.verticalPosition = Y_min
-	 *			|	else
-	 *			|		then new.verticalPosition = Y_max
-	 *			|else
-	 *			|	if isJumping
-	 *			|		then new.verticalPosition = loc_Y + v_Y*dt
-	 */
+	
 	public void computeNewVerticalPosition(double duration){
 		double newYPosition;
 		if (isInAir()){
@@ -557,12 +537,6 @@ public class MazubSander {
 				this.setPositionAt((double)Y_MAX, 2);
 			}
 		}
-		else{
-			if (isJumping == true){
-				newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity();
-				this.setPositionAt(newYPosition, 2);
-			}
-		}
 	}
 	
 	/**
@@ -574,14 +548,6 @@ public class MazubSander {
 	 * 			times the duration
 	 * 			if the character is on the ground and jumping the new velocity is the initial velocity of
 	 * 			the character if it's not jumping the new velocity is zero
-	 * 			| if isInAir()
-	 * 			|	if not isJumping && getVertivalVelocity > 0
-	 * 			|		then new.verticalVelocity = 0
-	 * 			|	else new.verticalVelocity = getVerticalVelocity()+getVerticalAcceleration()*duration
-	 * 			| else 
-	 * 			|	if isJumping
-	 * 			|		then new.verticalVelocity = INIT_VERTICAL_VELOCITY
-	 * 			|	else new.verticalVelocity = 0
 	 */
 	public void computeNewVerticalSpeed(double duration){
 		if (isInAir() == true){
