@@ -61,13 +61,5 @@ public class Facade implements IFacade{
 	public void advanceTime(Mazub mazub, double duration) {
 		mazub.AdvanceTime(duration);
 	}
-	
-	public void startDuck(Mazub mazub){
-		mazub.startDuck();
-	}
-	
-	public void endDuck(Mazub mazub){
-		mazub.endDuck();
-	}
 
 }

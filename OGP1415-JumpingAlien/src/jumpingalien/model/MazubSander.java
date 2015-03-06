@@ -1,5 +1,6 @@
 package jumpingalien.model;
-import jumpingalien.util.*;
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 
@@ -54,10 +55,22 @@ public class MazubSander {
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
 	 * @effect	Rounds down the position at the requested index and converts to an int type.
-	 * 			| (int)getPositionAt(index)
+	 * 			| result == (int)getPositionAt(index)
 	 */
 	public int getIntPositionAt(int index) throws ArrayIndexOutOfBoundsException{
 		return (int)Position[index-1];
+	}
+	
+	/**
+	 * Return the position of the character, rounded down to the nearest integer value.
+	 * @effect Returns both rounded down positions (as an integer) in one array.
+	 * 			| result == {getIntPositionAt(1), getIntPositionAt(2)}
+	 */
+	public int[] getIntPosition() throws ArrayIndexOutOfBoundsException {
+		int position1 = this.getIntPositionAt(1);
+		int position2 = this.getIntPositionAt(2);
+		int[] positions = {position1, position2};
+		return positions;
 	}
 	
 	/**
@@ -185,7 +198,7 @@ public class MazubSander {
 	}
 	
 	public double getHorizontalAcceleration() {
-		return this.HORIZONTAL_ACCELERATION;
+		return MazubSander.HORIZONTAL_ACCELERATION;
 	}
 	
 	public double getMaxHorizontalVelocity() {
@@ -320,11 +333,12 @@ public class MazubSander {
 	public void startMove (String direction) {
 		if (direction == "left") {
 			this.isMovingLeft = true;
+			this.isMovingRight = false;
 		}
-		else {
+		if (direction == "right") {
 			this.isMovingRight = true;
+			this.isMovingLeft = false;
 		}
-		this.timeSinceEndMove = 0;
 	}
 	
 	/**
@@ -343,7 +357,7 @@ public class MazubSander {
 		if (direction == "left") {
 			this.isMovingLeft = false;
 		}
-		else {
+		if (direction == "right") {
 			this.isMovingRight = false;
 		}
 	}
@@ -391,11 +405,9 @@ public class MazubSander {
 			throw new IllegalArgumentException();
 		}
 		this.computeHorizontalPositionAfter(duration);
+		this.computeVerticalPositionAfter(duration);
 		this.computeHorizontalVelocityAfter(duration);
-		
-		if (getHorizontalVelocity() == 0){
-			timeSinceEndMove += duration;
-		}
+		this.computeVerticalVelocityAfter(duration);
 	}
 	
 	/**
@@ -430,8 +442,6 @@ public class MazubSander {
 		}
 		
 	}
-
-	// vanaf hier zijn het nieuwe functies
 	
 	
 	/**
@@ -458,7 +468,7 @@ public class MazubSander {
 	private double currVerticalVelocity;
 	
 	/**
-	 * Return the speed with wich the character starts jumping
+	 * Return the speed with which the character starts jumping
 	 */
 	public double getInitVerticalVelocity() {
 		return this.INIT_VERTICAL_VELOCITY;
@@ -485,7 +495,7 @@ public class MazubSander {
 	 */
 	@Basic
 	public double getVerticalAcceleration() {
-		return this.VERTICAL_ACCELERATION;
+		return MazubSander.VERTICAL_ACCELERATION;
 	}
 	
 	
@@ -548,7 +558,7 @@ public class MazubSander {
 	 *			|	if isJumping
 	 *			|		then new.verticalPosition = loc_Y + v_Y*dt +0.5*a_Y*dt²
 	 */
-	public void computeNewVerticalPosition(double duration){
+	public void computeVerticalPositionAfter(double duration){
 		double newYPosition;
 		if (isInAir()){
 			newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity() + 0.5*this.getVerticalAcceleration()*duration*duration;
@@ -588,7 +598,7 @@ public class MazubSander {
 	 * 			|		then new.verticalVelocity = INIT_VERTICAL_VELOCITY
 	 * 			|	else new.verticalVelocity = 0
 	 */
-	public void computeNewVerticalSpeed(double duration){
+	public void computeVerticalVelocityAfter(double duration){
 		if (isInAir() == true){
 			if ((isJumping == false) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
 				setVerticalVelocity(0.0);
@@ -659,8 +669,5 @@ public class MazubSander {
 			return leftOrRightSprite(6);
 		} 
 		
-	}
-	
-	
-	
+	}	
 }

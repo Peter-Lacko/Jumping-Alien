@@ -217,19 +217,19 @@ public class Mazub {
 	 * @return The initial velocity for a character is 1 m/s.
 	 * 			| return == 1.0
 	 */
-	private final double INIT_HORIZONTAL_VELOCITY = 1.0;
+	private final double INIT_HORIZONTAL_VELOCITY = 100.0;
 	
 	/**
 	 * Variable reflecting the maximal horizontal velocity of a character.
 	 */
-	private double maxHorizontalVelocity = 3.0;
+	private double maxHorizontalVelocity = 300.0;
 	
 	/**
 	 * Constant reflecting the horizontal acceleration of a character.
 	 * @return The horizontal acceleration for all characters is 0.9m/s²
 	 * 			| return == 0.9
 	 */
-	private static final double HORIZONTAL_ACCELERATION = 0.9;
+	private static final double HORIZONTAL_ACCELERATION = 90;
 	
 	/**
 	 * method that returns the value of the variable isAccelerating
@@ -498,14 +498,14 @@ public class Mazub {
 	 * @return The initial jumping velocity for a character is 8 m/s.
 	 * 			| return == 8.0
 	 */
-	private final Double INIT_VERTICAL_VELOCITY = 8.0;
+	private final Double INIT_VERTICAL_VELOCITY = 800.0;
 	
 	/**
 	 * Constant reflecting the vertical acceleration of a character.
 	 * @return The vertical acceleration for all characters is 0.9m/s²
 	 * 			| return == -10
 	 */
-	private static final Double VERTICAL_ACCELERATION = -10.0;
+	private static final Double VERTICAL_ACCELERATION = -1000.0;
 	
 	
 	/**
