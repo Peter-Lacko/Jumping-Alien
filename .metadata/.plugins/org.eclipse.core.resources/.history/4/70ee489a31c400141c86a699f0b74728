@@ -648,7 +648,7 @@ public class Mazub {
 	 */
 	public void startDuck(){
 		this.isDucked = true;
-		this.maxHorizontalVelocity = 1.0;
+		this.maxHorizontalVelocity = 100.0;
 	}
 	
 	/**
@@ -659,7 +659,7 @@ public class Mazub {
 	 */
 	public void endDuck(){
 		this.isDucked = false;
-		this.maxHorizontalVelocity = 3.0;
+		this.maxHorizontalVelocity = 300.0;
 	}
 	
 	/**

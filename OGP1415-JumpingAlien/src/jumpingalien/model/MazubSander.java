@@ -1,6 +1,6 @@
 package jumpingalien.model;
-import jumpingalien.util.Sprite;
-import jumpingalien.util.Util;
+
+import jumpingalien.util.*;
 import be.kuleuven.cs.som.annotate.*;
 
 
@@ -8,7 +8,15 @@ import be.kuleuven.cs.som.annotate.*;
  * @author Peter Lacko, Sander Switsers
  *
  */
-public class MazubSander {
+public class Mazub {
+	
+	public Mazub(int x_pos, int y_pos, Sprite[] sprites){
+		this.setPositionAt((double) x_pos, 1);
+		this.setPositionAt((double) y_pos, 2);
+		this.images = sprites;
+		this.m = images.length/2-4;
+		this.sprite = images[0];
+	}	
 	
 	/**
 	 * Return the number of coordinates ascribed to this character.
@@ -49,28 +57,21 @@ public class MazubSander {
 		return Position[index-1];
 	}
 	
+	public int[] getIntPosition(){
+		int[] position = {getIntPositionAt(1),getIntPositionAt(2)};
+		return position;
+	}
+	
 	/**
 	 * Return the rounded down coordinate (in the form of an int) ascribed to this character at the given index.
 	 * @param index
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
 	 * @effect	Rounds down the position at the requested index and converts to an int type.
-	 * 			| result == (int)getPositionAt(index)
+	 * 			| (int)getPositionAt(index)
 	 */
 	public int getIntPositionAt(int index) throws ArrayIndexOutOfBoundsException{
 		return (int)Position[index-1];
-	}
-	
-	/**
-	 * Return the position of the character, rounded down to the nearest integer value.
-	 * @effect Returns both rounded down positions (as an integer) in one array.
-	 * 			| result == {getIntPositionAt(1), getIntPositionAt(2)}
-	 */
-	public int[] getIntPosition() throws ArrayIndexOutOfBoundsException {
-		int position1 = this.getIntPositionAt(1);
-		int position2 = this.getIntPositionAt(2);
-		int[] positions = {position1, position2};
-		return positions;
 	}
 	
 	/**
@@ -118,6 +119,7 @@ public class MazubSander {
 			throw new IllegalArgumentException();
 		this.Position[index-1] = coordinate;
 	}
+	
 	
 	
 	/**
@@ -198,7 +200,7 @@ public class MazubSander {
 	}
 	
 	public double getHorizontalAcceleration() {
-		return MazubSander.HORIZONTAL_ACCELERATION;
+		return Mazub.HORIZONTAL_ACCELERATION;
 	}
 	
 	public double getMaxHorizontalVelocity() {
@@ -220,7 +222,7 @@ public class MazubSander {
 	/**
 	 * Variable reflecting the maximal horizontal velocity of a character.
 	 */
-	private double maxHorizontalVelocity;
+	private double maxHorizontalVelocity = 3.0;
 	
 	/**
 	 * Constant reflecting the horizontal acceleration of a character.
@@ -278,14 +280,15 @@ public class MazubSander {
 				directionModifier  = -1;
 			}
 			if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), getInitHorizontalVelocity())){
-				newVelocity = getInitHorizontalVelocity() + duration*getHorizontalAcceleration();
+				newVelocity = directionModifier*getInitHorizontalVelocity() + duration*directionModifier*getHorizontalAcceleration();
 				newVelocity = Math.min(newVelocity,getMaxHorizontalVelocity());
-				setHorizontalVelocity(directionModifier*newVelocity);
+				setHorizontalVelocity(newVelocity);
+				
 			}
 			else {
-			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
-			newVelocity = Math.min(newVelocity,getMaxHorizontalVelocity());
-			setHorizontalVelocity(directionModifier*newVelocity);
+			newVelocity = getHorizontalVelocity() + duration*directionModifier*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+			setHorizontalVelocity(newVelocity*directionModifier);
 			}
 		}
 		else {
@@ -302,7 +305,7 @@ public class MazubSander {
 	/**
 	 * value stating whether the character is accelerating
 	 */
-	private boolean isAccelerating;
+	private boolean isAccelerating = false;
 	
 	/**
 	 * Set the horizontal velocity to the given velocity.
@@ -316,7 +319,7 @@ public class MazubSander {
 	/**
 	 * A variable reflecting the current horizontal velocity.
 	 */
-	private double currHorizontalVelocity;
+	private double currHorizontalVelocity = 0.0;
 	
 	/**
 	 * Start moving the character in the given direction
@@ -333,12 +336,14 @@ public class MazubSander {
 	public void startMove (String direction) {
 		if (direction == "left") {
 			this.isMovingLeft = true;
-			this.isMovingRight = false;
+			this.hasMovedLeft = true;
 		}
-		if (direction == "right") {
+		else {
 			this.isMovingRight = true;
-			this.isMovingLeft = false;
+			this.hasMovedLeft = false;
 		}
+		this.timeSinceEndMove = 0;
+		this.hasMoved =true;
 	}
 	
 	/**
@@ -357,9 +362,10 @@ public class MazubSander {
 		if (direction == "left") {
 			this.isMovingLeft = false;
 		}
-		if (direction == "right") {
+		else {
 			this.isMovingRight = false;
 		}
+		index = 0;
 	}
 	
 	/**
@@ -381,12 +387,12 @@ public class MazubSander {
 	/**
 	 * A value stating whether the character is moving left.
 	 */
-	private boolean isMovingLeft;
+	private boolean isMovingLeft = false;
 	
 	/**
 	 * A value stating whether the character is moving right.
 	 */
-	private boolean isMovingRight;
+	private boolean isMovingRight = false;
 	
 	/**
 	 * A method to calculate the new position and horizontal velocity after a given duration of time.
@@ -405,9 +411,18 @@ public class MazubSander {
 			throw new IllegalArgumentException();
 		}
 		this.computeHorizontalPositionAfter(duration);
-		this.computeVerticalPositionAfter(duration);
 		this.computeHorizontalVelocityAfter(duration);
-		this.computeVerticalVelocityAfter(duration);
+		this.computeNewVerticalPosition(duration);
+		this.computeNewVerticalSpeed(duration);
+		this.prevTimeSinceEndMove = this.timeSinceEndMove;
+		if (getHorizontalVelocity() == 0){
+			timeSinceEndMove += duration;
+		}
+		if ((this.timeSinceEndMove > 1.0) &&(this.prevTimeSinceEndMove < 1.0)){
+			this.hasMoved = false;
+			this.hasMovedLeft = false;
+		}
+		this.sprite = this.getCurrentSprite();
 	}
 	
 	/**
@@ -427,9 +442,10 @@ public class MazubSander {
 	 */
 	public void computeHorizontalPositionAfter(double duration) {
 		double newPosition;
-		newPosition = this.getPositionAt(1) + duration*this.getHorizontalVelocity();
+		newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
 		if (this.isAccelerating()){
 			newPosition += 0.5*getHorizontalAcceleration()*duration*duration;
+			
 		}
 		if (isValidPositionAt(newPosition,1)){
 			this.setPositionAt(newPosition, 1);
@@ -442,13 +458,15 @@ public class MazubSander {
 		}
 		
 	}
+
+	// vanaf hier zijn het nieuwe functies
 	
 	
 	/**
 	 * Return the current vertical velocity.
 	 */
 	@Basic
-	public double getVerticalVelocity() {
+	public Double getVerticalVelocity() {
 		return this.currVerticalVelocity;
 	}
 	
@@ -457,7 +475,7 @@ public class MazubSander {
 	 * @post The new vertical velocity is the given velocity.
 	 * 			| new.getVerticalVelocity == velocity
 	 */
-	public void setVerticalVelocity(double velocity) {
+	public void setVerticalVelocity(Double velocity) {
 		this.currVerticalVelocity = velocity;
 	}
 	
@@ -465,12 +483,12 @@ public class MazubSander {
 	/**
 	 * A variable reflecting the current vertical velocity.
 	 */
-	private double currVerticalVelocity;
+	private Double currVerticalVelocity = 0.0;
 	
 	/**
-	 * Return the speed with which the character starts jumping
+	 * Return the speed with wich the character starts jumping
 	 */
-	public double getInitVerticalVelocity() {
+	public Double getInitVerticalVelocity() {
 		return this.INIT_VERTICAL_VELOCITY;
 	}
 	
@@ -478,29 +496,29 @@ public class MazubSander {
 	/**
 	 * Constant reflecting the initial jumping velocity of a character.
 	 * @return The initial jumping velocity for a character is 8 m/s.
-	 * 			| return == 8.0 m/s
+	 * 			| return == 8.0
 	 */
-	private final double INIT_VERTICAL_VELOCITY = 8.0;
+	private final Double INIT_VERTICAL_VELOCITY = 8.0;
 	
 	/**
 	 * Constant reflecting the vertical acceleration of a character.
 	 * @return The vertical acceleration for all characters is 0.9m/s²
-	 * 			| return == -10 m/s²
+	 * 			| return == -10
 	 */
-	private static final double VERTICAL_ACCELERATION = -10.0;
+	private static final Double VERTICAL_ACCELERATION = -10.0;
 	
 	
 	/**
 	 * Return the current vertical velocity.
 	 */
 	@Basic
-	public double getVerticalAcceleration() {
-		return MazubSander.VERTICAL_ACCELERATION;
+	public Double getVerticalAcceleration() {
+		return Mazub.VERTICAL_ACCELERATION;
 	}
 	
 	
 	/**
-	 * A variable that returns whether a character is in the air or not.
+	 * A variable that returns whether a character is in the air or not
 	 * @return	true if the character is in the air
 	 * 			else false
 	 * 			| if this.getPosition()[1] > 0:
@@ -508,7 +526,7 @@ public class MazubSander {
 	 * 			|
 	 */
 	public boolean isInAir(){
-		if (! Util.fuzzyGreaterThanOrEqualTo(0,this.getPositionAt(2))){
+		if (! Util.fuzzyGreaterThanOrEqualTo(0,this.getPosition()[1])){
 			return true;
 		}
 		else {
@@ -534,20 +552,20 @@ public class MazubSander {
 	/**
 	 * value stating whether the character is jumping
 	 */
-	private boolean isJumping;
+	private boolean isJumping = false;
 	
 	
 	/**
-	 * Compute the new vertical speed and position after a given duration.
+	 * Compute the new vertical speedposition after a given duration.
 	 * @param duration
 	 * 			The duration after after which to calculate the new vertical position.
 	 * @post    if the character is in the air and and loc_Y + v_Y*dt + 0.5*a_Y*dt*dt is 
-	 * 			a possible height then that is the new height. if it's to high the new
+	 * 			a posible height then that is the new height. if it's to high the new
 	 * 			height is the maximal height. if it's to low the new height is the minimal 
 	 * 			height. if the character is not in the air but it is jumping, the new height
 	 * 			is oc_Y + v_Y*dt.
 	 * 			|if isInAir()
-	 * 			|	then newYPosition = loc_Y + v_Y*dt + 0.5*a_Y*dt²
+	 * 			|	then newYPosition = loc_Y + v_Y*dt + 0.5*a_Y*dt*dt
 	 * 			|	if isValidPosition(newYPosition)
 	 * 			|		then new.verticalPosition = newYPosition
 	 * 			|	else if newYPosition < Y_min
@@ -556,12 +574,12 @@ public class MazubSander {
 	 *			|		then new.verticalPosition = Y_max
 	 *			|else
 	 *			|	if isJumping
-	 *			|		then new.verticalPosition = loc_Y + v_Y*dt +0.5*a_Y*dt²
+	 *			|		then new.verticalPosition = loc_Y + v_Y*dt
 	 */
-	public void computeVerticalPositionAfter(double duration){
+	public void computeNewVerticalPosition(double duration){
 		double newYPosition;
 		if (isInAir()){
-			newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity() + 0.5*this.getVerticalAcceleration()*duration*duration;
+			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 0.5*getVerticalAcceleration()*duration*duration;
 			if (isValidPositionAt(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
 			}
@@ -574,7 +592,7 @@ public class MazubSander {
 		}
 		else{
 			if (isJumping == true){
-				newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity() + 0.5*this.getVerticalAcceleration()*duration*duration;
+				newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity();
 				this.setPositionAt(newYPosition, 2);
 			}
 		}
@@ -598,9 +616,9 @@ public class MazubSander {
 	 * 			|		then new.verticalVelocity = INIT_VERTICAL_VELOCITY
 	 * 			|	else new.verticalVelocity = 0
 	 */
-	public void computeVerticalVelocityAfter(double duration){
+	public void computeNewVerticalSpeed(double duration){
 		if (isInAir() == true){
-			if ((isJumping == false) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
+			if ((isJumping ==false) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
 				setVerticalVelocity(0.0);
 			}
 			else{
@@ -620,7 +638,7 @@ public class MazubSander {
 	/**
 	 * a boolean stating whether the character is ducked
 	 */
-	public boolean isDucked;
+	public boolean isDucked = false;
 
 	/**
 	 * A method that starts the character's duck
@@ -649,25 +667,59 @@ public class MazubSander {
 	 */
 	public Sprite[] images;
 	
-	public double timeSinceEndMove;
+	public double timeSinceEndMove = 0.0;
 	
-	public double prevTimeSinceEndMove;
+	public double prevTimeSinceEndMove = 0.0;
+	
+	public boolean hasMoved = false;
+	
+	public Sprite sprite;
+	
+	public int index = 0;
+	
+	private int m ;
+	
+	public boolean hasMovedLeft = false;
+	
+	
+	public int[] getSize(){
+		int[] sizes = {0,0};
+		sizes[0] = sprite.getWidth();
+		sizes[1] = sprite.getHeight();
+		return sizes;
+	}
 	
 	public Sprite leftOrRightSprite(int n){
-		if (isMovingRight()){
-			return images[n];
-		}
-		if (isMovingLeft()){
+		if ((isMovingLeft()) || (hasMovedLeft)){
 			return images[n+1];
+		}
+		else{
+			return images[n];
 		}
 	}
 	
 	public Sprite getCurrentSprite(){
-		if ((isJumping) && (! isDucked)){
+		if ((isInAir()) && (this.hasMoved) && (! isDucked)){
 			return leftOrRightSprite(4);
-		} if (isDucked){
+		} else if ((isDucked) && (this.hasMoved)){
 			return leftOrRightSprite(6);
-		} 
-		
-	}	
+		} else if (this.hasMoved){
+			if (index<m-1){
+				index+=1;
+			} else {
+				index = 0;
+			}
+			if (isMovingRight){
+				return images[8+index];
+			} else if(isMovingLeft) {
+				return images[8+m+index];
+			} else {
+				return leftOrRightSprite(2);
+			}
+		} else if ((isDucked) && (! hasMoved)){
+			return images[1];
+		} else{
+			return images[0];
+		}
+	}
 }
