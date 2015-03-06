@@ -442,7 +442,7 @@ public class Mazub {
 	 */
 	public void computeHorizontalPositionAfter(double duration) {
 		double newPosition;
-		newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+		newPosition = this.getPositionAt(1) + duration*this.getHorizontalVelocity();
 		if (this.isAccelerating()){
 			newPosition += 0.5*getHorizontalAcceleration()*duration*duration;
 			
