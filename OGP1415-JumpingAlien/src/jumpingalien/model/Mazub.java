@@ -336,10 +336,12 @@ public class Mazub {
 	public void startMove (String direction) {
 		if (direction == "left") {
 			this.isMovingLeft = true;
+			this.isMovingRight = false;
 			this.hasMovedLeft = true;
 		}
 		else {
 			this.isMovingRight = true;
+			this.isMovingLeft = false;
 			this.hasMovedLeft = false;
 		}
 		this.timeSinceEndMove = 0;
@@ -452,9 +454,11 @@ public class Mazub {
 		}
 		else if ((int)newPosition < X_MIN){
 			this.setPositionAt((double)X_MIN, 1);
+			this.endMove("left");
 		}
 		else {
 			this.setPositionAt((double)X_MAX, 1);
+			this.endMove("right");
 		}
 		
 	}
@@ -648,7 +652,7 @@ public class Mazub {
 	 */
 	public void startDuck(){
 		this.isDucked = true;
-		this.maxHorizontalVelocity = 100.0;
+		this.maxHorizontalVelocity = 1.0;
 	}
 	
 	/**
@@ -659,7 +663,7 @@ public class Mazub {
 	 */
 	public void endDuck(){
 		this.isDucked = false;
-		this.maxHorizontalVelocity = 300.0;
+		this.maxHorizontalVelocity = 3.0;
 	}
 	
 	/**
@@ -690,10 +694,12 @@ public class Mazub {
 	}
 	
 	public Sprite leftOrRightSprite(int n){
-		if ((isMovingLeft()) || (hasMovedLeft)){
-			return images[n+1];
+		if (isMovingRight){
+			return images[n];
 		}
-		else{
+		else if ((isMovingLeft()) || (hasMovedLeft)){
+			return images[n+1];
+		} else{
 			return images[n];
 		}
 	}
