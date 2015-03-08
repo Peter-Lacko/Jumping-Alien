@@ -550,6 +550,7 @@ public class Mazub {
 	 */
 	public void startJump(){
 		this.isJumping = true;
+		this.setVerticalVelocity(8.0);
 	}
 	
 	

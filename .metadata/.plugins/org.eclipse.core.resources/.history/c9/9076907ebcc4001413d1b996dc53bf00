@@ -336,7 +336,7 @@ public class Mazub {
 	public void startMove (String direction) {
 		if (direction == "left") {
 			this.isMovingLeft = true;
-			this.isMovingRight = false;
+//			this.isMovingRight = false;
 			this.hasMovedLeft = true;
 		}
 		else {
@@ -454,11 +454,9 @@ public class Mazub {
 		}
 		else if ((int)newPosition < X_MIN){
 			this.setPositionAt((double)X_MIN, 1);
-			this.endMove("left");
 		}
 		else {
 			this.setPositionAt((double)X_MAX, 1);
-			this.endMove("right");
 		}
 		
 	}

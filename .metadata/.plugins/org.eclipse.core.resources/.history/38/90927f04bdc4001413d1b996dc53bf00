@@ -458,7 +458,6 @@ public class Mazub {
 		}
 		else {
 			this.setPositionAt((double)X_MAX, 1);
-			this.endMove("right");
 		}
 		
 	}
