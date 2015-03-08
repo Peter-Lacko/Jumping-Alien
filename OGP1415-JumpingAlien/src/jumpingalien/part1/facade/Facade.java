@@ -47,7 +47,7 @@ public class Facade implements IFacade{
 	}
 	
 	public void endMoveLeft(Mazub mazub) {
-		mazub.endMove("left");
+		mazub.endMove();
 	}
 	
 	public void startMoveRight(Mazub mazub) {
@@ -55,7 +55,7 @@ public class Facade implements IFacade{
 	}
 	
 	public void endMoveRight(Mazub mazub) {
-		mazub.endMove("right");
+		mazub.endMove();
 	}
 	
 	public void advanceTime(Mazub mazub, double duration) {
