@@ -2,27 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="computeNewVerticalVelocityAfter" key="selection"/>
+		<item value="Direction" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="computeNewVerticalSpeed"/>
-			<item value="computeNewVerticalPosition"/>
-			<item value="prevTime"/>
+			<item value="direction"/>
+			<item value="endMove"/>
+			<item value="computenewhorizontalve"/>
+			<item value="computenewhor"/>
+			<item value="StoppingDirection"/>
 			<item value="MovingDirection"/>
-			<item value="hasmove"/>
-			<item value="ismoving"/>
-			<item value="ismov"/>
-			<item value="isMoving"/>
+			<item value="computeHorizontalPosition"/>
+			<item value="computeHorizontalVelocity"/>
 		</list>
 		<list key="replacehistory">
+			<item value="stoppingDirection"/>
+			<item value="movingDirection"/>
+			<item value="computeNewHorizontalPOsition"/>
+			<item value="computeNewHorizontalVelocity"/>
+			<item value="(MovingDirection() == MovementDirection.RIGHT) || (MovingDirection() == MovementDirection.LEFT)"/>
 			<item value="computeNewVerticalVelocityAfter"/>
 			<item value="computeNewVerticalPositionAfter"/>
 			<item value="computeVerticalVelocityAfter"/>
-			<item value="computeVerticalPositionAfter"/>
-			<item value="double"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

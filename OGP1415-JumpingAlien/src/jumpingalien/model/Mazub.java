@@ -239,14 +239,14 @@ public class Mazub {
 		return this.isAccelerating;
 	}
 		
-	// change name to "computeHorizontalVelocity" and check documentation! (needs to be total programming!)
+	// change name to "computeNewHorizontalVelocity" and check documentation! (needs to be total programming!)
 	// startMove is just a method that changes the boolean variable isMovingRight or isMovingLeft (maybe more), SAME FOR endMove!
 	/**
 	 * Compute the new horizontal velocity after a given duration
 	 * @param duration
 	 * 			the duration after which to calculate the new horizontal velocity.
 	 * @post	If the character is moving:
-	 * 			| If (this.isMovingLeft() || this.isMovingRight()) then:
+	 * 			| If (this.isMovingLeft || this.isMovingRight) then:
 	 * 				If the absolute value of the current speed is lower than the initial speed, the new speed is calculated as the smallest value between 
 	 * 					1) the initial horizontal velocity plus the duration times horizontal acceleration. 
 	 * 					or 2) the maximal horizontal velocity.
@@ -272,11 +272,11 @@ public class Mazub {
 	 * 			| Else
 	 * 			|	new.isAccelerating == false
 	 */
-	public void computeHorizontalVelocityAfter(double duration) {
+	public void computeNewHorizontalVelocityAfter(double duration) {
 		double newVelocity;
-		if (isMovingLeft() || isMovingRight()){
+		if (this.isMovingLeft || this.isMovingRight){
 			int directionModifier = 1;
-			if (isMovingLeft()){
+			if (isMovingLeft){
 				directionModifier  = -1;
 			}
 			if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), getInitHorizontalVelocity())){
@@ -329,23 +329,23 @@ public class Mazub {
 	 * 		| (direction == "left") || (direction == "right")
 	 * @post The character's new movement is set in the given direction.
 	 * 			| if (direction == "left")
-	 * 			|	then new.isMovingLeft() == true
+	 * 			|	then new.isMovingLeft == true
 	 * 			| else
-	 * 			|	new.isMovingRight() == true
+	 * 			|	new.isMovingRight == true
 	 */
 	public void startMove (String direction) {
 		if (direction == "left") {
 			this.isMovingLeft = true;
-			this.isMovingRight = false;
-			this.hasMovedLeft = true;
+//			this.hasMovedLeft = true;
+			this.hasMoved = MovementDirection.LEFT;
 		}
 		else {
 			this.isMovingRight = true;
-			this.isMovingLeft = false;
-			this.hasMovedLeft = false;
+//			this.hasMovedLeft = false;
+			this.hasMoved = MovementDirection.RIGHT;
 		}
 		this.timeSinceEndMove = 0;
-		this.hasMoved =true;
+//		this.hasMoved = true;
 	}
 	
 	/**
@@ -354,14 +354,14 @@ public class Mazub {
 	 * 			The direction to stop moving in.
 	 * @pre The direction must be left or right
 	 * 		| (direction == "left") || (direction == "right")
-	 * @post The character stops in the given direction.
+	 * @post The character stops movement in the given direction.
 	 * 			| if (direction == "left")
-	 * 			|	then new.isMovingLeft() == false
+	 * 			|	then new.isMovingLeft == false
 	 * 			| else
-	 * 			|	new.isMovingRight() == false
+	 * 			|	new.isMovingRight == false
 	 */
 	public void endMove (String direction) {
-		if (direction == "left") {
+		if (direction == "left"){
 			this.isMovingLeft = false;
 		}
 		else {
@@ -371,39 +371,23 @@ public class Mazub {
 	}
 	
 	/**
-	 * Determines whether the character is moving left
-	 */
-	@Basic
-	public boolean isMovingLeft() {
-		return this.isMovingLeft;
-	}
-	
-	/**
-	 * Determines whether the character is moving right
-	 */
-	@Basic
-	public boolean isMovingRight() {
-		return this.isMovingRight;
-	}
-	
-	/**
-	 * A value stating whether the character is moving left.
+	 * A value stating if the character is moving left.
 	 */
 	private boolean isMovingLeft = false;
 	
 	/**
-	 * A value stating whether the character is moving right.
+	 * A value stating if the character is moving right.
 	 */
 	private boolean isMovingRight = false;
 	
 	/**
-	 * A method to calculate the new position and horizontal velocity after a given duration of time.
+	 * A method to calculate the new position and velocity after a given duration of time. It also
 	 * @param duration
 	 * 			The duration of time that passes.
 	 * @effect computes the new horizontal position after the given duration.
-	 * 			| computeHorizontalPositionAfter(duration)
+	 * 			| computeNewHorizontalPOsitionAfter(duration)
 	 * @effect computes the new horizontal velocity after the given duration.
-	 * 			| computeHorizontalVelocityAfter(duration)
+	 * 			| computeNewHorizontalVelocityAfter(duration)
 	 * @throws IllegalArgumentException
 	 * 			The given duration is an invalid duration of time.
 	 * 			| ((duration < 0.0) || (duration >= 0.2))
@@ -412,17 +396,19 @@ public class Mazub {
 		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2))){
 			throw new IllegalArgumentException();
 		}
-		this.computeHorizontalPositionAfter(duration);
-		this.computeHorizontalVelocityAfter(duration);
-		this.computeNewVerticalPosition(duration);
-		this.computeNewVerticalSpeed(duration);
-		this.prevTimeSinceEndMove = this.timeSinceEndMove;
+		this.computeNewHorizontalPositionAfter(duration);
+		this.computeNewHorizontalVelocityAfter(duration);
+		this.computeNewVerticalPositionAfter(duration);
+		this.computeNewVerticalVelocityAfter(duration);
+//		this.prevTimeSinceEndMove = this.timeSinceEndMove;
 		if (getHorizontalVelocity() == 0){
 			timeSinceEndMove += duration;
 		}
-		if ((this.timeSinceEndMove > 1.0) &&(this.prevTimeSinceEndMove < 1.0)){
-			this.hasMoved = false;
-			this.hasMovedLeft = false;
+//		if ((this.timeSinceEndMove > 1.0) &&(this.prevTimeSinceEndMove < 1.0)){
+		if (this.timeSinceEndMove > 1.0){
+			this.hasMoved = MovementDirection.NONE;
+//			this.hasMoved = false;
+//			this.hasMovedLeft = false;
 		}
 		this.sprite = this.getCurrentSprite();
 	}
@@ -442,7 +428,7 @@ public class Mazub {
 	 * 			|	then new.getPositionAt(1) == (double)X_MIN
 	 * 			| else new.getPositionAt(1) == (double)X_MAX
 	 */
-	public void computeHorizontalPositionAfter(double duration) {
+	public void computeNewHorizontalPositionAfter(double duration) {
 		double newPosition;
 		newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
 		if (this.isAccelerating()){
@@ -580,7 +566,7 @@ public class Mazub {
 	 *			|	if isJumping
 	 *			|		then new.verticalPosition = loc_Y + v_Y*dt
 	 */
-	public void computeNewVerticalPosition(double duration){
+	public void computeNewVerticalPositionAfter(double duration){
 		double newYPosition;
 		if (isInAir()){
 			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 0.5*getVerticalAcceleration()*duration*duration;
@@ -620,7 +606,7 @@ public class Mazub {
 	 * 			|		then new.verticalVelocity = INIT_VERTICAL_VELOCITY
 	 * 			|	else new.verticalVelocity = 0
 	 */
-	public void computeNewVerticalSpeed(double duration){
+	public void computeNewVerticalVelocityAfter(double duration){
 		if (isInAir() == true){
 			if ((isJumping ==false) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
 				setVerticalVelocity(0.0);
@@ -673,9 +659,10 @@ public class Mazub {
 	
 	public double timeSinceEndMove = 0.0;
 	
-	public double prevTimeSinceEndMove = 0.0;
+//	public double prevTimeSinceEndMove = 0.0;
 	
-	public boolean hasMoved = false;
+	public MovementDirection hasMoved = MovementDirection.NONE;
+//	public boolean hasMoved = false;
 	
 	public Sprite sprite;
 	
@@ -683,7 +670,7 @@ public class Mazub {
 	
 	private int m ;
 	
-	public boolean hasMovedLeft = false;
+//	public boolean hasMovedLeft = false;
 	
 	
 	public int[] getSize(){
@@ -697,7 +684,7 @@ public class Mazub {
 		if (isMovingRight){
 			return images[n];
 		}
-		else if ((isMovingLeft()) || (hasMovedLeft)){
+		else if ((isMovingLeft) || (hasMoved == MovementDirection.LEFT)){
 			return images[n+1];
 		} else{
 			return images[n];
@@ -705,11 +692,11 @@ public class Mazub {
 	}
 	
 	public Sprite getCurrentSprite(){
-		if ((isInAir()) && (this.hasMoved) && (! isDucked)){
+		if ((isInAir()) && (this.hasMoved != MovementDirection.NONE) && (! isDucked)){
 			return leftOrRightSprite(4);
-		} else if ((isDucked) && (this.hasMoved)){
+		} else if ((isDucked) && (this.hasMoved != MovementDirection.NONE)){
 			return leftOrRightSprite(6);
-		} else if (this.hasMoved){
+		} else if (this.hasMoved != MovementDirection.NONE){
 			if (index<m-1){
 				index+=1;
 			} else {
@@ -722,7 +709,7 @@ public class Mazub {
 			} else {
 				return leftOrRightSprite(2);
 			}
-		} else if ((isDucked) && (! hasMoved)){
+		} else if ((isDucked) && (this.hasMoved == MovementDirection.NONE)){
 			return images[1];
 		} else{
 			return images[0];
