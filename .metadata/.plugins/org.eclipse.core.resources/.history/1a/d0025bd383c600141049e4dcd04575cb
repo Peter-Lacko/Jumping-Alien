@@ -448,6 +448,9 @@ public class Mazub {
 		}
 		
 	}
+
+	// vanaf hier zijn het nieuwe functies
+	
 	
 	/**
 	 * Return the current vertical velocity.
@@ -473,7 +476,7 @@ public class Mazub {
 	private Double currVerticalVelocity = 0.0;
 	
 	/**
-	 * Return the speed with which the character starts jumping
+	 * Return the speed with wich the character starts jumping
 	 */
 	public Double getInitVerticalVelocity() {
 		return this.INIT_VERTICAL_VELOCITY;
@@ -543,11 +546,11 @@ public class Mazub {
 	
 	
 	/**
-	 * Compute the new vertical position after a given duration.
+	 * Compute the new vertical speedposition after a given duration.
 	 * @param duration
 	 * 			The duration after after which to calculate the new vertical position.
 	 * @post    if the character is in the air and and loc_Y + v_Y*dt + 0.5*a_Y*dt*dt is 
-	 * 			a possible height then that is the new height. if it's to high the new
+	 * 			a posible height then that is the new height. if it's to high the new
 	 * 			height is the maximal height. if it's to low the new height is the minimal 
 	 * 			height. if the character is not in the air but it is jumping, the new height
 	 * 			is oc_Y + v_Y*dt.
@@ -654,16 +657,10 @@ public class Mazub {
 	 */
 	public Sprite[] images;
 	
-	/**
-	 * A variable that states the time that has passed since the character has stopped moving.
-	 */
 	public double timeSinceEndMove = 0.0;
 	
 //	public double prevTimeSinceEndMove = 0.0;
 	
-	/**
-	 * A variable that states in which direction the character has recently moved.
-	 */
 	public MovementDirection hasMoved = MovementDirection.NONE;
 //	public boolean hasMoved = false;
 	
@@ -741,19 +738,5 @@ public class Mazub {
 		} else{
 			return images[0];
 		}
-	}
-	
-	/**
-	 * Check whether the given MovementDirection is a valid one.
-	 * @param direction
-	 * 			the direction to check.
-	 * @return True if and only if the direction is left, right or none.
-	 * 			| result == (direction == MovementDirection.NONE) || (direction == MovementDirection.LEFT) ||
-	 *			|	(direction == MovementDirection.RIGHT)
-	 * 
-	 */
-	public static boolean isValidDirection(MovementDirection direction) {
-		return (direction == MovementDirection.NONE) || (direction == MovementDirection.LEFT) ||
-				(direction == MovementDirection.RIGHT);
 	}
 }

@@ -749,7 +749,7 @@ public class Mazub {
 	 * 			the direction to check.
 	 * @return True if and only if the direction is left, right or none.
 	 * 			| result == (direction == MovementDirection.NONE) || (direction == MovementDirection.LEFT) ||
-	 *			|	(direction == MovementDirection.RIGHT)
+				|	(direction == MovementDirection.RIGHT)
 	 * 
 	 */
 	public static boolean isValidDirection(MovementDirection direction) {

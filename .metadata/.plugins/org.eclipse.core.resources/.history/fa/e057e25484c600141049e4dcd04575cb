@@ -742,18 +742,4 @@ public class Mazub {
 			return images[0];
 		}
 	}
-	
-	/**
-	 * Check whether the given MovementDirection is a valid one.
-	 * @param direction
-	 * 			the direction to check.
-	 * @return True if and only if the direction is left, right or none.
-	 * 			| result == (direction == MovementDirection.NONE) || (direction == MovementDirection.LEFT) ||
-	 *			|	(direction == MovementDirection.RIGHT)
-	 * 
-	 */
-	public static boolean isValidDirection(MovementDirection direction) {
-		return (direction == MovementDirection.NONE) || (direction == MovementDirection.LEFT) ||
-				(direction == MovementDirection.RIGHT);
-	}
 }
