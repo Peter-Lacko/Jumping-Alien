@@ -181,15 +181,38 @@ public class Mazub {
 	 * Return the orientation of the Mazub character.
 	 * 	The orientation is the direction Mazub is facing or moving.
 	 */
-	@Basic
 	public String getOrientation() {
-		return this.Orientation;
+		if (this.getEnumedOrientation() == MovementDirection.LEFT)
+			return "left";
+		else if (this.getEnumedOrientation() == MovementDirection.RIGHT)
+			return "right";
+		else
+			return "none";
+	}
+	
+	public double getnumOrientation() {
+		if (this.hasMoved == MovementDirection.LEFT)
+			return -1.0;
+		else if (this.hasMoved == MovementDirection.RIGHT)
+			return 1.0;
+		else
+			return 0.0;
 	}
 	
 	/**
-	 * Variable registering the orientation of the Mazub character.
+	 * Return the orientation of the Mazub character.
+	 * 	The orientation is the direction Mazub is facing or moving.
 	 */
-	private String Orientation;
+	public MovementDirection getEnumedOrientation() {
+		if (this.isMovingLeft ^ this.isMovingRight){
+			if (this.isMovingLeft)
+				return MovementDirection.LEFT;
+			else
+				return MovementDirection.RIGHT;
+		}
+		else
+			return hasMoved;
+	}
 	
 	/**
 	 * Return the current horizontal velocity.
@@ -274,7 +297,7 @@ public class Mazub {
 	 */
 	public void computeNewHorizontalVelocityAfter(double duration) {
 		double newVelocity;
-		if (this.isMovingLeft || this.isMovingRight){
+		if ((this.isMovingLeft || this.isMovingRight) && (! movingInTwoDirections)){
 			int directionModifier = 1;
 			if (isMovingLeft){
 				directionModifier  = -1;
@@ -336,16 +359,13 @@ public class Mazub {
 	public void startMove (String direction) {
 		if (direction == "left") {
 			this.isMovingLeft = true;
-//			this.hasMovedLeft = true;
-			this.hasMoved = MovementDirection.LEFT;
+//			this.hasMoved = MovementDirection.LEFT;
 		}
 		else {
 			this.isMovingRight = true;
-//			this.hasMovedLeft = false;
-			this.hasMoved = MovementDirection.RIGHT;
+//			this.hasMoved = MovementDirection.RIGHT;
 		}
 		this.timeSinceEndMove = 0;
-//		this.hasMoved = true;
 	}
 	
 	/**
@@ -393,24 +413,40 @@ public class Mazub {
 	 * 			| ((duration < 0.0) || (duration >= 0.2))
 	 */
 	public void AdvanceTime (double duration) throws IllegalArgumentException {
-		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2))){
+		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 			throw new IllegalArgumentException();
-		}
+		this.determineDoubleDirections();		
+//		if (isMovingLeft && isMovingRight)
+//			this.movingInTwoDirections = true;
+//		else 
+//			this.movingInTwoDirections = false;
 		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewHorizontalVelocityAfter(duration);
 		this.computeNewVerticalPositionAfter(duration);
 		this.computeNewVerticalVelocityAfter(duration);
-//		this.prevTimeSinceEndMove = this.timeSinceEndMove;
-		if (getHorizontalVelocity() == 0){
+		if (movingInTwoDirections || ((! isMovingLeft) && (! isMovingRight)))
 			timeSinceEndMove += duration;
-		}
-//		if ((this.timeSinceEndMove > 1.0) &&(this.prevTimeSinceEndMove < 1.0)){
-		if (this.timeSinceEndMove > 1.0){
+//		else
+//			timeSinceEndMove = 0.0;
+		if (this.timeSinceEndMove > 1.0)
 			this.hasMoved = MovementDirection.NONE;
-//			this.hasMoved = false;
-//			this.hasMovedLeft = false;
-		}
 		this.sprite = this.getCurrentSprite();
+	}
+	
+	private void determineDoubleDirections() {
+		if (isMovingLeft && isMovingRight)
+			this.movingInTwoDirections = true;
+		else {
+			this.movingInTwoDirections = false;
+			if (this.isMovingRight){
+				this.hasMoved = MovementDirection.RIGHT;
+				timeSinceEndMove = 0.0;
+			}
+			else if (this.isMovingLeft){
+				this.hasMoved = MovementDirection.LEFT;
+				timeSinceEndMove = 0.0;
+			}
+		}
 	}
 	
 	/**
@@ -682,6 +718,8 @@ public class Mazub {
 	 */
 	private int m ;
 	
+	private boolean movingInTwoDirections = false;
+	
 //	public boolean hasMovedLeft = false;
 	
 	/**
@@ -704,13 +742,18 @@ public class Mazub {
 	 * @return return the correct version of the sprite, depending on the state of the character.
 	 */
 	public Sprite leftOrRightSprite(int number){
-		if (isMovingRight){
-			return images[number];
+		if (! movingInTwoDirections){
+			if ((isMovingLeft) || (hasMoved == MovementDirection.LEFT)){
+				return images[number + 1];
+			} else{
+				return images[number];
+			}
 		}
-		else if ((isMovingLeft) || (hasMoved == MovementDirection.LEFT)){
-			return images[number + 1];
-		} else{
-			return images[number];
+		else{
+			if (hasMoved == MovementDirection.LEFT)
+				return images[number + 1];
+			else
+				return images[number];
 		}
 	}
 	
@@ -724,22 +767,27 @@ public class Mazub {
 		} else if ((isDucked) && (this.hasMoved != MovementDirection.NONE)){
 			return leftOrRightSprite(6);
 		} else if (this.hasMoved != MovementDirection.NONE){
-			if (index<m-1){
-				index+=1;
-			} else {
-				index = 0;
-			}
-			if (isMovingRight){
-				return images[8+index];
-			} else if(isMovingLeft) {
-				return images[8+m+index];
-			} else {
-				return leftOrRightSprite(2);
-			}
+			return getCurrentWalkCycleSprite();
 		} else if ((isDucked) && (this.hasMoved == MovementDirection.NONE)){
 			return images[1];
 		} else{
 			return images[0];
+		}
+	}
+	
+	private Sprite getCurrentWalkCycleSprite() {
+		if (index<m-1)
+			index+=1;
+		else 
+			index = 0;
+		if (movingInTwoDirections)
+			return leftOrRightSprite(2);
+		else if (isMovingRight)
+			return images[8+index];
+		else if (isMovingLeft) 
+			return images[8+m+index];
+		else {
+			return leftOrRightSprite(2);
 		}
 	}
 	

@@ -8,9 +8,9 @@ import be.kuleuven.cs.som.annotate.*;
  * @author Peter Lacko, Sander Switsers
  *
  */
-public class Mazub {
+public class Mazub_Peter {
 	
-	public Mazub(int x_pos, int y_pos, Sprite[] sprites){
+	public Mazub_Peter(int x_pos, int y_pos, Sprite[] sprites){
 		this.setPositionAt((double) x_pos, 1);
 		this.setPositionAt((double) y_pos, 2);
 		this.images = sprites;
@@ -201,7 +201,7 @@ public class Mazub {
 	}
 	
 	public double getHorizontalAcceleration() {
-		return Mazub.HORIZONTAL_ACCELERATION;
+		return Mazub_Peter.HORIZONTAL_ACCELERATION;
 	}
 	
 	public double getMaxHorizontalVelocity() {
@@ -500,7 +500,7 @@ public class Mazub {
 	 */
 	@Basic
 	public Double getVerticalAcceleration() {
-		return Mazub.VERTICAL_ACCELERATION;
+		return Mazub_Peter.VERTICAL_ACCELERATION;
 	}
 	
 	
