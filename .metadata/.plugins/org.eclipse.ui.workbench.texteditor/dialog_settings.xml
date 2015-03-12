@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Mazub" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="movingInTwoDirections" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="mazub"/>
-			<item value="class"/>
-			<item value="m"/>
-			<item value="direction"/>
-			<item value="endMove"/>
-			<item value="computenewhorizontalve"/>
-			<item value="computenewhor"/>
-			<item value="StoppingDirection"/>
+			<item value="movingInTwoDirections"/>
+			<item value="index"/>
+			<item value="sprite"/>
+			<item value="hasMoved"/>
+			<item value="hasmoved"/>
+			<item value="timeSinceStep"/>
+			<item value="timeSinceEndMove"/>
+			<item value="images"/>
 		</list>
 		<list key="replacehistory">
-			<item value="stoppingDirection"/>
-			<item value="movingDirection"/>
-			<item value="computeNewHorizontalPOsition"/>
-			<item value="computeNewHorizontalVelocity"/>
-			<item value="(MovingDirection() == MovementDirection.RIGHT) || (MovingDirection() == MovementDirection.LEFT)"/>
-			<item value="computeNewVerticalVelocityAfter"/>
-			<item value="computeNewVerticalPositionAfter"/>
-			<item value="computeVerticalVelocityAfter"/>
+			<item value="movingInTwoDirections()"/>
+			<item value="getSprite()"/>
+			<item value="hasMoved()"/>
+			<item value="timeSinceEndMove()"/>
+			<item value="getImageAt("/>
+			<item value="getNbImages()"/>
+			<item value="isDucked()"/>
+			<item value="isJumping()"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

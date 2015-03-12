@@ -16,13 +16,8 @@ public class Facade implements IFacade{
 		return mazub.getIntPosition();
 	}
 	
-//	public double[] getVelocity(Mazub mazub){
-//	double[] vel = {mazub.getHorizontalVelocity(), mazub.getVerticalVelocity()};
-//	return vel;
-//}
-	
 	public double[] getVelocity(Mazub mazub){
-	double[] vel = {mazub.getnumOrientation(), mazub.getnumOrientation()};
+	double[] vel = {mazub.getHorizontalVelocity(), mazub.getVerticalVelocity()};
 	return vel;
 	}
 	
