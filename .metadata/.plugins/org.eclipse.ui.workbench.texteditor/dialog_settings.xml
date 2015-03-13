@@ -2,37 +2,37 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="isInAir" key="selection"/>
+		<item value="getHasMovedIn()" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="isinair"/>
-			<item value="movingInTwoDirections"/>
-			<item value="index"/>
-			<item value="sprite"/>
+			<item value="hasMovedIn()"/>
 			<item value="hasMoved"/>
-			<item value="hasmoved"/>
-			<item value="timeSinceStep"/>
-			<item value="timeSinceEndMove"/>
+			<item value="timeSinceStep()"/>
+			<item value="timeSinceEndMove()"/>
+			<item value="fuzzy"/>
+			<item value="abs"/>
+			<item value="index()"/>
+			<item value="lidNbRunningCycle"/>
 		</list>
 		<list key="replacehistory">
+			<item value="getHasMovedIn()"/>
+			<item value="hasMovedIn"/>
+			<item value="getTimeSinceStep()"/>
+			<item value="getTimeSinceEndMove()"/>
+			<item value="gettimeSinceEndMove()"/>
+			<item value="getIndex()"/>
 			<item value="movingInTwoDirections()"/>
 			<item value="getSprite()"/>
-			<item value="hasMoved()"/>
-			<item value="timeSinceEndMove()"/>
-			<item value="getImageAt("/>
-			<item value="getNbImages()"/>
-			<item value="isDucked()"/>
-			<item value="isJumping()"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="305" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="444" key="DIALOG_HEIGHT"/>
-		<item value="1566" key="DIALOG_X_ORIGIN"/>
-		<item value="280" key="DIALOG_Y_ORIGIN"/>
+		<item value="1140" key="DIALOG_X_ORIGIN"/>
+		<item value="243" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
