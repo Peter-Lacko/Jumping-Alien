@@ -18,112 +18,6 @@ public class Mazub {
 		this.setSprite(getImageAt(1));
 	}	
 	
-	/**
-	 * A method to return the size of the character's sprite variable.
-	 * @return return the width and Height of the current sprite in an array.
-	 */
-	public int[] getSize(){
-		int[] sizes = {0,0};
-		sizes[0] = getSprite().getWidth();
-		sizes[1] = getSprite().getHeight();
-		return sizes;
-	}
-	
-	/**
-	 * A method to determine whether to use the left or right version of a sprite.
-	 * @pre number is in the range of images
-	 * 		| (number >=0) && (number < getNbImages())
-	 * @param number
-	 * 			the index in images where the left and right version of the sprite to be returned, is stored.
-	 * @return return the correct version of the sprite, depending on the state of the character.
-	 */
-	public Sprite leftOrRightSprite(int number){
-		if (! movingInTwoDirections()){
-			if ((isMovingLeft()) || (hasMoved() == MovementDirection.LEFT)){
-				return getImageAt(number + 2);
-			} else{
-				return getImageAt(number + 1);
-			}
-		}
-		else{
-			if (hasMoved() == MovementDirection.LEFT)
-				return getImageAt(number + 2);
-			else
-				return getImageAt(number + 1);
-		}
-	}
-	
-	/**
-	 * A method that returns the Sprite for the character with its current variables.
-	 * @return The new Sprite is determined depending on the state of the character.
-	 */
-	public Sprite getCurrentSprite(){
-		if ((isInAir()) && (this.hasMoved() != MovementDirection.NONE) && (! isDucked())){
-			return leftOrRightSprite(4);
-		} else if ((isDucked()) && (this.hasMoved() != MovementDirection.NONE)){
-			return leftOrRightSprite(6);
-		} else if (this.hasMoved() != MovementDirection.NONE){
-			return getCurrentWalkCycleSprite();
-		} else if ((isDucked()) && (this.hasMoved() == MovementDirection.NONE)){
-			return getImageAt(2);
-		} else{
-			return getImageAt(1);
-		}
-	}
-	
-	private Sprite getCurrentWalkCycleSprite() {
-		if (timeSinceStep() > 0.03){
-			if (index() < getNbRunningCycle()-1)
-				setIndex(index() + 1);
-			else 
-				setIndex(0);
-			setTimeSinceStep(0.0);
-		}
-		if (movingInTwoDirections())
-			return leftOrRightSprite(2);
-		else if (isMovingRight())
-			return getImageAt(9+index());
-		else if (isMovingLeft()) 
-			return getImageAt(9+getNbRunningCycle()+index());
-		else {
-			return leftOrRightSprite(2);
-		}
-	}
-
-	public Sprite getSprite() {
-		return this.sprite;
-	}
-	
-	public void setSprite(Sprite sprite) {
-		this.sprite = sprite;
-	}
-	
-	/**
-	 * A variable that stores the current sprite of the character.
-	 */
-	private Sprite sprite;
-	
-	public int index() {
-		return this.index;
-	}
-	
-	public void setIndex(int number) {
-		this.index = number;
-	}
-	/**
-	 * A variable to determine at which sprite in the run cycle the character is.
-	 */
-	private int index = 0;
-	
-	public int getNbRunningCycle() {
-		return this.nbRunningCycle;
-	}
-	
-	/**
-	 * A variable that stores how many sprites there are for a running animation (left or right).
-	 */
-	private final int nbRunningCycle ;
-	
 	public int getNbImages() {
 		return getImages().length;
 	}
@@ -476,43 +370,6 @@ public class Mazub {
 	}
 	
 	/**
-	 * Compute the new vertical speed after a given duration.
-	 * @param duration
-	 * 			The duration after after which to calculate the new vertical speed.
-	 * @post	if the character is in the air and is going upward but no longer jumping the new vertical
-	 * 			velocity is zero otherwise the new vertical velocity is the old one plus the acceleration
-	 * 			times the duration
-	 * 			if the character is on the ground and jumping the new velocity is the initial velocity of
-	 * 			the character if it's not jumping the new velocity is zero
-	 * 			| if isInAir()
-	 * 			|	if not isJumping() && getVertivalVelocity > 0
-	 * 			|		then new.getVerticalVelocity() = 0
-	 * 			|	else new.getVerticalVelocity() = getVerticalVelocity()+getVerticalAcceleration()*duration
-	 * 			| else 
-	 * 			|	if isJumping()
-	 * 			|		then new.getVerticalVelocity() = getInitVerticalVelocity()
-	 * 			|	else new.getVerticalVelocity() = 0
-	 */
-	public void computeNewVerticalVelocityAfter(double duration){
-		if (isInAir() == true){
-			if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
-				setVerticalVelocity(0.0);
-			}
-			else{
-				setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
-			}
-		}
-		else{
-			if (isJumping()){
-				setVerticalVelocity(getInitVerticalVelocity());
-			}
-			else{
-				setVerticalVelocity(0.0);
-			}
-		}
-	}
-
-	/**
 	 * A variable that returns whether a character is in the air or not
 	 * @return	true if the character is in the air
 	 * 			else false
@@ -598,14 +455,57 @@ public class Mazub {
 		this.isJumping = true;
 	}
 	
+	
 	/**
 	 * value stating whether the character is jumping
 	 */
 	private boolean isJumping = false;
-
+		
+	/**
+	 * Compute the new vertical speed after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical speed.
+	 * @post	if the character is in the air and is going upward but no longer jumping the new vertical
+	 * 			velocity is zero otherwise the new vertical velocity is the old one plus the acceleration
+	 * 			times the duration
+	 * 			if the character is on the ground and jumping the new velocity is the initial velocity of
+	 * 			the character if it's not jumping the new velocity is zero
+	 * 			| if isInAir()
+	 * 			|	if not isJumping() && getVertivalVelocity > 0
+	 * 			|		then new.getVerticalVelocity() = 0
+	 * 			|	else new.getVerticalVelocity() = getVerticalVelocity()+getVerticalAcceleration()*duration
+	 * 			| else 
+	 * 			|	if isJumping()
+	 * 			|		then new.getVerticalVelocity() = getInitVerticalVelocity()
+	 * 			|	else new.getVerticalVelocity() = 0
+	 */
+	public void computeNewVerticalVelocityAfter(double duration){
+		if (isInAir() == true){
+			if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0, getVerticalVelocity()))){
+				setVerticalVelocity(0.0);
+			}
+			else{
+				setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
+			}
+		}
+		else{
+			if (isJumping()){
+				setVerticalVelocity(getInitVerticalVelocity());
+			}
+			else{
+				setVerticalVelocity(0.0);
+			}
+		}
+	}
+	
 	public boolean isDucked() {
 		return this.isDucked;
 	}
+	
+	/**
+	 * a boolean stating whether the character is ducked
+	 */
+	private boolean isDucked = false;
 
 	/**
 	 * A method that starts the character's duck
@@ -627,39 +527,6 @@ public class Mazub {
 	public void endDuck(){
 		this.isDucked = false;
 		this.setMaxHorizontalVelocity(3.0);
-	}
-	
-	/**
-	 * a boolean stating whether the character is ducked
-	 */
-	private boolean isDucked = false;
-	
-	/**
-	 * Return the orientation of the Mazub character as an (enumerated) MovementDirection.
-	 * 	The orientation is the direction Mazub is facing or moving.
-	 */
-	public MovementDirection getEnumedOrientation() {
-		if (this.isMovingLeft() ^ this.isMovingRight()){
-			if (this.isMovingLeft())
-				return MovementDirection.LEFT;
-			else
-				return MovementDirection.RIGHT;
-		}
-		else
-			return hasMoved();
-	}
-	
-	/**
-	 * Return the orientation of the Mazub character as a String.
-	 * 	The orientation is the direction Mazub is facing or moving.
-	 */
-	public String getOrientation() {
-		if (this.getEnumedOrientation() == MovementDirection.LEFT)
-			return "left";
-		else if (this.getEnumedOrientation() == MovementDirection.RIGHT)
-			return "right";
-		else
-			return "none";
 	}
 	
 	public double timeSinceEndMove() {
@@ -697,7 +564,41 @@ public class Mazub {
 	 * A variable that states in which direction the character has recently moved.
 	 */
 	private MovementDirection hasMoved = MovementDirection.NONE;
-
+	
+	public Sprite getSprite() {
+		return this.sprite;
+	}
+	
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
+	}
+	
+	/**
+	 * A variable that stores the current sprite of the character.
+	 */
+	private Sprite sprite;
+	
+	public int index() {
+		return this.index;
+	}
+	
+	public void setIndex(int number) {
+		this.index = number;
+	}
+	/**
+	 * A variable to determine at which sprite in the run cycle the character is.
+	 */
+	private int index = 0;
+	
+	public int getNbRunningCycle() {
+		return this.nbRunningCycle;
+	}
+	
+	/**
+	 * A variable that stores how many sprites there are for a running animation (left or right).
+	 */
+	private final int nbRunningCycle ;
+	
 	public boolean movingInTwoDirections() {
 		return this.movingInTwoDirections;
 	}
@@ -707,6 +608,78 @@ public class Mazub {
 	}
 	
 	private boolean movingInTwoDirections = false;
+	
+	/**
+	 * A method to return the size of the character's sprite variable.
+	 * @return return the width and Height of the current sprite in an array.
+	 */
+	public int[] getSize(){
+		int[] sizes = {0,0};
+		sizes[0] = getSprite().getWidth();
+		sizes[1] = getSprite().getHeight();
+		return sizes;
+	}
+	
+	/**
+	 * A method to determine whether to use the left or right version of a sprite.
+	 * @pre number is in the range of images
+	 * 		| (number >=0) && (number < getNbImages())
+	 * @param number
+	 * 			the index in images where the left and right version of the sprite to be returned, is stored.
+	 * @return return the correct version of the sprite, depending on the state of the character.
+	 */
+	public Sprite leftOrRightSprite(int number){
+		if (! movingInTwoDirections()){
+			if ((isMovingLeft()) || (hasMoved() == MovementDirection.LEFT)){
+				return getImageAt(number + 2);
+			} else{
+				return getImageAt(number + 1);
+			}
+		}
+		else{
+			if (hasMoved() == MovementDirection.LEFT)
+				return getImageAt(number + 2);
+			else
+				return getImageAt(number + 1);
+		}
+	}
+	
+	/**
+	 * A method that returns the Sprite for the character with its current variables.
+	 * @return The new Sprite is determined depending on the state of the character.
+	 */
+	public Sprite getCurrentSprite(){
+		if ((isInAir()) && (this.hasMoved() != MovementDirection.NONE) && (! isDucked())){
+			return leftOrRightSprite(4);
+		} else if ((isDucked()) && (this.hasMoved() != MovementDirection.NONE)){
+			return leftOrRightSprite(6);
+		} else if (this.hasMoved() != MovementDirection.NONE){
+			return getCurrentWalkCycleSprite();
+		} else if ((isDucked()) && (this.hasMoved() == MovementDirection.NONE)){
+			return getImageAt(2);
+		} else{
+			return getImageAt(1);
+		}
+	}
+	
+	private Sprite getCurrentWalkCycleSprite() {
+		if (timeSinceStep() > 0.03){
+			if (index() < getNbRunningCycle()-1)
+				setIndex(index() + 1);
+			else 
+				setIndex(0);
+			setTimeSinceStep(0.0);
+		}
+		if (movingInTwoDirections())
+			return leftOrRightSprite(2);
+		else if (isMovingRight())
+			return getImageAt(9+index());
+		else if (isMovingLeft()) 
+			return getImageAt(9+getNbRunningCycle()+index());
+		else {
+			return leftOrRightSprite(2);
+		}
+	}
 	
 	/**
 	 * Check whether the given MovementDirection is a valid one.
@@ -721,7 +694,37 @@ public class Mazub {
 		return (direction == MovementDirection.NONE) || (direction == MovementDirection.LEFT) ||
 				(direction == MovementDirection.RIGHT);
 	}
-
+	
+	
+	/**
+	 * Return the orientation of the Mazub character as an (enumerated) MovementDirection.
+	 * 	The orientation is the direction Mazub is facing or moving.
+	 */
+	public MovementDirection getEnumedOrientation() {
+		if (this.isMovingLeft() ^ this.isMovingRight()){
+			if (this.isMovingLeft())
+				return MovementDirection.LEFT;
+			else
+				return MovementDirection.RIGHT;
+		}
+		else
+			return hasMoved();
+	}
+	
+	/**
+	 * Return the orientation of the Mazub character as a String.
+	 * 	The orientation is the direction Mazub is facing or moving.
+	 */
+	public String getOrientation() {
+		if (this.getEnumedOrientation() == MovementDirection.LEFT)
+			return "left";
+		else if (this.getEnumedOrientation() == MovementDirection.RIGHT)
+			return "right";
+		else
+			return "none";
+	}
+	
+	
 	/**
 	 * Return the number of coordinates ascribed to this character.
 	 * @throws NullPointerException
