@@ -35,11 +35,11 @@ public class PartialFacadeTest {
 		Mazub alien = facade.createMazub(0, 0, spriteArrayForSize(2, 2));
 		facade.startMoveRight(alien);
 		// maximum speed reached after 20/9 seconds
-		for (int i = 0; i < 10; i++) {
-			facade.advanceTime(alien, 0.2 /9);
+		for (int i = 0; i < 100; i++) {
+			facade.advanceTime(alien, 0.2 / 9);
 		}
 
-		assertArrayEquals(doubleArray(3.0, 0), facade.getVelocity(alien),
+		assertArrayEquals(doubleArray(3, 0), facade.getVelocity(alien),
 				Util.DEFAULT_EPSILON);
 	}
 
@@ -70,12 +70,5 @@ public class PartialFacadeTest {
 		assertEquals(sprites[8+m], facade.getCurrentSprite(alien));
 	}
 
-	@Test
-	public void testGetSize(){
-		IFacade facade = new Facade();
-		int m = 10;
-		Sprite[] sprites = spriteArrayForSize(66, 92, 10 + 2 * m);
-		Mazub alien = facade.createMazub(0, 0, sprites);
-		assertArrayEquals(intArray(66,92), facade.getSize(alien));
-	}
+	// TODO: add more tests
 }
