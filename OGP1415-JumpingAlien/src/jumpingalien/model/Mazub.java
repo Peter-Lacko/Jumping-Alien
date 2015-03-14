@@ -254,7 +254,7 @@ public class Mazub {
 		double newPosition;
 		newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
 		if (this.isAccelerating()){
-			newPosition += 0.5*getHorizontalAcceleration()*duration*duration;
+			newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
 		}
 		if (isValidPositionAt(newPosition,1)){
 			this.setPositionAt(newPosition, 1);
@@ -303,34 +303,36 @@ public class Mazub {
 	public void computeNewHorizontalVelocityAfter(double duration) {
 		double newVelocity = 0.0;
 		if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())){
-			computeNewHorizontalVelocityMoving(duration, newVelocity);
+			newVelocity = computeNewHorizontalVelocityMoving(duration);
 		}
 		else {
 			newVelocity = 0.0;
 			setHorizontalVelocity(newVelocity);
 		}
-		if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (newVelocity < getMaxHorizontalVelocity())){
+		if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (! Util.fuzzyGreaterThanOrEqualTo(
+				Math.abs(newVelocity),getMaxHorizontalVelocity()))){
 			this.setAccelerating(true);
 		}
 		else{ this.setAccelerating(false);
 		}
 	}
 	
-	public void computeNewHorizontalVelocityMoving(double duration, double newVelocity){
-		int directionModifier = 1;
-		if (isMovingLeft()){
-			directionModifier  = -1;
-		}
-		if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), getInitHorizontalVelocity())){
-			newVelocity = directionModifier*getInitHorizontalVelocity() + duration*directionModifier*getHorizontalAcceleration();
-			newVelocity = Math.min(newVelocity,getMaxHorizontalVelocity());
-			setHorizontalVelocity(newVelocity);
+	public double computeNewHorizontalVelocityMoving(double duration){
+		double newVelocity = 0.0;
+		if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), 
+				Math.abs(getInitHorizontalVelocity()))){
+			newVelocity = getInitHorizontalVelocity() + 
+					duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
 		}
 		else {
-		newVelocity = getHorizontalVelocity() + duration*directionModifier*getHorizontalAcceleration();
-		newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-		setHorizontalVelocity(newVelocity*directionModifier);
+			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
 		}
+		if (isMovingLeft())
+			newVelocity = -1.0*newVelocity;
+		setHorizontalVelocity(newVelocity);
+		return newVelocity;
 	}
 	
 	/**
@@ -361,11 +363,16 @@ public class Mazub {
 	private double currHorizontalVelocity = 0.0;
 	
 	public double getHorizontalAcceleration() {
-		return Mazub.HORIZONTAL_ACCELERATION;
+		if (this.isAccelerating() && this.isMovingLeft() && (! this.movingInTwoDirections()))
+			return -Mazub.HORIZONTAL_ACCELERATION;
+		else if (this.isAccelerating() && this.isMovingRight() && (! this.movingInTwoDirections()))
+			return Mazub.HORIZONTAL_ACCELERATION;
+		else
+			return 0.0;
 	}
 
 	public boolean isValidHorizontalAcceleration(double acceleration) {
-		return (Util.fuzzyGreaterThanOrEqualTo(acceleration, 0.0) && (! Double.isNaN(acceleration)));
+		return (! Double.isNaN(acceleration));
 	}
 	
 	/**
@@ -381,7 +388,7 @@ public class Mazub {
 	
 	public boolean canHaveAsMaxHorizontalVelocity(double velocity) {
 		return (Util.fuzzyGreaterThanOrEqualTo(this.getMaxHorizontalVelocity(), 
-				this.getInitHorizontalVelocity()) && (! Double.isNaN(velocity)));
+				Math.abs(this.getInitHorizontalVelocity())) && (! Double.isNaN(velocity)));
 	}
 	
 	public void setMaxHorizontalVelocity(double velocity){
@@ -389,16 +396,19 @@ public class Mazub {
 	}
 
 	/**
-	 * Variable reflecting the maximal horizontal velocity of a character.
+	 * Variable reflecting the maximal horizontal velocity of a character, in absolute value.
 	 */
 	private double maxHorizontalVelocity = 3.0;
 	
 	public double getInitHorizontalVelocity() {
-		return this.INIT_HORIZONTAL_VELOCITY;
+		if (this.isMovingLeft())
+			return -this.INIT_HORIZONTAL_VELOCITY;
+		else
+			return this.INIT_HORIZONTAL_VELOCITY;
 	}
 	
 	public boolean canHaveAsInitHorizontalVelocity(double velocity) {
-		return (Util.fuzzyGreaterThanOrEqualTo(velocity, 0.0) && (! Double.isNaN(velocity)));
+		return (! Double.isNaN(velocity));
 	}
 	
 	/**
@@ -641,11 +651,14 @@ public class Mazub {
 	 */
 	@Basic
 	public Double getVerticalAcceleration() {
-		return Mazub.VERTICAL_ACCELERATION;
+		if (this.isInAir())
+			return Mazub.VERTICAL_ACCELERATION;
+		else
+			return 0.0;
 	}
 	
 	public boolean isValidVerticalAcceleration(double acceleration) {
-		return ((! Util.fuzzyGreaterThanOrEqualTo(acceleration, 0.0)) && (! Double.isNaN(acceleration)));
+		return ((Util.fuzzyGreaterThanOrEqualTo(0.0, acceleration)) && (! Double.isNaN(acceleration)));
 	}
 	
 	/**
