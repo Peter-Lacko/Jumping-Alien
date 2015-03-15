@@ -43,7 +43,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author Peter Lacko, Sander Switsers
  * @version 1.0
  */
-public class Mazub_Peter {
+public class Mazub {
 	
 	// defensive
 	/**
@@ -197,8 +197,9 @@ public class Mazub_Peter {
 		return getImages().length;
 	}
 	
+	//Goed? of niet?
 	public static boolean isValidNbImages(int nbImages){
-		return ((nbImages >= 10) && (nbImages % 2 == 0));
+		return (nbImages > 1);
 	}
 	
 	public Sprite getImageAt(int index) {
@@ -230,8 +231,8 @@ public class Mazub_Peter {
 		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 			throw new IllegalArgumentException();
 		this.determineDoubleDirections();
-		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewHorizontalVelocityAfter(duration);
+		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewVerticalPositionAfter(duration);
 		this.computeNewVerticalVelocityAfter(duration);
 		if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))

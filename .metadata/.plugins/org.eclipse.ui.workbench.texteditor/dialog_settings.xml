@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="getHasMovedIn()" key="selection"/>
+		<item value="accelnu" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="accelnu"/>
+			<item value="setacc"/>
+			<item value="setacce"/>
+			<item value="isAcce"/>
+			<item value="setIsacce"/>
 			<item value="hasMovedIn()"/>
 			<item value="hasMoved"/>
 			<item value="timeSinceStep()"/>
-			<item value="timeSinceEndMove()"/>
-			<item value="fuzzy"/>
-			<item value="abs"/>
-			<item value="index()"/>
-			<item value="lidNbRunningCycle"/>
 		</list>
 		<list key="replacehistory">
 			<item value="getHasMovedIn()"/>

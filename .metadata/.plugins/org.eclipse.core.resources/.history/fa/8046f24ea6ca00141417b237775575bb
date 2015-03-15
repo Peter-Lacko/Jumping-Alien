@@ -43,7 +43,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author Peter Lacko, Sander Switsers
  * @version 1.0
  */
-public class Mazub_Peter {
+public class Mazub {
 	
 	// defensive
 	/**

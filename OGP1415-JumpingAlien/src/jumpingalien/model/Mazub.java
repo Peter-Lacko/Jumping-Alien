@@ -45,7 +45,32 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class Mazub {
 	
-	public Mazub(int x_pos, int y_pos, Sprite[] sprites){
+	// defensive
+	/**
+	 * Initialize the Mazub character with given x-coordinate, y-coordinate and sprites.
+	 * @param x_pos
+	 * 			the initial x-coordinate for this character.
+	 * @param y_pos
+	 * 			the initial y-coordinate for this character.
+	 * @param sprites
+	 * 			the sprites used to display the mazub character.
+	 * @post	The character starts at the given position.
+	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
+	 * @post	The character's image set is equal to the given one.
+	 * 			| new.getImages().equals(images)
+	 * @post	The amount of running cycle images is equal to the total amount of images divided by two,
+	 * 			minus four
+	 * 			| new.getnbRunningCycle() = getNbImages()/2-4;
+	 * @post	The current sprite is the first sprite in the given array of sprites.
+	 * 			| new.getSprite().equals(sprites[0])
+	 */
+	public Mazub(int x_pos, int y_pos, Sprite[] sprites) throws IllegalArgumentException{
+		if (! isValidPositionAt((double) x_pos, 1))
+			throw new IllegalArgumentException("Illegal x-coordinate!");
+		if (! isValidPositionAt((double) y_pos, 2))
+			throw new IllegalArgumentException("Illegal y-coordinate!");
+		if (! isValidNbImages(sprites.length))
+			throw new IllegalArgumentException("Illegal sprite array length!");
 		this.setPositionAt((double) x_pos, 1);
 		this.setPositionAt((double) y_pos, 2);
 		this.images = sprites.clone();
@@ -208,8 +233,8 @@ public class Mazub {
 		this.determineDoubleDirections();
 		this.computeNewHorizontalVelocityAfter(duration);
 		this.computeNewHorizontalPositionAfter(duration);
-		this.computeNewVerticalPositionAfter(duration);
 		this.computeNewVerticalVelocityAfter(duration);
+		this.computeNewVerticalPositionAfter(duration);
 		if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
 			setTimeSinceEndMove(getTimeSinceEndMove() + duration);
 		else
