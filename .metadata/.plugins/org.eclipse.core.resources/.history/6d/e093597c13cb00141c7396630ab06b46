@@ -484,22 +484,6 @@ public class Mazub {
 	 * 			valid, the new character is at the highest possible position.
 	 * 			|else if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)))
 	 * 			|	new.getPositionAt(1) = (double)X_MAX
-	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
-	 * 			valid and the new position is smaller than the smallest possible position, the new
-	 * 			character is at the smallest possible position.
-	 * 			|if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)) &&
-	 * 			|	((int)newPositionAccelerating < X_MIN))
-	 * 			|	new.getPositionAt(1) = (double)X_MIN
-	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
-	 * 			valid, the new character is at the highest possible position.
-	 * 			|else if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)))
-	 * 			|	new.getPositionAt(1) = (double)X_MAX
-	 * @effect	if the new position is at the lowest position, the character stops moving left.
-	 * 			| if (new.getPositionAt(1) == (double)X_MIN)
-	 * 			|	this.endMove("left")
-	 * @effect	if the new position is at the highest position, the character stops moving right.
-	 * 			| if (new.getPositionAt(1) == (double)X_MAX)
-	 * 			|	this.endMove("right")
 	 */
 	public void computeNewHorizontalPositionAfter(double duration) {
 		double newPosition;
