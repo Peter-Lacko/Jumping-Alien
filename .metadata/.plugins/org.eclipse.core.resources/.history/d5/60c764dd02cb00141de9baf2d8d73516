@@ -367,8 +367,8 @@ public class Mazub {
 		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 			throw new IllegalArgumentException();
 		this.determineDoubleDirections();
-		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewHorizontalVelocityAfter(duration);
+		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewVerticalVelocityAfter(duration);
 		this.computeNewVerticalPositionAfter(duration);
 		if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
