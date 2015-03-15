@@ -6792,3 +6792,51 @@ This warning can be switched off on the Team > Git > Confirmations and Warnings 
 
 !ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:39:42.071
 !MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@serialData'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.011
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.javadoc.JavadocInlineTagCompletionProposal' ('{@code}'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.014
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@deprecated'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.017
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.javadoc.JavadocInlineTagCompletionProposal' ('{@value}'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.020
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@category'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.022
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@return'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.025
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.javadoc.JavadocInlineTagCompletionProposal' ('{@linkplain}'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.028
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.javadoc.JavadocInlineTagCompletionProposal' ('{@inheritDoc}'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.030
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@see'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.033
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@param'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.035
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.javadoc.JavadocInlineTagCompletionProposal' ('{@docRoot}'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.037
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@serialData'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.039
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@exception'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.043
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.javadoc.JavadocInlineTagCompletionProposal' ('{@literal}'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.045
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@throws'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.049
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@since'). Returning original proposal instead.
+
+!ENTRY org.eclipse.m2e.logback.appender 2 0 2015-03-15 11:56:35.051
+!MESSAGE Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.javadoc.JavadocInlineTagCompletionProposal' ('{@link}'). Returning original proposal instead.

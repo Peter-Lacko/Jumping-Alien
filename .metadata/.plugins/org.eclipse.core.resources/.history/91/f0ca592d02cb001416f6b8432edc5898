@@ -324,16 +324,6 @@ public class Mazub {
 		return images[index-1];
 	}
 	
-	/**
-	 * Return the character's array of sprites
-	 * @return the length of the returned array is equal to the number of sprites this character has.
-	 * 			| result.length == getNbImages()
-	 * @return Each sprite in the array is equal to the sprite ascribed to this character at the
-	 * 			corresponding index.
-	 * 			| for i in 0..result.length-1:
-	 * 			|	result[i].equals(getImageAt(i+1))
-	 */
-	@Immutable
 	public Sprite[] getImages(){
 		return this.images.clone();
 	}
