@@ -13,33 +13,35 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidNbRunningCycle(this.getNbRunningCycle()) 
  * @invar	The amount of images must be valid.
  * 			| isValidNbImages(getNbImages())
+ * @invar	each sprite from the images array must be a valid sprite
+ * 			| hasProperSprites(getImages())
  * @invar	The current horizontal Velocity must be valid.
- * 			| canHaveAsHorizontalVelocity(this.getHorizontalVelocity())
+ * 			| canHaveAsHorizontalVelocity(getHorizontalVelocity())
  * @invar	The saved horizontal acceleration must be valid.
- * 			| isValidHorizontalAcceleration(this.getHorizontalAcceleration())
+ * 			| isValidHorizontalAcceleration(getHorizontalAcceleration())
  * @invar	The maximum horizontal velocity must be valid.
- * 			| canHaveAsMaxHorizontalVelocity(this.getMaxHorizontalVelocity())
+ * 			| canHaveAsMaxHorizontalVelocity(getMaxHorizontalVelocity())
  * @invar	The initial horizontal velocity must be valid.
- * 			| canHaveAsInitHorizontalVelocity(this.getInitHorizontalVelocity())
+ * 			| canHaveAsInitHorizontalVelocity(getInitHorizontalVelocity())
  * @invar	The current vertical Velocity must be valid.
- * 			| canHaveAsVerticalVelocity(this.getVerticalVelocity())
+ * 			| canHaveAsVerticalVelocity(getVerticalVelocity())
  * @invar	The initial vertical velocity must be valid.
- * 			| canHaveAsInitVerticalVelocity(this.getInitVerticalVelocity())
+ * 			| canHaveAsInitVerticalVelocity(getInitVerticalVelocity())
  * @invar	The saved vertical acceleration must be valid.
- * 			| isValidVerticalAcceleration(this.getVerticalAcceleration())
+ * 			| isValidVerticalAcceleration(getVerticalAcceleration())
  * @invar	The time since a move has ended must be valid.
- * 			| isValidTimeSinceEndMove(this.getTimeSinceEndMove())
+ * 			| isValidTimeSinceEndMove(getTimeSinceEndMove())
  * @invar	The time since a previous step (or running cycle frame) must be valid.
- * 			| isValidTimeSinceStep(this.getTimeSinceStep())
+ * 			| isValidTimeSinceStep(getTimeSinceStep())
  * @invar	The direction the character has moved must be valid.
- * 			| isValidDirection(this.getHasMovedIn())
+ * 			| isValidDirection(getHasMovedIn())
  * @invar	the amount of coordinates must be valid.
- * 			| isValidNbPosition(this.getNbPosition())
+ * 			| isValidNbPosition(getNbPosition())
  * @invar	each coordinate must be a valid coordinate in its axis.
  * 			| for i in Position:
- * 			|	isValidPositionAt(this.getPositionAt(i),i)
+ * 			|	isValidPositionAt(getPositionAt(i),i)
  * @invar	the given field must be valid.
- * 			| isProperField(this.FIELD_SIZE);
+ * 			| isProperField(FIELD_SIZE);
  * @author Peter Lacko, Sander Switsers
  * @version 1.0
  */
@@ -53,7 +55,7 @@ public class Mazub {
 	 * @param y_pos
 	 * 			the initial y-coordinate for this character.
 	 * @param sprites
-	 * 			the sprites used to display the mazub character.
+	 * 			the array of sprites used to display the mazub character.
 	 * @post	The character starts at the given position.
 	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
 	 * @post	The character's image set is equal to the given one.
@@ -63,6 +65,18 @@ public class Mazub {
 	 * 			| new.getnbRunningCycle() = getNbImages()/2-4;
 	 * @post	The current sprite is the first sprite in the given array of sprites.
 	 * 			| new.getSprite().equals(sprites[0])
+	 * @throws IllegalArgumentException
+	 * 			The given x coordinate is not valid
+	 * 			|(! isValidPositionAt((double) x_pos, 1))
+	 * @throws IllegalArgumentException
+	 * 			The given y coordinate is not valid
+	 * 			|(! isValidPositionAt((double) y_pos, 2))
+	 * @throws IllegalArgumentException
+	 * 			The given array of sprites has an invalid size.
+	 * 			|(! isValidNbImages(sprites.length))
+	 * @throws IllegalArgumentException
+	 * 			There are one or more invalid sprites in the given array of sprites.
+	 * 			|(! hasProperSprites(sprites))
 	 */
 	public Mazub(int x_pos, int y_pos, Sprite[] sprites) throws IllegalArgumentException{
 		if (! isValidPositionAt((double) x_pos, 1))
@@ -71,6 +85,8 @@ public class Mazub {
 			throw new IllegalArgumentException("Illegal y-coordinate!");
 		if (! isValidNbImages(sprites.length))
 			throw new IllegalArgumentException("Illegal sprite array length!");
+		if (! hasProperSprites(sprites))
+			throw new IllegalArgumentException("Illegal sprite array!");
 		this.setPositionAt((double) x_pos, 1);
 		this.setPositionAt((double) y_pos, 2);
 		this.images = sprites.clone();
@@ -179,11 +195,27 @@ public class Mazub {
 		}
 	}
 
+	//nominal
+	/**
+	 * Return the stored sprite of this character.
+	 */
+	@Basic
 	public Sprite getSprite() {
 		return this.sprite;
 	}
 	
+	//nominal
+	/**
+	 * A method to set the character's sprite to the given sprite.
+	 * @pre the sprite must be effective
+	 * 		| (sprite != null)
+	 * @param sprite
+	 * 			The sprite that must be set as the character's sprite.
+	 * @post	The character's new sprite is equal to the given sprite.
+	 * 			| new.getSprite().equals(sprite)
+	 */
 	public void setSprite(Sprite sprite) {
+		assert (sprite != null);
 		this.sprite = sprite;
 	}
 	
@@ -192,15 +224,38 @@ public class Mazub {
 	 */
 	private Sprite sprite;
 	
+	/**
+	 * A method to return at which sprite in the run cycle the character is.
+	 */
+	@Basic
 	public int getIndex() {
 		return this.index;
 	}
 	
+	/**
+	 * Check whether the character can have the given index for its run cycle.
+	 * @param number
+	 * 			the number to be checked.
+	 * @return True if the index is bigger or equal to 0, and smaller than the amount of images for
+	 * 			the character's run cycle.
+	 * 			| result == ((number >= 0) && (number < this.getNbRunningCycle()))
+	 */
 	public boolean canHaveAsIndex(int number) {
 		return ((number >= 0) && (number < this.getNbRunningCycle()));
 	}
 	
+	//nominal
+	/**
+	 * Set the character's running cycle index to the given number
+	 * @pre The given number must be a valid index.
+	 * 		| canHaveAsIndex(number)
+	 * @param number
+	 * 			the number to set the index at.
+	 * @post	The new index is equal to the given number.
+	 * 			new.getIndex() == number
+	 */
 	public void setIndex(int number) {
+		assert canHaveAsIndex(number);
 		this.index = number;
 	}
 	
@@ -209,34 +264,76 @@ public class Mazub {
 	 */
 	private int index = 0;
 	
+	/**
+	 * A method to return how many sprites there are for a running animation.
+	 */
+	@Basic @Immutable
 	public int getNbRunningCycle() {
 		return this.nbRunningCycle;
 	}
 	
+	/**
+	 * Check whether the character can have the given number as the amount of images for the running cycle.
+	 * @param number
+	 * 			the number to check.
+	 * @return	true if the number is bigger than 0.
+	 * 			|(number > 0)
+	 */
 	public boolean isValidNbRunningCycle(int number){
 		return (number > 0);
 	}
 	
 	/**
-	 * A variable that stores how many sprites there are for a running animation (left or right).
+	 * A variable that stores how many sprites there are for a running animation (running to the left and
+	 * right have the same amount of sprites for the animation).
 	 */
 	private final int nbRunningCycle ;
 	
+	/**
+	 * Return the amount of sprites stored for this character.
+	 */
+	@Basic @Immutable
 	public int getNbImages() {
 		return getImages().length;
 	}
 	
-	//Goed? of niet?
+	/**
+	 * Check whether the given amount of images is valid.
+	 * @param nbImages
+	 * 			the amount to check.
+	 * @return true if the amount is bigger or equal to 10 and divisible by 2. (there are different states
+	 * 			of the character summing up to at least 10 different sprites total, and it must be divisible
+	 * 			by two due to the fact that there must be left and right sided sprites.)
+	 * 			| (nbImages >= 10) && (nbImages % 2 == 0)
+	 */
 	public static boolean isValidNbImages(int nbImages){
-		return (nbImages > 1);
+		return ((nbImages >= 10) && (nbImages % 2 == 0));
 	}
 	
+	//nominal
+	/**
+	 * Return the sprite from the character's array of sprites at the given index.
+	 * @param index
+	 * 			the index of the sprite to return.
+	 * @pre	The given index must be positive and may not exceed the total number of sprites that the
+	 * 		character has.
+	 * 		| (index > 0) && (index <= getNbImages())
+	 */
+	@Basic
 	public Sprite getImageAt(int index) {
 		return images[index-1];
 	}
 	
 	public Sprite[] getImages(){
 		return this.images.clone();
+	}
+	
+	public boolean hasProperSprites(Sprite[] images){
+		for (Sprite sprite: images){
+			if (sprite == null)
+				return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -367,8 +464,8 @@ public class Mazub {
 				Math.abs(newVelocity),getMaxHorizontalVelocity()))){
 			this.setAccelerating(true);
 		}
-		else{ this.setAccelerating(false);
-		}
+		else
+			this.setAccelerating(false);
 	}
 	
 	public double computeNewHorizontalVelocityMoving(double duration){
@@ -509,6 +606,7 @@ public class Mazub {
 			this.setMovingRight(true);
 		}
 		this.setTimeSinceEndMove(0.0);
+		this.setAccelerating(true);
 	}
 	
 	/**
@@ -707,7 +805,7 @@ public class Mazub {
 	 */
 	@Basic
 	public Double getVerticalAcceleration() {
-		if (this.isInAir())
+		if (this.isInAir() || this.isJumping())
 			return Mazub.VERTICAL_ACCELERATION;
 		else
 			return 0.0;
