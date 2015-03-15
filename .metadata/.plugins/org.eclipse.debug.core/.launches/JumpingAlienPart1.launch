@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/OGP1415-JumpingAlien/src-provided/jumpingalien/part1/JumpingAlienPart1.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="jumpingalien.part1.JumpingAlienPart1"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="OGP1415-JumpingAlien"/>
+</launchConfiguration>

@@ -187,7 +187,7 @@ public class PartialFacadeTest {
 		assertEquals(0.0, facade.getVelocity(alien)[0],Util.DEFAULT_EPSILON);
 		}
 
-	@Test(expected = ModelException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testToBigDt() {
 		IFacade facade = new Facade();
 		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
