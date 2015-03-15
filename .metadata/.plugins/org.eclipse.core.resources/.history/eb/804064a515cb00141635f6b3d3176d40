@@ -80,7 +80,7 @@ public class Mazub {
 	 */
 	public Mazub(int x_pos, int y_pos, Sprite[] sprites) throws IllegalArgumentException{
 		if (! isValidPositionAt((double) x_pos, 1))
-			throw new IllegalArgumentException("Illegal x-coordinate!");
+			throw new IllegalArgumentException("Illegalx-coordinate!");
 		if (! isValidPositionAt((double) y_pos, 2))
 			throw new IllegalArgumentException("Illegal y-coordinate!");
 		if (! isValidNbImages(sprites.length))

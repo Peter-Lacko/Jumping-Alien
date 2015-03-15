@@ -7,7 +7,6 @@ import jumpingalien.part1.facade.IFacade;
 import jumpingalien.model.Mazub;
 import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
-import jumpingalien.util.ModelException;
 import jumpingalien.common.sprites.*;
 
 import org.junit.Test;
@@ -145,17 +144,4 @@ public class PartialFacadeTest {
 		assertArrayEquals(intArray(68,70),facade.getSize(alien));
 	}
 	
-	@Test(expected = ModelException.class)
-	public void testCreatMazub(){
-		IFacade facade = new Facade();
-		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
-		Mazub alien = facade.createMazub(1024, 0, sprites);
-	}
-	
-	@Test(expected = ModelException.class)
-	public void test2CreatMazub(){
-		IFacade facade = new Facade();
-		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
-		Mazub alien = facade.createMazub(0, -1, sprites);
-	}
 }
