@@ -42,10 +42,8 @@ import be.kuleuven.cs.som.annotate.*;
  * 			|	isValidPositionAt(getPositionAt(i),i)
  * @invar	the given field must be valid.
  * 			| isProperField(FIELD_SIZE);
- * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
- * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @author Peter Lacko, Sander Switsers
  * @version 1.0
- * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
  */
 public class Mazub {
 	

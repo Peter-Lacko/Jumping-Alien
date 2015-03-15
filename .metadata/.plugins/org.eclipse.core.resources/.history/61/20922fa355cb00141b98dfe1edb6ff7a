@@ -45,7 +45,6 @@ import be.kuleuven.cs.som.annotate.*;
  * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
  * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
  * @version 1.0
- * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
  */
 public class Mazub {
 	

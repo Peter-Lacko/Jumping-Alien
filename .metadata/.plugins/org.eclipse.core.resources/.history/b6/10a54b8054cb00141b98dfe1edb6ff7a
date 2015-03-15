@@ -42,13 +42,12 @@ import be.kuleuven.cs.som.annotate.*;
  * 			|	isValidPositionAt(getPositionAt(i),i)
  * @invar	the given field must be valid.
  * 			| isProperField(FIELD_SIZE);
- * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
- * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @author Peter Lacko, Sander Switsers
  * @version 1.0
- * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
  */
 public class Mazub {
 	
+	// defensive
 	/**
 	 * Initialize the Mazub character with given x-coordinate, y-coordinate and sprites.
 	 * @param x_pos
@@ -96,6 +95,7 @@ public class Mazub {
 		this.setPositionAt((double) y_pos, 2);
 	}	
 	
+	//defensive
 	/**
 	 * A method to return the size of the character's sprite variable.
 	 * @return return the width and Height of the current sprite in an array.
@@ -108,6 +108,7 @@ public class Mazub {
 		return sizes;
 	}
 	
+	//nominal
 	/**
 	 * A method to determine whether to use the left or right version of a sprite.
 	 * @pre number is in the range of images (minus one).
@@ -138,6 +139,7 @@ public class Mazub {
 		}
 	}
 	
+	//nominal
 	/**
 	 * A method that returns the Sprite for the character with its current variables.
 	 * @return The new Sprite is determined depending on the state of the character.
@@ -163,6 +165,7 @@ public class Mazub {
 		}
 	}
 	
+	//nominal
 	/**
 	 * A method that returns the walking/running cycle sprite for the character. It possibly returns a
 	 * non-cycle sprite if the character is moving in both directions
@@ -193,6 +196,7 @@ public class Mazub {
 		}
 	}
 
+	//nominal
 	/**
 	 * Return the stored sprite of this character.
 	 */
@@ -201,6 +205,7 @@ public class Mazub {
 		return this.sprite;
 	}
 	
+	//nominal
 	/**
 	 * A method to set the character's sprite to the given sprite.
 	 * @pre the sprite must be effective
@@ -240,6 +245,7 @@ public class Mazub {
 		return ((number >= 0) && (number < this.getNbRunningCycle()));
 	}
 	
+	//nominal
 	/**
 	 * Set the character's running cycle index to the given number
 	 * @pre The given number must be a valid index.
@@ -305,6 +311,7 @@ public class Mazub {
 		return ((nbImages >= 10) && (nbImages % 2 == 0));
 	}
 	
+	//nominal
 	/**
 	 * Return the sprite from the character's array of sprites at the given index.
 	 * @param index
@@ -355,6 +362,7 @@ public class Mazub {
 	 */
 	private final Sprite[] images;
 	
+	//defensive
 	/**
 	 * A method to calculate the new position and velocity after a given duration of time. It also 
 	 * calculates the time since the previous frame of running animation and time since previous stop.
@@ -412,6 +420,7 @@ public class Mazub {
 		}
 	}
 	
+	//defensive
 	/**
 	 * A method to determine what actions should be taken if the character is moving in two directions
 	 * (when both keys are pushed). The character will not move in such a case.
@@ -518,6 +527,7 @@ public class Mazub {
 		}
 	}
 
+	//total
 	/**
 	 * Compute the new horizontal velocity after a given duration
 	 * @param duration
@@ -553,6 +563,7 @@ public class Mazub {
 			this.setAccelerating(false);
 	}
 	
+	//total
 	/**
 	 * Calculate the new horizontal velocity when the character is moving.
 	 * @param duration
@@ -640,6 +651,7 @@ public class Mazub {
 				(!Double.isNaN(velocity)));
 	}
 	
+	//nominal
 	/**
 	 * Set the horizontal velocity to the given velocity.
 	 * @param velocity
@@ -714,6 +726,7 @@ public class Mazub {
 				Math.abs(this.getInitHorizontalVelocity())) && (! Double.isNaN(velocity)));
 	}
 	
+	//defensive
 	/**
 	 * A method to set the maximum horizontal velocity.
 	 * @param velocity
@@ -786,6 +799,7 @@ public class Mazub {
 	 */
 	private boolean isAccelerating = false;
 	
+	//nominal
 	/**
 	 * Start moving the character in the given direction
 	 * @param direction
@@ -811,10 +825,12 @@ public class Mazub {
 		else if (direction == "right") {
 			this.setMovingRight(true);
 		}
+//		this.setTimeSinceEndMove(0.0);
 		this.setAccelerating(true);
 		this.setHorizontalVelocity(getInitHorizontalVelocity());
 	}
 	
+	//nominal
 	/**
 	 * Stop moving the character in the given direction
 	 * @param direction

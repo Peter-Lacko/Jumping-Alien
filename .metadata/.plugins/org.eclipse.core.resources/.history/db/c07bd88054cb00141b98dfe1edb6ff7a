@@ -6,6 +6,7 @@ import jumpingalien.util.ModelException;
 
 public class Facade implements IFacade{
 	
+	// try catch voor exeptions (zie worms facade)
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites){
 		try{
 			return new Mazub(pixelLeftX,pixelBottomY,sprites);
