@@ -338,16 +338,6 @@ public class Mazub {
 		return this.images.clone();
 	}
 	
-	/**
-	 * Check whether the given array of sprites is valid.
-	 * @param images
-	 * 			the array of sprites to be checked.
-	 * @return true if and only if there are no null entities in the array
-	 * 			| for sprite in images:
-	 * 			|	if (sprite == null)
-	 * 			|		return false
-	 * 			| return true
-	 */
 	public boolean hasProperSprites(Sprite[] images){
 		for (Sprite sprite: images){
 			if (sprite == null)
@@ -357,7 +347,7 @@ public class Mazub {
 	}
 	
 	/**
-	 * An array of Sprites to display the character.
+	 * an Array of Sprites for the character
 	 */
 	private final Sprite[] images;
 	
@@ -379,8 +369,8 @@ public class Mazub {
 		this.determineDoubleDirections();
 		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewHorizontalVelocityAfter(duration);
-		this.computeNewVerticalPositionAfter(duration);
 		this.computeNewVerticalVelocityAfter(duration);
+		this.computeNewVerticalPositionAfter(duration);
 		if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
 			setTimeSinceEndMove(getTimeSinceEndMove() + duration);
 		else
@@ -859,8 +849,6 @@ public class Mazub {
 	 */
 	public void startJump(){
 		this.isJumping = true;
-		if(! isInAir())
-			this.setVerticalVelocity(getInitVerticalVelocity());
 	}
 	
 	/**

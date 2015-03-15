@@ -859,8 +859,7 @@ public class Mazub {
 	 */
 	public void startJump(){
 		this.isJumping = true;
-		if(! isInAir())
-			this.setVerticalVelocity(getInitVerticalVelocity());
+		this.setVerticalVelocity(getInitVerticalVelocity());
 	}
 	
 	/**

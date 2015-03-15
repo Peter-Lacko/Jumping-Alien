@@ -379,8 +379,8 @@ public class Mazub {
 		this.determineDoubleDirections();
 		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewHorizontalVelocityAfter(duration);
-		this.computeNewVerticalPositionAfter(duration);
 		this.computeNewVerticalVelocityAfter(duration);
+		this.computeNewVerticalPositionAfter(duration);
 		if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
 			setTimeSinceEndMove(getTimeSinceEndMove() + duration);
 		else
@@ -859,8 +859,7 @@ public class Mazub {
 	 */
 	public void startJump(){
 		this.isJumping = true;
-		if(! isInAir())
-			this.setVerticalVelocity(getInitVerticalVelocity());
+		this.setVerticalVelocity(getInitVerticalVelocity());
 	}
 	
 	/**
