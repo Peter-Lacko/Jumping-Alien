@@ -582,28 +582,7 @@ public class Mazub {
 	 * 			|	then (new.getHorizontalVelocity == 
 	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
 	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
-	 * @return Returns the newly calculated velocity.
-	 *			If the character is moving left, it has a negative velocity.
-	 * 			| If (direction == "left")
-	 * 			|	then directionModifier == -1
-	 * 			| Else directionModifier == 1	
-	 * 			If the absolute value of the current speed is lower than the absolute value of the 
-	 * 			initial speed, the new speed is calculated as the smallest value between 
-	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
-	 * 					times horizontal acceleration. 
-	 * 				or 2) the maximal horizontal velocity.
-	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
-	 * 			|	then (result == 
-	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
-	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
-	 * 			Otherwise, the new speed is calculated as the smallest value between 
-	 * 				1) the absolute value of the current horizontal velocity plus the duration 
-	 * 					times horizontal acceleration. 
-	 * 				or 2) the maximal horizontal velocity.
-	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
-	 * 			|	then (result == 
-	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
-	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * @return
 	 */
 	@Model
 	private double computeNewHorizontalVelocityMoving(double duration){
