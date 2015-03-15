@@ -152,13 +152,7 @@ public class Mazub {
 	/**
 	 * A method that returns the walking/running cycle sprite for the character. It possibly returns a
 	 * non-cycle sprite if the character is moving in both directions
-	 * @return The new walking/ running cycle Sprite is determined depending on the state of the character.
-	 * 			if there has been sufficient time since the last frame of animation, set the index to the
-	 * 			next frame and reset the timer. if the character is moving in both directions (ie not 
-	 * 			moving) return the correct sided sprite for this case. Otherwise, if the character is 
-	 * 			moving right, return the correct sided sprite for this case. Otherwise, if the character
-	 * 			is moving left, return the correct sided sprite for this case. Otherwise, return the
-	 * 			correct sided sprite for all other cases.
+	 * @return 
 	 */
 	private Sprite getCurrentWalkCycleSprite() {
 		if (getTimeSinceStep() > 0.03){

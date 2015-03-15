@@ -78,11 +78,9 @@ public class Mazub {
 		this.setSprite(getImageAt(1));
 	}	
 	
-	//total
 	/**
 	 * A method to return the size of the character's sprite variable.
 	 * @return return the width and Height of the current sprite in an array.
-	 * 			| return.equals({getSprite().getWidth(),getSprite().getHeight()})
 	 */
 	public int[] getSize(){
 		int[] sizes = {0,0};
@@ -91,22 +89,15 @@ public class Mazub {
 		return sizes;
 	}
 	
-	//nominal
 	/**
 	 * A method to determine whether to use the left or right version of a sprite.
-	 * @pre number is in the range of images (minus one).
-	 * 		| (number >=0) && (number + 1 < getNbImages())
+	 * @pre number is in the range of images
+	 * 		| (number >=0) && (number < getNbImages())
 	 * @param number
 	 * 			the index in images where the left and right version of the sprite to be returned, is stored.
 	 * @return return the correct version of the sprite, depending on the state of the character.
-	 * 			if the character isn't moving in both directions, and is moving or has moved left,
-	 * 			then return the left sprite, otherwise the right sprite.
-	 * 			if the character is moving in both directions, and has moved left, return the left
-	 * 			sprite. otherwise return the right sprite.
 	 */
 	public Sprite leftOrRightSprite(int number){
-		assert (number >= 0);
-		assert (number + 1 < getNbImages());
 		if (! movingInTwoDirections()){
 			if ((isMovingLeft()) || (getHasMovedIn() == MovementDirection.LEFT)){
 				return getImageAt(number + 2);
@@ -122,17 +113,9 @@ public class Mazub {
 		}
 	}
 	
-	//nominal
 	/**
 	 * A method that returns the Sprite for the character with its current variables.
 	 * @return The new Sprite is determined depending on the state of the character.
-	 * 			if the character is in the air and has moved in the last second and is not ducked,
-	 * 			return the correct sided sprite for this case. Otherwise, if the character is ducked and 
-	 * 			has moved in the last second, return the correct sided sprite for this case. Otherwise,
-	 * 			if the character has move in the last second, return the correct sided (walking/ running 
-	 * 			cycle) sprite for this case. otherwise, if the character is ducked and has not moved
-	 * 			in the last second, return the correct sprite for this case. Otherwise, return the last
-	 * 			available sprite.
 	 */
 	public Sprite getCurrentSprite(){
 		if ((isInAir()) && (this.getHasMovedIn() != MovementDirection.NONE) && (! isDucked())){
@@ -148,18 +131,6 @@ public class Mazub {
 		}
 	}
 	
-	//nominal
-	/**
-	 * A method that returns the walking/running cycle sprite for the character. It possibly returns a
-	 * non-cycle sprite if the character is moving in both directions
-	 * @return The new walking/ running cycle Sprite is determined depending on the state of the character.
-	 * 			if there has been sufficient time since the last frame of animation, set the index to the
-	 * 			next frame and reset the timer. if the character is moving in both directions (ie not 
-	 * 			moving) return the correct sided sprite for this case. Otherwise, if the character is 
-	 * 			moving right, return the correct sided sprite for this case. Otherwise, if the character
-	 * 			is moving left, return the correct sided sprite for this case. Otherwise, return the
-	 * 			correct sided sprite for all other cases.
-	 */
 	private Sprite getCurrentWalkCycleSprite() {
 		if (getTimeSinceStep() > 0.03){
 			if (getIndex() < getNbRunningCycle()-1)
