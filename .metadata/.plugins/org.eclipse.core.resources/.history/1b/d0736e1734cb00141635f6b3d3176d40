@@ -651,15 +651,6 @@ public class Mazub {
 	 */
 	private double maxHorizontalVelocity = 3.0;
 	
-	/**
-	 * A getter method for initHorizontalVelocity
-	 * @return	if the character is moving left return the negative of the initial horizontal velocity
-	 * 			otherwise return the initial horizontal velocity
-	 * 			| if this.isMovinLeft
-	 * 			|  then return -INIT_HORIZONTAL_VELOCITY
-	 * 			| else
-	 * 			|  then return INIT_HORIZONTAL_VELOCITY
-	 */
 	public double getInitHorizontalVelocity() {
 		if (this.isMovingLeft())
 			return -this.INIT_HORIZONTAL_VELOCITY;
@@ -667,13 +658,6 @@ public class Mazub {
 			return this.INIT_HORIZONTAL_VELOCITY;
 	}
 	
-	/**
-	 * A checker method to check whether velocity is valid for initHorizontalVelocity
-	 * @param velocity
-	 * 			the velocity which has to be set
-	 * @return is a number velocity
-	 * 			| not double.isNaN(velocity)
-	 */
 	public boolean canHaveAsInitHorizontalVelocity(double velocity) {
 		return (! Double.isNaN(velocity));
 	}
@@ -693,13 +677,6 @@ public class Mazub {
 		return this.isAccelerating;
 	}
 	
-	/**
-	 * A setter method for the variable isAccelerating
-	 * @param flag
-	 * 			the boolean to which isAccelerating has to be set
-	 * @post	isAccelerating is set to flag
-	 * 			| new.isAccelerating == flag
-	 */
 	public void setAccelerating(boolean flag) {
 		this.isAccelerating = flag;
 	}
@@ -755,21 +732,10 @@ public class Mazub {
 		setIndex(0);
 	}
 	
-	/**
-	 * A getter method for the variable isMovingLeft
-	 */
-	@Basic
 	public boolean isMovingLeft() {
 		return this.isMovingLeft;
 	}
 	
-	/**
-	 * A setter method for the variable isMovingLeft
-	 * @param flag
-	 * 			the boolean to which isMovingLeft has to be set
-	 * @post	isMovingLeft is set to flag
-	 * 			| new.isMovingLeft == flag
-	 */
 	public void setMovingLeft(boolean flag) {
 		this.isMovingLeft = flag;
 	}
@@ -779,21 +745,10 @@ public class Mazub {
 	 */
 	private boolean isMovingLeft = false;
 	
-	/**
-	 * A getter method for the variable isMovingRight
-	 */
-	@Basic
 	public boolean isMovingRight() {
 		return this.isMovingRight;
 	}
 	
-	/**
-	 * A setter method for the variable isMovingRight
-	 * @param flag
-	 * 			the boolean to which isMovingRight has to be set
-	 * @post	isMovingRight is set to flag
-	 * 			| new.isMovingRight == flag
-	 */
 	public void setMovingRight(boolean flag) {
 		this.isMovingRight = flag;
 	}
@@ -910,13 +865,6 @@ public class Mazub {
 		return this.currVerticalVelocity;
 	}
 	
-	/**
-     * a checker method for whether the double acceleration is valid as verticalacceleration
-	 * @param acceleration
-	 * 			the double wich has to be checked whether its valid
-	 * @return	true if acceleration is greater than zero and a number
-	 * 			| velocity is a number
-	 */
 	public boolean canHaveAsVerticalVelocity(double velocity) {
 		return (! Double.isNaN(velocity));
 	}
@@ -942,13 +890,6 @@ public class Mazub {
 		return this.INIT_VERTICAL_VELOCITY;
 	}
 	
-	/**
-     * a checker method for whether the double acceleration is valid as verticalvelocity
-	 * @param velocity
-	 * 			the double wich has to be checked whether its valid
-	 * @return	true if velocity is greater than zero and a number
-	 * 			| velocity>0 && velocity is a number
-	 */
 	public boolean canHaveAsInitVerticalVelocity(double velocity) {
 		return (Util.fuzzyGreaterThanOrEqualTo(velocity, 0.0) && (! Double.isNaN(velocity)));
 	}
@@ -971,13 +912,6 @@ public class Mazub {
 			return 0.0;
 	}
 	
-	/**
-     * a checker method for whether the double acceleration is valid as verticalacceleration
-	 * @param acceleration
-	 * 			the double wich has to be checked whether its valid
-	 * @return	true if acceleration is greater than zero and a number
-	 * 			| acceleration>0 && acceleration is a number
-	 */
 	public boolean isValidVerticalAcceleration(double acceleration) {
 		return ((Util.fuzzyGreaterThanOrEqualTo(0.0, acceleration)) && (! Double.isNaN(acceleration)));
 	}
@@ -989,9 +923,6 @@ public class Mazub {
 	 */
 	private static final Double VERTICAL_ACCELERATION = -10.0;
 
-	/**
-	 * A boolean stating whether the character is jumping
-	 */
 	public boolean isJumping(){
 		return this.isJumping;
 	}
@@ -1017,10 +948,6 @@ public class Mazub {
 	 */
 	private boolean isJumping = false;
 
-	/**
-	 * A getter method for the boolean isducked
-	 */
-	@Basic
 	public boolean isDucked() {
 		return this.isDucked;
 	}
@@ -1080,32 +1007,14 @@ public class Mazub {
 			return "none";
 	}
 	
-	/**
-	 * A getter method for the variable timeSinceEndMove
-	 */
-	@Basic
 	public double getTimeSinceEndMove() {
 		return this.timeSinceEndMove;
 	}
 	
-	/**
-	 * a checker method for whether the double time is valid as timeSinceEndMove
-	 * @param time
-	 * 			the double wich has to be checked whether its valid
-	 * @return	true if time is greater than zero and a number
-	 * 			| time>0 && time is a number
-	 */
 	public boolean isValidTimeSinceEndMove(double time) {
 		return (Util.fuzzyGreaterThanOrEqualTo(time, 0.0) && (! Double.isNaN(time)));
 	}
 	
-	/**
-	 * A setter method for the variable timesinceendmove
-	 * @param time
-	 * 			the time to which timesinceendmove has to be set
-	 * @post	timesinceendmove is set to time
-	 * 			| new.timeSinceEndMove == time
-	 */
 	public void setTimeSinceEndMove(double time) {
 		this.timeSinceEndMove = time;
 	}
@@ -1115,56 +1024,24 @@ public class Mazub {
 	 */
 	private double timeSinceEndMove = 0.0;
 	
-	/**
-	 * A getter method for the variable timesincestep
-	 */
-	@Basic
 	public double getTimeSinceStep() {
 		return this.timeSinceStep;
 	}
 	
-	/**
-	 * a checker method for whether the double time is valid as timeSinceStep
-	 * @param time
-	 * 			the double wich has to be checked whether its valid
-	 * @return	true if time is greater than zero and a number
-	 * 			| time>0 && time is a number
-	 */
 	public boolean isValidTimeSinceStep(double time) {
 		return (Util.fuzzyGreaterThanOrEqualTo(time, 0.0) && (! Double.isNaN(time)));
 	}
 	
-	/**
-	 * a setter method for the variable timesincestep
-	 * @param time
-	 * 			the time to which timesincestep has to be set
-	 * @post	timesincestep is set to time
-	 * 			| new.timeSinceStep == time
-	 */
 	public void setTimeSinceStep(double time) {
 		this.timeSinceStep = time;
 	}
 	
-	/**
-	 * a variable containing the time since the character has stepped
-	 */
 	private double timeSinceStep = 0.0;
 	
-	/**
-	 * returns the movementdirection that the character has moved in
-	 */
-	@Basic
 	public MovementDirection getHasMovedIn() {
 		return this.hasMovedIn;
 	}
 	
-	/**
-	 * a method for setting the direction that the character has moved in.
-	 * @param direction
-	 * 			a movement direction for the character
-	 * @post	hasmovedin is set to direction
-	 * 			| new.hasMovedIn == direction
-	 */
 	public void sethasMovedIn(MovementDirection direction) {
 		this.hasMovedIn = direction;
 	}
@@ -1173,29 +1050,15 @@ public class Mazub {
 	 * A variable that states in which direction the character has recently moved.
 	 */
 	private MovementDirection hasMovedIn = MovementDirection.NONE;
-	
-	/**
-	 * return the boolean movingintwodirections
-	 */
-	@Basic
+
 	public boolean movingInTwoDirections() {
 		return this.movingInTwoDirections;
 	}
 	
-	/**
-	 * a method that sets the boolean movingintwodirections
-	 * @param flag
-	 * 			a boolean to wich moving in two directions has to be changed
-	 * @post	movingintwodirections is set to flag
-	 * 			| new.movinInTwoDirection == flag
-	 */
 	public void setMovingInTwoDirections(boolean flag) {
 		this.movingInTwoDirections = flag;
 	}
 	
-	/**
-	 * A boolean that states if the character gets the command to move in both directions.
-	 */
 	private boolean movingInTwoDirections = false;
 	
 	/**
@@ -1249,11 +1112,6 @@ public class Mazub {
 		return Position[index-1];
 	}
 	
-	/**
-	 * Return the coordinates of the character in the playing field
-	 * @return	the rouded down coordinates in the form of an int[]
-	 * 			| return [getIntPositionAt(1),getIntPositionAt(2)]
-	 */
 	public int[] getIntPosition(){
 		int[] position = {getIntPositionAt(1),getIntPositionAt(2)};
 		return position;
@@ -1337,18 +1195,6 @@ public class Mazub {
 	 */
 	private double[] Position = {0.0, 0.0};
 	
-	/**
-	 * a boolean that says whether the given field is permitted as a playing field
-	 * @param field
-	 * 			the dimension of the playing field
-	 * @return true if the playing field is allowed, false if it isn't
-	 * 			|if field.length != 2
-	 * 			| then return false
-	 * 			|else if (field[0]<=1) || (field[1]<=1
-	 * 			| then return false
-	 * 			|else
-	 * 			| return true
-	 */
 	public boolean isProperField(int[] field) {
 		if (field.length != 2)
 			return false;

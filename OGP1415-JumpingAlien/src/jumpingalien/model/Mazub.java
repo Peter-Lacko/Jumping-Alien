@@ -401,8 +401,8 @@ public class Mazub {
 		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 			throw new IllegalArgumentException();
 		this.determineDoubleDirections();
-		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewHorizontalVelocityAfter(duration);
+		this.computeNewHorizontalPositionAfter(duration);
 		this.computeNewVerticalPositionAfter(duration);
 		this.computeNewVerticalVelocityAfter(duration);
 		if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
@@ -572,8 +572,7 @@ public class Mazub {
 		double newVelocity = 0.0;
 		if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), 
 				Math.abs(getInitHorizontalVelocity()))){
-			newVelocity = getInitHorizontalVelocity() + 
-					duration*getHorizontalAcceleration();
+			newVelocity = getInitHorizontalVelocity();
 			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
 		}
 		else {
@@ -707,7 +706,6 @@ public class Mazub {
 		}
 		this.setTimeSinceEndMove(0.0);
 		this.setAccelerating(true);
-		this.setHorizontalVelocity(getInitHorizontalVelocity());
 	}
 	
 	/**

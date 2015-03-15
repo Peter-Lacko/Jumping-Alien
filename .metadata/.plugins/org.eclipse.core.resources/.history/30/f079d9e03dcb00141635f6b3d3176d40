@@ -671,8 +671,7 @@ public class Mazub {
 	 * A checker method to check whether velocity is valid for initHorizontalVelocity
 	 * @param velocity
 	 * 			the velocity which has to be set
-	 * @return is a number velocity
-	 * 			| not double.isNaN(velocity)
+	 * @return
 	 */
 	public boolean canHaveAsInitHorizontalVelocity(double velocity) {
 		return (! Double.isNaN(velocity));
@@ -698,7 +697,7 @@ public class Mazub {
 	 * @param flag
 	 * 			the boolean to which isAccelerating has to be set
 	 * @post	isAccelerating is set to flag
-	 * 			| new.isAccelerating == flag
+	 * 			| this.isAccelerating == flag
 	 */
 	public void setAccelerating(boolean flag) {
 		this.isAccelerating = flag;
@@ -768,7 +767,7 @@ public class Mazub {
 	 * @param flag
 	 * 			the boolean to which isMovingLeft has to be set
 	 * @post	isMovingLeft is set to flag
-	 * 			| new.isMovingLeft == flag
+	 * 			| this.isMovingLeft == flag
 	 */
 	public void setMovingLeft(boolean flag) {
 		this.isMovingLeft = flag;
@@ -792,7 +791,7 @@ public class Mazub {
 	 * @param flag
 	 * 			the boolean to which isMovingRight has to be set
 	 * @post	isMovingRight is set to flag
-	 * 			| new.isMovingRight == flag
+	 * 			| this.isMovingRight == flag
 	 */
 	public void setMovingRight(boolean flag) {
 		this.isMovingRight = flag;
@@ -1104,7 +1103,7 @@ public class Mazub {
 	 * @param time
 	 * 			the time to which timesinceendmove has to be set
 	 * @post	timesinceendmove is set to time
-	 * 			| new.timeSinceEndMove == time
+	 * 			| timeSinceEndMove == time
 	 */
 	public void setTimeSinceEndMove(double time) {
 		this.timeSinceEndMove = time;
@@ -1139,7 +1138,7 @@ public class Mazub {
 	 * @param time
 	 * 			the time to which timesincestep has to be set
 	 * @post	timesincestep is set to time
-	 * 			| new.timeSinceStep == time
+	 * 			| timeSinceStep == time
 	 */
 	public void setTimeSinceStep(double time) {
 		this.timeSinceStep = time;
@@ -1163,7 +1162,7 @@ public class Mazub {
 	 * @param direction
 	 * 			a movement direction for the character
 	 * @post	hasmovedin is set to direction
-	 * 			| new.hasMovedIn == direction
+	 * 			| this.hasMovedIn == direction
 	 */
 	public void sethasMovedIn(MovementDirection direction) {
 		this.hasMovedIn = direction;
@@ -1187,7 +1186,7 @@ public class Mazub {
 	 * @param flag
 	 * 			a boolean to wich moving in two directions has to be changed
 	 * @post	movingintwodirections is set to flag
-	 * 			| new.movinInTwoDirection == flag
+	 * 			| this.movinInTwoDirection == flag
 	 */
 	public void setMovingInTwoDirections(boolean flag) {
 		this.movingInTwoDirections = flag;
