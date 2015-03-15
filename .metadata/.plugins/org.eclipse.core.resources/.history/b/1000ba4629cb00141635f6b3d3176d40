@@ -651,15 +651,6 @@ public class Mazub {
 	 */
 	private double maxHorizontalVelocity = 3.0;
 	
-	/**
-	 * A getter method for initHorizontalVelocity
-	 * @return	if the character is moving left return the negative of the initial horizontal velocity
-	 * 			otherwise return the initial horizontal velocity
-	 * 			| if this.isMovinLeft
-	 * 			|  then return -INIT_HORIZONTAL_VELOCITY
-	 * 			| else
-	 * 			|  then return INIT_HORIZONTAL_VELOCITY
-	 */
 	public double getInitHorizontalVelocity() {
 		if (this.isMovingLeft())
 			return -this.INIT_HORIZONTAL_VELOCITY;
@@ -667,12 +658,6 @@ public class Mazub {
 			return this.INIT_HORIZONTAL_VELOCITY;
 	}
 	
-	/**
-	 * A checker method to check whether velocity is valid for initHorizontalVelocity
-	 * @param velocity
-	 * 			the velocity which has to be set
-	 * @return
-	 */
 	public boolean canHaveAsInitHorizontalVelocity(double velocity) {
 		return (! Double.isNaN(velocity));
 	}
