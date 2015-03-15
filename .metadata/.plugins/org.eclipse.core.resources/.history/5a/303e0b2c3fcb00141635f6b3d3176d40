@@ -1103,7 +1103,7 @@ public class Mazub {
 	 * A setter method for the variable timesinceendmove
 	 * @param time
 	 * 			the time to which timesinceendmove has to be set
-	 * @post	time since end move is set to time
+	 * @post	timesinceendmove is set to time
 	 * 			| new.timeSinceEndMove == time
 	 */
 	public void setTimeSinceEndMove(double time) {
@@ -1124,7 +1124,7 @@ public class Mazub {
 	}
 	
 	/**
-	 * a checker method for whether the double time is valid as time Ssnce step
+	 * a checker method for whether the double time is valid as timeSinceStep
 	 * @param time
 	 * 			the double wich has to be checked whether its valid
 	 * @return	true if time is greater than zero and a number
@@ -1135,7 +1135,7 @@ public class Mazub {
 	}
 	
 	/**
-	 * a setter method for the variable time since step
+	 * a setter method for the variable timesincestep
 	 * @param time
 	 * 			the time to which timesincestep has to be set
 	 * @post	timesincestep is set to time
@@ -1151,7 +1151,7 @@ public class Mazub {
 	private double timeSinceStep = 0.0;
 	
 	/**
-	 * returns the movement direction that the character has moved in
+	 * returns the movementdirection that the character has moved in
 	 */
 	@Basic
 	public MovementDirection getHasMovedIn() {
@@ -1162,7 +1162,7 @@ public class Mazub {
 	 * a method for setting the direction that the character has moved in.
 	 * @param direction
 	 * 			a movement direction for the character
-	 * @post	has moved in is set to direction
+	 * @post	hasmovedin is set to direction
 	 * 			| new.hasMovedIn == direction
 	 */
 	public void sethasMovedIn(MovementDirection direction) {
@@ -1175,7 +1175,7 @@ public class Mazub {
 	private MovementDirection hasMovedIn = MovementDirection.NONE;
 	
 	/**
-	 * return the boolean moving in two directions
+	 * return the boolean movingintwodirections
 	 */
 	@Basic
 	public boolean movingInTwoDirections() {
@@ -1183,10 +1183,10 @@ public class Mazub {
 	}
 	
 	/**
-	 * a method that sets the boolean moving in two directions
+	 * a method that sets the boolean movingintwodirections
 	 * @param flag
-	 * 			a boolean to which moving in two directions has to be changed
-	 * @post	moving in two directions is set to flag
+	 * 			a boolean to wich moving in two directions has to be changed
+	 * @post	movingintwodirections is set to flag
 	 * 			| new.movinInTwoDirection == flag
 	 */
 	public void setMovingInTwoDirections(boolean flag) {
