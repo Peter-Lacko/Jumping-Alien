@@ -554,8 +554,7 @@ public class Mazub {
 	public void computeNewVerticalPositionAfter(double duration){
 		double newYPosition;
 		if (isInAir()){
-			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
-					100*0.5*getVerticalAcceleration()*duration*duration;
+			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 0.5*getVerticalAcceleration()*duration*duration;
 			if (isValidPositionAt(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
 			}
@@ -568,8 +567,7 @@ public class Mazub {
 		}
 		else{
 			if (isJumping()){
-				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
-						100*0.5*getVerticalAcceleration()*duration*duration;
+				newYPosition = this.getPositionAt(2) + duration*this.getVerticalVelocity();
 				this.setPositionAt(newYPosition, 2);
 			}
 		}

@@ -568,8 +568,7 @@ public class Mazub {
 		}
 		else{
 			if (isJumping()){
-				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
-						100*0.5*getVerticalAcceleration()*duration*duration;
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity();
 				this.setPositionAt(newYPosition, 2);
 			}
 		}
