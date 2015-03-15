@@ -107,7 +107,7 @@ public class PartialFacadeTest {
 	}
 	
 	@Test
-	public void testStopAtLeftEdge(){
+	public void testStopAtEdges(){
 		IFacade facade = new Facade();
 		int m = 10;
 		Sprite[] sprites = spriteArrayForSize(66, 92, 10 + 2 * m);
@@ -190,19 +190,9 @@ public class PartialFacadeTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testToBigDt() {
 		IFacade facade = new Facade();
+		int m = 10;
 		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
 		Mazub alien = facade.createMazub(0,0, sprites);
 		facade.advanceTime(alien,2.01);
 	}	
-	
-	@Test
-	public void noJumphenInAir(){
-		IFacade facade = new Facade();
-		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
-		Mazub alien = facade.createMazub(0,1, sprites);
-		facade.startJump(alien);
-		facade.advanceTime(alien, 0.1);
-		assertArrayEquals(intArray(0,0), facade.getLocation(alien));
-	}
-	
 }

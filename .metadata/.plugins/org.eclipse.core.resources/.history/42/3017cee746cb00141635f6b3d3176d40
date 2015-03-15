@@ -205,4 +205,11 @@ public class PartialFacadeTest {
 		assertArrayEquals(intArray(0,0), facade.getLocation(alien));
 	}
 	
+	@Test
+	public void testUpperBorder(){
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(0,767, sprites);
+		
+	}
 }
