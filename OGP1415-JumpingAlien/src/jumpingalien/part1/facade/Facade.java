@@ -2,18 +2,27 @@ package jumpingalien.part1.facade;
 
 import jumpingalien.model.Mazub;
 import jumpingalien.util.Sprite;
+import jumpingalien.util.ModelException;
 
 public class Facade implements IFacade{
 	
 	// try catch voor exeptions (zie worms facade)
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites){
-		
+		try{
 			return new Mazub(pixelLeftX,pixelBottomY,sprites);
+		} catch (IllegalArgumentException exc){
+			throw new ModelException("invalid initialisation");
+		}
 
 	}
 	
 	public int[] getLocation(Mazub mazub){
-		return mazub.getIntPosition();
+		try {
+			return mazub.getIntPosition();
+		}
+		catch (ArrayIndexOutOfBoundsException exc) {
+			throw new ModelException("position error");
+		}
 	}
 	
 	public double[] getVelocity(Mazub mazub){
@@ -35,7 +44,12 @@ public class Facade implements IFacade{
 	}
 	
 	public void startJump(Mazub mazub) {
-		mazub.startJump();
+		try{
+			mazub.startJump();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("jump error");
+		}
 	}
 	
 	public void endJump(Mazub mazub) {
@@ -59,15 +73,30 @@ public class Facade implements IFacade{
 	}
 	
 	public void advanceTime(Mazub mazub, double duration) {
-		mazub.AdvanceTime(duration);
+		try{
+			mazub.advanceTime(duration);
+		}
+		catch (IllegalArgumentException exc) {
+			throw new ModelException("invalid duration");
+		}
 	}
 	
 	public void startDuck(Mazub mazub){
-		mazub.startDuck();
+		try {
+			mazub.startDuck();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("startDuck error");
+		}
 	}
 	
 	public void endDuck(Mazub mazub){
-		mazub.endDuck();
+		try {
+			mazub.endDuck();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("endDuck error");
+		}
 	}
 
 }
