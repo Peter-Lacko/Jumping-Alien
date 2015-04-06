@@ -1,0 +1,80 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpinngalien.model.Characters;
+
+public class Mazub extends Characters {
+
+	@Override
+	public Sprite getCurrentSprite() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean canHaveAsIndex(int number) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isValidNbImages(int nbImages) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewHorizontalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void advanceTime(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startMove(String direction) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void endMove(String direction) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isInAir() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void startJump() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

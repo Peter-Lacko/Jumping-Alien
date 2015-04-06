@@ -8,7 +8,7 @@ public class Facade implements IFacade{
 	
 	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites){
 		try{
-			return new Mazub(pixelLeftX,pixelBottomY,sprites);
+			return new Mazub(pixelLeftX,pixelBottomY,sprites, 0.9, 3.0, 1.0, 8.0);
 		} catch (IllegalArgumentException exc){
 			throw new ModelException("invalid initialisation");
 		}
