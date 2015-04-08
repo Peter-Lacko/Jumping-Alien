@@ -1,0 +1,102 @@
+/**
+ * 
+ */
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.Basic;
+
+/**
+ * A class that controls the game world.
+ * 
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+public class World {
+
+	/**
+	 * Initialize the world with given parameters.
+	 * @param tileLength
+	 * @param nbTilesX
+	 * @param nbTilesY
+	 * @param visibleWindowWidth
+	 * @param visibleWindowHeight
+	 * @param targetTileX
+	 * @param targetTileY
+	 * @post	| new.getTileLength() == tileLength
+	 * @post	| new.getMaxXTiles() == nbTilesX
+	 * @post	| new.getMaxYTiles() == nbTilesY
+	 */
+	public World(int tileLength, int nbTilesX, int nbTilesY,
+			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
+			int targetTileY){
+		TILE_LENGTH = tileLength;
+		MAX_X_TILES = nbTilesX;
+		MAX_Y_TILES = nbTilesY;
+	}
+	
+	@Basic
+	public int getTileLength(){
+		return TILE_LENGTH;
+	}
+	
+	private final int TILE_LENGTH;
+	
+	@Basic
+	public int getMaxXTiles(){
+		return MAX_X_TILES;
+	}
+	
+	//this is actually the maximum number minus 1
+	private final int MAX_X_TILES;
+	
+	@Basic
+	public int getMaxYTiles(){
+		return MAX_Y_TILES;
+	}
+	
+	/**
+	 * @return	| result == {(getMaxXTiles()+1)*getTileLength(), (getMaxYTiles()+1)*getTileLength()}
+	 */
+	public int[] getWorldSize(){
+		int[] WorldSize = {(getMaxXTiles()+1)*getTileLength(), (getMaxYTiles()+1)*getTileLength()};
+		return WorldSize;
+	}
+	
+	//this is actually the maximum number minus 1
+	private final int MAX_Y_TILES;
+	
+	public int[] getBottomLeftPixelOfTile(int tileX, int tileY){
+		int[] coordinates = {tileX*getTileLength(), tileY*getTileLength()};
+		return coordinates;
+	}
+	
+	/**
+	 * Return the coordinates of the tile that contain the given coordinates.
+	 * @param xPixel
+	 * 			the x-coordinate
+	 * @param yPixel
+	 * 			the y-coordinate
+	 * @return	| result == {(xPixel-xPixel%getTileLength())/getTileLength(),
+				|				(yPixel-yPixel%getTileLength())/getTileLength()}
+	 */
+	public int[] getTilePosition(int xPixel, int yPixel){
+		int[] position = {(xPixel-xPixel%getTileLength())/getTileLength(),
+				(yPixel-yPixel%getTileLength())/getTileLength()};
+		return position;
+		
+	}
+	
+	public int[][] getTilePositionsIn(int pixelLeft, int pixelBottom, int pixelRight, int pixelTop){
+		
+		return null;
+	}
+	
+	//to be implemented yet
+	public void advanceTime(double duration){
+		
+	}
+	
+	
+}

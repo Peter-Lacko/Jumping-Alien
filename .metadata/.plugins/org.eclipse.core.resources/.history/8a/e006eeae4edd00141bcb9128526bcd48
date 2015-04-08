@@ -1,0 +1,17 @@
+package jumpingalien.model;
+
+public enum GeoFeature {
+
+	AIR {
+		
+		/**
+		 * Return the symbol representing the male gender.
+	     *
+		 * @return The symbol with unicode U+2642.
+		 *       | result == '\u2642'
+		 */
+		public int getValue() {
+			return 0;
+		}
+	};
+}

@@ -1,0 +1,60 @@
+/**
+ * 
+ */
+package jumpingalien.model;
+
+/**
+ * A class that controls the game world.
+ * 
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+public class World {
+
+	public World(int tileLength, int nbTilesX, int nbTilesY,
+			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
+			int targetTileY){
+		TILE_LENGTH = tileLength;
+		MAX_X_TILES = nbTilesX;
+		MAX_Y_TILES = nbTilesY;
+	}
+	
+	public int getTileLength(){
+		return TILE_LENGTH;
+	}
+	
+	private final int TILE_LENGTH;
+	
+	public int getMaxXTiles(){
+		return MAX_X_TILES;
+	}
+	
+	//this is actually the maximum number minus 1
+	private final int MAX_X_TILES;
+	
+	public int getMaxYTiles(){
+		return MAX_Y_TILES;
+	}
+	
+	public int[] getWorldSize(){
+		int[] WorldSize = {(getMaxXTiles()+1)*getTileLength(), (getMaxYTiles()+1)*getTileLength()};
+		return WorldSize;
+	}
+	
+	//this is actually the maximum number minus 1
+	private final int MAX_Y_TILES;
+	
+	int[] getBottomLeftPixelOfTile(int tileX, int tileY){
+		int[] coordinates = {tileX*getTileLength(), tileY*getTileLength()};
+		return coordinates;
+	}
+	
+	//to be implemented yet
+	public void advanceTime(double duration){
+		
+	}
+	
+	
+}

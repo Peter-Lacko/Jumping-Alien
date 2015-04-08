@@ -1,0 +1,275 @@
+/**
+ * 
+ */
+package jumpingalien.model;
+
+import java.util.*;
+
+import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Raw;
+
+/**
+ * A class that controls the game world.
+ * @invar	|hasProperObjects()
+ * @invar	|isValidTileLength()
+ * @invar	|isValidMaxXTiles()
+ * @invar	|isValidMaxYTiles()
+ * @invar	|hasProperGeoFeatures() 
+ * 
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+public class World {
+
+	/**
+	 * Initialize the world with given parameters.
+	 * @param tileLength
+	 * @param nbTilesX
+	 * @param nbTilesY
+	 * @param visibleWindowWidth
+	 * @param visibleWindowHeight
+	 * @param targetTileX
+	 * @param targetTileY
+	 * @post	| new.getTileLength() == tileLength
+	 * @post	| new.getMaxXTiles() == nbTilesX
+	 * @post	| new.getMaxYTiles() == nbTilesY
+	 */
+	@Raw
+	public World(int tileLength, int nbTilesX, int nbTilesY,
+			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
+			int targetTileY){
+		TILE_LENGTH = tileLength;
+		MAX_X_TILES = nbTilesX;
+		MAX_Y_TILES = nbTilesY;
+	}
+	
+	@Basic
+	public int getTileLength(){
+		return TILE_LENGTH;
+	}
+	
+	/**
+	 * @return	| result == (getTileLength() >= 1)
+	 */
+	private boolean isValidTileLength(){
+		return false;
+	}
+	
+	private final int TILE_LENGTH;
+	
+	@Basic
+	public int getMaxXTiles(){
+		return MAX_X_TILES;
+	}
+	
+	/**
+	 * @return	| result == (getMaxXTiles() >= 1)
+	 */
+	//misschien maken zodat minstens 1 mazub net past
+	private boolean isValidMaxXTiles(){
+		return false;
+	}
+	
+	//this is actually the maximum number minus 1
+	private final int MAX_X_TILES;
+	
+	@Basic
+	public int getMaxYTiles(){
+		return MAX_Y_TILES;
+	}
+	
+	/**
+	 * @return	| result == (getMaxYTiles() >= 1)
+	 */
+	//misschien maken zodat minstens 1 mazub net past
+	private boolean isValidMaxYTiles(){
+		return false;
+	}
+	
+	//this is actually the maximum number minus 1
+	private final int MAX_Y_TILES;
+	
+	
+	/**
+	 * @return	| result == {(getMaxXTiles()+1)*getTileLength(), (getMaxYTiles()+1)*getTileLength()}
+	 */
+	public int[] getWorldSize(){
+		int[] WorldSize = {(getMaxXTiles()+1)*getTileLength(), (getMaxYTiles()+1)*getTileLength()};
+		return WorldSize;
+	}
+	
+	/**
+	 * @param tileX
+	 * @param tileY
+	 * @return	| result == {tileX*getTileLength(), tileY*getTileLength()}
+	 */
+	public int[] getBottomLeftPixelOfTile(int tileX, int tileY){
+		int[] coordinates = {tileX*getTileLength(), tileY*getTileLength()};
+		return coordinates;
+	}
+	
+	/**
+	 * Return the coordinates of the tile that contain the given coordinates.
+	 * @param xPixel
+	 * 			the x-coordinate
+	 * @param yPixel
+	 * 			the y-coordinate
+	 * @return	| result == {(xPixel-xPixel%getTileLength())/getTileLength(),
+				|				(yPixel-yPixel%getTileLength())/getTileLength()}
+	 */
+	public int[] getTilePosition(int xPixel, int yPixel){
+		int[] position = {(xPixel-xPixel%getTileLength())/getTileLength(),
+				(yPixel-yPixel%getTileLength())/getTileLength()};
+		return position;
+		
+	}
+	
+	/**
+	 * 
+	 * @param pixelLeft
+	 * @param pixelBottom
+	 * @param pixelRight
+	 * @param pixelTop
+	 * @return	| for (y in getTilePosition(pixelLeft,pixelBottom)[1]
+	 * 			|			..getTilePosition(pixelLeft,pixelTop)[1])
+	 * 			|	for (x in getTilePosition(pixelLeft,pixelBottom)[0]
+	 * 			|			..getTilePosition(pixelRight,pixelBottom)[0])
+	 * 			|		positions.add({x,y})
+	 * 			| result == positions
+	 */
+	public int[][] getTilePositionsIn(int pixelLeft, int pixelBottom, int pixelRight, int pixelTop){
+		int yStart = getTilePosition(pixelLeft,pixelBottom)[1];	
+		int yEnd = getTilePosition(pixelLeft,pixelTop)[1];
+		int xStart = getTilePosition(pixelLeft,pixelBottom)[0];
+		int xEnd = getTilePosition(pixelRight,pixelBottom)[0];
+		List<int[]> positions = new ArrayList<int[]>();
+		for (int yIndex = yStart ; yIndex <= yEnd ; yIndex++){
+			for (int xIndex = xStart ; xIndex <= xEnd ; xIndex++){
+				int[] coordinates = {xIndex,yIndex};
+				positions.add(coordinates);
+			}
+		}
+		int[][] positionArray = new int[positions.size()][];
+		positions.toArray( positionArray );
+		return positionArray;
+	}
+	
+	/**
+	 * 
+	 * @param xPixel
+	 * @param yPixel
+	 * @return
+	 * @throws IllegalArgumentException
+	 * 			| ! isValidGeoPosition({xPixel,yPixel})
+	 */
+	@Basic
+	public GeoFeature getGeoFeatureAt(int xPixel, int yPixel) throws IllegalArgumentException{
+		return GeoFeature.AIR;
+	}
+	
+	/**
+	 * 
+	 * @param xPixel
+	 * @param yPixel
+	 * @post	|new.getGeoFeatureAt(xPixel, yPixel) == feature
+	 * @throws IllegalArgumentException
+	 * 			| ! isValidGeoPosition({xPixel,yPixel})
+	 */
+	public void setGeoFeatureAt(int xPixel, int yPixel, GeoFeature feature) throws IllegalArgumentException{
+		
+	}
+	
+	/**
+	 * 
+	 * @param feature
+	 * @return	| result == (feature == GeoFeature.AIR || feature == GeoFeature.GROUND 
+	 * 			|	|| feature == GeoFeature.WATER || feature == GeoFeature.MAGMA)
+	 */
+	private boolean isValidGeoFeature(GeoFeature feature){
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @return	|result == ((position.length == 2) && (position[0]%getTileLength() == 0) && 
+	 * 			|				(position[1]%getTileLength()==0) && (position[0] < getWorldSize()[0])
+	 * 			|				&& (position[1] < getWorldSize()[1]))
+	 */
+	private boolean isValidGeoPosition(int[] position){
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @return	|result ==
+	 * 			|	for each key in keySet():	
+	 * 			|		isValidGeoPosition(key);
+	 * 			|	&& for each value in values():
+	 * 			|		isValidGeoFeature(value);
+	 */
+	private boolean hasProperGeoFeatures(){
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @return	|result == for one I in geoFeatures:
+	 * 			|		key == position;
+	 */
+	private boolean hasAsKeyGeoFeaturePosition(int[] position){
+		return false;
+	}
+	
+	/**
+	 * @invar	|geoFeatures != null
+	 * @invar	|for each value in geoFeatures:
+	 * 			|	value == GeoFeature.GROUND || value == GeoFeature.WATER || value == GeoFeature.MAGMA
+	 */
+	private final Map<int[], GeoFeature> geoFeatures = new HashMap<int[], GeoFeature>();
+	
+	public void advanceTime(double duration){
+		
+	}
+	
+	/**
+	 * @post new.isGameStarted() == true;
+	 */
+	public void startGame(){
+		isGameStarted = true;
+	}
+	
+	@Basic
+	public boolean isGameStarted(){
+		return isGameStarted;
+	}
+	
+	private boolean isGameStarted = false;
+	
+	/**
+	 * 
+	 * @return	|result == 
+	 */
+	private boolean canHaveAsObject(){
+		return true;
+	}
+	
+	private boolean hasProperObjects(){
+		return false;
+	}
+	
+	private List<Characters> objects = new LinkedList<Characters>();
+	
+	public void terminate(){
+		
+	}
+	
+	@Basic
+	public boolean isTerminated(){
+		return false;
+	}
+	
+}
