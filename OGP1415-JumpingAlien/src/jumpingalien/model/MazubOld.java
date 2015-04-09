@@ -50,7 +50,7 @@ import be.kuleuven.cs.som.annotate.*;
 public class MazubOld {
 	
 	/**
-	 * Initialize the MazubOldOld character with given x-coordinate, y-coordinate and sprites.
+	 * Initialize the MazubOld character with given x-coordinate, y-coordinate and sprites.
 	 * @param x_pos
 	 * 			the initial x-coordinate for this character.
 	 * @param y_pos
@@ -518,250 +518,250 @@ public class MazubOld {
 		}
 	}
 
-//	/**
-//	 * Compute the new horizontal velocity after a given duration
-//	 * @param duration
-//	 * 			the duration after which to calculate the new horizontal velocity.
-//	 * @effect if the character is actually moving, compute the new velocity while it is moving
-//	 * 			| if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections()))
-//	 * 			| 	computeNewHorizontalVelocityMoving(duration)
-//	 * @post if the character isn't actually moving, the new horizontal velocity is 0
-//	 * 			| if (! ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())))
-//	 * 			|	new.getHorizontalVelocity == 0.0
-//	 * @post	if the character's horizontal velocity is between 0 and the maximum horizontal velocity 
-//	 * 			then the character is accelerating
-//	 * 			| If ((new.getHorizontalVelocity != 0) && (new.getHorizontalVelocity < getMaxHorizontalVelocity())
-//	 * 			|	then new.isAccelerating() == true
-//	 * 			Otherwise he is not accelerating.
-//	 * 			| Else
-//	 * 			|	new.isAccelerating() == false
-//	 */
-//	public void computeNewHorizontalVelocityAfter(double duration) {
-//		double newVelocity = 0.0;
-//		if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())){
-//			newVelocity = computeNewHorizontalVelocityMoving(duration);
-//		}
-//		else {
-//			newVelocity = 0.0;
-//			setHorizontalVelocity(newVelocity);
-//		}
-//		if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (! Util.fuzzyGreaterThanOrEqualTo(
-//				Math.abs(newVelocity),getMaxHorizontalVelocity()))){
-//			this.setAccelerating(true);
-//		}
-//		else
-//			this.setAccelerating(false);
-//	}
-//	
-//	/**
-//	 * Calculate the new horizontal velocity when the character is moving.
-//	 * @param duration
-//	 * 			the duration after which to calculate the new horizontal velocity.
-//	 * @post	If the character is moving left, it has a negative velocity.
-//	 * 			| If (direction == "left")
-//	 * 			|	then directionModifier == -1
-//	 * 			| Else directionModifier == 1	
-//	 * 			If the absolute value of the current speed is lower than the absolute value of the 
-//	 * 			initial speed, the new speed is calculated as the smallest value between 
-//	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
-//	 * 					times horizontal acceleration. 
-//	 * 				or 2) the maximal horizontal velocity.
-//	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
-//	 * 			|	then (new.getHorizontalVelocity == 
-//	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
-//	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
-//	 * 			Otherwise, the new speed is calculated as the smallest value between 
-//	 * 				1) the absolute value of the current horizontal velocity plus the duration 
-//	 * 					times horizontal acceleration. 
-//	 * 				or 2) the maximal horizontal velocity.
-//	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
-//	 * 			|	then (new.getHorizontalVelocity == 
-//	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
-//	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
-//	 * @return Returns the newly calculated velocity.
-//	 *			If the character is moving left, it has a negative velocity.
-//	 * 			| If (direction == "left")
-//	 * 			|	then directionModifier == -1
-//	 * 			| Else directionModifier == 1	
-//	 * 			If the absolute value of the current speed is lower than the absolute value of the 
-//	 * 			initial speed, the new speed is calculated as the smallest value between 
-//	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
-//	 * 					times horizontal acceleration. 
-//	 * 				or 2) the maximal horizontal velocity.
-//	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
-//	 * 			|	then (result == 
-//	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
-//	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
-//	 * 			Otherwise, the new speed is calculated as the smallest value between 
-//	 * 				1) the absolute value of the current horizontal velocity plus the duration 
-//	 * 					times horizontal acceleration. 
-//	 * 				or 2) the maximal horizontal velocity.
-//	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
-//	 * 			|	then (result == 
-//	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
-//	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
-//	 */
-//	@Model
-//	private double computeNewHorizontalVelocityMoving(double duration){
-//		double newVelocity = 0.0;
-//		if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), 
-//				Math.abs(getInitHorizontalVelocity()))){
-//			newVelocity = getInitHorizontalVelocity() + 
-//					duration*getHorizontalAcceleration();
-//			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-//		}
-//		else {
-//			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
-//			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-//		}
-//		if (isMovingLeft())
-//			newVelocity = -1.0*newVelocity;
-//		setHorizontalVelocity(newVelocity);
-//		return newVelocity;
-//	}
-//	
-//	/**
-//	 * Return the current horizontal velocity.
-//	 */
-//	@Basic
-//	public double getHorizontalVelocity() {
-//		return this.currHorizontalVelocity;
-//	}
-//	
-//	/**
-//	 * Check whether the character can have the given horizontal velocity
-//	 * @param velocity
-//	 * 			the horizontal velocity to check
-//	 * @return true if it is smaller in absolute value than the maximum velocity and if it is a number.
-//	 * 			| return ((Math.abs(velocity) <= getMaxHorizontalVelocity()) && (! Double.isNaN(velocity)))
-//	 */
-//	public boolean canHaveAsHorizontalVelocity(double velocity) {
-//		return (Util.fuzzyLessThanOrEqualTo(Math.abs(velocity),getMaxHorizontalVelocity()) &&
-//				(!Double.isNaN(velocity)));
-//	}
-//	
-//	/**
-//	 * Set the horizontal velocity to the given velocity.
-//	 * @param velocity
-//	 * 			the velocity to be assigned to the character.
-//	 * @pre The given velocity must be a valid horizontal velocity.
-//	 * 		| canHaveAsHorizontalVelocity(velocity)
-//	 * @post The new horizontal velocity is the given velocity.
-//	 * 			| new.getHorizontalVelocity == velocity
-//	 */
-//	private void setHorizontalVelocity(double velocity) {
-//		assert this.canHaveAsHorizontalVelocity(velocity);
-//		this.currHorizontalVelocity = velocity;
-//	}
-//	
-//	/**
-//	 * A variable reflecting the current horizontal velocity.
-//	 */
-//	private double currHorizontalVelocity = 0.0;
-//	
-//	/**
-//	 * A method to return the current horizontal acceleration. The acceleration is negative if the 
-//	 * character is moving left, positive if the character is moving right, and 0.0 if the character is
-//	 * not moving horizontally.
-//	 */
-//	@Basic
-//	public double getHorizontalAcceleration() {
-//		if (this.isAccelerating() && this.isMovingLeft() && (! this.movingInTwoDirections()))
-//			return -MazubOld.HORIZONTAL_ACCELERATION;
-//		else if (this.isAccelerating() && this.isMovingRight() && (! this.movingInTwoDirections()))
-//			return MazubOld.HORIZONTAL_ACCELERATION;
-//		else
-//			return 0.0;
-//	}
-//
-//	/**
-//	 * Check whether the given horizontal acceleration is valid.
-//	 * @param acceleration
-//	 * 			the acceleration to check.
-//	 * @return True if and only if the acceleration is a number.
-//	 * 			| result == (! Double.isNaN(acceleration))
-//	 */
-//	public boolean isValidHorizontalAcceleration(double acceleration) {
-//		return (! Double.isNaN(acceleration));
-//	}
-//	
-//	/**
-//	 * Constant reflecting the horizontal acceleration of a character.
-//	 * @return the Horizontal acceleration for all characters is 0.9 m/s²
-//	 * 			| result == 0.9
-//	 */
-//	private static final double HORIZONTAL_ACCELERATION = 0.9;
-//	
-//	/**
-//	 * Return the maximum horizontal velocity of the character.
-//	 */
-//	@Basic
-//	public double getMaxHorizontalVelocity() {
-//		return this.maxHorizontalVelocity;
-//	}
-//	
-//	/**
-//	 * Check whether the given maximum velocity is valid.
-//	 * @param velocity
-//	 * 			the maximum velocity to check.
-//	 * @return true if and only if the velocity is greater than or equal to the absolute value of the 
-//	 * 			initial velocity and is a number.
-//	 * 			| result == (getMaxHorizontalVelocity() >= Math.abs(getInitHorizontalVelocity()) &&
-//	 * 			|			(! Double.isNaN(velocity)))
-//	 */
-//	public boolean canHaveAsMaxHorizontalVelocity(double velocity) {
-//		return (Util.fuzzyGreaterThanOrEqualTo(this.getMaxHorizontalVelocity(), 
-//				Math.abs(this.getInitHorizontalVelocity())) && (! Double.isNaN(velocity)));
-//	}
-//	
-//	/**
-//	 * A method to set the maximum horizontal velocity.
-//	 * @param velocity
-//	 * 			the new maximum velocity.
-//	 * @post The new maximum horizontal velocity is equal to the given velocity.
-//	 * 		| new.getMaxHorizontalVelocity() == velocity
-//	 * @throws	the new maximum velocity is invalid for this character.
-//	 * 		| (! canHaveAsMaxHorizontalVelocity(velocity))
-//	 */
-//	public void setMaxHorizontalVelocity(double velocity) throws IllegalArgumentException{
-//		if (! canHaveAsMaxHorizontalVelocity(velocity))
-//			throw new IllegalArgumentException();
-//		this.maxHorizontalVelocity = velocity;
-//	}
-//
-//	/**
-//	 * Variable reflecting the maximal horizontal velocity of a character, in absolute value.
-//	 */
-//	private double maxHorizontalVelocity = 3.0;
-//	
-//	/**
-//	 * A method to return the current horizontal initial velocity. The velocity is negative if the 
-//	 * character is moving left, otherwise it is positive.
-//	 */
-//	@Basic
-//	public double getInitHorizontalVelocity() {
-//		if (this.isMovingLeft())
-//			return -this.INIT_HORIZONTAL_VELOCITY;
-//		else
-//			return this.INIT_HORIZONTAL_VELOCITY;
-//	}
-//	
-//	/**
-//	 * Check whether the given velocity is valid for this character.
-//	 * @param velocity
-//	 * 			the velocity to check
-//	 * @return	true if the velocity is a number.
-//	 * 			| result == (! Double.isNaN(velocity))
-//	 */
-//	public boolean canHaveAsInitHorizontalVelocity(double velocity) {
-//		return (! Double.isNaN(velocity));
-//	}
-//	
-//	/**
-//	 * Constant reflecting the initial velocity of a character.
-//	 */
-//	private final double INIT_HORIZONTAL_VELOCITY = 1.0;
-//	
+	/**
+	 * Compute the new horizontal velocity after a given duration
+	 * @param duration
+	 * 			the duration after which to calculate the new horizontal velocity.
+	 * @effect if the character is actually moving, compute the new velocity while it is moving
+	 * 			| if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections()))
+	 * 			| 	computeNewHorizontalVelocityMoving(duration)
+	 * @post if the character isn't actually moving, the new horizontal velocity is 0
+	 * 			| if (! ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())))
+	 * 			|	new.getHorizontalVelocity == 0.0
+	 * @post	if the character's horizontal velocity is between 0 and the maximum horizontal velocity 
+	 * 			then the character is accelerating
+	 * 			| If ((new.getHorizontalVelocity != 0) && (new.getHorizontalVelocity < getMaxHorizontalVelocity())
+	 * 			|	then new.isAccelerating() == true
+	 * 			Otherwise he is not accelerating.
+	 * 			| Else
+	 * 			|	new.isAccelerating() == false
+	 */
+	public void computeNewHorizontalVelocityAfter(double duration) {
+		double newVelocity = 0.0;
+		if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())){
+			newVelocity = computeNewHorizontalVelocityMoving(duration);
+		}
+		else {
+			newVelocity = 0.0;
+			setHorizontalVelocity(newVelocity);
+		}
+		if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (! Util.fuzzyGreaterThanOrEqualTo(
+				Math.abs(newVelocity),getMaxHorizontalVelocity()))){
+			this.setAccelerating(true);
+		}
+		else
+			this.setAccelerating(false);
+	}
+	
+	/**
+	 * Calculate the new horizontal velocity when the character is moving.
+	 * @param duration
+	 * 			the duration after which to calculate the new horizontal velocity.
+	 * @post	If the character is moving left, it has a negative velocity.
+	 * 			| If (direction == "left")
+	 * 			|	then directionModifier == -1
+	 * 			| Else directionModifier == 1	
+	 * 			If the absolute value of the current speed is lower than the absolute value of the 
+	 * 			initial speed, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
+	 * 			|	then (new.getHorizontalVelocity == 
+	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * 			Otherwise, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the current horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
+	 * 			|	then (new.getHorizontalVelocity == 
+	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * @return Returns the newly calculated velocity.
+	 *			If the character is moving left, it has a negative velocity.
+	 * 			| If (direction == "left")
+	 * 			|	then directionModifier == -1
+	 * 			| Else directionModifier == 1	
+	 * 			If the absolute value of the current speed is lower than the absolute value of the 
+	 * 			initial speed, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
+	 * 			|	then (result == 
+	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * 			Otherwise, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the current horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
+	 * 			|	then (result == 
+	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 */
+	@Model
+	private double computeNewHorizontalVelocityMoving(double duration){
+		double newVelocity = 0.0;
+		if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), 
+				Math.abs(getInitHorizontalVelocity()))){
+			newVelocity = getInitHorizontalVelocity() + 
+					duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+		}
+		else {
+			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+		}
+		if (isMovingLeft())
+			newVelocity = -1.0*newVelocity;
+		setHorizontalVelocity(newVelocity);
+		return newVelocity;
+	}
+	
+	/**
+	 * Return the current horizontal velocity.
+	 */
+	@Basic
+	public double getHorizontalVelocity() {
+		return this.currHorizontalVelocity;
+	}
+	
+	/**
+	 * Check whether the character can have the given horizontal velocity
+	 * @param velocity
+	 * 			the horizontal velocity to check
+	 * @return true if it is smaller in absolute value than the maximum velocity and if it is a number.
+	 * 			| return ((Math.abs(velocity) <= getMaxHorizontalVelocity()) && (! Double.isNaN(velocity)))
+	 */
+	public boolean canHaveAsHorizontalVelocity(double velocity) {
+		return (Util.fuzzyLessThanOrEqualTo(Math.abs(velocity),getMaxHorizontalVelocity()) &&
+				(!Double.isNaN(velocity)));
+	}
+	
+	/**
+	 * Set the horizontal velocity to the given velocity.
+	 * @param velocity
+	 * 			the velocity to be assigned to the character.
+	 * @pre The given velocity must be a valid horizontal velocity.
+	 * 		| canHaveAsHorizontalVelocity(velocity)
+	 * @post The new horizontal velocity is the given velocity.
+	 * 			| new.getHorizontalVelocity == velocity
+	 */
+	private void setHorizontalVelocity(double velocity) {
+		assert this.canHaveAsHorizontalVelocity(velocity);
+		this.currHorizontalVelocity = velocity;
+	}
+	
+	/**
+	 * A variable reflecting the current horizontal velocity.
+	 */
+	private double currHorizontalVelocity = 0.0;
+	
+	/**
+	 * A method to return the current horizontal acceleration. The acceleration is negative if the 
+	 * character is moving left, positive if the character is moving right, and 0.0 if the character is
+	 * not moving horizontally.
+	 */
+	@Basic
+	public double getHorizontalAcceleration() {
+		if (this.isAccelerating() && this.isMovingLeft() && (! this.movingInTwoDirections()))
+			return -MazubOld.HORIZONTAL_ACCELERATION;
+		else if (this.isAccelerating() && this.isMovingRight() && (! this.movingInTwoDirections()))
+			return MazubOld.HORIZONTAL_ACCELERATION;
+		else
+			return 0.0;
+	}
+
+	/**
+	 * Check whether the given horizontal acceleration is valid.
+	 * @param acceleration
+	 * 			the acceleration to check.
+	 * @return True if and only if the acceleration is a number.
+	 * 			| result == (! Double.isNaN(acceleration))
+	 */
+	public boolean isValidHorizontalAcceleration(double acceleration) {
+		return (! Double.isNaN(acceleration));
+	}
+	
+	/**
+	 * Constant reflecting the horizontal acceleration of a character.
+	 * @return the Horizontal acceleration for all characters is 0.9 m/s²
+	 * 			| result == 0.9
+	 */
+	private static final double HORIZONTAL_ACCELERATION = 0.9;
+	
+	/**
+	 * Return the maximum horizontal velocity of the character.
+	 */
+	@Basic
+	public double getMaxHorizontalVelocity() {
+		return this.maxHorizontalVelocity;
+	}
+	
+	/**
+	 * Check whether the given maximum velocity is valid.
+	 * @param velocity
+	 * 			the maximum velocity to check.
+	 * @return true if and only if the velocity is greater than or equal to the absolute value of the 
+	 * 			initial velocity and is a number.
+	 * 			| result == (getMaxHorizontalVelocity() >= Math.abs(getInitHorizontalVelocity()) &&
+	 * 			|			(! Double.isNaN(velocity)))
+	 */
+	public boolean canHaveAsMaxHorizontalVelocity(double velocity) {
+		return (Util.fuzzyGreaterThanOrEqualTo(this.getMaxHorizontalVelocity(), 
+				Math.abs(this.getInitHorizontalVelocity())) && (! Double.isNaN(velocity)));
+	}
+	
+	/**
+	 * A method to set the maximum horizontal velocity.
+	 * @param velocity
+	 * 			the new maximum velocity.
+	 * @post The new maximum horizontal velocity is equal to the given velocity.
+	 * 		| new.getMaxHorizontalVelocity() == velocity
+	 * @throws	the new maximum velocity is invalid for this character.
+	 * 		| (! canHaveAsMaxHorizontalVelocity(velocity))
+	 */
+	public void setMaxHorizontalVelocity(double velocity) throws IllegalArgumentException{
+		if (! canHaveAsMaxHorizontalVelocity(velocity))
+			throw new IllegalArgumentException();
+		this.maxHorizontalVelocity = velocity;
+	}
+
+	/**
+	 * Variable reflecting the maximal horizontal velocity of a character, in absolute value.
+	 */
+	private double maxHorizontalVelocity = 3.0;
+	
+	/**
+	 * A method to return the current horizontal initial velocity. The velocity is negative if the 
+	 * character is moving left, otherwise it is positive.
+	 */
+	@Basic
+	public double getInitHorizontalVelocity() {
+		if (this.isMovingLeft())
+			return -this.INIT_HORIZONTAL_VELOCITY;
+		else
+			return this.INIT_HORIZONTAL_VELOCITY;
+	}
+	
+	/**
+	 * Check whether the given velocity is valid for this character.
+	 * @param velocity
+	 * 			the velocity to check
+	 * @return	true if the velocity is a number.
+	 * 			| result == (! Double.isNaN(velocity))
+	 */
+	public boolean canHaveAsInitHorizontalVelocity(double velocity) {
+		return (! Double.isNaN(velocity));
+	}
+	
+	/**
+	 * Constant reflecting the initial velocity of a character.
+	 */
+	private final double INIT_HORIZONTAL_VELOCITY = 1.0;
+	
 	/**
 	 * Method that returns the value of the variable isAccelerating
 	 */

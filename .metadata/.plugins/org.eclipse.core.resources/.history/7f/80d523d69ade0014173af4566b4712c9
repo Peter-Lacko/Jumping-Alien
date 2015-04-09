@@ -1,0 +1,78 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+
+public class Plant extends OtherCharacters {
+
+	public Plant(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0);
+	}
+
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewHorizontalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startMovement() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void endMovement() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String lefOrRight() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void computeNewVerticalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startJump() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startMove(String direction) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void endMove(String direction) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isInAir() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}

@@ -1,0 +1,18 @@
+package jumpingalien.part2.tests;
+
+import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
+import static org.junit.Assert.*;
+import jumpingalien.model.Plant;
+import jumpingalien.util.Sprite;
+
+import org.junit.Test;
+
+public class CharacterTest {
+
+	@Test
+	public void testPlant() {
+		sprites = spriteArrayForSize(2, 2);
+		sprites = sprites.copyOfRange(array, 0, 2);
+		new Plant(5,5,spriteArrayForSize(2, 2));
+	}
+}

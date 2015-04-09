@@ -1,0 +1,7 @@
+package jumpingalien.model;
+
+import lumpingailen.model.OtherCharacter;
+
+public class Plant extends OtherCharacter {
+
+}

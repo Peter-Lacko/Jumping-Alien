@@ -1,0 +1,428 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+import be.kuleuven.cs.som.annotate.*;
+
+
+public class Mazub extends Characters {
+
+	public Mazub(int x_pos, int y_pos, Sprite[] sprites, double hor_acc,
+			double max_hor_vel, double init_hor_vel, double init_ver_vel)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel);
+		this.nbRunningCycle = getNbImages()/2-4;
+	}
+
+	@Override
+	public Sprite getCurrentSprite(){
+		if ((isInAir()) && (this.getHasMovedIn() != MovementDirection.NONE) && (! isDucked())){
+			return leftOrRightSprite(4);
+		} else if ((isDucked()) && (this.getHasMovedIn() != MovementDirection.NONE)){
+			return leftOrRightSprite(6);
+		} else if (this.getHasMovedIn() != MovementDirection.NONE){
+			return getCurrentWalkCycleSprite();
+		} else if ((isDucked()) && (this.getHasMovedIn() == MovementDirection.NONE)){
+			return getImageAt(2);
+		} else{
+			return getImageAt(1);
+		}
+	}
+	
+	/**
+	 * A method that returns the walking/running cycle sprite for the character. It possibly returns a
+	 * non-cycle sprite if the character is moving in both directions
+	 * @return The new walking/ running cycle Sprite is determined depending on the state of the character.
+	 * 			if there has been sufficient time since the last frame of animation, set the index to the
+	 * 			next frame and reset the timer. if the character is moving in both directions (ie not 
+	 * 			moving) return the correct sided sprite for this case. Otherwise, if the character is 
+	 * 			moving right, return the correct sided sprite for this case. Otherwise, if the character
+	 * 			is moving left, return the correct sided sprite for this case. Otherwise, return the
+	 * 			correct sided sprite for all other cases.
+	 */
+	private Sprite getCurrentWalkCycleSprite() {
+		if (getTimeSinceStep() > 0.03){
+			if (getIndex() < getNbRunningCycle()-1)
+				setIndex(getIndex() + 1);
+			else 
+				setIndex(0);
+			setTimeSinceStep(0.0);
+		}
+		if (movingInTwoDirections())
+			return leftOrRightSprite(2);
+		else if (isMovingRight())
+			return getImageAt(9+getIndex());
+		else if (isMovingLeft()) 
+			return getImageAt(9+getNbRunningCycle()+getIndex());
+		else {
+			return leftOrRightSprite(2);
+		}
+	}
+	
+	/**
+	 * Check whether the character can have the given index for its run cycle.
+	 * @param number
+	 * 			the number to be checked.
+	 * @return True if the index is bigger or equal to 0, and smaller than the amount of images for
+	 * 			the character's run cycle.
+	 * 			| result == ((number >= 0) && (number < this.getNbRunningCycle()))
+	 */
+	@Override
+	public boolean canHaveAsIndex(int number) {
+		return ((number >= 0) && (number < this.getNbRunningCycle()));
+	}
+
+	/**
+	 * A method to return how many sprites there are for a running animation.
+	 */
+	@Basic @Immutable
+	public int getNbRunningCycle() {
+		return this.nbRunningCycle;
+	}
+	
+	/**
+	 * Check whether the character can have the given number as the amount of images for the running cycle.
+	 * @param number
+	 * 			the number to check.
+	 * @return	true if the number is bigger than 0.
+	 * 			|(number > 0)
+	 */
+	public boolean isValidNbRunningCycle(int number){
+		return (number > 0);
+	}
+	
+	/**
+	 * A variable that stores how many sprites there are for a running animation (running to the left and
+	 * right have the same amount of sprites for the animation).
+	 */
+	private final int nbRunningCycle ;
+	
+	
+	@Override
+	public boolean isValidNbImages(int nbImages){
+		return ((nbImages >= 10) && (nbImages % 2 == 0));
+	}
+
+	@Override
+	public void computeNewHorizontalPositionAfter(double duration) {
+		if (this.movingInTwoDirections())
+			this.setPositionAt(this.getPositionAt(1),1);
+		else{
+			double newPosition;
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+			if (this.isAccelerating())
+				newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
+			if (isValidPositionAt(newPosition,1))
+				this.setPositionAt(newPosition, 1);
+			else if ((int)newPosition < X_MIN){
+				this.setPositionAt((double)X_MIN, 1);
+				this.endMove("left");
+			}
+			else {
+				this.setPositionAt((double)X_MAX, 1);
+				this.endMove("right");
+			}
+		}
+	}
+
+	@Override
+	public void computeNewHorizontalVelocityAfter(double duration) {
+		double newVelocity = 0.0;
+		if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())){
+			newVelocity = computeNewHorizontalVelocityMoving(duration);
+		}
+		else {
+			newVelocity = 0.0;
+			setHorizontalVelocity(newVelocity);
+		}
+		if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (! Util.fuzzyGreaterThanOrEqualTo(
+				Math.abs(newVelocity),getMaxHorizontalVelocity()))){
+			this.setAccelerating(true);
+		}
+		else
+			this.setAccelerating(false);
+	}
+	
+	private double computeNewHorizontalVelocityMoving(double duration){
+		double newVelocity = 0.0;
+		if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), 
+				Math.abs(getInitHorizontalVelocity()))){
+			newVelocity = getInitHorizontalVelocity() + 
+					duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+		}
+		else {
+			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+		}
+		if (isMovingLeft())
+			newVelocity = -1.0*newVelocity;
+		setHorizontalVelocity(newVelocity);
+		return newVelocity;
+	}
+
+	@Override
+	public void advanceTime (double duration) throws IllegalArgumentException {
+		try{
+			if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
+				throw new IllegalArgumentException();
+			this.computeNewVerticalPositionAfter(duration);
+			this.computeNewVerticalVelocityAfter(duration);
+			this.determineDoubleDirections();
+			this.computeNewHorizontalPositionAfter(duration);
+			this.computeNewHorizontalVelocityAfter(duration);
+			if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
+				setTimeSinceEndMove(getTimeSinceEndMove() + duration);
+			else
+				setTimeSinceStep(getTimeSinceStep() + duration);
+			if (this.getTimeSinceEndMove() > 1.0)
+				this.sethasMovedIn(MovementDirection.NONE);
+			this.setSprite(this.getCurrentSprite());
+		}
+		catch (IllegalArgumentException exc){
+			throw exc;
+		}
+	}
+	
+	@Model
+	private void determineDoubleDirections() {
+		if (isMovingLeft() && isMovingRight())
+			this.setMovingInTwoDirections(true);
+		else {
+			this.setMovingInTwoDirections(false);
+			if (this.isMovingRight()){
+				this.sethasMovedIn(MovementDirection.RIGHT);
+				setTimeSinceEndMove(0.0);
+			}
+			else if (this.isMovingLeft()){
+				this.sethasMovedIn(MovementDirection.LEFT);
+				setTimeSinceEndMove(0.0);
+			}
+		}
+	}
+
+	@Override
+	public void startMove (String direction) {
+		assert (direction == "left" || direction == "right");
+		if (direction == "left") {
+			this.setMovingLeft(true);
+		}
+		else if (direction == "right") {
+			this.setMovingRight(true);
+		}
+		this.setAccelerating(true);
+		this.setHorizontalVelocity(getInitHorizontalVelocity());
+	}
+
+	@Override
+	public void endMove (String direction) {
+		assert (direction == "left" || direction == "right");
+		if (direction == "left"){
+			this.setMovingLeft(false);
+		}
+		else {
+			this.setMovingRight(false);
+		}
+		setIndex(0);
+	}
+
+	@Override
+	public void computeNewVerticalPositionAfter(double duration){
+		double newYPosition;
+		if (isInAir()){
+			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+					100*0.5*getVerticalAcceleration()*duration*duration;
+			if (isValidPositionAt(newYPosition,2)){
+				this.setPositionAt(newYPosition, 2);
+			}
+			else if ((int)newYPosition < Y_MIN){
+				this.setPositionAt((double)Y_MIN, 2);
+			}
+			else {
+				this.setPositionAt((double)Y_MAX, 2);
+			}
+		}
+		else{
+			if (isJumping()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
+						100*0.5*getVerticalAcceleration()*duration*duration;
+				this.setPositionAt(newYPosition, 2);
+			}
+		}
+	}
+
+	@Override
+	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
+		try{
+			if (isInAir()){
+				if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity()))){
+					setVerticalVelocity(0.0);
+				}
+				else{
+					setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
+				}
+			}
+			else{
+				if (isJumping()){
+					setVerticalVelocity(getInitVerticalVelocity());
+				}
+				else{
+					setVerticalVelocity(0.0);
+				}
+			}
+		}
+		catch (IllegalArgumentException exc){
+			throw exc;
+		}
+	}
+
+	@Override
+	public boolean isInAir(){
+		if (! Util.fuzzyGreaterThanOrEqualTo(0,this.getPositionAt(2))){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public void startJump() throws IllegalArgumentException{
+		try {
+			if(! isInAir())
+				this.setVerticalVelocity(getInitVerticalVelocity());
+			this.isJumping = true;
+		}
+		catch (IllegalArgumentException exc) {
+			throw exc;
+		}
+	}
+	
+	/**
+	 * A getter method for the boolean isDucked.
+	 */
+	@Basic
+	public boolean isDucked() {
+		return this.isDucked;
+	}
+
+	/**
+	 * A method that starts the character's duck
+	 * @post	the new character is ducking
+	 * 			| new.isDucked() = true
+	 * @effect the maximum horizontal velocity is set to 1
+	 * 			| setMaxHorizontalVelocity(1.0)
+	 */
+	public void startDuck() throws IllegalArgumentException{
+		try{
+			this.setMaxHorizontalVelocity(1.0);
+			this.isDucked = true;
+		}
+		catch (IllegalArgumentException exc) {
+			throw exc;
+		}
+	}
+	
+	/**
+	 * A method that ends the character's duck
+	 * @post	the new character is not ducking
+	 * 			| new.isDucked() = false
+	 * @effect the maximum horizontal velocity is set to 3
+	 * 			| setMaxHorizontalVelocity(3.0)
+	 */
+	public void endDuck() throws IllegalArgumentException{
+		try{
+			this.setMaxHorizontalVelocity(3.0);
+			this.isDucked = false;
+		}
+		catch (IllegalArgumentException exc) {
+			throw exc;
+		}
+	}
+	
+	/**
+	 * a boolean stating whether the character is ducked.
+	 */
+	private boolean isDucked = false;
+	
+	/**
+	 * A getter method for the variable timeSinceEndMove
+	 */
+	@Basic
+	public double getTimeSinceEndMove() {
+		return this.timeSinceEndMove;
+	}
+	
+	/**
+	 * a checker method for whether the double time is valid as timeSinceEndMove
+	 * @param time
+	 * 			the double which has to be checked whether its valid
+	 * @return	true if time is greater or equal to zero and a number
+	 * 			| result == ((time >= 0) && (! Double.isNaN(time)))
+	 */
+	public boolean isValidTimeSinceEndMove(double time) {
+		return (Util.fuzzyGreaterThanOrEqualTo(time, 0.0) && (! Double.isNaN(time)));
+	}
+	
+	/**
+	 * A setter method for the variable timeSinceEndMove
+	 * @param time
+	 * 			the time to which timeSinceEndMove has to be set
+	 * @post	timeSinceEndMove is set to time
+	 * 			| new.getTimeSinceEndMove() == time
+	 */
+	public void setTimeSinceEndMove(double time) {
+		this.timeSinceEndMove = time;
+	}
+	
+	/**
+	 * A variable that states the time that has passed since the character has stopped moving.
+	 */
+	private double timeSinceEndMove = 0.0;
+	
+	/**
+	 * A getter method for the variable timeSinceStep
+	 */
+	@Basic
+	public double getTimeSinceStep() {
+		return this.timeSinceStep;
+	}
+	
+	/**
+	 * a checker method for whether the double time is valid as timeSinceStep
+	 * @param time
+	 * 			the double which has to be checked whether its valid
+	 * @return	true if time is greater or equal to zero and a number
+	 * 			| result == ((time >= 0) && (! Double.isNaN(time)))
+	 */
+	public boolean isValidTimeSinceStep(double time) {
+		return (Util.fuzzyGreaterThanOrEqualTo(time, 0.0) && (! Double.isNaN(time)));
+	}
+	
+	/**
+	 * a setter method for the variable timeSinceStep
+	 * @param time
+	 * 			the time to which timeSinceStep has to be set
+	 * @post	timeSinceStep is set to time
+	 * 			| new.getTimeSinceStep() == time
+	 */
+	public void setTimeSinceStep(double time) {
+		this.timeSinceStep = time;
+	}
+	
+	/**
+	 * a variable containing the time since the character has stepped (in the run cycle).
+	 */
+	private double timeSinceStep = 0.0;
+	
+	/**
+	 * returns the movementDirection that the character has moved in
+	 */
+	@Basic
+	public MovementDirection getHasMovedIn() {
+		return this.hasMovedIn;
+	}
+	
+	
+
+}

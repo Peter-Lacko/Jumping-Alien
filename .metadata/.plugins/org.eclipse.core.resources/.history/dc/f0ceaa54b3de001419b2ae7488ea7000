@@ -1,0 +1,53 @@
+package jumpingalien.model;
+
+public class Shark extends OtherCharacters {
+
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewHorizontalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startMove() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void endMove() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startJump() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isInAir() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}
