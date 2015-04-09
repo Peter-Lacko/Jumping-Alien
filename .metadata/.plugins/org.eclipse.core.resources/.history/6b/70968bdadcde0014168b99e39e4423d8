@@ -594,14 +594,6 @@ public class World {
 	}
 	
 	/**
-	 * 
-	 * @return	|result == {getWindowWidth(), getWindowHeight()}
-	 */
-	public int[] getVisibleWindow(){
-		return null;
-	}
-	
-	/**
 	 * @post	| new.isTerminated()
 	 */
 	public void terminate(){

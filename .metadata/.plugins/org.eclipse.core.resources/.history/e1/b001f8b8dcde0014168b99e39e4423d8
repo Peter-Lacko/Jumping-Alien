@@ -10,17 +10,17 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * A class that controls the game world.
- * @invar	|canHaveAsTargetTile(getTargetTile())
- * @invar	|isValidTileLength(getTileLength())
- * @invar	|isValidMaxXTiles(getMaxXTiles())
- * @invar	|isValidMaxYTiles(getMaxYTiles())
+ * @invar	|canHaveAsTargetTile()
+ * @invar	|isValidTileLength()
+ * @invar	|isValidMaxXTiles()
+ * @invar	|isValidMaxYTiles()
  * @invar	|hasProperGeoFeatures() 
  * @invar	|hasProperObjects()
  * @invar	|hasProperLeftObjects()
  * @invar	|hasProperRightObjects()
  * @invar	|allCharactersLeftOrRight()
- * @invar	|canHaveAsWindowWidth(getWindowWidth())
- * @invar	|canHaveAsWindowHeight(getWindowHeight())
+ * @invar	|canHaveAsWindowWidth()
+ * @invar	|canHaveAsWindowHeight()
  * 
  * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
  * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
@@ -42,8 +42,6 @@ public class World {
 	 * @post	| new.getTileLength() == tileLength
 	 * @post	| new.getMaxXTiles() == nbTilesX
 	 * @post	| new.getMaxYTiles() == nbTilesY
-	 * @post	| new.getWindowWidth() == windowWidth
-	 * @post	| new.getWindowHeight() == windowHeight
 	 * @throws IllegalArgumentException
 	 * 			| isValidTileLength(tileLength)
 	 * @throws IllegalArgumentException
@@ -563,42 +561,6 @@ public class World {
 	 */
 	private boolean allCharactersLeftOrRight(){
 		return true;
-	}
-	
-	@Basic
-	public int getWindowWidth(){
-		return -1;
-	}
-	
-	/**
-	 * 
-	 * @param width
-	 * @return	|result == ((width > 0) && (width <= getMaxXTiles()))
-	 */
-	public boolean canHaveAsWindowWidth(int width){
-		return true;
-	}
-	
-	@Basic
-	public int getWindowHeight(){
-		return -1;
-	}
-	
-	/**
-	 * 
-	 * @param height
-	 * @return	|result == ((height > 0) && (height <= getMaxYTiles()))
-	 */
-	public boolean canHaveAsWindowHeight(int height){
-		return true;
-	}
-	
-	/**
-	 * 
-	 * @return	|result == {getWindowWidth(), getWindowHeight()}
-	 */
-	public int[] getVisibleWindow(){
-		return null;
 	}
 	
 	/**
