@@ -10,17 +10,15 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * A class that controls the game world.
- * @invar	|canHaveAsTargetTile(getTargetTile())
- * @invar	|isValidTileLength(getTileLength())
- * @invar	|isValidMaxXTiles(getMaxXTiles())
- * @invar	|isValidMaxYTiles(getMaxYTiles())
+ * @invar	|hasProperObjects()
+ * @invar	|isValidTileLength()
+ * @invar	|isValidMaxXTiles()
+ * @invar	|isValidMaxYTiles()
  * @invar	|hasProperGeoFeatures() 
  * @invar	|hasProperObjects()
  * @invar	|hasProperLeftObjects()
  * @invar	|hasProperRightObjects()
  * @invar	|allCharactersLeftOrRight()
- * @invar	|canHaveAsWindowWidth(getWindowWidth())
- * @invar	|canHaveAsWindowHeight(getWindowHeight())
  * 
  * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
  * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
@@ -34,33 +32,19 @@ public class World {
 	 * @param tileLength
 	 * @param nbTilesX
 	 * @param nbTilesY
-	 * @param windowWidth
-	 * @param windowHeight
+	 * @param visibleWindowWidth
+	 * @param visibleWindowHeight
 	 * @param targetTileX
 	 * @param targetTileY
 	 * @post	| new.getTargetTile() == {targetTileX, targetTileY}
 	 * @post	| new.getTileLength() == tileLength
 	 * @post	| new.getMaxXTiles() == nbTilesX
 	 * @post	| new.getMaxYTiles() == nbTilesY
-	 * @post	| new.getWindowWidth() == windowWidth
-	 * @post	| new.getWindowHeight() == windowHeight
-	 * @throws IllegalArgumentException
-	 * 			| isValidTileLength(tileLength)
-	 * @throws IllegalArgumentException
-	 * 			| isValidMaxXTiles(nbTilesX)
-	 * @throws IllegalArgumentException
-	 * 			| isValidMaxYTiles(nbTilesY)
-	 * @throws IllegalArgumentException
-	 * 			| canHaveAsTargetTile({targetTileX, targetTileY})
-	 * @throws IllegalArgumentException
-	 * 			| canHaveAsWindowWidth(windowWidth)
-	 * @throws IllegalArgumentException
-	 * 			| canHaveAsWindowHeight(windowHeight)
 	 */
 	@Raw
 	public World(int tileLength, int nbTilesX, int nbTilesY,
-			int windowWidth, int windowHeight, int targetTileX,
-			int targetTileY) throws IllegalArgumentException{
+			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
+			int targetTileY){
 		TILE_LENGTH = tileLength;
 		MAX_X_TILES = nbTilesX;
 		MAX_Y_TILES = nbTilesY;
@@ -69,49 +53,6 @@ public class World {
 	@Basic
 	public int[] getTargetTile(){
 		return null;
-	}
-	
-	/**
-	 * 
-	 * @param target
-	 * @return	|if (target.length != 2):
-	 * 			|	then result == false
-	 * 			|else if ((target[0] < 0) || (target[0] > getMaxXTiles())
-	 * 			|	then result == false
-	 * 			|else if ((target[1] < 0) || (target[1] > getMaxYTiles())
-	 * 			|	then result == false
-	 * 			|else
-	 * 			|	result == true
-	 */
-	public boolean canHaveAsTargetTile(int[] target){
-		return false;
-	}
-	
-	/**
-	 * 
-	 * @param mazub
-	 * @return	|if (getTilePosition(mazub.getIntPositionAt(1), mazub.getIntPositionAt(2))
-	 * 			|	== getTargetTile())
-	 * 			|	then result == true
-	 * 			|else
-	 * 			|	result == false
-	 */
-	public boolean checkIfWin(Character mazub){
-		return false;
-	}
-	
-	@Basic
-	public boolean hasPlayerWon(){
-		return false;
-	}
-	
-	/**
-	 * 
-	 * @param flag
-	 * @post new.hasPlayerWon() == flag
-	 */
-	public void setPlayerWon(boolean flag){
-		
 	}
 	
 	@Basic
@@ -563,42 +504,6 @@ public class World {
 	 */
 	private boolean allCharactersLeftOrRight(){
 		return true;
-	}
-	
-	@Basic
-	public int getWindowWidth(){
-		return -1;
-	}
-	
-	/**
-	 * 
-	 * @param width
-	 * @return	|result == ((width > 0) && (width <= getMaxXTiles()))
-	 */
-	public boolean canHaveAsWindowWidth(int width){
-		return true;
-	}
-	
-	@Basic
-	public int getWindowHeight(){
-		return -1;
-	}
-	
-	/**
-	 * 
-	 * @param height
-	 * @return	|result == ((height > 0) && (height <= getMaxYTiles()))
-	 */
-	public boolean canHaveAsWindowHeight(int height){
-		return true;
-	}
-	
-	/**
-	 * 
-	 * @return	|result == {getWindowWidth(), getWindowHeight()}
-	 */
-	public int[] getVisibleWindow(){
-		return null;
 	}
 	
 	/**

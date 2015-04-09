@@ -2,23 +2,36 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
+		<item value="Left" key="selection"/>
+=======
 		<item value="MovementDirection" key="selection"/>
+>>>>>>> 68935dfe08030f474e63c662a03f195816d9f07e
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
+			<item value="left"/>
+			<item value="computeNew"/>
+=======
 			<item value="MovementDirection"/>
 			<item value="Move"/>
 			<item value="MovementDire"/>
 			<item value="//"/>
 			<item value="//7"/>
 			<item value="horizontal"/>
+>>>>>>> 68935dfe08030f474e63c662a03f195816d9f07e
 			<item value="getnbpo"/>
 			<item value="getnb"/>
 		</list>
 		<list key="replacehistory">
+<<<<<<< HEAD
+			<item value=""/>
+=======
 			<item value="vertical"/>
+>>>>>>> 68935dfe08030f474e63c662a03f195816d9f07e
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
