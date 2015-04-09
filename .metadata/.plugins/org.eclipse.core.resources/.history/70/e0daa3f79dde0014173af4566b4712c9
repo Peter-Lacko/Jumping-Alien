@@ -1,0 +1,79 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+
+public class Plant extends OtherCharacters {
+
+	public Plant(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0);
+		setMovementDuration(0.5);
+	}
+
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		double newPosition;
+		newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+		this.setPositionAt(newPosition, 1);
+	}
+
+	
+	@Override
+	protected void computeNewHorizontalVelocityAfter(double duration) {
+		// this.setHorizontalVelocity(0.5);
+	}
+	
+	public String getLastDirection() {
+		return lastDirection;
+	}
+
+	public void setLastDirection(String lastDirection) {
+		this.lastDirection = lastDirection;
+	}
+	
+	public String lastDirection;
+
+	@Override
+	public void startMove() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void endMove() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String lefOrRight() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void computeNewVerticalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startJump() {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public boolean isInAir() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}

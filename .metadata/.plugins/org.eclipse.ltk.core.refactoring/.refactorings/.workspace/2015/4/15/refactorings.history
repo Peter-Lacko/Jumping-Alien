@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 0 elements to &apos;jumpingalien.model.Mazub.java&apos;&#x0D;&#x0A;- Destination element: &apos;jumpingalien.model.Mazub.java&apos;" description="Move compilation units" destination="=OGP1415-JumpingAlien/src&lt;jumpingalien.model{Mazub.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="false" stamp="1428535096136" units="0" version="1.0"/>
+</session>

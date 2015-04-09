@@ -7,13 +7,23 @@ import be.kuleuven.cs.som.annotate.*;
 
 public class Mazub extends Characters {
 
-	public Mazub(int x_pos, int y_pos, Sprite[] sprites, double hor_acc,
-			double max_hor_vel, double init_hor_vel, double init_ver_vel)
+	public Mazub(int x_pos, int y_pos, Sprite[] sprites)
 			throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel);
+		super(x_pos, y_pos, sprites, 0.9, 3.0, 1.0, 8.0);
 		this.nbRunningCycle = getNbImages()/2-4;
 	}
 
+	/**
+	 * A method that returns the Sprite for the character with its current variables.
+	 * @return The new Sprite is determined depending on the state of the character.
+	 * 			if the character is in the air and has moved in the last second and is not ducked,
+	 * 			return the correct sided sprite for this case. Otherwise, if the character is ducked and 
+	 * 			has moved in the last second, return the correct sided sprite for this case. Otherwise,
+	 * 			if the character has move in the last second, return the correct sided (walking/ running 
+	 * 			cycle) sprite for this case. otherwise, if the character is ducked and has not moved
+	 * 			in the last second, return the correct sprite for this case. Otherwise, return the last
+	 * 			available sprite.
+	 */
 	@Override
 	public Sprite getCurrentSprite(){
 		if ((isInAir()) && (this.getHasMovedIn() != MovementDirection.NONE) && (! isDucked())){
@@ -97,12 +107,62 @@ public class Mazub extends Characters {
 	 */
 	private final int nbRunningCycle ;
 	
-	
+	/**
+	 * Check whether the given amount of images is valid.
+	 * @param nbImages
+	 * 			the amount to check.
+	 * @return true if the amount is bigger or equal to 10 and divisible by 2. (there are different states
+	 * 			of the character summing up to at least 10 different sprites total, and it must be divisible
+	 * 			by two due to the fact that there must be left and right sided sprites.)
+	 * 			| (nbImages >= 10) && (nbImages % 2 == 0)
+	 */
 	@Override
 	public boolean isValidNbImages(int nbImages){
 		return ((nbImages >= 10) && (nbImages % 2 == 0));
 	}
 
+	/**
+	 * Compute the new horizontal position after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new horizontal position.
+	 * @post 	If the character is accelerating and if the newly calculated position is valid, the new 
+	 * 			character is at that position.
+	 * 			|newPositionAccelerating = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity() 
+	 * 			|				+ 100*0.5*getHorizontalAcceleration()*duration²
+	 * 			|if (isAccelerating() && isValidPositionAt(newPositionAccelerating,1))
+	 * 			|	new.getPositionAt(1) = newPositionAccelerating
+	 * 			otherwise, if the character is not accelerating and if the newly calculated position is
+	 * 			valid, the new character is at that position.
+	 * 			|newPosition = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity()
+	 * 			|if ((! isAccelerating()) && isValidPositionAt(newPositionAccelerating,1))
+	 * 			|	new.getPositionAt(1) = newPosition
+	 * 			otherwise, if the character is accelerating, the newly calculated position is not
+	 * 			valid and the new position is smaller than the smallest possible position, the new
+	 * 			character is at the smallest possible position.
+	 * 			|if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)) &&
+	 * 			|	((int)newPositionAccelerating < X_MIN))
+	 * 			|	new.getPositionAt(1) = (double)X_MIN
+	 * 			otherwise, if the character is accelerating, the newly calculated position is not
+	 * 			valid, the new character is at the highest possible position.
+	 * 			|else if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)))
+	 * 			|	new.getPositionAt(1) = (double)X_MAX
+	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
+	 * 			valid and the new position is smaller than the smallest possible position, the new
+	 * 			character is at the smallest possible position.
+	 * 			|if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)) &&
+	 * 			|	((int)newPositionAccelerating < X_MIN))
+	 * 			|	new.getPositionAt(1) = (double)X_MIN
+	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
+	 * 			valid, the new character is at the highest possible position.
+	 * 			|else if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)))
+	 * 			|	new.getPositionAt(1) = (double)X_MAX
+	 * @effect	if the new position is at the lowest position, the character stops moving left.
+	 * 			| if (new.getPositionAt(1) == (double)X_MIN)
+	 * 			|	this.endMove("left")
+	 * @effect	if the new position is at the highest position, the character stops moving right.
+	 * 			| if (new.getPositionAt(1) == (double)X_MAX)
+	 * 			|	this.endMove("right")
+	 */
 	@Override
 	public void computeNewHorizontalPositionAfter(double duration) {
 		if (this.movingInTwoDirections())
@@ -125,6 +185,24 @@ public class Mazub extends Characters {
 		}
 	}
 
+	/**
+	 * Compute the new horizontal velocity after a given duration
+	 * @param duration
+	 * 			the duration after which to calculate the new horizontal velocity.
+	 * @effect if the character is actually moving, compute the new velocity while it is moving
+	 * 			| if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections()))
+	 * 			| 	computeNewHorizontalVelocityMoving(duration)
+	 * @post if the character isn't actually moving, the new horizontal velocity is 0
+	 * 			| if (! ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())))
+	 * 			|	new.getHorizontalVelocity == 0.0
+	 * @post	if the character's horizontal velocity is between 0 and the maximum horizontal velocity 
+	 * 			then the character is accelerating
+	 * 			| If ((new.getHorizontalVelocity != 0) && (new.getHorizontalVelocity < getMaxHorizontalVelocity())
+	 * 			|	then new.isAccelerating() == true
+	 * 			Otherwise he is not accelerating.
+	 * 			| Else
+	 * 			|	new.isAccelerating() == false
+	 */
 	@Override
 	public void computeNewHorizontalVelocityAfter(double duration) {
 		double newVelocity = 0.0;
@@ -143,6 +221,54 @@ public class Mazub extends Characters {
 			this.setAccelerating(false);
 	}
 	
+	/**
+	 * Calculate the new horizontal velocity when the character is moving.
+	 * @param duration
+	 * 			the duration after which to calculate the new horizontal velocity.
+	 * @post	If the character is moving left, it has a negative velocity.
+	 * 			| If (direction == "left")
+	 * 			|	then directionModifier == -1
+	 * 			| Else directionModifier == 1	
+	 * 			If the absolute value of the current speed is lower than the absolute value of the 
+	 * 			initial speed, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
+	 * 			|	then (new.getHorizontalVelocity == 
+	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * 			Otherwise, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the current horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
+	 * 			|	then (new.getHorizontalVelocity == 
+	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * @return Returns the newly calculated velocity.
+	 *			If the character is moving left, it has a negative velocity.
+	 * 			| If (direction == "left")
+	 * 			|	then directionModifier == -1
+	 * 			| Else directionModifier == 1	
+	 * 			If the absolute value of the current speed is lower than the absolute value of the 
+	 * 			initial speed, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
+	 * 			|	then (result == 
+	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * 			Otherwise, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the current horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
+	 * 			|	then (result == 
+	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 */
 	private double computeNewHorizontalVelocityMoving(double duration){
 		double newVelocity = 0.0;
 		if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), 
@@ -161,6 +287,41 @@ public class Mazub extends Characters {
 		return newVelocity;
 	}
 
+	/**
+	 * A method to calculate the new position and velocity after a given duration of time. It also 
+	 * calculates the time since the previous frame of running animation and time since previous stop.
+	 * finally, it determines the correct sprite for the character.
+	 * @param duration
+	 * 			The duration of time that passes.
+	 * @effect determines whether the character is moving in two directions (ie both direction keys are
+	 * 			pushed, so the character is not moving) and what actions should be taken.
+	 * 			|determineDoubleDirections()
+	 * @effect computes the new horizontal position after the given duration.
+	 * 			| computeNewHorizontalPositionAfter(duration)
+	 * @effect computes the new horizontal velocity after the given duration.
+	 * 			| computeNewHorizontalVelocityAfter(duration)
+	 * @effect computes the new vertical position after the given duration.
+	 * 			| computeNewVerticalPositionAfter(duration)
+	 * @effect computes the new vertical velocity after the given duration.
+	 * 			| computeNewVerticalVelocityAfter(duration)
+	 * @effect The new sprite is calculated with the character's current values
+	 * 			| new.getSprite() == this.getCurrentSprite()
+	 * @post	if the character isn't moving, the duration is added to the timer counting the time since
+	 * 			the character stopped.
+	 * 			|if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
+	 * 			|	new.getTimeSinceEndMove() == this.getTimeSinceEndMove() + duration
+	 * 			otherwise, the duration is added to the timer counting the time since the previous frame
+	 * 			of running animation
+	 * 			|else
+	 * 			|	new.getTimeSinceStep() == this.getTimeSinceStep() + duration
+	 * @post	if the character hasn't moved in the last second, this fact is then registered in the new 
+	 * 			character's variable.
+	 * 			|if (this.getTimeSinceEndMove() > 1.0)
+	 * 			|	new.getHasMovedIn() == MovementDirection.NONE
+	 * @throws IllegalArgumentException
+	 * 			The given duration is an invalid duration of time.
+	 * 			| ((duration < 0.0) || (duration >= 0.2))
+	 */
 	@Override
 	public void advanceTime (double duration) throws IllegalArgumentException {
 		try{
@@ -184,6 +345,32 @@ public class Mazub extends Characters {
 		}
 	}
 	
+	/**
+	 * A method to determine what actions should be taken if the character is moving in two directions
+	 * (when both keys are pushed). The character will not move in such a case.
+	 * @post if the character is moving in both directions, the new character is moving in both directions
+	 * 		| if (isMovingLeft() && isMovingRight())
+	 * 		|	new.movingInTwoDirections() == true
+	 * 		otherwise the new character is not moving in both directions.
+	 * 		| else
+	 * 		| 	new.movingInTwoDirections() == false
+	 * @post 	if the character is not moving in both directions, and is moving right, then the new character
+	 * 			has moved right.
+	 * 			|if (! (isMovingLeft() && isMovingRight())) && isMovingRight()
+	 * 			|	new.getHasMovedIn() == MovementDirection.RIGHT
+	 * @post 	if the character is not moving in both directions, and is moving right, then no time has 
+	 * 			passed since the new character stopped.
+	 * 			|if (! (isMovingLeft() && isMovingRight())) && isMovingRight()
+	 * 			|	new.getTimeSinceEndMove() == 0.0
+	 * @post 	if the character is not moving in both directions, and is moving left, then the new character
+	 * 			has moved left.
+	 * 			|if (! (isMovingLeft() && isMovingRight())) && isMovingLeft()
+	 * 			|	new.getHasMovedIn() == MovementDirection.LEFT
+	 * @post 	if the character is not moving in both directions, and is moving left, then no time has 
+	 * 			passed since the new character stopped.
+	 * 			|if (! (isMovingLeft() && isMovingRight())) && isMovingLeft()
+	 * 			|	new.getTimeSinceEndMove() == 0.0
+	 */
 	@Model
 	private void determineDoubleDirections() {
 		if (isMovingLeft() && isMovingRight())
@@ -200,8 +387,24 @@ public class Mazub extends Characters {
 			}
 		}
 	}
-
-	@Override
+	
+	/**
+	 * Start moving the character in the given direction
+	 * @param direction
+	 * 			The direction to start moving in.
+	 * @pre The direction must be left or right
+	 * 		| (direction == "left") || (direction == "right")
+	 * @post if the direction was left, the new character is moving left.
+	 * 		| if (direction == "left")
+	 * 		|	then new.isMovingLeft() == true
+	 * @post if the direction was right, the new character is moving right.
+	 * 		| if (direction == "right")
+	 * 		|	then new.isMovingRight() == true
+	 * @post the new character is accelerating
+	 * 		| new.isAccelerating() == true
+	 * @post The character's new velocity is equal to the initial velocity.
+	 * 		| new.getHorizontalVelocity() == new.getInitHorizontalVelocity()
+	 */
 	public void startMove (String direction) {
 		assert (direction == "left" || direction == "right");
 		if (direction == "left") {
@@ -214,7 +417,21 @@ public class Mazub extends Characters {
 		this.setHorizontalVelocity(getInitHorizontalVelocity());
 	}
 
-	@Override
+	/**
+	 * Stop moving the character in the given direction
+	 * @param direction
+	 * 			The direction to stop moving in.
+	 * @pre The direction must be left or right
+	 * 		| (direction == "left") || (direction == "right")
+	 * @post if the direction was left, the new character is not moving left.
+	 * 		| if (direction == "left")
+	 * 		|	then new.isMovingLeft() == false
+	 * @post if the direction was right, the new character is not moving right.
+	 * 		| if (direction == "right")
+	 * 		|	then new.isMovingRight() == false
+	 * @post The index of the new character's running cycle is reset.
+	 * 		| new.getIndex() = 0
+	 */
 	public void endMove (String direction) {
 		assert (direction == "left" || direction == "right");
 		if (direction == "left"){
@@ -226,6 +443,30 @@ public class Mazub extends Characters {
 		setIndex(0);
 	}
 
+	/**
+	 * Compute the new vertical position after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical position.
+	 * @post    if the character is in the air and and the calculated position is 
+	 * 			a possible height then that is the new height. if it's too high the new
+	 * 			height is the maximal height. if it's too low the new height is the minimal 
+	 * 			height. if the character is not in the air but it is jumping, the new height
+	 * 			is calculated.
+	 * 			|if isInAir()
+	 * 			|	then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+	 *			|						100*0.5*getVerticalAcceleration()*duration*duration;
+	 * 			|	if isValidPositionAt(newYPosition,2)
+	 * 			|		then new.getPositionAt(2) = newYPosition
+	 * 			|	else if (int)newYPosition < Y_MIN
+	 * 			|		then new.getPositionAt(2) = (double)Y_MIN
+	 *			|	else
+	 *			|		then new.verticalPosition = (double)Y_MAX
+	 *			|else
+	 *			|	if isJumping()
+	 *			|		then new.getPositionAt(2) = this.getPositionAt(2) + 100*duration
+	 *			|									*this.getVerticalVelocity()
+	 *			|									+ 100*0.5*getVerticalAcceleration()*duration*duration;
+	 */
 	@Override
 	public void computeNewVerticalPositionAfter(double duration){
 		double newYPosition;
@@ -251,6 +492,25 @@ public class Mazub extends Characters {
 		}
 	}
 
+	/**
+	 * Compute the new vertical speed after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical speed.
+	 * @effect if the character is in the air, not jumping and the vertical velocity is bigger than 0,
+	 * 			the vertical velocity is set to 0
+	 * 			| if (isInAir() && (! isJumping()) && (0.0 < getVerticalVelocity()))
+	 * 			|	setVerticalVelocity(0.0)
+	 * 			otherwise, if the character is in the air, the velocity is set to the calculated velocity
+	 * 			| if (isInAir())
+	 * 			|	setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
+	 * 			otherwise, if the character is not in the air, and is jumping, set the velocity to
+	 * 			the initial vertical velocity
+	 * 			| if ((! isInAir()) && isJumping())
+	 * 			|	setVerticalVelocity(getInitVerticalVelocity())
+	 * 			otherwise, set the vertical velocity to 0
+	 * 			| else
+	 * 			| setVerticalVelocity(0.0)
+	 */
 	@Override
 	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
 		try{
@@ -276,6 +536,16 @@ public class Mazub extends Characters {
 		}
 	}
 
+	/**
+	 * A method that returns whether a character is in the air or not
+	 * @return	true if the character is in the air (ie above the 0.0 y-coordinate)
+	 * 			else false
+	 * 			| if (this.getPositionAt(2) > 0):
+	 * 			| 	result == true
+	 * 			| else
+	 * 			|	result == false
+	 */
+	// TODO aanpassen voor de nieuwe world
 	@Override
 	public boolean isInAir(){
 		if (! Util.fuzzyGreaterThanOrEqualTo(0,this.getPositionAt(2))){
@@ -286,6 +556,15 @@ public class Mazub extends Characters {
 		}
 	}
 
+	/**
+	 * A method that starts the character's jump.
+	 * @post the character is jumping
+	 * 		| new.isJumping() == true
+	 * @effect if the character isn't already in the air, its new vertical velocity is equal to the initial
+	 * 			vertical velocity
+	 * 			| if (! isInAir())
+	 * 			|	then setVerticalVelocity(getInitVerticalVelocity())
+	 */
 	@Override
 	public void startJump() throws IllegalArgumentException{
 		try {
@@ -414,15 +693,6 @@ public class Mazub extends Characters {
 	 * a variable containing the time since the character has stepped (in the run cycle).
 	 */
 	private double timeSinceStep = 0.0;
-	
-	/**
-	 * returns the movementDirection that the character has moved in
-	 */
-	@Basic
-	public MovementDirection getHasMovedIn() {
-		return this.hasMovedIn;
-	}
-	
 	
 
 }
