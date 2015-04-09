@@ -24,7 +24,6 @@ public class Shark extends OtherCharacters {
 	
 	public double[] durationrange;
 
-	// TODO collisions
 	@Override
 	protected void computeNewHorizontalPositionAfter(double duration) {
 		double newPosition;

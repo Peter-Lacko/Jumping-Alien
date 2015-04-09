@@ -4,6 +4,7 @@
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Raw"/>
 <fullyQualifiedTypeName name="jumpingalien.util.Util"/>
-<fullyQualifiedTypeName name="jumpingalien.model.MovementDirection"/>
 <fullyQualifiedTypeName name="jumpingalien.model.Plant"/>
+<fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="jumpingalien.model.MovementDirection"/>
 </qualifiedTypeNameHistroy>

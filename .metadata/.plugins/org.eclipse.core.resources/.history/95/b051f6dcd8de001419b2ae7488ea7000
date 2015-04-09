@@ -1,7 +1,6 @@
 package jumpingalien.model;
 
 import jumpingalien.util.*;
-import jumpingalien.model.World.*;
 import be.kuleuven.cs.som.annotate.*;
 
 

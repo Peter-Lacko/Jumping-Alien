@@ -15,20 +15,13 @@ public class Plant extends OtherCharacters {
 	// TODO rekening houden met collisions
 	protected void computeNewHorizontalPositionAfter(double duration) {
 		double newPosition;
-		if (isMovingLeft() || isMovingRight())
+		if (isMovingLeft())
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+		else if (isMovingRight())
 			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
 		else
 			newPosition = this.getPositionAt(1);
-		if (isValidPositionAt(newPosition,1))
-			this.setPositionAt(newPosition, 1);
-		else if ((int)newPosition < X_MIN){
-			this.setPositionAt((double)X_MIN, 1);
-			this.endMove();
-		}
-		else {
-			this.setPositionAt((double)X_MAX, 1);
-			this.endMove();
-		}
+		this.setPositionAt(newPosition, 1);
 	}
 
 	

@@ -306,18 +306,18 @@ public class Mazub extends Characters {
 	 * 			| computeNewVerticalVelocityAfter(duration)
 	 * @effect The new sprite is calculated with the character's current values
 	 * 			| new.getSprite() == this.getCurrentSprite()
-	 * @effect	if the character isn't moving, the duration is added to the timer counting the time since
+	 * @post	if the character isn't moving, the duration is added to the timer counting the time since
 	 * 			the character stopped.
 	 * 			|if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
-	 * 			|	this.setTimeSinceEndMove(this.getTimeSinceEndMove() + duration)
+	 * 			|	new.getTimeSinceEndMove() == this.getTimeSinceEndMove() + duration
 	 * 			otherwise, the duration is added to the timer counting the time since the previous frame
 	 * 			of running animation
 	 * 			|else
-	 * 			|	this.setTimeSinceStep(this.getTimeSinceStep() + duration)
-	 * @effect	if the character hasn't moved in the last second, this fact is then registered in the new 
+	 * 			|	new.getTimeSinceStep() == this.getTimeSinceStep() + duration
+	 * @post	if the character hasn't moved in the last second, this fact is then registered in the new 
 	 * 			character's variable.
 	 * 			|if (this.getTimeSinceEndMove() > 1.0)
-	 * 			|	this.setHasMovedIn((MovementDirection.NONE)
+	 * 			|	new.getHasMovedIn() == MovementDirection.NONE
 	 * @throws IllegalArgumentException
 	 * 			The given duration is an invalid duration of time.
 	 * 			| ((duration < 0.0) || (duration >= 0.2))

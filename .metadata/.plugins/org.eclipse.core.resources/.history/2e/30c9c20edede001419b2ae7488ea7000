@@ -1,8 +1,6 @@
 package jumpingalien.model;
 
 import jumpingalien.util.Sprite;
-import jumpingalien.util.Util;
-
 import java.util.Random;
 
 public abstract class OtherCharacters extends Characters {
@@ -48,29 +46,19 @@ public abstract class OtherCharacters extends Characters {
 	@Override
 	protected abstract void computeNewHorizontalVelocityAfter(double duration) ;
 	
-	/**
-	 * 
-	 */
 	@Override
 	public void advanceTime(double duration){
-		try {
-			if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
-				throw new IllegalArgumentException();
-			if (getTimeSinceStartMovement() < movementDuration){
-					computeNewHorizontalVelocityAfter(duration);
-					computeNewHorizontalPositionAfter(duration);
-					computeNewVerticalVelocityAfter(duration);
-					computeNewVerticalPositionAfter(duration);
-					setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
-			}
-			else{
-				endMove();
-				setTimeSinceStartMovement(0.0);;
-				startMove();
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (getTimeSinceStartMovement() < movementDuration){
+				computeNewHorizontalVelocityAfter(duration);
+				computeNewHorizontalPositionAfter(duration);
+				computeNewVerticalVelocityAfter(duration);
+				computeNewVerticalPositionAfter(duration);
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+		}
+		else{
+			endMove();
+			setTimeSinceStartMovement(0.0);;
+			startMove();
 		}
 	}
 
