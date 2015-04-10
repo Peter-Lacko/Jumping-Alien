@@ -56,17 +56,17 @@ public abstract class OtherCharacters extends Characters {
 		try {
 			if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 				throw new IllegalArgumentException();
-			if (getTimeSinceStartMovement() < movementDuration){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
 					computeNewHorizontalVelocityAfter(duration);
 					computeNewHorizontalPositionAfter(duration);
-					computeNewVerticalVelocityAfter(duration);
 					computeNewVerticalPositionAfter(duration);
+					computeNewVerticalVelocityAfter(duration);
 					setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
 			}
 			else{
 				endMove();
 				setTimeSinceStartMovement(0.0);;
-				startMove();
+				//startMove();
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

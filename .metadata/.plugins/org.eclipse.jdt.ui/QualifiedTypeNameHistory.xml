@@ -7,4 +7,6 @@
 <fullyQualifiedTypeName name="jumpingalien.model.Plant"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
 <fullyQualifiedTypeName name="jumpingalien.model.MovementDirection"/>
+<fullyQualifiedTypeName name="jumpingalien.model.World"/>
+<fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
 </qualifiedTypeNameHistroy>

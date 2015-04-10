@@ -121,48 +121,48 @@ public class Mazub extends Characters {
 		return ((nbImages >= 10) && (nbImages % 2 == 0));
 	}
 
-	/**
-	 * Compute the new horizontal position after a given duration.
-	 * @param duration
-	 * 			The duration after after which to calculate the new horizontal position.
-	 * @post 	If the character is accelerating and if the newly calculated position is valid, the new 
-	 * 			character is at that position.
-	 * 			|newPositionAccelerating = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity() 
-	 * 			|				+ 100*0.5*getHorizontalAcceleration()*duration²
-	 * 			|if (isAccelerating() && isValidPositionAt(newPositionAccelerating,1))
-	 * 			|	new.getPositionAt(1) = newPositionAccelerating
-	 * 			otherwise, if the character is not accelerating and if the newly calculated position is
-	 * 			valid, the new character is at that position.
-	 * 			|newPosition = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity()
-	 * 			|if ((! isAccelerating()) && isValidPositionAt(newPositionAccelerating,1))
-	 * 			|	new.getPositionAt(1) = newPosition
-	 * 			otherwise, if the character is accelerating, the newly calculated position is not
-	 * 			valid and the new position is smaller than the smallest possible position, the new
-	 * 			character is at the smallest possible position.
-	 * 			|if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)) &&
-	 * 			|	((int)newPositionAccelerating < X_MIN))
-	 * 			|	new.getPositionAt(1) = (double)X_MIN
-	 * 			otherwise, if the character is accelerating, the newly calculated position is not
-	 * 			valid, the new character is at the highest possible position.
-	 * 			|else if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)))
-	 * 			|	new.getPositionAt(1) = (double)X_MAX
-	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
-	 * 			valid and the new position is smaller than the smallest possible position, the new
-	 * 			character is at the smallest possible position.
-	 * 			|if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)) &&
-	 * 			|	((int)newPositionAccelerating < X_MIN))
-	 * 			|	new.getPositionAt(1) = (double)X_MIN
-	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
-	 * 			valid, the new character is at the highest possible position.
-	 * 			|else if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)))
-	 * 			|	new.getPositionAt(1) = (double)X_MAX
-	 * @effect	if the new position is at the lowest position, the character stops moving left.
-	 * 			| if (new.getPositionAt(1) == (double)X_MIN)
-	 * 			|	this.endMove("left")
-	 * @effect	if the new position is at the highest position, the character stops moving right.
-	 * 			| if (new.getPositionAt(1) == (double)X_MAX)
-	 * 			|	this.endMove("right")
-	 */
+//	/**
+//	 * Compute the new horizontal position after a given duration.
+//	 * @param duration
+//	 * 			The duration after after which to calculate the new horizontal position.
+//	 * @post 	If the character is accelerating and if the newly calculated position is valid, the new 
+//	 * 			character is at that position.
+//	 * 			|newPositionAccelerating = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity() 
+//	 * 			|				+ 100*0.5*getHorizontalAcceleration()*duration²
+//	 * 			|if (isAccelerating() && isValidPositionAt(newPositionAccelerating,1))
+//	 * 			|	new.getPositionAt(1) = newPositionAccelerating
+//	 * 			otherwise, if the character is not accelerating and if the newly calculated position is
+//	 * 			valid, the new character is at that position.
+//	 * 			|newPosition = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity()
+//	 * 			|if ((! isAccelerating()) && isValidPositionAt(newPositionAccelerating,1))
+//	 * 			|	new.getPositionAt(1) = newPosition
+//	 * 			otherwise, if the character is accelerating, the newly calculated position is not
+//	 * 			valid and the new position is smaller than the smallest possible position, the new
+//	 * 			character is at the smallest possible position.
+//	 * 			|if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)) &&
+//	 * 			|	((int)newPositionAccelerating < X_MIN))
+//	 * 			|	new.getPositionAt(1) = (double)X_MIN
+//	 * 			otherwise, if the character is accelerating, the newly calculated position is not
+//	 * 			valid, the new character is at the highest possible position.
+//	 * 			|else if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)))
+//	 * 			|	new.getPositionAt(1) = (double)X_MAX
+//	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
+//	 * 			valid and the new position is smaller than the smallest possible position, the new
+//	 * 			character is at the smallest possible position.
+//	 * 			|if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)) &&
+//	 * 			|	((int)newPositionAccelerating < X_MIN))
+//	 * 			|	new.getPositionAt(1) = (double)X_MIN
+//	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
+//	 * 			valid, the new character is at the highest possible position.
+//	 * 			|else if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)))
+//	 * 			|	new.getPositionAt(1) = (double)X_MAX
+//	 * @effect	if the new position is at the lowest position, the character stops moving left.
+//	 * 			| if (new.getPositionAt(1) == (double)X_MIN)
+//	 * 			|	this.endMove("left")
+//	 * @effect	if the new position is at the highest position, the character stops moving right.
+//	 * 			| if (new.getPositionAt(1) == (double)X_MAX)
+//	 * 			|	this.endMove("right")
+//	 */
 	@Override
 	public void computeNewHorizontalPositionAfter(double duration) {
 		if (this.movingInTwoDirections())
@@ -174,14 +174,8 @@ public class Mazub extends Characters {
 				newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
 			if (isValidPositionAt(newPosition,1))
 				this.setPositionAt(newPosition, 1);
-			else if ((int)newPosition < X_MIN){
-				this.setPositionAt((double)X_MIN, 1);
-				this.endMove("left");
-			}
-			else {
-				this.setPositionAt((double)X_MAX, 1);
-				this.endMove("right");
-			}
+			endMove("left");
+			endMove("right");
 		}
 	}
 
@@ -443,30 +437,30 @@ public class Mazub extends Characters {
 		setIndex(0);
 	}
 
-	/**
-	 * Compute the new vertical position after a given duration.
-	 * @param duration
-	 * 			The duration after after which to calculate the new vertical position.
-	 * @post    if the character is in the air and and the calculated position is 
-	 * 			a possible height then that is the new height. if it's too high the new
-	 * 			height is the maximal height. if it's too low the new height is the minimal 
-	 * 			height. if the character is not in the air but it is jumping, the new height
-	 * 			is calculated.
-	 * 			|if isInAir()
-	 * 			|	then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
-	 *			|						100*0.5*getVerticalAcceleration()*duration*duration;
-	 * 			|	if isValidPositionAt(newYPosition,2)
-	 * 			|		then new.getPositionAt(2) = newYPosition
-	 * 			|	else if (int)newYPosition < Y_MIN
-	 * 			|		then new.getPositionAt(2) = (double)Y_MIN
-	 *			|	else
-	 *			|		then new.verticalPosition = (double)Y_MAX
-	 *			|else
-	 *			|	if isJumping()
-	 *			|		then new.getPositionAt(2) = this.getPositionAt(2) + 100*duration
-	 *			|									*this.getVerticalVelocity()
-	 *			|									+ 100*0.5*getVerticalAcceleration()*duration*duration;
-	 */
+//	/**
+//	 * Compute the new vertical position after a given duration.
+//	 * @param duration
+//	 * 			The duration after after which to calculate the new vertical position.
+//	 * @post    if the character is in the air and and the calculated position is 
+//	 * 			a possible height then that is the new height. if it's too high the new
+//	 * 			height is the maximal height. if it's too low the new height is the minimal 
+//	 * 			height. if the character is not in the air but it is jumping, the new height
+//	 * 			is calculated.
+//	 * 			|if isInAir()
+//	 * 			|	then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+//	 *			|						100*0.5*getVerticalAcceleration()*duration*duration;
+//	 * 			|	if isValidPositionAt(newYPosition,2)
+//	 * 			|		then new.getPositionAt(2) = newYPosition
+//	 * 			|	else if (int)newYPosition < Y_MIN
+//	 * 			|		then new.getPositionAt(2) = (double)Y_MIN
+//	 *			|	else
+//	 *			|		then new.verticalPosition = (double)Y_MAX
+//	 *			|else
+//	 *			|	if isJumping()
+//	 *			|		then new.getPositionAt(2) = this.getPositionAt(2) + 100*duration
+//	 *			|									*this.getVerticalVelocity()
+//	 *			|									+ 100*0.5*getVerticalAcceleration()*duration*duration;
+//	 */
 	@Override
 	public void computeNewVerticalPositionAfter(double duration){
 		double newYPosition;
@@ -476,10 +470,7 @@ public class Mazub extends Characters {
 			if (isValidPositionAt(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
 			}
-			else if ((int)newYPosition < Y_MIN){
-				this.setPositionAt((double)Y_MIN, 2);
-			}
-			else {
+			else if ((int)newYPosition < Y_MAX){
 				this.setPositionAt((double)Y_MAX, 2);
 			}
 		}
@@ -487,7 +478,8 @@ public class Mazub extends Characters {
 			if (isJumping()){
 				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
 						100*0.5*getVerticalAcceleration()*duration*duration;
-				this.setPositionAt(newYPosition, 2);
+				if (isValidPositionAt(newYPosition, 2))
+					this.setPositionAt(newYPosition, 2);
 			}
 		}
 	}
@@ -548,12 +540,12 @@ public class Mazub extends Characters {
 	// TODO aanpassen voor de nieuwe world
 	@Override
 	public boolean isInAir(){
-		if (! Util.fuzzyGreaterThanOrEqualTo(0,this.getPositionAt(2))){
-			return true;
+		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
+			if (getWorld().getGeoFeatureAt(i, getIntPositionAt(2)) == GeoFeature.GROUND)
+				return false;
 		}
-		else {
-			return false;
-		}
+		return true;
+		
 	}
 
 	/**

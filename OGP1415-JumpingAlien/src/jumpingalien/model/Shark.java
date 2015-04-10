@@ -1,6 +1,7 @@
 package jumpingalien.model;
 
 import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
 
 public class Shark extends OtherCharacters {
 
@@ -24,7 +25,6 @@ public class Shark extends OtherCharacters {
 	
 	public double[] durationrange;
 
-	// TODO collisions
 	@Override
 	protected void computeNewHorizontalPositionAfter(double duration) {
 		double newPosition;
@@ -73,31 +73,106 @@ public class Shark extends OtherCharacters {
 		setHorizontalVelocity(0.0);
 		if (getVerticalVelocity() > 0)
 			setVerticalVelocity(0.0);
+		startMove();
 	}
 
 	@Override
-	protected void computeNewVerticalPositionAfter(double duration) {
-		// TODO Auto-generated method stub
+	public void computeNewVerticalPositionAfter(double duration){
+		double newYPosition;
+		if (isInAir()){
+			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+					100*0.5*getVerticalAcceleration()*duration*duration;
+			if (isValidPositionAt(newYPosition,2)){
+				this.setPositionAt(newYPosition, 2);
+			}
+			else if ((int)newYPosition < Y_MAX){
+				this.setPositionAt((double)Y_MAX, 2);
+			}
+		}
+		else{
+			if (isJumping()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
+						100*0.5*getVerticalAcceleration()*duration*duration;
+				if (isValidPositionAt(newYPosition, 2))
+					this.setPositionAt(newYPosition, 2);
+			}
+		}
+	}
 
+	/**
+	 * Compute the new vertical speed after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical speed.
+	 * @effect if the character is in the air, not jumping and the vertical velocity is bigger than 0,
+	 * 			the vertical velocity is set to 0
+	 * 			| if (isInAir() && (! isJumping()) && (0.0 < getVerticalVelocity()))
+	 * 			|	setVerticalVelocity(0.0)
+	 * 			otherwise, if the character is in the air, the velocity is set to the calculated velocity
+	 * 			| if (isInAir())
+	 * 			|	setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
+	 * 			otherwise, if the character is not in the air, and is jumping, set the velocity to
+	 * 			the initial vertical velocity
+	 * 			| if ((! isInAir()) && isJumping())
+	 * 			|	setVerticalVelocity(getInitVerticalVelocity())
+	 * 			otherwise, set the vertical velocity to 0
+	 * 			| else
+	 * 			| setVerticalVelocity(0.0)
+	 */
+	@Override
+	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
+		try{
+			if (isInAir()){
+				if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity()))){
+					setVerticalVelocity(0.0);
+				}
+				else{
+					setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
+				}
+			}
+			else{
+				if (isJumping()){
+					setVerticalVelocity(getInitVerticalVelocity());
+				}
+				else{
+					setVerticalVelocity(0.0);
+				}
+			}
+		}
+		catch (IllegalArgumentException exc){
+			throw exc;
+		}
+	}
+
+	/**
+	 * A method that starts the character's jump.
+	 * @post the character is jumping
+	 * 		| new.isJumping() == true
+	 * @effect if the character isn't already in the air, its new vertical velocity is equal to the initial
+	 * 			vertical velocity
+	 * 			| if (! isInAir())
+	 * 			|	then setVerticalVelocity(getInitVerticalVelocity())
+	 */
+	@Override
+	public void startJump() throws IllegalArgumentException{
+		try {
+			if(! isInAir())
+				this.setVerticalVelocity(getInitVerticalVelocity());
+			this.isJumping = true;
+		}
+		catch (IllegalArgumentException exc) {
+			throw exc;
+		}
 	}
 
 	@Override
-	protected void computeNewVerticalVelocityAfter(double duration) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void startJump() {
-		// TODO Auto-generated method stub
-		setMovementDuration(randomDuration(durationrange));
+	public boolean isInAir(){
+		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
+			GeoFeature geo = getWorld().getGeoFeatureAt(i, getIntPositionAt(2));
+			if (geo == GeoFeature.GROUND || geo == GeoFeature.WATER)
+				return false;
+		}
+		return true;
 		
-	}
-
-	@Override
-	public boolean isInAir() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }
