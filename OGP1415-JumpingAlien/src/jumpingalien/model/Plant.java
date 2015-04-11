@@ -9,21 +9,42 @@ public class Plant extends OtherCharacters {
 		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0);
 		setMovementDuration(0.5);
 		setMovingRight(true);
+		setHeight(getHeight());
+		setWidth(getWidth());
 	}
+
+	public static int getHeight() {
+		return height;
+	}
+
+
+	public static void setHeight(int height) {
+		Plant.height = height;
+	}
+	
+	public static int height;
+	
+	public static int getWidth() {
+		return width;
+	}
+
+	public static void setWidth(int width) {
+		Plant.width = width;
+	}
+	
+	public static int width;
 
 	@Override
 	// TODO rekening houden met collisions
 	protected void computeNewHorizontalPositionAfter(double duration) {
 		double newPosition;
-		if (isMovingLeft())
-			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
-		else if (isMovingRight())
-			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
-		else
+		if (isMovingLeft() || isMovingRight()){
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();;
+		}else
 			newPosition = this.getPositionAt(1);
-		this.setPositionAt(newPosition, 1);
+		if (isValidPositionAt(newPosition,1))
+			this.setPositionAt(newPosition, 1);
 	}
-
 	
 	@Override
 	protected void computeNewHorizontalVelocityAfter(double duration) {
@@ -59,7 +80,7 @@ public class Plant extends OtherCharacters {
 	public void endMove() {
 		setMovingRight(false);
 		setMovingLeft(false);
-
+		startMove();
 	}
 
 	@Override

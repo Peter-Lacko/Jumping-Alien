@@ -1,0 +1,112 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import java.util.Random;
+
+public abstract class OtherCharacters extends Characters {
+
+	public OtherCharacters(int x_pos, int y_pos, Sprite[] sprites,double hor_acc, double max_hor_vel, 
+			double init_hor_vel, double init_ver_vel) throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel);
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| leftOrRightSprite(0)
+	 */
+	@Override
+	public Sprite getCurrentSprite() {
+		return leftOrRightSprite(0);
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number >= 0 && number <2)
+	 */
+	@Override
+	public boolean canHaveAsIndex(int number) {
+		return ((number >= 0) && (number < 2));
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number == 2)
+	 */
+	@Override
+	public boolean isValidNbImages(int nbImages) {
+		return (nbImages == 2);
+	}
+
+	@Override
+	protected abstract void computeNewHorizontalPositionAfter(double duration) ;
+
+	@Override
+	protected abstract void computeNewHorizontalVelocityAfter(double duration) ;
+	
+	@Override
+	public void advanceTime(double duration){
+		if (getTimeSinceStartMovement() < movementDuration){
+				computeNewHorizontalVelocityAfter(duration);
+				computeNewHorizontalPositionAfter(duration);
+				computeNewVerticalVelocityAfter(duration);
+				computeNewVerticalPositionAfter(duration);
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+				System.out.println(getTimeSinceStartMovement());
+		}
+		else{
+			endMove();
+			setTimeSinceStartMovement(0.0);;
+			startMove();
+		}
+	}
+
+	public abstract void startMove();
+
+	public abstract void endMove();
+	
+	public boolean getRandomBoolean() {
+	    Random random = new Random();
+	    return random.nextBoolean();
+	}
+	
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	public void setTimeSinceStartMovement(double timeSinceStartMovement) {
+		this.timeSinceStartMovement = timeSinceStartMovement;
+	}
+	
+	public double timeSinceStartMovement = 0.0;
+
+	public double getMovementDuration() {
+		return movementDuration;
+	}
+
+	public void setMovementDuration(double movementDuration) {
+		this.movementDuration = movementDuration;
+	}
+	
+	public double randomDuration(double[] range){
+		Random r = new Random();
+		double duration = range[0] + (range[1]-range[0])*r.nextDouble();
+		return duration;
+	}
+	
+	public double movementDuration;
+
+	@Override
+	protected abstract void computeNewVerticalPositionAfter(double duration) ;
+
+	@Override
+	protected abstract void computeNewVerticalVelocityAfter(double duration) ;
+
+
+
+	@Override
+	public abstract void startJump() ;
+
+}

@@ -1,0 +1,82 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+
+public class Shark extends OtherCharacters {
+
+	public Shark(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0);
+		startMove();
+		double[] durationrange = new double[2];
+		durationrange[0]=1;
+		durationrange[1]=4;
+		setDurationrange(durationrange);
+	}
+	
+	public double[] getDurationrange() {
+		return durationrange;
+	}
+
+	public void setDurationrange(double[] durationrange) {
+		this.durationrange = durationrange;
+	}
+	
+	public double[] durationrange;
+
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewHorizontalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startMove() {
+		setMovementDuration(randomDuration(getDurationrange()));
+		if (getRandomBoolean())
+			setMovingLeft(true);
+		else
+			setMovingRight(true);
+		if (!isInAir() && getRandomBoolean())
+			startJump();
+	}
+
+	@Override
+	public void endMove() {
+		setMovingRight(false);
+		setMovingLeft(false);
+		endJump();
+	}
+
+	@Override
+	protected void computeNewVerticalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startJump() {
+		// TODO Auto-generated method stub
+		setMovementDuration(randomDuration(durationrange));
+		
+	}
+
+	@Override
+	public boolean isInAir() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+}

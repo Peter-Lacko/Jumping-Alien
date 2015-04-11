@@ -1,6 +1,7 @@
 package jumpingalien.model;
 
 import jumpingalien.util.*;
+import jumpingalien.model.World.*;
 import be.kuleuven.cs.som.annotate.*;
 
 
@@ -103,8 +104,23 @@ public abstract class Characters {
 		this.setMaxHorizontalVelocity(max_hor_vel);
 		this.setInitHorizontalVelocity(init_hor_vel);
 		this.setinitVerticalVelocity(init_ver_vel);
-	}	
+	}
 	
+	public boolean canHaveAsWorld(World world){
+		return true;
+	}
+	
+	public World getWorld() {
+		return this.world;
+	}
+
+	public void setWorld(World world) throws IllegalArgumentException {
+		if (! canHaveAsWorld(world))
+			throw new IllegalArgumentException("Wrong Arguments");
+		this.world = world;
+	}
+	
+	private World world = null;
 	
 	/**
 	 * A method to return the size of the character's sprite variable.
@@ -850,12 +866,54 @@ public abstract class Characters {
 	 * 			|	then result == true
 	 * 			| else result == false
 	 */
-	public static boolean isValidPositionAt (double coordinate, int index){
-		if ((index == 1) && ((int)coordinate >= X_MIN) && ((int)coordinate <= X_MAX))
+//	public static boolean isValidPositionAt (double coordinate, int index){
+//		if ((index == 1) && ((int)coordinate >= X_MIN) && ((int)coordinate <= X_MAX))
+//			return true;
+//		if ((index == 2) && ((int)coordinate >= Y_MIN) && ((int)coordinate <= Y_MAX))
+//			return true;
+//		return false;
+//	}
+	
+	public boolean isValidPositionAt (double coordinate, int index){
+		if ((index == 1) && (passableTerainHorizontal(coordinate)))
 			return true;
-		if ((index == 2) && ((int)coordinate >= Y_MIN) && ((int)coordinate <= Y_MAX))
+		else if ((index == 2) && (passableTerainVertical(coordinate)))
 			return true;
 		return false;
+	}
+	
+	// TODO best collisiondetector hierbij in aangezien we al itereren over nieuwe posities
+	public boolean passableTerainHorizontal(double newPosition){
+		if (isMovingLeft()){
+			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
+				if (getWorld().getGeoFeatureAt((int)newPosition,i) == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		else if (isMovingRight()){
+			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
+				if (getWorld().getGeoFeatureAt((int)newPosition+getSprite().getWidth(),i) == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		return true;
+	}
+	
+	// TODO best collisiondetector hierbij in aangezien we al itereren over nieuwe posities
+	public boolean passableTerainVertical(double newPosition){
+		if (getVerticalVelocity() > 0.0){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
+				if(getWorld().getGeoFeatureAt(i, (int)newPosition+getSprite().getHeight()) == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		else if (getVerticalVelocity() < 0.0){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
+				if (getWorld().getGeoFeatureAt(i, getIntPositionAt(2)) == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		return true;
 	}
 	
 	/**

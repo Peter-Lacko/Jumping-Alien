@@ -29,5 +29,8 @@ public class CharacterTest {
 		}
 		assertArrayEquals(doubleArray(5, 5), joske.getPosition(),
 				Util.DEFAULT_EPSILON);
+		Plant barry = new Plant(1023,5,newsprites);
+		barry.advanceTime(0.1);
+		assert(barry.getPositionAt(1) == 1023);
 	}
 }
