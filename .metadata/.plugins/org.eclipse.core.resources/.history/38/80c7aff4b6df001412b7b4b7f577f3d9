@@ -1,0 +1,79 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+
+public class Slime extends OtherCharacters {
+
+	public Slime(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0);
+		startMove();
+		double[] durationrange = new double[2];
+		durationrange[0]=2;
+		durationrange[1]=6;
+		setDurationrange(durationrange);
+	}
+	
+	public double[] getDurationrange() {
+		return durationrange;
+	}
+
+	public void setDurationrange(double[] durationrange) {
+		this.durationrange = durationrange;
+	}
+	
+	public double[] durationrange;
+
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewHorizontalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startMove() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void endMove() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void computeNewVerticalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startJump() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isInAir(){
+		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
+			GeoFeature geo = getWorld().getGeoFeatureAt(i, getIntPositionAt(2));
+			if (geo == GeoFeature.GROUND)
+				return false;
+		}
+		return true;
+	}
+
+}

@@ -467,10 +467,12 @@ public class Mazub extends Characters {
 		if (isInAir()){
 			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
 					100*0.5*getVerticalAcceleration()*duration*duration;
-			if (isValidPositionAt(newYPosition,2))
+			if (isValidPositionAt(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
-			else if ((int)newYPosition < Y_MAX)
+			}
+			else if ((int)newYPosition < Y_MAX){
 				this.setPositionAt((double)Y_MAX, 2);
+			}
 		}
 		else{
 			if (isJumping()){
@@ -505,16 +507,20 @@ public class Mazub extends Characters {
 	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
 		try{
 			if (isInAir()){
-				if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity())))
+				if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity()))){
 					setVerticalVelocity(0.0);
-				else
+				}
+				else{
 					setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
+				}
 			}
 			else{
-				if (isJumping())
+				if (isJumping()){
 					setVerticalVelocity(getInitVerticalVelocity());
-				else
+				}
+				else{
 					setVerticalVelocity(0.0);
+				}
 			}
 		}
 		catch (IllegalArgumentException exc){

@@ -29,11 +29,20 @@ public class Shark extends OtherCharacters {
 	protected void computeNewHorizontalPositionAfter(double duration) {
 		double newPosition;
 		if (isMovingLeft() || isMovingRight())
-			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() 
+				+ 100*0.5*getHorizontalAcceleration()*duration*duration;
 		else
 			newPosition = this.getPositionAt(1);
 		if (isValidPositionAt(newPosition,1))
 			this.setPositionAt(newPosition, 1);
+		else if ((int)newPosition < X_MIN){
+			this.setPositionAt((double)X_MIN, 1);
+			this.endMove();
+		}
+		else {
+			this.setPositionAt((double)X_MAX, 1);
+			this.endMove();
+		}
 	}
 
 	@Override
@@ -58,7 +67,6 @@ public class Shark extends OtherCharacters {
 
 	@Override
 	public void endMove() {
-		setTimeSinceStartMovement(0.0);
 		setMovingRight(false);
 		setMovingLeft(false);
 		endJump();
@@ -156,16 +164,11 @@ public class Shark extends OtherCharacters {
 	public boolean isInAir(){
 		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
 			GeoFeature geo = getWorld().getGeoFeatureAt(i, getIntPositionAt(2));
-			if (geo == GeoFeature.GROUND)
-				return false;
-		}
-		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-			GeoFeature geo = getWorld().getGeoFeatureAt(i, getIntPositionAt(2)+getSprite().getHeight());
-			if (geo == GeoFeature.WATER)
+			if (geo == GeoFeature.GROUND || geo == GeoFeature.WATER)
 				return false;
 		}
 		return true;
 		
-		}
+	}
 
 }

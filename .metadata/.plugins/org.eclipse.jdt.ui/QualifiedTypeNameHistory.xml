@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Basic"/>
 <fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Raw"/>
 <fullyQualifiedTypeName name="jumpingalien.util.Util"/>
 <fullyQualifiedTypeName name="jumpingalien.model.Plant"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
 <fullyQualifiedTypeName name="jumpingalien.model.MovementDirection"/>
 <fullyQualifiedTypeName name="jumpingalien.model.World"/>
 <fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
+<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Basic"/>
+<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Raw"/>
 </qualifiedTypeNameHistroy>

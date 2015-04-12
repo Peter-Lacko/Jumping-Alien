@@ -58,7 +58,6 @@ public class Shark extends OtherCharacters {
 
 	@Override
 	public void endMove() {
-		setTimeSinceStartMovement(0.0);
 		setMovingRight(false);
 		setMovingLeft(false);
 		endJump();
