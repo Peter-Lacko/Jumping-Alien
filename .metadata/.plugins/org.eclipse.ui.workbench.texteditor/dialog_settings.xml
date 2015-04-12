@@ -2,22 +2,29 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="getIndexOfObject" key="selection"/>
+		<item value="getMazub()" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="getIndexOfObject"/>
-			<item value="instance"/>
-			<item value="terminate"/>
-			<item value="leftobj"/>
-			<item value="advance"/>
-			<item value="hasproper"/>
-			<item value="isValidGeoFeature"/>
-			<item value="isValidMax"/>
+			<item value="getMazub()"/>
+			<item value="getWindowWidth()"/>
+			<item value="Size[1]"/>
+			<item value="Size[0]"/>
+			<item value="getMAzub().getIntPositionAt"/>
+			<item value="getMAzub().getIntPosition"/>
+			<item value="getWorldSize()"/>
+			<item value="getMazub().getSize()"/>
 		</list>
 		<list key="replacehistory">
+			<item value="dimension"/>
+			<item value="Size"/>
+			<item value="mazubPosAt"/>
+			<item value="mazubPos"/>
+			<item value="wSize"/>
+			<item value="mSize"/>
+			<item value="Mazub"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

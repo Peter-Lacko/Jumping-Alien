@@ -10,17 +10,17 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * A class that controls the game world.
- * @invar	|isValidTargetTile(getTargetTile(), getMaxXTiles(), getMaxYTiles())
+ * @invar	|canHaveAsTargetTile(getTargetTile())
  * @invar	|isValidTileLength(getTileLength())
- * @invar	|isValidMaxTiles(getMaxXTiles())
- * @invar	|isValidMaxTiles(getMaxYTiles())
+ * @invar	|canHaveAsMaxXTiles(getMaxXTiles())
+ * @invar	|canHaveAsMaxYTiles(getMaxYTiles())
  * @invar	|hasProperGeoFeatures() 
  * @invar	|hasProperObjects()
  * @invar	|hasProperLeftObjects()
  * @invar	|hasProperRightObjects()
  * @invar	|allCharactersLeftOrRight()
- * @invar	|isValidWindowWidth(getWindowWidth(), getMaxXTiles())
- * @invar	|isValidWindowHeight(getWindowHeight(), getMaxYTiles())
+ * @invar	|canHaveAsWindowWidth(getWindowWidth())
+ * @invar	|canHaveAsWindowHeight(getWindowHeight())
  * 
  * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
  * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
@@ -47,30 +47,35 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			| (! isValidTileLength(tileLength))
 	 * @throws IllegalArgumentException
-	 * 			| (! isValidMaxTiles(nbTilesX))
+	 * 			|(! isPossibleMaxTiles(nbTilesX)) !! (! matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|	nbTilesX, nbTilesY, {targetTileX, targetTileY})) || (! matchesMaxXTilesWindowWidth(
+	 * 			|	nbTilesX, WindowWidth))
 	 * @throws IllegalArgumentException
-	 * 			| (! isValidMaxTiles(nbTilesY))
+	 * 			|(! isPossibleMaxTiles(nbTilesX)) || (! matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|	nbTilesX, nbTilesY, {targetTileX, targetTileY})) || (! matchesMaxYTilesWindowHeight(
+	 * 			|	nbTilesY, WindowHeight))
 	 * @throws IllegalArgumentException
-	 * 			| (! isValidTargetTile(getTargetTile(), getMaxXTiles(), getMaxYTiles()))
+	 * 			|(! isPossibleTargetTile({targetTileX, targetTileY})) || 
+	 * 			|	(! matchesMaxXTilesMaxYTilesTargetTile(nbTilesX, nbTilesY, {targetTileX, targetTileY}))
 	 * @throws IllegalArgumentException
-	 * 			| (! isValidWindowWidth(windowWidth, nbTilesX))
+	 * 			|(! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
 	 * @throws IllegalArgumentException
-	 * 			| (! isValidWindowHeight(windowHeight, nbTilesY))
+	 * 			|(! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight))
 	 */
 	@Raw
 	public World(int tileLength, int nbTilesX, int nbTilesY,
 			int windowWidth, int windowHeight, int targetTileX,
 			int targetTileY) throws IllegalArgumentException{
 		int [] targetArray = {targetTileX, targetTileY};
-		if ((! isValidTileLength(tileLength)) || (! isValidMaxTiles(nbTilesX)) || 
-				(! isValidMaxTiles(nbTilesY)) || 
-				(! isValidTargetTile(targetArray, nbTilesX, nbTilesY)) || 
-				(! isValidWindowWidth(windowWidth, nbTilesX)) || 
-				(! isValidWindowHeight(windowHeight, nbTilesY)))
+		if ((! isValidTileLength(tileLength)) || (! isPossibleMaxTiles(nbTilesX)) 
+				|| (! isPossibleMaxTiles(nbTilesY)))
 			throw new IllegalArgumentException();
 		TILE_LENGTH = tileLength;
 		MAX_X_TILES = nbTilesX;
 		MAX_Y_TILES = nbTilesY;
+		if ((! canHaveAsTargetTile(targetArray)) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
+				|| (! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight)))
+			throw new IllegalArgumentException();
 		TARGET_TILE = targetArray;
 		WINDOW_WIDTH = windowWidth;
 		WINDOW_HEIGHT = windowHeight;
@@ -84,26 +89,57 @@ public class World {
 	/**
 	 * 
 	 * @param target
-	 * @return	|if (target.length != 2):
-	 * 			|	then result == false
-	 * 			|else if ((target[0] < 0) || (target[0] > nbXTiles))
-	 * 			|	then result == false
-	 * 			|else if ((target[1] < 0) || (target[1] > nbYTiles))
-	 * 			|	then result == false
-	 * 			|else
-	 * 			|	result == true
+	 * @return	|result == ((target.length == 2) && (target[0] >= 0) && (target[1] >= 0))
 	 */
-	@Raw
-	public boolean isValidTargetTile(int[] target, int nbXTiles, int nbYTiles){
-		if (target.length != 2)
-			return false;
-		else if ((target[0] < 0) || (target[0] > nbXTiles))
-			return false;
-		else if ((target[1] < 0) || (target[1] > nbYTiles))
-			return false;
-		else
-			return true;
+	public boolean isPossibleTargetTile(int[] target){
+		return ((target.length == 2) && (target[0] >= 0) && (target[1] >= 0));
 	}
+	
+	/**
+	 * 
+	 * @param target
+	 * @return	|result == ( isPossibleTargetTile(target) && matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|			getMaxXTiles(), getMaxYTiles(), target))
+	 */
+	public boolean canHaveAsTargetTile(int[] target){
+		return ( isPossibleTargetTile(target) && matchesMaxXTilesMaxYTilesTargetTile(
+				getMaxXTiles(), getMaxYTiles(), target));
+	}
+	
+	/**
+	 * 
+	 * @param maxXTiles
+	 * @param maxYTiles
+	 * @param targetTile
+	 * @return	|result == ((targetTile[0] <= maxXTiles) && (targetTile[1] <= maxYTiles))
+	 */
+	public boolean matchesMaxXTilesMaxYTilesTargetTile(int maxXTiles, int maxYTiles, int[] targetTile){
+		return ((targetTile[0] <= maxXTiles) && (targetTile[1] <= maxYTiles));
+	}
+	
+//	/**
+//	 * 
+//	 * @param target
+//	 * @return	|if (target.length != 2):
+//	 * 			|	then result == false
+//	 * 			|else if ((target[0] < 0) || (target[0] > nbXTiles))
+//	 * 			|	then result == false
+//	 * 			|else if ((target[1] < 0) || (target[1] > nbYTiles))
+//	 * 			|	then result == false
+//	 * 			|else
+//	 * 			|	result == true
+//	 */
+//	@Raw
+//	public boolean isValidTargetTile(int[] target, int nbXTiles, int nbYTiles){
+//		if (target.length != 2)
+//			return false;
+//		else if ((target[0] < 0) || (target[0] > nbXTiles))
+//			return false;
+//		else if ((target[1] < 0) || (target[1] > nbYTiles))
+//			return false;
+//		else
+//			return true;
+//	}
 	
 	private final int[] TARGET_TILE;
 	
@@ -161,13 +197,35 @@ public class World {
 	}
 	
 	/**
-	 * @return	| result == (amount >= 1)
+	 * 
+	 * @param amount
+	 * @return	|result == (amount > 0)
 	 */
-	//misschien maken zodat minstens 1 mazub net past
-	@Raw
-	private boolean isValidMaxTiles(int amount){
-		return (amount >= 1);
+	public boolean isPossibleMaxTiles(int amount){
+		return (amount > 0);
 	}
+	
+	/**
+	 * 
+	 * @param amount
+	 * @return	|result == (isPossibleMaxTiles(amount) && matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|			amount, getMaxYTiles(), getTargetTile()) && matchesMaxXTilesWindowWidth(
+	 * 			|			amount, getWindowWidth()))
+	 */
+	public boolean canHaveAsMaxXTiles(int amount){
+		return (isPossibleMaxTiles(amount) && matchesMaxXTilesMaxYTilesTargetTile(
+				amount, getMaxYTiles(), getTargetTile()) && matchesMaxXTilesWindowWidth(
+						amount, getWindowWidth()));
+	}
+	
+//	/**
+//	 * @return	| result == (amount >= 1)
+//	 */
+//	//misschien maken zodat minstens 1 mazub net past
+//	@Raw
+//	private boolean isValidMaxTiles(int amount){
+//		return (amount >= 1);
+//	}
 	
 	//this is actually the maximum number minus 1
 	private final int MAX_X_TILES;
@@ -175,6 +233,19 @@ public class World {
 	@Basic
 	public int getMaxYTiles(){
 		return MAX_Y_TILES;
+	}
+	
+	/**
+	 * 
+	 * @param amount
+	 * @return	|result == (isPossibleMaxTiles(amount) && matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|			getMaxXTiles(), amount, getTargetTile()) && matchesMaxYTilesWindowHeight(
+	 * 			|			amount, getWindowHeight()))
+	 */
+	public boolean canHaveAsMaxYTiles(int amount){
+		return (isPossibleMaxTiles(amount) && matchesMaxXTilesMaxYTilesTargetTile(
+				getMaxXTiles(), amount, getTargetTile()) && matchesMaxYTilesWindowHeight(
+						amount, getWindowHeight()));
 	}
 	
 	//this is actually the maximum number minus 1
@@ -627,6 +698,14 @@ public class World {
 	
 	/**
 	 * 
+	 * @effect	|getObjectAt(1)
+	 */
+	public Mazub getMazub() throws IndexOutOfBoundsException{
+		return (Mazub)getObjectAt(1);
+	}
+	
+	/**
+	 * 
 	 * @return 	|for each i in 0..getNbObjects()-1:
 	 * 			|	(result.get(i) == getObjectAt(i+1))
 	 * @return	| result.length() == getNbObjects()
@@ -788,12 +867,33 @@ public class World {
 	/**
 	 * 
 	 * @param width
-	 * @return	|result == ((width > 0) && (width <= nbXTiles))
+	 * @return	|result == ((matchesMaxXTilesWindowWidth(getMaxXTiles(), width)) &&
+	 * 			|			((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])))
 	 */
-	@Raw
-	public boolean isValidWindowWidth(int width, int nbXTiles){
-		return ((width > 0) && (width <= nbXTiles));
+	public boolean canHaveAsWindowWidth(int width){
+		return ((matchesMaxXTilesWindowWidth(getMaxXTiles(), width)) &&
+				((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])));
 	}
+	
+	/**
+	 * 
+	 * @param MaxXTiles
+	 * @param WindowWidth
+	 * @return	|result == ((MaxXTiles+1)*getTileLength() >= WindowWidth)
+	 */
+	public boolean matchesMaxXTilesWindowWidth(int MaxXTiles, int WindowWidth){
+		return ((MaxXTiles+1)*getTileLength() >= WindowWidth);
+	}
+	
+//	/**
+//	 * 
+//	 * @param width
+//	 * @return	|result == ((width > 0) && (width <= nbXTiles))
+//	 */
+//	@Raw
+//	public boolean isValidWindowWidth(int width, int nbXTiles){
+//		return ((width > 0) && (width <= nbXTiles));
+//	}
 	
 	private final int WINDOW_WIDTH;
 	
@@ -805,21 +905,91 @@ public class World {
 	/**
 	 * 
 	 * @param height
-	 * @return	|result == ((height > 0) && (height <= nbYTiles))
+	 * @return	|result == ((matchesMaxYTilesWindowHeight(getMaxYTiles(), height)) &&
+	 * 			|			((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])))
 	 */
-	@Raw
-	public boolean isValidWindowHeight(int height, int nbYTiles){
-		return ((height > 0) && (height <= nbYTiles));
+	public boolean canHaveAsWindowHeight(int height){
+		return ((matchesMaxYTilesWindowHeight(getMaxYTiles(), height)) &&
+				((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])));
 	}
+	
+	/**
+	 * 
+	 * @param MaxYTiles
+	 * @param WindowHeight
+	 * @return	|result == ((MaxYTiles+1)*getTileLength() >= WindowHeight)
+	 */
+	public boolean matchesMaxYTilesWindowHeight(int MaxYTiles, int WindowHeight){
+		return ((MaxYTiles+1)*getTileLength() >= WindowHeight);
+	}
+	
+//	/**
+//	 * 
+//	 * @param height
+//	 * @return	|result == ((height > 0) && (height <= nbYTiles))
+//	 */
+//	@Raw
+//	public boolean isValidWindowHeight(int height, int nbYTiles){
+//		return ((height > 0) && (height <= nbYTiles));
+//	}
 	
 	private final int WINDOW_HEIGHT;
 	
 	/**
 	 * 
-	 * @return	|result == {getWindowWidth(), getWindowHeight()}
+	 * @param mazub
+	 * @param mSize
+	 * @param wSize
+	 * @param mazubPos
+	 * @param dimension
+	 * @return	|if (dimension == wSize)
+	 * 			|	then (result[0] == 0) && (result[1] == wSize)
+	 * 			|else if (mazubPos <= (dimension-mSize)/2)
+	 * 			|	then (result[0] == 0) && (result[1] == dimension -1)
+	 * 			|else if (wSize -mSize -mazubPos
+	 * 			|			<= (dimension-mSize)/2)
+	 * 			|	then (result[1] == wSize) && (result[0] == wSize 
+	 * 			|			-dimension)
+	 * 			|else
+	 * 			|	(result[0] == mazubPos -(dimension -mSize)/2) &&
+	 * 			|		(result[1] == result[0] + dimension -1)
+	 * @return	|result.length == 2
+	 */
+	private int[] getVisibleWindow1D(Mazub mazub, int mSize, int wSize, int mazubPos, int dimension){
+		int firstPos = (mazubPos -(dimension -mSize)/2);
+		if (dimension == wSize)
+			return new int[] {0 , wSize};
+		else if (mazubPos <= (dimension -mSize)/2)
+			return new int[] {0, dimension -1};
+		else if ((wSize -mSize -mazubPos) <= (dimension-mSize)/2)
+			return new int[] {wSize -dimension, wSize};
+		else
+			return new int[] {firstPos, firstPos + dimension};
+	}
+	
+	/**
+	 * 
+	 * @effect	|result == {getVisibleWindowWidth(getMazub(), getMazub.getSize()[0], getWorldSize()[0], 
+	 * 			|				getMazub().getIntPositionAt(1), getWindowWidth())[0], 
+	 * 			|				getVisibleWindowHeight(getMazub(), getMazub().getSize()[1], getWorldSize()[1], 
+	 * 			|				getMazub.getIntPositionAt(2), getWindowHeight())[0],
+	 * 			|				getVisibleWindowWidth(getMazub(), getMazub.getSize()[0], getWorldSize()[0], 
+	 * 			|				getMazub().getIntPositionAt(1), getWindowWidth())[1], 
+	 * 			|				getVisibleWindowHeight(getMazub(), getMazub.getSize()[1], getWorldSize()[1], 
+	 * 			|				getMazub().getIntPositionAt(2), getWindowHeight())[1]}
+	 * @return	|result.length == 2
 	 */
 	public int[] getVisibleWindow(){
-		return new int[] {getWindowWidth(), getWindowHeight()};
+		Mazub mazub = getMazub();
+		int[] mSize = mazub.getSize();
+		int[] wSize = getWorldSize();
+		int mPos1 = mazub.getIntPositionAt(1);
+		int mPos2 = mazub.getIntPositionAt(2);
+		int width = getWindowWidth();
+		int height = getWindowHeight();
+		int[] widthArray = getVisibleWindow1D(mazub, mSize[0], wSize[0], mPos1,width);
+		int[] heightArray = getVisibleWindow1D(mazub, mSize[1], wSize[1], mPos2,height);
+		return new int[] {widthArray[0], heightArray[0], widthArray[1], heightArray[1]};
 	}
 	
 	/**
