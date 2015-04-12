@@ -22,6 +22,15 @@
 	<section name="OptionalMessageDialog.hide.">
 		<item value="true" key="org.eclipse.jdt.ui.typecomment.deprecated"/>
 	</section>
+<<<<<<< HEAD
+	<section name="quick_assist_proposal_size">
+	</section>
+	<section name="BuildPathsPropertyPage">
+		<item value="0" key="pageIndex"/>
+	</section>
+	<section name="completion_proposal_size">
+	</section>
+=======
 	<section name="org.eclipse.jdt.internal.ui.typehierarchy.QuickHierarchy">
 		<item value="true" key="org.eclipse.jdt.internal.ui.typehierarchy.HierarchyInformationControlDIALOG_USE_PERSISTED_SIZE"/>
 		<item value="462" key="org.eclipse.jdt.internal.ui.typehierarchy.HierarchyInformationControlDIALOG_HEIGHT"/>
@@ -66,6 +75,7 @@
 		<item value="false" key="SortOrdering"/>
 		<item value="false" key="RemoveFinal"/>
 	</section>
+>>>>>>> a2d1847c605cc61c6ccfa6d17f02d87b116f3f2d
 	<section name="JavaElementSearchActions">
 	</section>
 </section>
