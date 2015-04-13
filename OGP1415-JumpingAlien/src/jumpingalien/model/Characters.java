@@ -4,7 +4,7 @@ import jumpingalien.util.*;
 import jumpingalien.model.World.*;
 import be.kuleuven.cs.som.annotate.*;
 
-
+//TODO documentatie aanpassen
 /**
  * A class of Mazub characters, the player controlled character in Jumping Alien.
  * 
@@ -50,6 +50,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class Characters {
 	
+	// TODO documentatie aanpassen
 	/**
 	 * initialize a character with a given x_pos, y_pos, sprites, horizontal acceleration,
 	 * 	max horizontal velocity, initial horizontal velocity and initial vertical velocity.
@@ -106,20 +107,41 @@ public abstract class Characters {
 		this.setinitVerticalVelocity(init_ver_vel);
 	}
 	
-	public boolean canHaveAsWorld(World world){
-		return true;
-	}
+    @Basic @Raw
+    public boolean isTerminated() {
+        return this.isTerminated;
+    }
 	
+    private boolean isTerminated = false;
+	
+	public abstract boolean canHaveAsWorld(World world);
+	
+	/**
+	 * returns the world of the character
+	 */
+	@Basic
 	public World getWorld() {
 		return this.world;
 	}
 
+	/**
+	 * a setter method for the variable world
+	 * @param world
+	 * 			the world the which world has to be set
+	 * @post	...
+	 * 			| new.world == world
+	 * @throws IllegalArgumentException
+	 * 			| (! canHaveAsWorld(world))
+	 */
 	public void setWorld(World world) throws IllegalArgumentException {
 		if (! canHaveAsWorld(world))
 			throw new IllegalArgumentException("Wrong Arguments");
 		this.world = world;
 	}
 	
+	/**
+	 * a variable that stores the world of the character
+	 */
 	private World world = null;
 	
 	/**

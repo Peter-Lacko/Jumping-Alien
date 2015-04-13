@@ -86,12 +86,12 @@ public class Plant extends OtherCharacters {
 
 	@Override
 	protected void computeNewVerticalPositionAfter(double duration) {
-
+		this.setPositionAt(this.getPositionAt(2), 2);
 	}
 
 	@Override
 	protected void computeNewVerticalVelocityAfter(double duration) {
-
+		this.setinitVerticalVelocity(0.0);
 	}
 
 	@Override
@@ -103,6 +103,13 @@ public class Plant extends OtherCharacters {
 	@Override
 	public boolean isInAir() {
 		return false;
+	}
+
+	@Override
+	public boolean canHaveAsWorld(World world) {
+		if (world.isTerminated())
+			return false;
+		return true;
 	}
 
 }

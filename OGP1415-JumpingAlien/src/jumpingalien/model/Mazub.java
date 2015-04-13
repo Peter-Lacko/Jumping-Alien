@@ -679,6 +679,13 @@ public class Mazub extends Characters {
 	 * a variable containing the time since the character has stepped (in the run cycle).
 	 */
 	private double timeSinceStep = 0.0;
-	
 
+	@Override
+	public boolean canHaveAsWorld(World world) {
+		for (Characters character : world.getAllObjects()){
+			if (character instanceof Mazub)
+				return false;
+		}
+		return true;
+	}
 }

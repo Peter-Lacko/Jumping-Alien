@@ -168,4 +168,11 @@ public class Shark extends OtherCharacters {
 		
 		}
 
+	@Override
+	public boolean canHaveAsWorld(World world) {
+		if (world.isTerminated())
+			return false;
+		return true;
+	}
+
 }
