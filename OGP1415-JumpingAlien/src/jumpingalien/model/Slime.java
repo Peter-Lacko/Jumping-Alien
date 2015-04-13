@@ -5,14 +5,15 @@ import jumpingalien.util.Sprite;
 
 public class Slime extends OtherCharacters {
 
-	public Slime(int x_pos, int y_pos, Sprite[] sprites)
+	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school)
 			throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0);
+		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0,100);
 		startMove();
 		double[] durationrange = new double[2];
 		durationrange[0]=2;
 		durationrange[1]=6;
 		setDurationrange(durationrange);
+		this.setSchool(school);
 	}
 	
 	public double[] getDurationrange() {
@@ -23,7 +24,17 @@ public class Slime extends OtherCharacters {
 		this.durationrange = durationrange;
 	}
 	
+	public School getSchool() {
+		return school;
+	}
+
+	public void setSchool(School school) {
+		this.school = school;
+	}
+	
 	public double[] durationrange;
+	
+	public School school;
 
 	@Override
 	protected void computeNewHorizontalPositionAfter(double duration) {
@@ -101,5 +112,28 @@ public class Slime extends OtherCharacters {
 			return false;
 		return true;
 	}
-
+	
+	@Override
+	public void collision(Characters other) {
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune())
+				this.damage(50);
+				other.damage(50);
+				((Mazub)other).startImmune();
+			this.endMove();
+			((Mazub) other).endMove("left");
+			((Mazub) other).endMove("right");
+		}
+		else if (other instanceof Shark){
+			this.damage(50);
+			other.damage(50);
+			this.endMove();
+			((Shark) other).endMove();
+		}
+		else if (other instanceof Slime){
+			this.getSchool().changeSchool(this,(Slime)other);
+		}
+		else
+			other.collision(this);
+	}
 }

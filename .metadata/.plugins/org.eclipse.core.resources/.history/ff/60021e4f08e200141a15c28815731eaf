@@ -1085,7 +1085,7 @@ public abstract class Characters {
 	
 	public int hitPoints;
 	
-	public boolean notFullyDeadYet() {
+	public boolean isNotFullyDeadYet() {
 		return notFullyDeadYet;
 	}
 

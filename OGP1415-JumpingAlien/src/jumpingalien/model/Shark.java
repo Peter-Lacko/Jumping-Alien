@@ -1,5 +1,6 @@
 package jumpingalien.model;
 
+import be.kuleuven.cs.som.annotate.Basic;
 import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
 
@@ -7,7 +8,7 @@ public class Shark extends OtherCharacters {
 
 	public Shark(int x_pos, int y_pos, Sprite[] sprites)
 			throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0);
+		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0,100);
 		startMove();
 		double[] durationrange = new double[2];
 		durationrange[0]=1;
@@ -52,8 +53,15 @@ public class Shark extends OtherCharacters {
 			setMovingLeft(true);
 		else
 			setMovingRight(true);
-		if (!isInAir() && getRandomBoolean())
+		if (!isInAir() && getRandomBoolean() && (getMovementsSinceLastJump() >=4))
 			startJump();
+		else if (isInWater()){
+			if (getRandomBoolean())
+				setDiving(true);
+			else
+				setRising(true);
+		}
+		setMovementsSinceLastJump(getMovementsSinceLastJump()+1);
 	}
 
 	@Override
@@ -72,19 +80,14 @@ public class Shark extends OtherCharacters {
 	public void computeNewVerticalPositionAfter(double duration){
 		double newYPosition;
 		if (isInAir()){
-			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
-					100*0.5*getVerticalAcceleration()*duration*duration;
+			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 100*0.5*getVerticalAcceleration()*duration*duration;
 			if (isValidPositionAt(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
 			}
-			else if ((int)newYPosition < Y_MAX){
-				this.setPositionAt((double)Y_MAX, 2);
-			}
 		}
 		else{
-			if (isJumping()){
-				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
-						100*0.5*getVerticalAcceleration()*duration*duration;
+			if (isJumping() || isInWater()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration;
 				if (isValidPositionAt(newYPosition, 2))
 					this.setPositionAt(newYPosition, 2);
 			}
@@ -122,6 +125,8 @@ public class Shark extends OtherCharacters {
 			else{
 				if (isJumping())
 					setVerticalVelocity(getInitVerticalVelocity());
+				if (isRising || isDiving)
+					setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
 				else
 					setVerticalVelocity(0.0);
 			}
@@ -146,6 +151,7 @@ public class Shark extends OtherCharacters {
 			if(! isInAir())
 				this.setVerticalVelocity(getInitVerticalVelocity());
 			this.isJumping = true;
+			setMovementsSinceLastJump(0);
 		}
 		catch (IllegalArgumentException exc) {
 			throw exc;
@@ -155,24 +161,108 @@ public class Shark extends OtherCharacters {
 	@Override
 	public boolean isInAir(){
 		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-			GeoFeature geo = getWorld().getGeoFeatureAt(i, getIntPositionAt(2));
-			if (geo == GeoFeature.GROUND)
+			GeoFeature geobot = getWorld().getGeoFeatureAt(i, getIntPositionAt(2));
+			GeoFeature geotop = getWorld().getGeoFeatureAt(i, getIntPositionAt(2)+getSprite().getHeight());
+			if (geobot == GeoFeature.GROUND){
+				// (mss niet nodig) this.setInWater(false);
+				setDiving(false);
 				return false;
-		}
-		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-			GeoFeature geo = getWorld().getGeoFeatureAt(i, getIntPositionAt(2)+getSprite().getHeight());
-			if (geo == GeoFeature.WATER)
+			}
+			if (geotop == GeoFeature.WATER){
+				this.setInWater(true);
 				return false;
+			}
 		}
+		this.setInWater(false);
+		this.setRising(false);
 		return true;
-		
-		}
+	}
+	
+	public int getMovementsSinceLastJump() {
+		return movementsSinceLastJump;
+	}
+	
+	public boolean isInWater() {
+		return isInWater;
+	}
+
+	public void setInWater(boolean isInWater) {
+		this.isInWater = isInWater;
+	}
+	
+	public boolean isInWater = false;
+	
+	public boolean isRising() {
+		return isRising;
+	}
+
+	public void setRising(boolean isRising) {
+		this.isRising = isRising;
+	}
+	
+	public boolean isRising = false;
+
+
+	public boolean isDiving() {
+		return isDiving;
+	}
+
+	public void setDiving(boolean isDiving) {
+		this.isDiving = isDiving;
+	}
+
+	public boolean isDiving = false;
+	
+	/**
+	 * Return the current vertical acceleration.
+	 */
+	@Override
+	@Basic
+	public Double getVerticalAcceleration() {
+		if (this.isInAir() || this.isJumping())
+			return VERTICAL_ACCELERATION;
+		else if (this.isInWater() && (!isJumping))
+			if  (isDiving)
+				return -VERTICAL_ACCELERARION_WATER;
+			else if (isRising)
+				return VERTICAL_ACCELERARION_WATER;
+			else return 0.0;
+		else
+			return 0.0;
+	}
+	
+	protected static final double VERTICAL_ACCELERARION_WATER = 2.0;
+
+	public void setMovementsSinceLastJump(int movementsSinceLastJump) {
+		this.movementsSinceLastJump = movementsSinceLastJump;
+	}
+
+	public int movementsSinceLastJump = 0;
 
 	@Override
 	public boolean canHaveAsWorld(World world) {
 		if (world.isTerminated())
 			return false;
 		return true;
+	}
+
+	@Override
+	public void collision(Characters other) {
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune())
+				this.damage(50);
+				other.damage(50);
+				((Mazub)other).startImmune();
+			this.endMove();
+			((Mazub) other).endMove("left");
+			((Mazub) other).endMove("right");
+		}
+		else if (other instanceof Shark){
+			this.endMove();
+			((Shark)other).endMove();
+		}
+		else
+			other.collision(this);
 	}
 
 }
