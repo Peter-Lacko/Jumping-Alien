@@ -5,6 +5,8 @@ package jumpingalien.model;
 
 import java.util.*;
 
+import jumpingalien.model.*;
+
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 
@@ -38,7 +40,7 @@ public class World {
 	 * @param windowHeight
 	 * @param targetTileX
 	 * @param targetTileY
-	 * @post	| new.getTargetTile() == {targetTileX, targetTileY}
+	 * @post	| new.getTargetTile() == {TargetTileX, TargetTileY}
 	 * @post	| new.getTileLength() == tileLength
 	 * @post	| new.getMaxXTiles() == nbTilesX
 	 * @post	| new.getMaxYTiles() == nbTilesY
@@ -66,24 +68,41 @@ public class World {
 	public World(int tileLength, int nbTilesX, int nbTilesY,
 			int windowWidth, int windowHeight, int targetTileX,
 			int targetTileY) throws IllegalArgumentException{
-		int [] targetArray = {targetTileX, targetTileY};
+//		int [] targetArray = {targetTileX, targetTileY};
+		Position targetPos = new Position(targetTileX, targetTileY, Scale.TILE);
 		if ((! isValidTileLength(tileLength)) || (! isPossibleMaxTiles(nbTilesX)) 
 				|| (! isPossibleMaxTiles(nbTilesY)))
 			throw new IllegalArgumentException();
-		TILE_LENGTH = tileLength;
+		Scale.setConversion((double)tileLength);
+//		TILE_LENGTH = tileLength;
 		MAX_X_TILES = nbTilesX;
 		MAX_Y_TILES = nbTilesY;
-		if ((! canHaveAsTargetTile(targetArray)) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
+//		if ((! canHaveAsTargetTile(targetArray)) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
+		if ((! canHaveAsTargetTile(targetPos.getIntPosition())) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))		
 				|| (! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight)))
 			throw new IllegalArgumentException();
-		TARGET_TILE = targetArray;
+//		TARGET_TILE = targetArray;
+		TARGET_TILE = targetPos;
 		WINDOW_WIDTH = windowWidth;
 		WINDOW_HEIGHT = windowHeight;
 	}
 	
+//	@Basic
+//	public int[] getTargetTile(){
+//		return TARGET_TILE;
+//	}
+	
 	@Basic
-	public int[] getTargetTile(){
+	public Position getTargetPosition(){
 		return TARGET_TILE;
+	}
+	
+	/**
+	 * 
+	 * @return	|result == TARGET_TILE.getIntPosition()
+	 */
+	public int[] getTargetTile(){
+		return getTargetPosition().getIntPosition();
 	}
 	
 	/**
@@ -141,20 +160,20 @@ public class World {
 //			return true;
 //	}
 	
-	private final int[] TARGET_TILE;
+	private final Position TARGET_TILE;
 	
 	/**
 	 * check if the given character's saved position overlaps with the target tile.
 	 * @param mazub
-	 * @return	|if {getTilePosition(mazub.getIntPositionAt(1), mazub.getIntPositionAt(2)}
-	 * 			|	== getTargetTile())
+	 * @return	|if mazub.getIntPosition().toScale(Scale.TILE).equals(getTargetPosition())
 	 * 			|	then result == true
 	 * 			|else
 	 * 			|	result == false
 	 */
 	public boolean checkIfWin(Characters mazub){
-		int[] mazubPosition = mazub.getIntPosition();
-		if ((mazubPosition[0] == getTargetTile()[0]) && (mazubPosition[1] == getTargetTile()[1]))
+		Position mazubPosition = mazub.getPosition().toScale(Scale.TILE);
+//		if ((mazubPosition[0] == getTargetTile()[0]) && (mazubPosition[1] == getTargetTile()[1]))
+		if (mazubPosition.equals(getTargetPosition()))
 			return true;
 		else
 			return false;
@@ -178,7 +197,8 @@ public class World {
 	
 	@Basic
 	public int getTileLength(){
-		return TILE_LENGTH;
+		return Scale.getRatio();
+//		return TILE_LENGTH;
 	}
 	
 	/**
@@ -189,7 +209,7 @@ public class World {
 		return (length >= 1);
 	}
 	
-	private final int TILE_LENGTH;
+//	private final int TILE_LENGTH;
 	
 	@Basic
 	public int getMaxXTiles(){
@@ -263,11 +283,11 @@ public class World {
 	/**
 	 * @param tileX
 	 * @param tileY
-	 * @return	| result == {tileX*getTileLength(), tileY*getTileLength()}
+	 * @return	| result == new Position (tileX, tileY, Scale.TILE).toScale(Scale.PIXEL).getIntPosition()
 	 */
 	public int[] getBottomLeftPixelOfTile(int tileX, int tileY){
-		int[] coordinates = {tileX*getTileLength(), tileY*getTileLength()};
-		return coordinates;
+		Position pos = new Position (tileX, tileY, Scale.TILE).toScale(Scale.PIXEL);
+		return pos.getIntPosition();
 	}
 	
 	/**
@@ -276,14 +296,14 @@ public class World {
 	 * 			the x-coordinate
 	 * @param yPixel
 	 * 			the y-coordinate
-	 * @return	| result == {(xPixel-xPixel%getTileLength())/getTileLength(),
-				|				(yPixel-yPixel%getTileLength())/getTileLength()}
+	 * @return	| result == new Position (xPixel, yPixel).toScale(Scale.TILE).getIntPosition()
 	 */
 	public int[] getTilePosition(int xPixel, int yPixel){
-		int[] position = {(xPixel-xPixel%getTileLength())/getTileLength(),
-				(yPixel-yPixel%getTileLength())/getTileLength()};
-		return position;
-		
+//		int[] position = {(xPixel-xPixel%getTileLength())/getTileLength(),
+//				(yPixel-yPixel%getTileLength())/getTileLength()};
+//		return position;
+		Position pos = new Position (xPixel, yPixel).toScale(Scale.TILE);
+		return pos.getIntPosition();
 	}
 	
 	/**
@@ -296,7 +316,7 @@ public class World {
 	 * 			|			..getTilePosition(pixelLeft,pixelTop)[1])
 	 * 			|	for (x in getTilePosition(pixelLeft,pixelBottom)[0]
 	 * 			|			..getTilePosition(pixelRight,pixelBottom)[0])
-	 * 			|		positions.add({x,y})
+	 * 			|		positions.add(new Position(xIndex, yIndex, Scale.TILE).getIntPosition())
 	 * 			| result == positions
 	 */
 	public int[][] getTilePositionsIn(int pixelLeft, int pixelBottom, int pixelRight, int pixelTop){
@@ -307,7 +327,8 @@ public class World {
 		List<int[]> positions = new ArrayList<int[]>();
 		for (int yIndex = yStart ; yIndex <= yEnd ; yIndex++){
 			for (int xIndex = xStart ; xIndex <= xEnd ; xIndex++){
-				int[] coordinates = {xIndex,yIndex};
+//				int[] coordinates = {xIndex,yIndex};
+				int[] coordinates = new Position(xIndex, yIndex, Scale.TILE).getIntPosition();
 				positions.add(coordinates);
 			}
 		}
@@ -321,14 +342,15 @@ public class World {
 	 * @param xPixel
 	 * @param yPixel
 	 * @throws IllegalArgumentException
-	 * 			| ! isValidGeoPosition({xPixel,yPixel})
+	 * 			| ! isValidGeoPosition(new Position(xPixel, yPixel))
 	 */
 	@Basic
 	public GeoFeature getGeoFeatureAt(int xPixel, int yPixel) throws IllegalArgumentException{
-		int[] position = {xPixel, yPixel};
-		if (! isValidGeoPosition(position))
+//		int[] position = {xPixel, yPixel};
+		Position pos = new Position(xPixel, yPixel);
+		if (! isValidGeoPosition(pos))
 			throw new IllegalArgumentException();
-		GeoFeature geoFeature = geoFeatures.get(position);
+		GeoFeature geoFeature = geoFeatures.get(pos);
 		if (geoFeature == null)
 			geoFeature = GeoFeature.AIR;
 		return geoFeature;
@@ -339,20 +361,21 @@ public class World {
 	 * @param yPixel
 	 * @post	|new.getGeoFeatureAt(xPixel, yPixel) == feature
 	 * @throws IllegalArgumentException
-	 * 			| ! isValidGeoPosition({xPixel,yPixel})
+	 * 			| ! isValidGeoPosition(new Position(xPixel, yPixel))
 	 * @throws IllegalArgumentException
 	 * 			| ! isValidGeoFeature(feature)
 	 */
 	public void setGeoFeatureAt(int xPixel, int yPixel, GeoFeature feature) throws IllegalArgumentException{
-		int[] position = {xPixel, yPixel};
-		if ((! isValidGeoPosition(position)) || (! isValidGeoFeature(feature)))
+//		int[] position = {xPixel, yPixel};
+		Position pos = new Position(xPixel, yPixel);
+		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
 			throw new IllegalArgumentException();
 		if (feature == GeoFeature.AIR){
-			if (hasAsKeyGeoFeaturePosition(position))
-				geoFeatures.remove(position);
+			if (hasAsKeyGeoFeaturePosition(pos))
+				geoFeatures.remove(pos);
 		}
 		else
-			geoFeatures.put(position, feature);
+			geoFeatures.put(pos, feature);
 	}
 	
 	/**
@@ -368,14 +391,17 @@ public class World {
 	/**
 	 * 
 	 * @param position
-	 * @return	|result == ((position.length == 2) && (position[0]%getTileLength() == 0) && 
-	 * 			|				(position[1]%getTileLength()==0) && (position[0] < getWorldSize()[0])
-	 * 			|				&& (position[1] < getWorldSize()[1]))
+	 * @return	|let
+	 * 			|	pos = position.getIntPosition()
+	 * 			|result == ((position.getScale() == Scale.PIXEL) && (pos.length == 2) && (pos[0]%getTileLength() == 0) 
+	 *			|	&& (pos[1]%getTileLength()==0) && (pos[0] < getWorldSize()[0])
+	 *			|	&& (pos[1] < getWorldSize()[1]))
 	 */
-	private boolean isValidGeoPosition(int[] position){
-		return ((position.length == 2) && (position[0]%getTileLength() == 0) && 
-				(position[1]%getTileLength()==0) && (position[0] < getWorldSize()[0])
-				&& (position[1] < getWorldSize()[1]));
+	private boolean isValidGeoPosition(Position position){
+		int[] pos = position.getIntPosition();
+		return ((position.getScale() == Scale.PIXEL) && (pos.length == 2) && (pos[0]%getTileLength() == 0) 
+				&& (pos[1]%getTileLength()==0) && (pos[0] < getWorldSize()[0])
+				&& (pos[1] < getWorldSize()[1]));
 	}
 	
 	/**
@@ -401,20 +427,21 @@ public class World {
 	 * @return	|result == for one I in geoFeatures:
 	 * 			|		key == position;
 	 */
-	private boolean hasAsKeyGeoFeaturePosition(int[] position){
+	private boolean hasAsKeyGeoFeaturePosition(Position position){
 		return geoFeatures.containsKey(position);
 	}
 	
 	/**
 	 * @invar	|geoFeatures != null
 	 * @invar	|for each key in geoFeatures.keySet():
-	 * 			|	isValidGeoPosition();
+	 * 			|	isValidGeoPosition(key);
 	 * @invar	The default state is air, thus AIR shall not be saved in the effective Map
 	 * 			(if a position (key) is asked that has no value, that means the tile is an AIR tile)
 	 * 			|for each value in geoFeatures:
 	 * 			|	value == GeoFeature.GROUND || value == GeoFeature.WATER || value == GeoFeature.MAGMA
 	 */
-	private final Map<int[], GeoFeature> geoFeatures = new HashMap<int[], GeoFeature>();
+//	private final Map<int[], GeoFeature> geoFeatures = new HashMap<int[], GeoFeature>();
+	private final Map<Position, GeoFeature> geoFeatures = new HashMap<>();
 	
 	/**
 	 * 
@@ -467,13 +494,20 @@ public class World {
 	private boolean isGameStarted = false;
 	
 	/**
-	 * 
+	 * @return	|if ((object.getIntPositionAt(1) < 0) || (object.getIntPositionAt(2) < 0) 
+	 * 			|	|| (object.getIntPositionAt(1) > getWorldSize()[0]-1) 
+	 * 			|	|| (object.getIntPositionAt(2) > getWorldSize()[1]-1))
+	 *			|		then result == false;
 	 * @return	|if object.isTerminated()
 	 * 			|	then result == ((object.terminationTime() <= 0.6) && (object != null))
 	 * 			|else
 	 * 			|	result == (object != null)
 	 */
 	private boolean canHaveAsObject(Characters object){
+		int xPos = object.getIntPositionAt(1);
+		int yPos = object.getIntPositionAt(2);
+		if ((xPos < 0) || (yPos < 0) || (xPos > getWorldSize()[0]-1) || (yPos > getWorldSize()[1]-1))
+			return false;
 		if (object.isTerminated())
 			return ((object.notFullyDeadYet()) && (object != null));
 		else

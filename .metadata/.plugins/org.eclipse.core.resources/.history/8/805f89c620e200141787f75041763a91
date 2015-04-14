@@ -1,0 +1,89 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.*;
+
+/**
+ * An enumeration introducing different ways to represent a position. The different ways are in the grid of
+ * pixels and in the grid of tiles.
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+@Value
+public enum Scale {
+
+	PIXEL(0), TILE(1);
+	
+	/**
+	 * 
+	 * @param index
+	 * @post	|new.getIndex() == index
+	 */
+	private Scale(int index){
+		this.index = index;
+	}
+	
+	@Basic @Immutable
+	public int getIndex(){
+		return this.index;
+	}
+	
+	private final int index;
+	
+	/**
+	 * 
+	 * @param other
+	 * @return	|if (this == other)
+	 * 			|	then result == 1.0
+	 * @return	|result == (1.0 / other.toScale(this))
+	 * @throws IllegalArgumentException
+	 * 			|other == null
+	 */
+	@Basic
+	public double toScale(Scale other) throws IllegalArgumentException{
+		if (other == null)
+			throw new IllegalArgumentException();
+		return conversion[this.getIndex()/2][other.getIndex()/2];
+	}
+	
+	/**
+	 * Checks whether the conversion ratios have been set. The ratios are like a final variable, but must
+	 * be given as input outside of the constructor, so they cannot be classified as such. This variable
+	 * helps in preventing the ratios from being set more than once.
+	 */
+	@Basic
+	public boolean isConversionSet(){
+		return isConversionSet;
+	}
+	
+	/**
+	 * @post	|new.isConversionSet() = true
+	 */
+	private void conversionNowSet(){
+		isConversionSet = true;
+	}
+	
+	private boolean isConversionSet = false;
+	
+	/**
+	 * 
+	 * @param ratio
+	 * 			the ratio of number of pixels in a tile. (eg if a tile consists of 4x4 pixels, the ratio is
+	 * 			then 4)
+	 * @pre		|ratio > 0.0
+	 * @pre		|(! isConversionSet())
+	 * @post	|new.conversion[0][1] = 1.0/ratio
+	 * 			|new.conversion[1][0] = ratio
+	 */
+	public void setConversion(double ratio){
+		assert (! isConversionSet());
+		assert (ratio > 0.0);
+		conversion[0][1] = 1.0/ratio;
+		conversion[1][0] = ratio;
+		conversionNowSet();
+	}
+	
+	private static double[][] conversion = new double[][] {{1.0,1.0},{1.0,1.0}};
+	
+}

@@ -1,0 +1,88 @@
+package jumpingalien.model;
+import be.kuleuven.cs.som.annotate.*;
+
+/**
+ * A class of positions involving 2 coordinates and a scale type.
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+@Value
+public class Position{
+	
+	/**
+	 * 
+	 * @param xPos
+	 * @param yPos
+	 * @param type
+	 * @post	|new.getXCo() == xPos
+	 * @post	|new.getYCo() == yPos
+	 * @post	|new.getScale() == type
+	 * @throws IllegalArgumentException
+	 * 			|(! isValidScale(type))
+	 */
+	public Position(double xPos, double yPos, Scale type) throws IllegalArgumentException{
+		xCo = xPos;
+		yCo = yPos;
+		scale = type;
+	}
+	
+	@Basic
+	public double getXCo(){
+		return xCo;
+	}
+	
+	@Basic
+	public double getYCo(){
+		return yCo;
+	}
+	
+	/**
+	 * 
+	 * @effect	|result == {getXCo(), getYCo()}
+	 */
+	public double[] getPosition(){
+		return new double[] {getXCo(), getYCo()};
+	}
+	
+	/**
+	 * 
+	 * @effect	|result == (int)getXCo()
+	 */
+	public int getIntXCo(){
+		return (int)getXCo();
+	}
+	
+	/**
+	 *
+	 * @effect	|result == (int)getYCo()
+	 */
+	public int getIntYCo(){
+		return (int)getYCo();
+	}
+	
+	public int[] getIntPosition(){
+		return new int[] {getIntXCo(), getIntYCo()};
+	}
+	
+	@Basic
+	public Scale getScale(){
+		return scale;
+	}
+	
+	public static boolean isValidScale(Scale scale){
+		return ((scale == Scale.PIXEL) || (scale == Scale.TILE));
+	}
+	
+	public Position toScale(Scale scale){
+		return null;
+	}
+	
+	private final double xCo;
+	
+	private final double yCo;
+	
+	private final Scale scale;
+	
+}

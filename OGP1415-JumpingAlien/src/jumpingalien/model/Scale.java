@@ -1,0 +1,107 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.*;
+
+/**
+ * An enumeration introducing different ways to represent a position. The different ways are in the grid of
+ * pixels and in the grid of tiles.
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+@Value
+public enum Scale {
+
+	PIXEL(0, "pixels"), TILE(1, "tiles");
+	
+	/**
+	 * 
+	 * @param index
+	 * @post	|new.getIndex() == index
+	 * @post	|new.getName() == name
+	 */
+	private Scale(int index, String name){
+		this.index = index;
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	private final String name;
+	
+	@Basic @Immutable
+	public int getIndex(){
+		return this.index;
+	}
+	
+	private final int index;
+	
+	/**
+	 * 
+	 * @param other
+	 * @return	|if (this == other)
+	 * 			|	then result == 1.0
+	 * @return	|result == (1.0 / other.toScale(this))
+	 * @throws IllegalArgumentException
+	 * 			|other == null
+	 */
+	@Basic
+	public double toScale(Scale other) throws IllegalArgumentException{
+		if (other == null)
+			throw new IllegalArgumentException();
+		return conversion[this.getIndex()/2][other.getIndex()/2];
+	}
+	
+	/**
+	 * Checks whether the conversion ratios have been set. The ratios are like a final variable, but must
+	 * be given as input outside of the constructor, so they cannot be classified as such. This variable
+	 * helps in preventing the ratios from being set more than once.
+	 */
+	// niet zeker of dit mag of zelfs een oplossing is, als nodig wordt het gewoon verwijderd.
+	@Basic
+	public static boolean isConversionSet(){
+		return isConversionSet;
+	}
+	
+	/**
+	 * @post	|new.isConversionSet() = true
+	 */
+	private static void conversionNowSet(){
+		isConversionSet = true;
+	}
+	
+	private static boolean isConversionSet = false;
+	
+	/**
+	 * 
+	 * @param ratio
+	 * 			the ratio of number of pixels in a tile. (eg if a tile consists of 4x4 pixels, the ratio is
+	 * 			then 4)
+	 * @pre		|ratio > 0.0
+	 * @pre		|(! isConversionSet())
+	 * @post	|new.conversion[0][1] = 1.0/ratio
+	 * 			|new.conversion[1][0] = ratio
+	 */
+	public static void setConversion(double ratio){
+		assert (! isConversionSet());
+		assert (ratio > 0.0);
+		conversion[0][1] = 1.0/ratio;
+		conversion[1][0] = ratio;
+		conversionNowSet();
+	}
+	
+	/**
+	 * return the ratio that has been given if isConversionSet() == true. The given ratio must be an integer
+	 * due to the assignment, even if it is stored in conversion as a double.
+	 * @return	|result == (int)conversion[1][0]
+	 */
+	public static int getRatio(){
+		return (int)conversion[1][0];
+	}
+	
+	private static double[][] conversion = new double[][] {{1.0,1.0},{1.0,1.0}};
+	
+}

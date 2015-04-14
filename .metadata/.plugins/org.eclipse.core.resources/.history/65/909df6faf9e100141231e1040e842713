@@ -1,0 +1,21 @@
+package jumpingalien.model;
+import be.kuleuven.cs.som.annotate.*;
+
+/**
+ * 
+ * @author Peter
+ *
+ */
+@Value
+public class Position{
+	
+	/**
+	 * 
+	 * @param xPos
+	 * @param yPos
+	 */
+	public Position(double xPos, double yPos){
+		
+	}
+
+}

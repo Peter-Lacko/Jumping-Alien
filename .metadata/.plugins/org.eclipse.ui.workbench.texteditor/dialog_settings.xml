@@ -2,12 +2,17 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
 		<item value="getS" key="selection"/>
+=======
+		<item value="int[]" key="selection"/>
+>>>>>>> f57706e2d38423c9f8685dc03aa91938031a4c3c
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
 			<item value="gets"/>
 			<item value="get("/>
 			<item value="get"/>
@@ -16,6 +21,16 @@
 			<item value="ter"/>
 			<item value="getMazub()"/>
 			<item value="getWindowWidth()"/>
+=======
+			<item value="int[]"/>
+			<item value="tile_length"/>
+			<item value="tilelength"/>
+			<item value="fuzzyequals"/>
+			<item value="passableTerain"/>
+			<item value="isValidPosition"/>
+			<item value="setposition"/>
+			<item value="getposition"/>
+>>>>>>> f57706e2d38423c9f8685dc03aa91938031a4c3c
 		</list>
 		<list key="replacehistory">
 			<item value="dimension"/>
