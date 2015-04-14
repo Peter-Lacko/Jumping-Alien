@@ -916,15 +916,13 @@ public abstract class Characters {
 	public boolean passableTerainHorizontal(double newPosition){
 		if (isMovingLeft()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if (getWorld().getGeoFeatureAt((int)newPosition,i) == GeoFeature.GROUND)
 					return false;
 			}
 		}
 		else if (isMovingRight()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if (getWorld().getGeoFeatureAt((int)newPosition+getSprite().getWidth(),i) == GeoFeature.GROUND)
 					return false;
 			}
 		}
@@ -934,15 +932,13 @@ public abstract class Characters {
 	public boolean passableTerainVertical(double newPosition){
 		if (getVerticalVelocity() > 0.0){
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight());
-				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if(getWorld().getGeoFeatureAt(i, (int)newPosition+getSprite().getHeight()) == GeoFeature.GROUND)
 					return false;
 			}
 		}
 		else if (getVerticalVelocity() < 0.0){
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
+				if (getWorld().getGeoFeatureAt(i, getIntPositionAt(2)) == GeoFeature.GROUND)
 					return false;
 			}
 		}

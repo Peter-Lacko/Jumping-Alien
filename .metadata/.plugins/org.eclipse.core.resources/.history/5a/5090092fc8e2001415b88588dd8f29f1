@@ -33,7 +33,7 @@ public class Shark extends OtherCharacters {
 			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
 		else
 			newPosition = this.getPositionAt(1);
-		if (canHaveAsNewPosition(newPosition,1))
+		if (isValidPositionAt(newPosition,1))
 			this.setPositionAt(newPosition, 1);
 	}
 
@@ -81,14 +81,14 @@ public class Shark extends OtherCharacters {
 		double newYPosition;
 		if (isInAir()){
 			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 100*0.5*getVerticalAcceleration()*duration*duration;
-			if (canHaveAsNewPosition(newYPosition,2)){
+			if (isValidPositionAt(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
 			}
 		}
 		else{
 			if (isJumping() || isInWater()){
 				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration;
-				if (canHaveAsNewPosition(newYPosition, 2))
+				if (isValidPositionAt(newYPosition, 2))
 					this.setPositionAt(newYPosition, 2);
 			}
 		}
@@ -161,10 +161,8 @@ public class Shark extends OtherCharacters {
 	@Override
 	public boolean isInAir(){
 		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-			int[] pos1 = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-			int[] pos2 = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getSprite().getHeight());
- 			GeoFeature geobot = getWorld().getGeoFeatureAt(pos1[0],pos1[1]);
-			GeoFeature geotop = getWorld().getGeoFeatureAt(pos2[0],pos2[1]);
+			GeoFeature geobot = getWorld().getGeoFeatureAt(i, getIntPositionAt(2));
+			GeoFeature geotop = getWorld().getGeoFeatureAt(i, getIntPositionAt(2)+getSprite().getHeight());
 			if (geobot == GeoFeature.GROUND){
 				// (mss niet nodig) this.setInWater(false);
 				setDiving(false);

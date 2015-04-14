@@ -916,15 +916,13 @@ public abstract class Characters {
 	public boolean passableTerainHorizontal(double newPosition){
 		if (isMovingLeft()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if (getWorld().getGeoFeatureAt((int)newPosition,i) == GeoFeature.GROUND)
 					return false;
 			}
 		}
 		else if (isMovingRight()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if (getWorld().getGeoFeatureAt((int)newPosition+getSprite().getWidth(),i) == GeoFeature.GROUND)
 					return false;
 			}
 		}

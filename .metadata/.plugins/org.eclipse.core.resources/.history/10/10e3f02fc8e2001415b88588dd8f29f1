@@ -43,7 +43,7 @@ public class Slime extends OtherCharacters {
 			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
 		else
 			newPosition = this.getPositionAt(1);
-		if (canHaveAsNewPosition(newPosition,1))
+		if (isValidPositionAt(newPosition,1))
 			this.setPositionAt(newPosition, 1);
 	}
 
@@ -78,7 +78,7 @@ public class Slime extends OtherCharacters {
 		double newYPosition;
 		if (isInAir()){
 			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 100*0.5*getVerticalAcceleration()*duration*duration;
-			if (canHaveAsNewPosition(newYPosition,2)){
+			if (isValidPositionAt(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
 			}
 		}
@@ -99,8 +99,7 @@ public class Slime extends OtherCharacters {
 	@Override
 	public boolean isInAir(){
 		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-			GeoFeature geo = getWorld().getGeoFeatureAt(pos[0],pos[1]);
+			GeoFeature geo = getWorld().getGeoFeatureAt(i, getIntPositionAt(2));
 			if (geo == GeoFeature.GROUND)
 				return false;
 		}

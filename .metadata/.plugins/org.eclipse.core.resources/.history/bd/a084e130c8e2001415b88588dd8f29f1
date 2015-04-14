@@ -42,7 +42,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 			| isValidNbPosition(getNbPosition())
  * @invar	each coordinate must be a valid coordinate in its axis.
  * 			| for i in Position:
- * 			|	canHaveAsNewPosition(getPositionAt(i),i)
+ * 			|	isValidPositionAt(getPositionAt(i),i)
  * @invar	the given field must be valid.
  * 			| isProperField(FIELD_SIZE);
  * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
@@ -87,9 +87,9 @@ public abstract class Characters {
 	@Raw
 	public Characters(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, double init_hor_vel, double init_ver_vel, int hitpoints)
 			throws IllegalArgumentException{
-		if (! canHaveAsNewPosition((double) x_pos, 1))
+		if (! isValidPositionAt((double) x_pos, 1))
 			throw new IllegalArgumentException("Illegal x-coordinate!");
-		if (! canHaveAsNewPosition((double) y_pos, 2))
+		if (! isValidPositionAt((double) y_pos, 2))
 			throw new IllegalArgumentException("Illegal y-coordinate!");
 		if (! isValidNbImages(sprites.length))
 			throw new IllegalArgumentException("Illegal sprite array length!");
@@ -897,7 +897,7 @@ public abstract class Characters {
 	 * 			|	then result == true
 	 * 			| else result == false
 	 */
-//	public static boolean canHaveAsNewPosition (double coordinate, int index){
+//	public static boolean isValidPositionAt (double coordinate, int index){
 //		if ((index == 1) && ((int)coordinate >= X_MIN) && ((int)coordinate <= X_MAX))
 //			return true;
 //		if ((index == 2) && ((int)coordinate >= Y_MIN) && ((int)coordinate <= Y_MAX))
@@ -905,7 +905,7 @@ public abstract class Characters {
 //		return false;
 //	}
 	
-	public boolean canHaveAsNewPosition (double coordinate, int index){
+	public boolean isValidPositionAt (double coordinate, int index){
 		if ((index == 1) && (passableTerainHorizontal(coordinate)))
 			return true;
 		else if ((index == 2) && (passableTerainVertical(coordinate)))
@@ -916,15 +916,13 @@ public abstract class Characters {
 	public boolean passableTerainHorizontal(double newPosition){
 		if (isMovingLeft()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if (getWorld().getGeoFeatureAt((int)newPosition,i) == GeoFeature.GROUND)
 					return false;
 			}
 		}
 		else if (isMovingRight()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if (getWorld().getGeoFeatureAt((int)newPosition+getSprite().getWidth(),i) == GeoFeature.GROUND)
 					return false;
 			}
 		}
@@ -934,15 +932,13 @@ public abstract class Characters {
 	public boolean passableTerainVertical(double newPosition){
 		if (getVerticalVelocity() > 0.0){
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight());
-				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if(getWorld().getGeoFeatureAt(i, (int)newPosition+getSprite().getHeight()) == GeoFeature.GROUND)
 					return false;
 			}
 		}
 		else if (getVerticalVelocity() < 0.0){
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
+				if (getWorld().getGeoFeatureAt(i, getIntPositionAt(2)) == GeoFeature.GROUND)
 					return false;
 			}
 		}
@@ -1026,13 +1022,13 @@ public abstract class Characters {
 	 * 			| (index <= 0) || (index > 2)
 	 * @throws IllegalArgumentException
 	 * 			The given coordinate must be a valid coordinate at the given index.
-	 * 			| (! canHaveAsNewPosition(coordinate, index))
+	 * 			| (! isValidPositionAt(coordinate, index))
 	 * @post This character has the given coordinate as its coordinate at the given index.
 	 * 			| new.getPositionAt(index) == coordinate
 	 */
 	protected void setPositionAt(double coordinate, int index) throws ArrayIndexOutOfBoundsException, 
 	IllegalArgumentException{
-		if (! canHaveAsNewPosition(coordinate, index))
+		if (! isValidPositionAt(coordinate, index))
 			throw new IllegalArgumentException();
 		this.Position[index-1] = coordinate;
 	}

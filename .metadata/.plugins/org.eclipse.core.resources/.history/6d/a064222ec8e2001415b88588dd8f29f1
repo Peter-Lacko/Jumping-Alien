@@ -42,7 +42,7 @@ public class Plant extends OtherCharacters {
 			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();;
 		}else
 			newPosition = this.getPositionAt(1);
-		if (canHaveAsNewPosition(newPosition,1))
+		if (isValidPositionAt(newPosition,1))
 			this.setPositionAt(newPosition, 1);
 	}
 	
