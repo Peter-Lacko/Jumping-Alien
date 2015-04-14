@@ -295,6 +295,7 @@ public class Mazub extends Characters {
 				this.sethasMovedIn(MovementDirection.NONE);
 			this.setSprite(this.getCurrentSprite());
 			this.immune(duration);
+			this.getWorld().checkIfWin(this);
 		}
 		catch (IllegalArgumentException exc){
 			throw exc;
@@ -431,8 +432,6 @@ public class Mazub extends Characters {
 					100*0.5*getVerticalAcceleration()*duration*duration;
 			if (isValidPositionAt(newYPosition,2))
 				this.setPositionAt(newYPosition, 2);
-			else if ((int)newYPosition < Y_MAX)
-				this.setPositionAt((double)Y_MAX, 2);
 		}
 		else{
 			if (isJumping()){
