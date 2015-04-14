@@ -786,6 +786,9 @@ public class World {
 //		return result;
 //	}
 	public List<Characters> getAllObjects(){
+		for (Characters car: objects)
+			System.out.println(car.getClass().toString());
+		System.out.println(objects.size());
 		LinkedList<Characters> result = new LinkedList<Characters>();
 		for (Characters object: objects){
 			if (! result.contains(object))

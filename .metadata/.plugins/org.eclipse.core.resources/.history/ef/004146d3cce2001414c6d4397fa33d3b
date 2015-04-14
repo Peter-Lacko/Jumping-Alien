@@ -779,18 +779,10 @@ public class World {
 	 * 			|	(result.get(i) == getObjectAt(i+1))
 	 * @return	| result.length() == getNbObjects()
 	 */
-//	public List<Characters> getAllObjects(){
-//		LinkedList<Characters> result = new LinkedList<Characters>();
-//		for(int index = getNbObjects(); index <= 1; index--)
-//			result.addFirst(getObjectAt(index));
-//		return result;
-//	}
 	public List<Characters> getAllObjects(){
 		LinkedList<Characters> result = new LinkedList<Characters>();
-		for (Characters object: objects){
-			if (! result.contains(object))
-				result.addFirst(object);
-		}
+		for(int index = getNbObjects() -1 ; index <= 1; index--)
+			result.addFirst(getObjectAt(index));
 		return result;
 	}
 	

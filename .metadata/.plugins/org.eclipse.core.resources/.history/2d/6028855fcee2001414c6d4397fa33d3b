@@ -786,10 +786,14 @@ public class World {
 //		return result;
 //	}
 	public List<Characters> getAllObjects(){
+		for (Characters car: objects)
+			System.out.println(car.getClass().toString());
+		System.out.println(objects.size());
 		LinkedList<Characters> result = new LinkedList<Characters>();
-		for (Characters object: objects){
-			if (! result.contains(object))
-				result.addFirst(object);
+		for (int i=objects.size()-1; i <= 0; i--){
+			System.out.println(i);
+			if (! result.contains(objects.get(i)))
+				result.addFirst(objects.get(i));
 		}
 		return result;
 	}
