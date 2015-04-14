@@ -569,12 +569,12 @@ public class World {
 			return false;
 		else if ((index < 1) || index > getNbObjects() +1)
 			return false;
-		for (int newIndex=1; newIndex <= getNbObjects()+1; newIndex++){
+		for (int newIndex=1; newIndex <= getNbObjects(); newIndex++){
 			if ((newIndex != index) && (getObjectAt(newIndex) == object))
 				return false;
 		}
-		if ((index == 1) && (! (object instanceof Mazub)))
-			return false;
+//		if ((index == 1) && (! (object instanceof Mazub)))
+//			return false;
 		return true;
 	}
 	
@@ -707,7 +707,7 @@ public class World {
 		Characters objectToRemove = objects.get(indexOfObject);
 		for (int pos = indexOfObject; pos < objects.size(); pos++){
 			if (objects.get(pos) == objectToRemove)
-				objects.set(pos, null);
+				objects.remove(pos);
 		}
 	}
 	

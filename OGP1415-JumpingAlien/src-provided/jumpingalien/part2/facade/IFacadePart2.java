@@ -151,7 +151,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * {@link IFacadePart2#setMazub(World, Mazub)}), and no geological features
 	 * will be changed via
 	 * {@link IFacadePart2#setGeologicalFeature(World, int, int, int)}.
-	 *  
+	 * 
 	 * @param The
 	 *            world for which to start the game.
 	 */

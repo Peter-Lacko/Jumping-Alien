@@ -8,11 +8,6 @@ public class Slime extends OtherCharacters {
 	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school)
 			throws IllegalArgumentException {
 		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0,100);
-		startMove();
-		double[] durationrange = new double[2];
-		durationrange[0]=2;
-		durationrange[1]=6;
-		setDurationrange(durationrange);
 		this.setSchool(school);
 	}
 	
@@ -24,6 +19,8 @@ public class Slime extends OtherCharacters {
 		this.durationrange = durationrange;
 	}
 	
+	public double[] durationrange = {2.0 , 6.0};
+	
 	public School getSchool() {
 		return school;
 	}
@@ -31,8 +28,6 @@ public class Slime extends OtherCharacters {
 	public void setSchool(School school) {
 		this.school = school;
 	}
-	
-	public double[] durationrange;
 	
 	public School school;
 
@@ -53,6 +48,7 @@ public class Slime extends OtherCharacters {
 		if (isMovingLeft() || isMovingRight()){
 			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
 			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+			this.setHorizontalVelocity(newVelocity);
 		}
 	}
 
@@ -98,7 +94,7 @@ public class Slime extends OtherCharacters {
 
 	@Override
 	public boolean isInAir(){
-		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
+		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
 			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
 			GeoFeature geo = getWorld().getGeoFeatureAt(pos[0],pos[1]);
 			if (geo == GeoFeature.GROUND)

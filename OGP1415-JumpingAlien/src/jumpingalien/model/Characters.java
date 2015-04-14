@@ -336,10 +336,9 @@ public abstract class Characters {
 				getHorizontalVelocity()*getHorizontalVelocity()));
 		double acceleration = Math.sqrt((getVerticalAcceleration()*getVerticalAcceleration()+
 				getHorizontalAcceleration()*getHorizontalAcceleration()));
-		if ((speed > 0.0) || (acceleration > 0.0))
-			return (0.01 / (speed + acceleration * duration));
-		else 
-			return duration;
+	
+		return Math.min((0.01 / (speed + acceleration * duration)),duration/10.1);
+		
 	}
 	
 	/**
@@ -932,14 +931,14 @@ public abstract class Characters {
 	
 	public boolean passableTerainHorizontal(double newPosition){
 		if (isMovingLeft()){
-			for (int i = getIntPositionAt(2)+1;i<=getIntPositionAt(2)+getSprite().getHeight();i++){
+			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
 			}
 		}
 		else if (isMovingRight()){
-			for (int i = getIntPositionAt(2)+1;i<=getIntPositionAt(2)+getSprite().getHeight();i++){
+			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
@@ -950,7 +949,7 @@ public abstract class Characters {
 	
 	public boolean passableTerainVertical(double newPosition){
 		if (getVerticalVelocity() > 0.0){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
+			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
 				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight());
 				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND){
 					setVerticalVelocity(0.0);
@@ -959,7 +958,7 @@ public abstract class Characters {
 			}
 		}
 		else if (getVerticalVelocity() < 0.0){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
+			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
 				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
 				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
 					return false;
@@ -1067,8 +1066,8 @@ public abstract class Characters {
 	protected void terminate() {
 		if (! isTerminated()){
 			getWorld().removeAsObject(this);
-			this.setWorld(null);
 			this.setTerminated(true);
+			this.setWorld(null);
 		}
 	}
 	
