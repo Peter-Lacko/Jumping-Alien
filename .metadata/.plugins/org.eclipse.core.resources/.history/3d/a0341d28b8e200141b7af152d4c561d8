@@ -134,7 +134,7 @@ public class Facade implements IFacadePart2 {
 		return world.hasPlayerWon();
 	}
 	
-	public void advanceTime(World world, double dt){
+	void advanceTime(World world, double dt){
 		world.advanceTime(dt);
 	}
 	
