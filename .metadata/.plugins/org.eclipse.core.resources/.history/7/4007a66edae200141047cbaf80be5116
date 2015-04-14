@@ -55,9 +55,9 @@ public enum Scale {
 		if (other == this)
 			return 1.0;
 		else if (other == Scale.PIXEL)
-			return conversion;
-		else
 			return 1.0/conversion;
+		else
+			return conversion;
 	}
 	
 	/**

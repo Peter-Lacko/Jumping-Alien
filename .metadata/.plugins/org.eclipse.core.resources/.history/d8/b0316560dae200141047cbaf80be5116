@@ -55,9 +55,9 @@ public enum Scale {
 		if (other == this)
 			return 1.0;
 		else if (other == Scale.PIXEL)
-			return conversion;
-		else
 			return 1.0/conversion;
+		else
+			return conversion;
 	}
 	
 	/**
@@ -100,7 +100,7 @@ public enum Scale {
 	/**
 	 * return the ratio that has been given if isConversionSet() == true. The given ratio must be an integer
 	 * due to the assignment, even if it is stored in conversion as a double.
-	 * @return	|result == (int)conversion
+	 * @return	|result == (int)conversion[1][0]
 	 */
 	public static int getRatio(){
 		return (int)conversion;

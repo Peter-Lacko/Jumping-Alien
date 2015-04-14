@@ -52,12 +52,7 @@ public enum Scale {
 	public double toScale(Scale other) throws IllegalArgumentException{
 		if (other == null)
 			throw new IllegalArgumentException();
-		if (other == this)
-			return 1.0;
-		else if (other == Scale.PIXEL)
-			return conversion;
-		else
-			return 1.0/conversion;
+		return conversion[this.getIndex()/2][other.getIndex()/2];
 	}
 	
 	/**
@@ -93,19 +88,20 @@ public enum Scale {
 	public static void setConversion(double ratio){
 		assert (! isConversionSet());
 		assert (ratio > 0.0);
-		conversion = ratio;
+		conversion[0][1] = 1.0/ratio;
+		conversion[1][0] = ratio;
 		conversionNowSet();
 	}
 	
 	/**
 	 * return the ratio that has been given if isConversionSet() == true. The given ratio must be an integer
 	 * due to the assignment, even if it is stored in conversion as a double.
-	 * @return	|result == (int)conversion
+	 * @return	|result == (int)conversion[1][0]
 	 */
 	public static int getRatio(){
-		return (int)conversion;
+		return (int)conversion[1][0];
 	}
 	
-	private static double conversion = 1.0;
+	private static double[][] conversion = new double[][] {{1.0,1.0},{1.0,1.0}};
 	
 }
