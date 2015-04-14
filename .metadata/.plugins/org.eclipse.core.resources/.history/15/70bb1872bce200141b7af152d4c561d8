@@ -371,9 +371,10 @@ public class World {
 //		int[] position = {xPixel, yPixel};
 		Position pos = new Position(xTile, yTile, Scale.TILE);
 //		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
-		if ((! isValidGeoFeature(feature)) || (xTile*getTileLength() < 0) || (xTile >= getMaxXTiles())
-				|| (yTile*getTileLength() < 0) || (yTile >= getMaxYTiles()))
-			throw new IllegalArgumentException();
+		if (! isValidGeoPosition(pos))
+			throw new IllegalArgumentException("set geofeature pos problem");
+		if (! isValidGeoFeature(feature))
+			throw new IllegalArgumentException("set geofeature feature problem");
 		if (feature == GeoFeature.AIR){
 			if (hasAsKeyGeoFeaturePosition(pos))
 				geoFeatures.remove(pos);

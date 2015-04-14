@@ -367,12 +367,10 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			| ! isValidGeoFeature(feature)
 	 */
-	public void setGeoFeatureAt(int xTile, int yTile, GeoFeature feature) throws IllegalArgumentException{
+	public void setGeoFeatureAt(int xPixel, int yPixel, GeoFeature feature) throws IllegalArgumentException{
 //		int[] position = {xPixel, yPixel};
-		Position pos = new Position(xTile, yTile, Scale.TILE);
-//		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
-		if ((! isValidGeoFeature(feature)) || (xTile*getTileLength() < 0) || (xTile >= getMaxXTiles())
-				|| (yTile*getTileLength() < 0) || (yTile >= getMaxYTiles()))
+		Position pos = new Position(xPixel, yPixel);
+		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
 			throw new IllegalArgumentException();
 		if (feature == GeoFeature.AIR){
 			if (hasAsKeyGeoFeaturePosition(pos))
@@ -394,10 +392,10 @@ public class World {
 	 * 			|	if (feature == 3) then type = GeoFeature.MAGMA
 	 * 			|setGeoFeatureAt(xPixel, yPixel, type)
 	 */
-	public void setGeoFeatureAtWithInt(int xTile, int yTile, int feature) throws IllegalArgumentException{
+	public void setGeoFeatureAtWithInt(int xPixel, int yPixel, int feature) throws IllegalArgumentException{
 		for (GeoFeature type : GeoFeature.values()){
 			if (type.getValue() == feature)
-				setGeoFeatureAt(xTile, yTile, type);
+				setGeoFeatureAt(xPixel, yPixel, type);
 		}
 	}
 	

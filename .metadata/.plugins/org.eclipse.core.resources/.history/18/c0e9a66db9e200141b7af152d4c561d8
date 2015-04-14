@@ -367,12 +367,11 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			| ! isValidGeoFeature(feature)
 	 */
-	public void setGeoFeatureAt(int xTile, int yTile, GeoFeature feature) throws IllegalArgumentException{
+	public void setGeoFeatureAt(int xPixel, int yPixel, GeoFeature feature) throws IllegalArgumentException{
 //		int[] position = {xPixel, yPixel};
-		Position pos = new Position(xTile, yTile, Scale.TILE);
+		Position pos = new Position(xPixel, yPixel);
 //		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
-		if ((! isValidGeoFeature(feature)) || (xTile*getTileLength() < 0) || (xTile >= getMaxXTiles())
-				|| (yTile*getTileLength() < 0) || (yTile >= getMaxYTiles()))
+		if (! isValidGeoFeature(feature))
 			throw new IllegalArgumentException();
 		if (feature == GeoFeature.AIR){
 			if (hasAsKeyGeoFeaturePosition(pos))
@@ -380,25 +379,6 @@ public class World {
 		}
 		else
 			geoFeatures.put(pos, feature);
-	}
-	
-	/**
-	 * 
-	 * @param xPixel
-	 * @param yPixel
-	 * @param feature
-	 * @effect	|let
-	 * 			|	if (feature == 0) then type = GeoFeature.AIR
-	 * 			|	if (feature == 1) then type = GeoFeature.GROUND
-	 * 			|	if (feature == 2) then type = GeoFeature.WATER
-	 * 			|	if (feature == 3) then type = GeoFeature.MAGMA
-	 * 			|setGeoFeatureAt(xPixel, yPixel, type)
-	 */
-	public void setGeoFeatureAtWithInt(int xTile, int yTile, int feature) throws IllegalArgumentException{
-		for (GeoFeature type : GeoFeature.values()){
-			if (type.getValue() == feature)
-				setGeoFeatureAt(xTile, yTile, type);
-		}
 	}
 	
 	/**
@@ -421,8 +401,8 @@ public class World {
 	 *			|	&& (pos[1] < getWorldSize()[1]))
 	 */
 	private boolean isValidGeoPosition(Position position){
-		int[] pos = position.toScale(Scale.PIXEL).getIntPosition();
-		return ((pos.length == 2) && (pos[0]%getTileLength() == 0) 
+		int[] pos = position.getIntPosition();
+		return ((position.getScale() == Scale.PIXEL) && (pos.length == 2) && (pos[0]%getTileLength() == 0) 
 				&& (pos[1]%getTileLength()==0) && (pos[0] < getWorldSize()[0])
 				&& (pos[1] < getWorldSize()[1]));
 	}

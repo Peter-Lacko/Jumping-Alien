@@ -156,18 +156,12 @@ public class Facade implements IFacadePart2 {
 		try{
 			return world.getGeoFeatureAt(pixelX, pixelY).getValue();
 		} catch (Exception exc){
-			throw new ModelException("get geofeature error");
+			throw new ModelException("geofeature error");
 		}
 	}
 	
-	public void setGeologicalFeature(World world, int tileX, int tileY, int tileType) 
-			throws ModelException{
-		try{
-//			world.setGeoFeatureAt(tileX, tileY, GeoFeature.values()[tileType]);
-			world.setGeoFeatureAtWithInt(tileX, tileY, tileType);
-		} catch (Exception exc){
-			throw new ModelException("set geofeature error");
-		}
+	public void setGeologicalFeature(World world, int tileX, int tileY, int tileType){
+		world.setGeoFeatureAt(tileX, tileY, GeoFeature.values()[tileType]);
 	}
 	
 	public void setMazub(World world, Mazub alien){

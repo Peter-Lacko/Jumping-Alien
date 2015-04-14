@@ -163,8 +163,7 @@ public class Facade implements IFacadePart2 {
 	public void setGeologicalFeature(World world, int tileX, int tileY, int tileType) 
 			throws ModelException{
 		try{
-//			world.setGeoFeatureAt(tileX, tileY, GeoFeature.values()[tileType]);
-			world.setGeoFeatureAtWithInt(tileX, tileY, tileType);
+			world.setGeoFeatureAt(tileX, tileY, GeoFeature.values()[tileType]);
 		} catch (Exception exc){
 			throw new ModelException("set geofeature error");
 		}
