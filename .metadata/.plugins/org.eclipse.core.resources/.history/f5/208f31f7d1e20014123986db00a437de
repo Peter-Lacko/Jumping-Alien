@@ -171,8 +171,7 @@ public class Facade implements IFacadePart2 {
 	}
 	
 	public void setMazub(World world, Mazub alien){
-		world.addObjectAt(alien, 1);
-		alien.setWorld(world);
+		world.addAsObject(alien);
 	}
 	
 	public boolean isImmune(Mazub alien){

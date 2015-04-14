@@ -486,19 +486,13 @@ public class Mazub extends Characters {
 
 	@Override
 	public boolean isInAir(){
-		if (getWorld() == null){
-			return false;
-			}
-		else{
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
-				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-				System.out.println(pos[0]);
-				System.out.println(pos[1]);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
-					return false;
-			}
+		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
+			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				return false;
 		}
-		return true;	
+		return true;
+		
 	}
 
 	/**
@@ -641,6 +635,10 @@ public class Mazub extends Characters {
 
 	@Override
 	public boolean canHaveAsWorld(World world) {
+		for (Characters character : world.getAllObjects()){
+			if (character instanceof Mazub)
+				return false;
+		}
 		if (world.isTerminated())
 			return false;
 		return true;

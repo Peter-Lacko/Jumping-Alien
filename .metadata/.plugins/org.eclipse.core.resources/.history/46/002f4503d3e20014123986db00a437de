@@ -362,9 +362,8 @@ public class World {
 	public GeoFeature getGeoFeatureAt(int xPixel, int yPixel) throws IllegalArgumentException{
 //		int[] position = {xPixel, yPixel};
 		Position pos = new Position(xPixel, yPixel);
-		if (! isValidGeoPosition(pos)){
+		if (! isValidGeoPosition(pos))
 			throw new IllegalArgumentException();
-		}
 		GeoFeature geoFeature = geoFeatures.get(pos);
 		if (geoFeature == null)
 			geoFeature = GeoFeature.AIR;

@@ -107,6 +107,7 @@ public class Facade implements IFacadePart2 {
 			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
 			int targetTileY){
 		try{
+			System.out.println(tilesize);
 			return new World(tileSize, nbTilesX, nbTilesY, visibleWindowWidth, visibleWindowHeight, targetTileX, targetTileY);
 		}
 		catch (IllegalArgumentException exc){
