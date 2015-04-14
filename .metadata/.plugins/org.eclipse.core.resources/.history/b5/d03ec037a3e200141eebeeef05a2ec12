@@ -1028,10 +1028,7 @@ public abstract class Characters_Peter {
 	IllegalArgumentException{
 		if (! isValidPositionAt(coordinate, index))
 			throw new IllegalArgumentException();
-		if (index == 1)
-			this.Position = new Position(coordinate, getPositionAt(2));
-		else if (index == 2)
-			this.Position = new Position(getPositionAt(1), coordinate);
+		this.Position[index-1] = coordinate;
 	}
 		
 	/**

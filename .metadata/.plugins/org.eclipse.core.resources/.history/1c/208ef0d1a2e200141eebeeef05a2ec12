@@ -1001,8 +1001,13 @@ public abstract class Characters_Peter {
 	/**
 	 * Return the position for this Mazub character.
 	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
-	 * @effect return the array for the stored position value
-	 * 			|result == getPositionValue().getPosition()
+	 * @return The length of the resulting array is equal to the number of coordinates ascribed to this 
+	 * 			character (2).
+	 * 			| result.length == getNbPosition()
+	 * @return Each element in the resulting array is equal to the coordinate ascribed to this character
+	 * 			at the corresponding index.
+	 * 			| for each I in 0..result.length-1:
+	 * 			|	result[I].equals(getPositionAt(I+1))
 	 */
 	public double[] getPosition() {
 		return getPositionValue().getPosition();
@@ -1028,10 +1033,7 @@ public abstract class Characters_Peter {
 	IllegalArgumentException{
 		if (! isValidPositionAt(coordinate, index))
 			throw new IllegalArgumentException();
-		if (index == 1)
-			this.Position = new Position(coordinate, getPositionAt(2));
-		else if (index == 2)
-			this.Position = new Position(getPositionAt(1), coordinate);
+		this.Position[index-1] = coordinate;
 	}
 		
 	/**

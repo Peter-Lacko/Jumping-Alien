@@ -5,9 +5,9 @@ import jumpingalien.util.Util;
 import be.kuleuven.cs.som.annotate.*;
 
 
-public class Mazub_Peter extends Characters {
+public class Mazub extends Characters {
 
-	public Mazub_Peter(int x_pos, int y_pos, Sprite[] sprites)
+	public Mazub(int x_pos, int y_pos, Sprite[] sprites)
 			throws IllegalArgumentException {
 		super(x_pos, y_pos, sprites, 0.9, 3.0, 1.0, 8.0,100);
 		this.nbRunningCycle = getNbImages()/2-4;

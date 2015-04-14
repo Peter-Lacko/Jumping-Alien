@@ -819,35 +819,27 @@ public abstract class Characters_Peter {
 				(direction == MovementDirection.RIGHT);
 	}
 
-//	/**
-//	 * Return the number of coordinates ascribed to this character.
-//	 * @throws NullPointerException
-//	 * 			Null is not a valid array for the Position
-//	 * 			| this.getPosition() == null
-//	 */
-//	@Basic @Immutable
-//	public int getNbPosition() throws NullPointerException {
-//		return getPosition().length;
-//	}
-//	
-//	/**
-//	 * Check whether the number of coordinates is valid for any character.
-//	 * 
-//	 * @param nbPosition
-//	 * 			The number of coordinates to check.
-//	 * @return True if and only if the given number of coordinates is 2 (the game takes place in a 2D plane)
-//	 * 			| result == (nbPosition == 2)
-//	 */
-//	public static boolean isValidNbPosition(int nbPosition){
-//		return (nbPosition == 2);
-//	}
+	/**
+	 * Return the number of coordinates ascribed to this character.
+	 * @throws NullPointerException
+	 * 			Null is not a valid array for the Position
+	 * 			| this.getPosition() == null
+	 */
+	@Basic @Immutable
+	public int getNbPosition() throws NullPointerException {
+		return getPosition().length;
+	}
 	
 	/**
-	 * Returns the saved Position Value.
+	 * Check whether the number of coordinates is valid for any character.
+	 * 
+	 * @param nbPosition
+	 * 			The number of coordinates to check.
+	 * @return True if and only if the given number of coordinates is 2 (the game takes place in a 2D plane)
+	 * 			| result == (nbPosition == 2)
 	 */
-	@Basic
-	public Position getPositionValue(){
-		return Position;
+	public static boolean isValidNbPosition(int nbPosition){
+		return (nbPosition == 2);
 	}
 	
 	/**
@@ -855,23 +847,28 @@ public abstract class Characters_Peter {
 	 * @param index
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
-	 * @effect	returns the saved X coordinate (index 1) or Y coordinate (index 2) for this character
-	 * 			|result == getPositionValue().getPosition()[index-1]
 	 * @throws ArrayIndexOutOfBoundsException
 	 * 			The given index must be positive and may not be bigger than 2.
 	 * 			| (index <= 0) || (index > 2)
 	 */
+	@Basic
 	public double getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
-		return getPositionValue().getPosition()[index-1];
+		return Position[index-1];
 	}
 	
 	/**
 	 * Return the coordinates of the character in the playing field
-	 * @effect	return the position array in int form
-	 * 			|result == getPositionValue().getIntPosition()
+	 * @return	the rounded down coordinates in the form of an int[]
+	 * 			| return [getIntPositionAt(1),getIntPositionAt(2)]
 	 */
 	public int[] getIntPosition(){
-		return getPositionValue().getIntPosition();
+		try{
+			int[] position = {getIntPositionAt(1),getIntPositionAt(2)};
+			return position;
+		}
+		catch (ArrayIndexOutOfBoundsException exc){
+			throw exc;
+		}
 	}
 	
 	/**
@@ -880,10 +877,10 @@ public abstract class Characters_Peter {
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
 	 * @effect	Rounds down the position at the requested index and converts to an int type.
-	 * 			| result == getIntPosition()[index-1]
+	 * 			| (int)getPositionAt(index)
 	 */
 	public int getIntPositionAt(int index) throws ArrayIndexOutOfBoundsException{
-		return getIntPosition()[index-1];
+		return (int)getPositionAt(index);
 	}
 	
 	/**
@@ -1001,11 +998,16 @@ public abstract class Characters_Peter {
 	/**
 	 * Return the position for this Mazub character.
 	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
-	 * @effect return the array for the stored position value
-	 * 			|result == getPositionValue().getPosition()
+	 * @return The length of the resulting array is equal to the number of coordinates ascribed to this 
+	 * 			character (2).
+	 * 			| result.length == getNbPosition()
+	 * @return Each element in the resulting array is equal to the coordinate ascribed to this character
+	 * 			at the corresponding index.
+	 * 			| for each I in 0..result.length-1:
+	 * 			|	result[I].equals(getPositionAt(I+1))
 	 */
 	public double[] getPosition() {
-		return getPositionValue().getPosition();
+		return this.Position.clone();
 	}
 	
 	/**
@@ -1028,79 +1030,76 @@ public abstract class Characters_Peter {
 	IllegalArgumentException{
 		if (! isValidPositionAt(coordinate, index))
 			throw new IllegalArgumentException();
-		if (index == 1)
-			this.Position = new Position(coordinate, getPositionAt(2));
-		else if (index == 2)
-			this.Position = new Position(getPositionAt(1), coordinate);
+		this.Position[index-1] = coordinate;
 	}
 		
 	/**
 	 * Variable registering the position of the bottom left corner of the Mazub Sprite.
 	 */
-	protected Position Position = new Position(0.0, 0.0);
+	protected double[] Position = {0.0, 0.0};
 	
 	
 	// alles hierna is nu voor world denk ik
 	
 	
-//	/**
-//	 * a boolean that says whether the given field is permitted as a playing field
-//	 * @param field
-//	 * 			the dimension of the playing field
-//	 * @return true if the playing field is allowed, false if it isn't
-//	 * 			|if field.length != 2
-//	 * 			| then return false
-//	 * 			|else if (field[0]<=1) || (field[1]<=1)
-//	 * 			| then return false
-//	 * 			|else
-//	 * 			| return true
-//	 */
-//	public boolean isProperField(int[] field) {
-//		if (field.length != 2)
-//			return false;
-//		else{
-//			for (int size: field){
-//				if (size <= 1)
-//					return false;
-//			}
-//			return true;
-//		}
-//	}
-//	
-//	/**
-//	 * Constant reflecting the size of the playing field.
-//	 * @return	The size of the field is 1024 pixels long and 768 pixels high.
-//	 * 			| result == {1024, 768}
-//	 */
-//	protected static final int[] FIELD_SIZE = {1024, 768};
-//	
-//	/**
-//	 * Constant reflecting the maximal X coordinate.
-//	 * @return The highest X coordinate is the field length minus one.
-//	 * 			| result == FIELD_SIZE[0]-1
-//	 */
-//	protected static final int X_MAX = FIELD_SIZE[0]-1;
-//	
-//	/**
-//	 * Constant reflecting the maximal Y coordinate.
-//	 * @return The highest Y coordinate is the field height minus one.
-//	 * 			| result == FIELD_SIZE[0]-1
-//	 */
-//	protected static final int Y_MAX = FIELD_SIZE[1]-1;
-//	
-//	/**
-//	 * Constant reflecting the minimal X coordinate.
-//	 * @return The lowest X coordinate is zero.
-//	 * 			| result == 0
-//	 */
-//	protected static final int X_MIN = 0;
-//	
-//	/**
-//	 * Constant reflecting the minimal Y coordinate.
-//	 * @return The lowest Y coordinate is zero.
-//	 * 			| result == 0
-//	 */
-//	protected static final int Y_MIN = 0;
+	/**
+	 * a boolean that says whether the given field is permitted as a playing field
+	 * @param field
+	 * 			the dimension of the playing field
+	 * @return true if the playing field is allowed, false if it isn't
+	 * 			|if field.length != 2
+	 * 			| then return false
+	 * 			|else if (field[0]<=1) || (field[1]<=1)
+	 * 			| then return false
+	 * 			|else
+	 * 			| return true
+	 */
+	public boolean isProperField(int[] field) {
+		if (field.length != 2)
+			return false;
+		else{
+			for (int size: field){
+				if (size <= 1)
+					return false;
+			}
+			return true;
+		}
+	}
+	
+	/**
+	 * Constant reflecting the size of the playing field.
+	 * @return	The size of the field is 1024 pixels long and 768 pixels high.
+	 * 			| result == {1024, 768}
+	 */
+	protected static final int[] FIELD_SIZE = {1024, 768};
+	
+	/**
+	 * Constant reflecting the maximal X coordinate.
+	 * @return The highest X coordinate is the field length minus one.
+	 * 			| result == FIELD_SIZE[0]-1
+	 */
+	protected static final int X_MAX = FIELD_SIZE[0]-1;
+	
+	/**
+	 * Constant reflecting the maximal Y coordinate.
+	 * @return The highest Y coordinate is the field height minus one.
+	 * 			| result == FIELD_SIZE[0]-1
+	 */
+	protected static final int Y_MAX = FIELD_SIZE[1]-1;
+	
+	/**
+	 * Constant reflecting the minimal X coordinate.
+	 * @return The lowest X coordinate is zero.
+	 * 			| result == 0
+	 */
+	protected static final int X_MIN = 0;
+	
+	/**
+	 * Constant reflecting the minimal Y coordinate.
+	 * @return The lowest Y coordinate is zero.
+	 * 			| result == 0
+	 */
+	protected static final int Y_MIN = 0;
 	
 	public abstract void collision(Characters other);
 

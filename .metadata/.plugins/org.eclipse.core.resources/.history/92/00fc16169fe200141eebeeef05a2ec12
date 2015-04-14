@@ -1,12 +1,10 @@
 package jumpingalien.model;
 
-import java.util.List;
-
 import jumpingalien.util.*;
 import jumpingalien.model.World.*;
 import be.kuleuven.cs.som.annotate.*;
 
-//TODO documentatie aanpassen
+
 /**
  * A class of Mazub characters, the player controlled character in Jumping Alien.
  * 
@@ -50,9 +48,8 @@ import be.kuleuven.cs.som.annotate.*;
  * @version 1.0
  * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
  */
-public abstract class Characters_Peter {
+public abstract class Characters {
 	
-	// TODO documentatie aanpassen
 	/**
 	 * initialize a character with a given x_pos, y_pos, sprites, horizontal acceleration,
 	 * 	max horizontal velocity, initial horizontal velocity and initial vertical velocity.
@@ -85,7 +82,7 @@ public abstract class Characters_Peter {
 	 * @throws IllegalArgumentException
 	 */
 	@Raw
-	public Characters_Peter(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, double init_hor_vel, double init_ver_vel, int hitpoints)
+	public Characters(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, double init_hor_vel, double init_ver_vel)
 			throws IllegalArgumentException{
 		if (! isValidPositionAt((double) x_pos, 1))
 			throw new IllegalArgumentException("Illegal x-coordinate!");
@@ -99,8 +96,6 @@ public abstract class Characters_Peter {
 			throw new IllegalArgumentException("illegal horizontal details");
 		if (! canHaveAsInitVerticalVelocity(init_ver_vel))
 			throw new IllegalArgumentException("illegal vertical details");
-		if (! canHaveAsHitpoints(hitpoints))
-			throw new IllegalArgumentException();
 		this.images = sprites.clone();
 		this.setSprite(getImageAt(1));
 		this.setPositionAt((double) x_pos, 1);
@@ -109,48 +104,22 @@ public abstract class Characters_Peter {
 		this.setMaxHorizontalVelocity(max_hor_vel);
 		this.setInitHorizontalVelocity(init_hor_vel);
 		this.setinitVerticalVelocity(init_ver_vel);
-		this.setHitPoints(hitpoints);
 	}
 	
-    @Basic @Raw
-    public boolean isTerminated() {
-        return this.isTerminated;
-    }
-	
-    private boolean isTerminated = false;
-	
-	public void setTerminated(boolean isTerminated) {
-		this.isTerminated = isTerminated;
+	public boolean canHaveAsWorld(World world){
+		return true;
 	}
-
-	public abstract boolean canHaveAsWorld(World world);
 	
-	/**
-	 * returns the world of the character
-	 */
-	@Basic
 	public World getWorld() {
 		return this.world;
 	}
 
-	/**
-	 * a setter method for the variable world
-	 * @param world
-	 * 			the world the which world has to be set
-	 * @post	...
-	 * 			| new.world == world
-	 * @throws IllegalArgumentException
-	 * 			| (! canHaveAsWorld(world))
-	 */
 	public void setWorld(World world) throws IllegalArgumentException {
 		if (! canHaveAsWorld(world))
 			throw new IllegalArgumentException("Wrong Arguments");
 		this.world = world;
 	}
 	
-	/**
-	 * a variable that stores the world of the character
-	 */
 	private World world = null;
 	
 	/**
@@ -819,35 +788,27 @@ public abstract class Characters_Peter {
 				(direction == MovementDirection.RIGHT);
 	}
 
-//	/**
-//	 * Return the number of coordinates ascribed to this character.
-//	 * @throws NullPointerException
-//	 * 			Null is not a valid array for the Position
-//	 * 			| this.getPosition() == null
-//	 */
-//	@Basic @Immutable
-//	public int getNbPosition() throws NullPointerException {
-//		return getPosition().length;
-//	}
-//	
-//	/**
-//	 * Check whether the number of coordinates is valid for any character.
-//	 * 
-//	 * @param nbPosition
-//	 * 			The number of coordinates to check.
-//	 * @return True if and only if the given number of coordinates is 2 (the game takes place in a 2D plane)
-//	 * 			| result == (nbPosition == 2)
-//	 */
-//	public static boolean isValidNbPosition(int nbPosition){
-//		return (nbPosition == 2);
-//	}
+	/**
+	 * Return the number of coordinates ascribed to this character.
+	 * @throws NullPointerException
+	 * 			Null is not a valid array for the Position
+	 * 			| this.getPosition() == null
+	 */
+	@Basic @Immutable
+	public int getNbPosition() throws NullPointerException {
+		return getPosition().length;
+	}
 	
 	/**
-	 * Returns the saved Position Value.
+	 * Check whether the number of coordinates is valid for any character.
+	 * 
+	 * @param nbPosition
+	 * 			The number of coordinates to check.
+	 * @return True if and only if the given number of coordinates is 2 (the game takes place in a 2D plane)
+	 * 			| result == (nbPosition == 2)
 	 */
-	@Basic
-	public Position getPositionValue(){
-		return Position;
+	public static boolean isValidNbPosition(int nbPosition){
+		return (nbPosition == 2);
 	}
 	
 	/**
@@ -855,23 +816,28 @@ public abstract class Characters_Peter {
 	 * @param index
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
-	 * @effect	returns the saved X coordinate (index 1) or Y coordinate (index 2) for this character
-	 * 			|result == getPositionValue().getPosition()[index-1]
 	 * @throws ArrayIndexOutOfBoundsException
 	 * 			The given index must be positive and may not be bigger than 2.
 	 * 			| (index <= 0) || (index > 2)
 	 */
+	@Basic
 	public double getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
-		return getPositionValue().getPosition()[index-1];
+		return Position[index-1];
 	}
 	
 	/**
 	 * Return the coordinates of the character in the playing field
-	 * @effect	return the position array in int form
-	 * 			|result == getPositionValue().getIntPosition()
+	 * @return	the rounded down coordinates in the form of an int[]
+	 * 			| return [getIntPositionAt(1),getIntPositionAt(2)]
 	 */
 	public int[] getIntPosition(){
-		return getPositionValue().getIntPosition();
+		try{
+			int[] position = {getIntPositionAt(1),getIntPositionAt(2)};
+			return position;
+		}
+		catch (ArrayIndexOutOfBoundsException exc){
+			throw exc;
+		}
 	}
 	
 	/**
@@ -880,10 +846,10 @@ public abstract class Characters_Peter {
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
 	 * @effect	Rounds down the position at the requested index and converts to an int type.
-	 * 			| result == getIntPosition()[index-1]
+	 * 			| (int)getPositionAt(index)
 	 */
 	public int getIntPositionAt(int index) throws ArrayIndexOutOfBoundsException{
-		return getIntPosition()[index-1];
+		return (int)getPositionAt(index);
 	}
 	
 	/**
@@ -916,6 +882,7 @@ public abstract class Characters_Peter {
 		return false;
 	}
 	
+	// TODO best collisiondetector hierbij in aangezien we al itereren over nieuwe posities
 	public boolean passableTerainHorizontal(double newPosition){
 		if (isMovingLeft()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
@@ -929,9 +896,10 @@ public abstract class Characters_Peter {
 					return false;
 			}
 		}
-		return this.collisionDetectionHorizontal(newPosition);
+		return true;
 	}
 	
+	// TODO best collisiondetector hierbij in aangezien we al itereren over nieuwe posities
 	public boolean passableTerainVertical(double newPosition){
 		if (getVerticalVelocity() > 0.0){
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
@@ -945,67 +913,22 @@ public abstract class Characters_Peter {
 					return false;
 			}
 		}
-		return this.collisionDetectionVertical(newPosition);
-	}
-	
-	public boolean collisionDetectionHorizontal(double newPosition){
-		List<Characters> characters = world.getAllObjects();
-		if (isMovingRight()){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-						this.collision(character);
-						return false;
-				}
-			}
-		}
-		if (isMovingLeft()){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-						this.collision(character);
-						return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	public boolean collisionDetectionVertical(double newPosition){
-		List<Characters> characters = world.getAllObjects();
-		if (getVerticalVelocity() > 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
-				}
-			}
-		}
-		if (getVerticalVelocity() < 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
-				}
-			}
-		}
 		return true;
 	}
 	
 	/**
 	 * Return the position for this Mazub character.
 	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
-	 * @effect return the array for the stored position value
-	 * 			|result == getPositionValue().getPosition()
+	 * @return The length of the resulting array is equal to the number of coordinates ascribed to this 
+	 * 			character (2).
+	 * 			| result.length == getNbPosition()
+	 * @return Each element in the resulting array is equal to the coordinate ascribed to this character
+	 * 			at the corresponding index.
+	 * 			| for each I in 0..result.length-1:
+	 * 			|	result[I].equals(getPositionAt(I+1))
 	 */
 	public double[] getPosition() {
-		return getPositionValue().getPosition();
+		return this.Position.clone();
 	}
 	
 	/**
@@ -1028,124 +951,75 @@ public abstract class Characters_Peter {
 	IllegalArgumentException{
 		if (! isValidPositionAt(coordinate, index))
 			throw new IllegalArgumentException();
-		if (index == 1)
-			this.Position = new Position(coordinate, getPositionAt(2));
-		else if (index == 2)
-			this.Position = new Position(getPositionAt(1), coordinate);
+		this.Position[index-1] = coordinate;
 	}
 		
 	/**
 	 * Variable registering the position of the bottom left corner of the Mazub Sprite.
 	 */
-	protected Position Position = new Position(0.0, 0.0);
+	protected double[] Position = {0.0, 0.0};
 	
 	
 	// alles hierna is nu voor world denk ik
 	
 	
-//	/**
-//	 * a boolean that says whether the given field is permitted as a playing field
-//	 * @param field
-//	 * 			the dimension of the playing field
-//	 * @return true if the playing field is allowed, false if it isn't
-//	 * 			|if field.length != 2
-//	 * 			| then return false
-//	 * 			|else if (field[0]<=1) || (field[1]<=1)
-//	 * 			| then return false
-//	 * 			|else
-//	 * 			| return true
-//	 */
-//	public boolean isProperField(int[] field) {
-//		if (field.length != 2)
-//			return false;
-//		else{
-//			for (int size: field){
-//				if (size <= 1)
-//					return false;
-//			}
-//			return true;
-//		}
-//	}
-//	
-//	/**
-//	 * Constant reflecting the size of the playing field.
-//	 * @return	The size of the field is 1024 pixels long and 768 pixels high.
-//	 * 			| result == {1024, 768}
-//	 */
-//	protected static final int[] FIELD_SIZE = {1024, 768};
-//	
-//	/**
-//	 * Constant reflecting the maximal X coordinate.
-//	 * @return The highest X coordinate is the field length minus one.
-//	 * 			| result == FIELD_SIZE[0]-1
-//	 */
-//	protected static final int X_MAX = FIELD_SIZE[0]-1;
-//	
-//	/**
-//	 * Constant reflecting the maximal Y coordinate.
-//	 * @return The highest Y coordinate is the field height minus one.
-//	 * 			| result == FIELD_SIZE[0]-1
-//	 */
-//	protected static final int Y_MAX = FIELD_SIZE[1]-1;
-//	
-//	/**
-//	 * Constant reflecting the minimal X coordinate.
-//	 * @return The lowest X coordinate is zero.
-//	 * 			| result == 0
-//	 */
-//	protected static final int X_MIN = 0;
-//	
-//	/**
-//	 * Constant reflecting the minimal Y coordinate.
-//	 * @return The lowest Y coordinate is zero.
-//	 * 			| result == 0
-//	 */
-//	protected static final int Y_MIN = 0;
-	
-	public abstract void collision(Characters other);
-
-	protected void terminate() {
-		if (! isTerminated()){
-			getWorld().removeAsObject(this);
-			this.setTerminated(true);
-		}
-	}
-	
-	protected void damage(int damage){
-		if (Util.fuzzyLessThanOrEqualTo(this.getHitPoints(), damage)){
-			this.setHitPoints(0);
-			this.terminate();
-		}
-		else
-			this.setHitPoints(this.getHitPoints() - damage);		
-	}
-	
-	public boolean canHaveAsHitpoints(int hitpoints){
-		if (hitpoints < 0)
+	/**
+	 * a boolean that says whether the given field is permitted as a playing field
+	 * @param field
+	 * 			the dimension of the playing field
+	 * @return true if the playing field is allowed, false if it isn't
+	 * 			|if field.length != 2
+	 * 			| then return false
+	 * 			|else if (field[0]<=1) || (field[1]<=1)
+	 * 			| then return false
+	 * 			|else
+	 * 			| return true
+	 */
+	public boolean isProperField(int[] field) {
+		if (field.length != 2)
 			return false;
-		return true;
+		else{
+			for (int size: field){
+				if (size <= 1)
+					return false;
+			}
+			return true;
+		}
 	}
 	
-	public int getHitPoints() {
-		return hitPoints;
-	}
+	/**
+	 * Constant reflecting the size of the playing field.
+	 * @return	The size of the field is 1024 pixels long and 768 pixels high.
+	 * 			| result == {1024, 768}
+	 */
+	protected static final int[] FIELD_SIZE = {1024, 768};
+	
+	/**
+	 * Constant reflecting the maximal X coordinate.
+	 * @return The highest X coordinate is the field length minus one.
+	 * 			| result == FIELD_SIZE[0]-1
+	 */
+	protected static final int X_MAX = FIELD_SIZE[0]-1;
+	
+	/**
+	 * Constant reflecting the maximal Y coordinate.
+	 * @return The highest Y coordinate is the field height minus one.
+	 * 			| result == FIELD_SIZE[0]-1
+	 */
+	protected static final int Y_MAX = FIELD_SIZE[1]-1;
+	
+	/**
+	 * Constant reflecting the minimal X coordinate.
+	 * @return The lowest X coordinate is zero.
+	 * 			| result == 0
+	 */
+	protected static final int X_MIN = 0;
+	
+	/**
+	 * Constant reflecting the minimal Y coordinate.
+	 * @return The lowest Y coordinate is zero.
+	 * 			| result == 0
+	 */
+	protected static final int Y_MIN = 0;
 
-	public void setHitPoints(int hitPoints) {
-		this.hitPoints = hitPoints;
-	}
-	
-	public int hitPoints;
-	
-	public boolean notFullyDeadYet() {
-		return notFullyDeadYet;
-	}
-
-	public void setNotFullyDeadYet(boolean notFullyDeadYet) {
-		this.notFullyDeadYet = notFullyDeadYet;
-	}
-
-	
-	public boolean notFullyDeadYet = false;
-
-	
 }

@@ -1,21 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy>
-<<<<<<< HEAD
-<fullyQualifiedTypeName name="java.util.List"/>
-=======
-<fullyQualifiedTypeName name="jumpingalien.util.Util"/>
->>>>>>> de14cf24bc76e155f1cf1fa700b47363256160d8
-<fullyQualifiedTypeName name="jumpingalien.model.Plant"/>
-<fullyQualifiedTypeName name="java.util.Arrays"/>
-<fullyQualifiedTypeName name="jumpingalien.model.MovementDirection"/>
-<fullyQualifiedTypeName name="jumpingalien.model.World"/>
-<fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
-<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Basic"/>
-<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Raw"/>
-<<<<<<< HEAD
-<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Value"/>
-<fullyQualifiedTypeName name="jumpingalien.util.Util"/>
-=======
-<fullyQualifiedTypeName name="java.util.List"/>
->>>>>>> de14cf24bc76e155f1cf1fa700b47363256160d8
-</qualifiedTypeNameHistroy>
+<qualifiedTypeNameHistroy/>
