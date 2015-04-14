@@ -781,7 +781,7 @@ public class World {
 	 */
 	public List<Characters> getAllObjects(){
 		LinkedList<Characters> result = new LinkedList<Characters>();
-		for(int index = getNbObjects() -1 ; index <= 1; index--)
+		for(int index = getNbObjects(); index <= 1; index--)
 			result.addFirst(getObjectAt(index));
 		return result;
 	}

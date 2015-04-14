@@ -87,10 +87,10 @@ public abstract class Characters {
 	@Raw
 	public Characters(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, double init_hor_vel, double init_ver_vel, int hitpoints)
 			throws IllegalArgumentException{
-//		if (! canHaveAsNewPosition((double) x_pos, 1))
-//			throw new IllegalArgumentException("Illegal x-coordinate!");
-//		if (! canHaveAsNewPosition((double) y_pos, 2))
-//			throw new IllegalArgumentException("Illegal y-coordinate!");
+		if (! canHaveAsNewPosition((double) x_pos, 1))
+			throw new IllegalArgumentException("Illegal x-coordinate!");
+		if (! canHaveAsNewPosition((double) y_pos, 2))
+			throw new IllegalArgumentException("Illegal y-coordinate!");
 		if (! isValidNbImages(sprites.length))
 			throw new IllegalArgumentException("Illegal sprite array length!");
 		if (! hasProperSprites(sprites))
@@ -103,8 +103,8 @@ public abstract class Characters {
 			throw new IllegalArgumentException();
 		this.images = sprites.clone();
 		this.setSprite(getImageAt(1));
-		this.Position[0] = ((double) x_pos);
-		this.Position[1] = ((double) y_pos);;
+		this.setPositionAt((double) x_pos, 1);
+		this.setPositionAt((double) y_pos, 2);
 		this.setHorizontalAcceleration(hor_acc);
 		this.setMaxHorizontalVelocity(max_hor_vel);
 		this.setInitHorizontalVelocity(init_hor_vel);
@@ -905,6 +905,7 @@ public abstract class Characters {
 //		return false;
 //	}
 	
+	@Raw
 	public boolean canHaveAsNewPosition (double coordinate, int index){
 		if ((index == 1) && (passableTerainHorizontal(coordinate)))
 			return true;
