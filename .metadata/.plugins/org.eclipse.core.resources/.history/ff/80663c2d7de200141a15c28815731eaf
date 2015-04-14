@@ -1,7 +1,5 @@
 package jumpingalien.model;
 
-import java.util.List;
-
 import jumpingalien.util.*;
 import jumpingalien.model.World.*;
 import be.kuleuven.cs.som.annotate.*;
@@ -913,6 +911,7 @@ public abstract class Characters {
 		return false;
 	}
 	
+	// TODO best collisiondetector hierbij in aangezien we al itereren over nieuwe posities
 	public boolean passableTerainHorizontal(double newPosition){
 		if (isMovingLeft()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
@@ -926,9 +925,10 @@ public abstract class Characters {
 					return false;
 			}
 		}
-		return this.collisionDetectionHorizontal(newPosition);
+		return true;
 	}
 	
+	// TODO best collisiondetector hierbij in aangezien we al itereren over nieuwe posities
 	public boolean passableTerainVertical(double newPosition){
 		if (getVerticalVelocity() > 0.0){
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
@@ -940,56 +940,6 @@ public abstract class Characters {
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
 				if (getWorld().getGeoFeatureAt(i, getIntPositionAt(2)) == GeoFeature.GROUND)
 					return false;
-			}
-		}
-		return this.collisionDetectionVertical(newPosition);
-	}
-	
-	public boolean collisionDetectionHorizontal(double newPosition){
-		List<Characters> characters = world.getAllObjects();
-		if (isMovingRight()){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-						this.collision(character);
-						return false;
-				}
-			}
-		}
-		if (isMovingLeft()){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-						this.collision(character);
-						return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	public boolean collisionDetectionVertical(double newPosition){
-		List<Characters> characters = world.getAllObjects();
-		if (getVerticalVelocity() > 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
-				}
-			}
-		}
-		if (getVerticalVelocity() < 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
-				}
 			}
 		}
 		return true;

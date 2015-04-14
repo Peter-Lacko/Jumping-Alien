@@ -919,6 +919,7 @@ public abstract class Characters {
 				if (getWorld().getGeoFeatureAt((int)newPosition,i) == GeoFeature.GROUND)
 					return false;
 			}
+			return collsionD
 		}
 		else if (isMovingRight()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
@@ -926,7 +927,7 @@ public abstract class Characters {
 					return false;
 			}
 		}
-		return this.collisionDetectionHorizontal(newPosition);
+		return true;
 	}
 	
 	public boolean passableTerainVertical(double newPosition){
@@ -942,51 +943,15 @@ public abstract class Characters {
 					return false;
 			}
 		}
-		return this.collisionDetectionVertical(newPosition);
+		return true;
 	}
 	
 	public boolean collisionDetectionHorizontal(double newPosition){
 		List<Characters> characters = world.getAllObjects();
-		if (isMovingRight()){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+		for (Characters character : characters){
+			if (character.getIntPositionAt(1) == (int)newPosition){
+				if ((character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
 						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-						this.collision(character);
-						return false;
-				}
-			}
-		}
-		if (isMovingLeft()){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-						this.collision(character);
-						return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	public boolean collisionDetectionVertical(double newPosition){
-		List<Characters> characters = world.getAllObjects();
-		if (getVerticalVelocity() > 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
-				}
-			}
-		}
-		if (getVerticalVelocity() < 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
 					this.collision(character);
 					return false;
 				}

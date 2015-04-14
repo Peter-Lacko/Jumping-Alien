@@ -942,7 +942,7 @@ public abstract class Characters {
 					return false;
 			}
 		}
-		return this.collisionDetectionVertical(newPosition);
+		return true;
 	}
 	
 	public boolean collisionDetectionHorizontal(double newPosition){
@@ -974,21 +974,12 @@ public abstract class Characters {
 		List<Characters> characters = world.getAllObjects();
 		if (getVerticalVelocity() > 0.0){
 			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
-				}
-			}
-		}
-		if (getVerticalVelocity() < 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
+				if (character.getIntPositionAt(2) == (int)newPosition){
+					if ((character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
+							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
+						this.collision(character);
+						return false;
+					}
 				}
 			}
 		}

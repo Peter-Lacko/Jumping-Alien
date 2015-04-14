@@ -942,7 +942,7 @@ public abstract class Characters {
 					return false;
 			}
 		}
-		return this.collisionDetectionVertical(newPosition);
+		return true;
 	}
 	
 	public boolean collisionDetectionHorizontal(double newPosition){
