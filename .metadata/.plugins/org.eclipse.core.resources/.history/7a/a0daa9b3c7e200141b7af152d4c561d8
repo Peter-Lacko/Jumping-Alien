@@ -312,12 +312,13 @@ public class World {
 	 * return the bottom left pixel of the tile containing the given pixel.
 	 * @param xPixel
 	 * @param yPixel
-	 * @effect	|getBottomLeftPixelOfTile(getTilePosition(xPixel, yPixel)[0], 
-	 * 			|	getTilePosition(xPixel, yPixel)[1])
+	 * @effect
 	 */
 	public int[] getPixelOfTileContaining(int xPixel, int yPixel){
 		int[] tile = getTilePosition(xPixel, yPixel);
-		return getBottomLeftPixelOfTile(tile[0], tile[1]);
+		Position pos = new Position(tile[0], tile[1]);
+		pos = pos.toScale(Scale.PIXEL);
+		return pos.getIntPosition();
 	}
 	
 	/**
