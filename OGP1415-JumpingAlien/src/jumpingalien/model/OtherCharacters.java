@@ -52,7 +52,7 @@ public abstract class OtherCharacters extends Characters {
 	 * 
 	 */
 	@Override
-	public void advanceTime(double duration){
+	public void advanceTimeLong(double duration){
 		try {
 			if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 				throw new IllegalArgumentException();

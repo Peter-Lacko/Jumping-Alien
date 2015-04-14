@@ -321,9 +321,26 @@ public abstract class Characters {
 	
 	protected abstract void computeNewHorizontalVelocityAfter(double duration);
 	
-	public abstract void advanceTime (double duration);
+	public void advanceTime (double duration){
+		double shortduration = shortDuration(duration);
+		int iteraties = ((int)(duration/shortduration))+1;
+		for (int i=0 ;i<iteraties ;i++){
+			this.advanceTimeLong(shortduration);
+		}
+	}
 	
+	public abstract void advanceTimeLong (double duration);
 	
+	public double shortDuration(double duration){
+		double speed = Math.sqrt((getVerticalVelocity()*getVerticalVelocity()+
+				getHorizontalVelocity()*getHorizontalVelocity()));
+		double acceleration = Math.sqrt((getVerticalAcceleration()*getVerticalAcceleration()+
+				getHorizontalAcceleration()*getHorizontalAcceleration()));
+		if ((speed > 0.0) || (acceleration > 0.0))
+			return (0.01 / (speed + acceleration * duration));
+		else 
+			return duration;
+	}
 	
 	/**
 	 * Check whether the given horizontal acceleration is valid.
@@ -915,14 +932,14 @@ public abstract class Characters {
 	
 	public boolean passableTerainHorizontal(double newPosition){
 		if (isMovingLeft()){
-			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
+			for (int i = getIntPositionAt(2)+1;i<=getIntPositionAt(2)+getSprite().getHeight();i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
 			}
 		}
 		else if (isMovingRight()){
-			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
+			for (int i = getIntPositionAt(2)+1;i<=getIntPositionAt(2)+getSprite().getHeight();i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
@@ -933,14 +950,16 @@ public abstract class Characters {
 	
 	public boolean passableTerainVertical(double newPosition){
 		if (getVerticalVelocity() > 0.0){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
 				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight());
-				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND){
+					setVerticalVelocity(0.0);
 					return false;
+				}
 			}
 		}
 		else if (getVerticalVelocity() < 0.0){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
 				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
 				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
 					return false;

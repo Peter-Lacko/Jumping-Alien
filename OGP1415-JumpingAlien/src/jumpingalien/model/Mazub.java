@@ -133,10 +133,10 @@ public class Mazub extends Characters {
 				newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
 			if (canHaveAsNewPosition(newPosition,1))
 				this.setPositionAt(newPosition, 1);
-			else{
-				endMove("left");
-				endMove("right");
-			}
+//			else{
+//				endMove("left");
+//				endMove("right");
+//			}
 		}
 	}
 
@@ -278,7 +278,7 @@ public class Mazub extends Characters {
 	 * 			| ((duration < 0.0) || (duration >= 0.2))
 	 */
 	@Override
-	public void advanceTime (double duration) throws IllegalArgumentException {
+	public void advanceTimeLong (double duration) throws IllegalArgumentException {
 		try{
 			if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 				throw new IllegalArgumentException();
