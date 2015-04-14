@@ -2,20 +2,48 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
 		<item value="removeAsObj" key="selection"/>
+=======
+<<<<<<< HEAD
+		<item value="getS" key="selection"/>
+=======
+		<item value="int[]" key="selection"/>
+>>>>>>> f57706e2d38423c9f8685dc03aa91938031a4c3c
+>>>>>>> 19eed261038fdb995806ffbf2a75e5d0388a6e21
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
 			<item value="removeasobj"/>
 			<item value="Y_MAX"/>
 			<item value="X_MAX"/>
+=======
+<<<<<<< HEAD
+			<item value="gets"/>
+			<item value="get("/>
+			<item value="get"/>
+			<item value="terminat"/>
+			<item value="mazub"/>
+			<item value="ter"/>
+			<item value="getMazub()"/>
+			<item value="getWindowWidth()"/>
+=======
+>>>>>>> 19eed261038fdb995806ffbf2a75e5d0388a6e21
 			<item value="int[]"/>
 			<item value="tile_length"/>
 			<item value="tilelength"/>
 			<item value="fuzzyequals"/>
 			<item value="passableTerain"/>
+<<<<<<< HEAD
+=======
+			<item value="isValidPosition"/>
+			<item value="setposition"/>
+			<item value="getposition"/>
+>>>>>>> f57706e2d38423c9f8685dc03aa91938031a4c3c
+>>>>>>> 19eed261038fdb995806ffbf2a75e5d0388a6e21
 		</list>
 		<list key="replacehistory">
 			<item value="dimension"/>
@@ -28,9 +56,9 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="305" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="444" key="DIALOG_HEIGHT"/>
+		<item value="353" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="513" key="DIALOG_HEIGHT"/>
 		<item value="1521" key="DIALOG_X_ORIGIN"/>
 		<item value="218" key="DIALOG_Y_ORIGIN"/>
 	</section>

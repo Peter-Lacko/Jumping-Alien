@@ -136,4 +136,15 @@ public class Slime extends OtherCharacters {
 		else
 			other.collision(this);
 	}
+	
+	@Override
+	protected void terminate() {
+		if (! isTerminated()){
+			getWorld().removeAsObject(this);
+			this.setWorld(null);
+			getSchool().removeAsSlime(this);
+			this.setSchool(null);
+			this.setTerminated(true);
+		}
+	}
 }

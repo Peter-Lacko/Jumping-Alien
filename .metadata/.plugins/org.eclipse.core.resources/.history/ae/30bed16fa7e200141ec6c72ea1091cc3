@@ -1,0 +1,55 @@
+package jumpingalien.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import be.kuleuven.cs.som.annotate.*;
+
+public class School {
+
+	public School(){
+	}
+	
+	public void addAsSlime(Slime slime){
+		
+	}
+	
+	public void removeAsSlime(Slime slime){
+		
+	}
+	
+	public void removeAsSlimeAt(Slime slime,int index){
+		
+	}
+	
+	public int getIndexOfObject(Slime slime) throws IllegalArgumentException{
+		if (! hasAsSlime(slime))
+			throw new IllegalArgumentException();
+		int nbObjectsSoFar = 0;
+		int index = 0;
+		Slime currentSlime = Slime.get(index);
+		while (currentObject != object) {
+			currentObject = objects.get(index);
+			if ((currentObject != null) && (objects.indexOf(currentObject) == index))
+				nbObjectsSoFar++;
+			index++;
+		}
+		return nbObjectsSoFar;
+	}
+	
+	private List<Slime> slimes = new ArrayList<Slime>();
+	
+    /**
+     * Check whether this School is already terminated.
+     */
+    @Basic @Raw
+    public boolean isTerminated() {
+        return this.isTerminated;
+    }
+	
+    private boolean isTerminated = false;
+    
+    public void changeSchool(Slime peter,Slime sander){
+    	
+    }
+}

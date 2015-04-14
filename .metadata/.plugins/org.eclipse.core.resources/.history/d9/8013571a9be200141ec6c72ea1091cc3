@@ -1,0 +1,151 @@
+package jumpingalien.part2.facade;
+
+import jumpingalien.model.Mazub;
+import jumpingalien.model.World;
+import jumpingalien.util.ModelException;
+import jumpingalien.util.Sprite;
+
+public class Facade {
+	
+	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites){
+		try{
+			return new Mazub(pixelLeftX,pixelBottomY,sprites);
+		} catch (IllegalArgumentException exc){
+			throw new ModelException("invalid initialisation");
+		}
+
+	}
+	
+	public int[] getLocation(Mazub mazub){
+		try {
+			return mazub.getIntPosition();
+		}
+		catch (ArrayIndexOutOfBoundsException exc) {
+			throw new ModelException("position error");
+		}
+	}
+	
+	public double[] getVelocity(Mazub mazub){
+	double[] vel = {mazub.getHorizontalVelocity(), mazub.getVerticalVelocity()};
+	return vel;
+	}
+	
+	public double[] getAcceleration(Mazub mazub){
+		double[] acc = {mazub.getHorizontalAcceleration(), mazub.getVerticalAcceleration()};
+		return acc;
+	}
+	
+	public int[] getSize(Mazub mazub){
+		return mazub.getSize();
+	} 
+	
+	public Sprite getCurrentSprite(Mazub mazub){
+		return mazub.getCurrentSprite();
+	}
+	
+	public void startJump(Mazub mazub) {
+		try{
+			mazub.startJump();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("jump error");
+		}
+	}
+	
+	public void endJump(Mazub mazub) {
+		mazub.endJump();
+	}
+	
+	public void startMoveLeft(Mazub mazub) {
+		mazub.startMove("left");
+	}
+	
+	public void endMoveLeft(Mazub mazub) {
+		mazub.endMove("left");
+	}
+	
+	public void startMoveRight(Mazub mazub) {
+		mazub.startMove("right");
+	}
+	
+	public void endMoveRight(Mazub mazub) {
+		mazub.endMove("right");
+	}
+	
+	public void startDuck(Mazub mazub){
+		try {
+			mazub.startDuck();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("startDuck error");
+		}
+	}
+	
+	public void endDuck(Mazub mazub){
+		try {
+			mazub.endDuck();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("endDuck error");
+		}
+	}
+	
+	public int getNbHitPoints(Mazub alien){
+		return alien.getHitPoints();
+	}
+	
+	public World createWorld(int tileSize, int nbTilesX, int nbTilesY,
+			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
+			int targetTileY){
+		try{
+			return new World(tileSize, nbTilesX, nbTilesY, visibleWindowWidth, visibleWindowHeight, targetTileX, targetTileY);
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("invalid initialisation");	
+		}
+	}
+	
+	public int[] getWorldSizeInPixels(World world){
+		return world.getWorldSize();
+	}
+	
+	public int getTileLength(World world){
+		return world.getTileLength();
+	}
+	
+	public void startGame(World world){
+		world.startGame();
+	}
+	
+	public boolean isGameOver(World world){
+		return (world.getMazub().isTerminated() || world.hasPlayerWon());
+	}
+	
+	public boolean didPlayerWin(World world){
+		return world.hasPlayerWon();
+	}
+	
+	void advanceTime(World world, double dt){
+		world.advanceTime(dt);
+	}
+	
+	public int[] getVisibleWindow(World world){
+		return world.getVisibleWindow();
+	}
+	
+	public int[] getBottomLeftPixelOfTile(World world, int tileX, int tileY){
+		return world.getBottomLeftPixelOfTile(tileX, tileY);
+	}
+	
+	public int[][] getTilePositionsIn(World world, int pixelLeft, int pixelBottom,
+			int pixelRight, int pixelTop){
+		return world.getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop);
+	}
+	
+	public int getGeologicalFeature(World world, int pixelX, int pixelY)
+			throws ModelException{
+		try{
+			return world.getGeoFeatureAt(pixelX, pixelY);
+		}
+	}
+}

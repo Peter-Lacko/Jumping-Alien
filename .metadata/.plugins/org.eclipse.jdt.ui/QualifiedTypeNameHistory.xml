@@ -1,2 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<<<<<<< HEAD
 <qualifiedTypeNameHistroy/>
+=======
+<qualifiedTypeNameHistroy>
+<<<<<<< HEAD
+<fullyQualifiedTypeName name="java.util.List"/>
+=======
+<fullyQualifiedTypeName name="jumpingalien.util.Util"/>
+<<<<<<< HEAD
+=======
+>>>>>>> de14cf24bc76e155f1cf1fa700b47363256160d8
+<fullyQualifiedTypeName name="jumpingalien.model.Plant"/>
+>>>>>>> f57706e2d38423c9f8685dc03aa91938031a4c3c
+<fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="jumpingalien.model.MovementDirection"/>
+<fullyQualifiedTypeName name="jumpingalien.model.World"/>
+<fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
+<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Basic"/>
+<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Raw"/>
+<<<<<<< HEAD
+<fullyQualifiedTypeName name="jumpingalien.util.ModelException"/>
+<fullyQualifiedTypeName name="jumpingalien.model.GeoFeature"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="jumpingalien.model.Plant"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="java.util.LinkedList"/>
+=======
+<<<<<<< HEAD
+<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Value"/>
+<fullyQualifiedTypeName name="jumpingalien.util.Util"/>
+=======
+<fullyQualifiedTypeName name="java.util.List"/>
+>>>>>>> de14cf24bc76e155f1cf1fa700b47363256160d8
+>>>>>>> f57706e2d38423c9f8685dc03aa91938031a4c3c
+</qualifiedTypeNameHistroy>
+>>>>>>> 19eed261038fdb995806ffbf2a75e5d0388a6e21

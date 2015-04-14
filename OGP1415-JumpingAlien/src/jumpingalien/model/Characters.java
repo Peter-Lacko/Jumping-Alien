@@ -1039,73 +1039,12 @@ public abstract class Characters {
 	protected double[] Position = {0.0, 0.0};
 	
 	
-	// alles hierna is nu voor world denk ik
-	
-	
-	/**
-	 * a boolean that says whether the given field is permitted as a playing field
-	 * @param field
-	 * 			the dimension of the playing field
-	 * @return true if the playing field is allowed, false if it isn't
-	 * 			|if field.length != 2
-	 * 			| then return false
-	 * 			|else if (field[0]<=1) || (field[1]<=1)
-	 * 			| then return false
-	 * 			|else
-	 * 			| return true
-	 */
-	public boolean isProperField(int[] field) {
-		if (field.length != 2)
-			return false;
-		else{
-			for (int size: field){
-				if (size <= 1)
-					return false;
-			}
-			return true;
-		}
-	}
-	
-	/**
-	 * Constant reflecting the size of the playing field.
-	 * @return	The size of the field is 1024 pixels long and 768 pixels high.
-	 * 			| result == {1024, 768}
-	 */
-	protected static final int[] FIELD_SIZE = {1024, 768};
-	
-	/**
-	 * Constant reflecting the maximal X coordinate.
-	 * @return The highest X coordinate is the field length minus one.
-	 * 			| result == FIELD_SIZE[0]-1
-	 */
-	protected static final int X_MAX = FIELD_SIZE[0]-1;
-	
-	/**
-	 * Constant reflecting the maximal Y coordinate.
-	 * @return The highest Y coordinate is the field height minus one.
-	 * 			| result == FIELD_SIZE[0]-1
-	 */
-	protected static final int Y_MAX = FIELD_SIZE[1]-1;
-	
-	/**
-	 * Constant reflecting the minimal X coordinate.
-	 * @return The lowest X coordinate is zero.
-	 * 			| result == 0
-	 */
-	protected static final int X_MIN = 0;
-	
-	/**
-	 * Constant reflecting the minimal Y coordinate.
-	 * @return The lowest Y coordinate is zero.
-	 * 			| result == 0
-	 */
-	protected static final int Y_MIN = 0;
-	
 	public abstract void collision(Characters other);
 
 	protected void terminate() {
 		if (! isTerminated()){
 			getWorld().removeAsObject(this);
+			this.setWorld(null);
 			this.setTerminated(true);
 		}
 	}
