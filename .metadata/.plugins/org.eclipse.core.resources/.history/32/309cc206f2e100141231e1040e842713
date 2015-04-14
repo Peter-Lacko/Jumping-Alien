@@ -1,0 +1,17 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.*;
+
+@Value
+public enum Scale {
+
+	private Scale(int i){
+		this.index = i;
+	}
+	
+	public int getIndex(){
+		return this.index;
+	}
+	
+	private final int index;
+}

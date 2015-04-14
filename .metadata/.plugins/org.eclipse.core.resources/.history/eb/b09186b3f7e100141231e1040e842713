@@ -1,0 +1,63 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.*;
+
+/**
+ * An enumeration introducing different ways to represent a position. The different ways are in the grid of
+ * pixels and in the grid of tiles, both as a double and an integer.
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+@Value
+public enum Scale {
+
+	PIXEL(0), INT_PIXEL(1), TILE(2), INT_TILE(3);
+	
+	/**
+	 * 
+	 * @param index
+	 * @post	|new.getIndex() == index
+	 */
+	private Scale(int index){
+		this.index = index;
+	}
+	
+	@Basic @Immutable
+	public int getIndex(){
+		return this.index;
+	}
+	
+	private final int index;
+	
+	/**
+	 * 
+	 * @param other
+	 * @return	|if (this == other)
+	 * 			|	then result == 1.0
+	 * 			|
+	 * @throws IllegalArgumentException
+	 */
+	@Basic
+	public double toScale(Scale other) throws IllegalArgumentException{
+		return 0.0;
+	}
+	
+	public boolean isConversionSet(){
+		return isConversionSet;
+	}
+	
+	public void conversionNowSet(){
+		isConversionSet = true;
+	}
+	
+	private boolean isConversionSet = false;
+	
+	public void setConversion(){
+		assert (! isConversionSet);
+	}
+	
+	private static double[][] conversion = new double[2][2];
+	
+}
