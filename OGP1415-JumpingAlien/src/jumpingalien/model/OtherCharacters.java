@@ -8,8 +8,8 @@ import java.util.Random;
 public abstract class OtherCharacters extends Characters {
 
 	public OtherCharacters(int x_pos, int y_pos, Sprite[] sprites,double hor_acc, double max_hor_vel, 
-			double init_hor_vel, double init_ver_vel) throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel);
+			double init_hor_vel, double init_ver_vel,int hitPoints) throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitPoints);
 	}
 
 	/**

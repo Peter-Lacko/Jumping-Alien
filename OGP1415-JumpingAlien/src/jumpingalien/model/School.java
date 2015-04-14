@@ -17,4 +17,8 @@ public class School {
     }
 	
     private boolean isTerminated = false;
+    
+    public void changeSchool(Slime peter,Slime sander){
+    	
+    }
 }

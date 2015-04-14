@@ -9,7 +9,7 @@ public class Mazub extends Characters {
 
 	public Mazub(int x_pos, int y_pos, Sprite[] sprites)
 			throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, 0.9, 3.0, 1.0, 8.0);
+		super(x_pos, y_pos, sprites, 0.9, 3.0, 1.0, 8.0,100);
 		this.nbRunningCycle = getNbImages()/2-4;
 	}
 
@@ -121,48 +121,7 @@ public class Mazub extends Characters {
 		return ((nbImages >= 10) && (nbImages % 2 == 0));
 	}
 
-//	/**
-//	 * Compute the new horizontal position after a given duration.
-//	 * @param duration
-//	 * 			The duration after after which to calculate the new horizontal position.
-//	 * @post 	If the character is accelerating and if the newly calculated position is valid, the new 
-//	 * 			character is at that position.
-//	 * 			|newPositionAccelerating = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity() 
-//	 * 			|				+ 100*0.5*getHorizontalAcceleration()*duration²
-//	 * 			|if (isAccelerating() && isValidPositionAt(newPositionAccelerating,1))
-//	 * 			|	new.getPositionAt(1) = newPositionAccelerating
-//	 * 			otherwise, if the character is not accelerating and if the newly calculated position is
-//	 * 			valid, the new character is at that position.
-//	 * 			|newPosition = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity()
-//	 * 			|if ((! isAccelerating()) && isValidPositionAt(newPositionAccelerating,1))
-//	 * 			|	new.getPositionAt(1) = newPosition
-//	 * 			otherwise, if the character is accelerating, the newly calculated position is not
-//	 * 			valid and the new position is smaller than the smallest possible position, the new
-//	 * 			character is at the smallest possible position.
-//	 * 			|if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)) &&
-//	 * 			|	((int)newPositionAccelerating < X_MIN))
-//	 * 			|	new.getPositionAt(1) = (double)X_MIN
-//	 * 			otherwise, if the character is accelerating, the newly calculated position is not
-//	 * 			valid, the new character is at the highest possible position.
-//	 * 			|else if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)))
-//	 * 			|	new.getPositionAt(1) = (double)X_MAX
-//	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
-//	 * 			valid and the new position is smaller than the smallest possible position, the new
-//	 * 			character is at the smallest possible position.
-//	 * 			|if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)) &&
-//	 * 			|	((int)newPositionAccelerating < X_MIN))
-//	 * 			|	new.getPositionAt(1) = (double)X_MIN
-//	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
-//	 * 			valid, the new character is at the highest possible position.
-//	 * 			|else if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)))
-//	 * 			|	new.getPositionAt(1) = (double)X_MAX
-//	 * @effect	if the new position is at the lowest position, the character stops moving left.
-//	 * 			| if (new.getPositionAt(1) == (double)X_MIN)
-//	 * 			|	this.endMove("left")
-//	 * @effect	if the new position is at the highest position, the character stops moving right.
-//	 * 			| if (new.getPositionAt(1) == (double)X_MAX)
-//	 * 			|	this.endMove("right")
-//	 */
+
 	@Override
 	public void computeNewHorizontalPositionAfter(double duration) {
 		if (this.movingInTwoDirections())
@@ -174,8 +133,10 @@ public class Mazub extends Characters {
 				newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
 			if (isValidPositionAt(newPosition,1))
 				this.setPositionAt(newPosition, 1);
-			endMove("left");
-			endMove("right");
+			else{
+				endMove("left");
+				endMove("right");
+			}
 		}
 	}
 
@@ -333,6 +294,7 @@ public class Mazub extends Characters {
 			if (this.getTimeSinceEndMove() > 1.0)
 				this.sethasMovedIn(MovementDirection.NONE);
 			this.setSprite(this.getCurrentSprite());
+			this.immune(duration);
 		}
 		catch (IllegalArgumentException exc){
 			throw exc;
@@ -522,16 +484,7 @@ public class Mazub extends Characters {
 		}
 	}
 
-	/**
-	 * A method that returns whether a character is in the air or not
-	 * @return	true if the character is in the air (ie above the 0.0 y-coordinate)
-	 * 			else false
-	 * 			| if (this.getPositionAt(2) > 0):
-	 * 			| 	result == true
-	 * 			| else
-	 * 			|	result == false
-	 */
-	// TODO aanpassen voor de nieuwe world
+
 	@Override
 	public boolean isInAir(){
 		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
@@ -679,6 +632,58 @@ public class Mazub extends Characters {
 	 * a variable containing the time since the character has stepped (in the run cycle).
 	 */
 	private double timeSinceStep = 0.0;
+
+	@Override
+	public boolean canHaveAsWorld(World world) {
+		for (Characters character : world.getAllObjects()){
+			if (character instanceof Mazub)
+				return false;
+		}
+		if (world.isTerminated())
+			return false;
+		return true;
+	}
 	
+	@Override
+	public void collision(Characters other){
+		 other.collision(this);
+	}
+	 
+	public void eat(){
+		 //TODO
+	}
+	
+	protected void immune(double duration){
+		if (this.getImmuneTime()>0){
+			setImmune(true);
+			setImmuneTime(getImmuneTime()-duration);
+		}
+		else
+			setImmune(false);
+	}
+	
+	protected void startImmune(){
+		setImmuneTime(0.6);
+	}
+
+	public double getImmuneTime() {
+		return immuneTime;
+	}
+
+	public void setImmuneTime(double immuneTime) {
+		this.immuneTime = immuneTime;
+	}
+	
+	public double immuneTime;
+	
+	public boolean isImmune() {
+		return isImmune;
+	}
+
+	public void setImmune(boolean isImmune) {
+		this.isImmune = isImmune;
+	}
+	
+	public boolean isImmune;
 
 }

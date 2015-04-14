@@ -6,7 +6,7 @@ public class Plant extends OtherCharacters {
 
 	public Plant(int x_pos, int y_pos, Sprite[] sprites)
 			throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0);
+		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0,1);
 		setMovementDuration(0.5);
 		setMovingRight(true);
 		setHeight(getHeight());
@@ -86,12 +86,12 @@ public class Plant extends OtherCharacters {
 
 	@Override
 	protected void computeNewVerticalPositionAfter(double duration) {
-
+		this.setPositionAt(this.getPositionAt(2), 2);
 	}
 
 	@Override
 	protected void computeNewVerticalVelocityAfter(double duration) {
-
+		this.setinitVerticalVelocity(0.0);
 	}
 
 	@Override
@@ -103,6 +103,21 @@ public class Plant extends OtherCharacters {
 	@Override
 	public boolean isInAir() {
 		return false;
+	}
+
+	@Override
+	public boolean canHaveAsWorld(World world) {
+		if (world.isTerminated())
+			return false;
+		return true;
+	}
+
+	@Override
+	public void collision(Characters other) {
+		if (other instanceof Mazub){
+			this.terminate();
+			((Mazub) other).eat();
+		}
 	}
 
 }

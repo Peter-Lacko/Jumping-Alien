@@ -1,10 +1,12 @@
 package jumpingalien.model;
 
+import java.util.List;
+
 import jumpingalien.util.*;
 import jumpingalien.model.World.*;
 import be.kuleuven.cs.som.annotate.*;
 
-
+//TODO documentatie aanpassen
 /**
  * A class of Mazub characters, the player controlled character in Jumping Alien.
  * 
@@ -50,6 +52,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class Characters {
 	
+	// TODO documentatie aanpassen
 	/**
 	 * initialize a character with a given x_pos, y_pos, sprites, horizontal acceleration,
 	 * 	max horizontal velocity, initial horizontal velocity and initial vertical velocity.
@@ -82,7 +85,7 @@ public abstract class Characters {
 	 * @throws IllegalArgumentException
 	 */
 	@Raw
-	public Characters(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, double init_hor_vel, double init_ver_vel)
+	public Characters(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, double init_hor_vel, double init_ver_vel, int hitpoints)
 			throws IllegalArgumentException{
 		if (! isValidPositionAt((double) x_pos, 1))
 			throw new IllegalArgumentException("Illegal x-coordinate!");
@@ -96,6 +99,8 @@ public abstract class Characters {
 			throw new IllegalArgumentException("illegal horizontal details");
 		if (! canHaveAsInitVerticalVelocity(init_ver_vel))
 			throw new IllegalArgumentException("illegal vertical details");
+		if (! canHaveAsHitpoints(hitpoints))
+			throw new IllegalArgumentException();
 		this.images = sprites.clone();
 		this.setSprite(getImageAt(1));
 		this.setPositionAt((double) x_pos, 1);
@@ -104,22 +109,48 @@ public abstract class Characters {
 		this.setMaxHorizontalVelocity(max_hor_vel);
 		this.setInitHorizontalVelocity(init_hor_vel);
 		this.setinitVerticalVelocity(init_ver_vel);
+		this.setHitPoints(hitpoints);
 	}
 	
-	public boolean canHaveAsWorld(World world){
-		return true;
-	}
+    @Basic @Raw
+    public boolean isTerminated() {
+        return this.isTerminated;
+    }
 	
+    private boolean isTerminated = false;
+	
+	public void setTerminated(boolean isTerminated) {
+		this.isTerminated = isTerminated;
+	}
+
+	public abstract boolean canHaveAsWorld(World world);
+	
+	/**
+	 * returns the world of the character
+	 */
+	@Basic
 	public World getWorld() {
 		return this.world;
 	}
 
+	/**
+	 * a setter method for the variable world
+	 * @param world
+	 * 			the world the which world has to be set
+	 * @post	...
+	 * 			| new.world == world
+	 * @throws IllegalArgumentException
+	 * 			| (! canHaveAsWorld(world))
+	 */
 	public void setWorld(World world) throws IllegalArgumentException {
 		if (! canHaveAsWorld(world))
 			throw new IllegalArgumentException("Wrong Arguments");
 		this.world = world;
 	}
 	
+	/**
+	 * a variable that stores the world of the character
+	 */
 	private World world = null;
 	
 	/**
@@ -882,7 +913,6 @@ public abstract class Characters {
 		return false;
 	}
 	
-	// TODO best collisiondetector hierbij in aangezien we al itereren over nieuwe posities
 	public boolean passableTerainHorizontal(double newPosition){
 		if (isMovingLeft()){
 			for (int i = getIntPositionAt(2);i<=getIntPositionAt(2)+getSprite().getHeight();i++){
@@ -896,10 +926,9 @@ public abstract class Characters {
 					return false;
 			}
 		}
-		return true;
+		return this.collisionDetectionHorizontal(newPosition);
 	}
 	
-	// TODO best collisiondetector hierbij in aangezien we al itereren over nieuwe posities
 	public boolean passableTerainVertical(double newPosition){
 		if (getVerticalVelocity() > 0.0){
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
@@ -911,6 +940,56 @@ public abstract class Characters {
 			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1+getSprite().getWidth());i++){
 				if (getWorld().getGeoFeatureAt(i, getIntPositionAt(2)) == GeoFeature.GROUND)
 					return false;
+			}
+		}
+		return this.collisionDetectionVertical(newPosition);
+	}
+	
+	public boolean collisionDetectionHorizontal(double newPosition){
+		List<Characters> characters = world.getAllObjects();
+		if (isMovingRight()){
+			for (Characters character : characters){
+				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
+						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+						this.collision(character);
+						return false;
+				}
+			}
+		}
+		if (isMovingLeft()){
+			for (Characters character : characters){
+				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
+						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+						this.collision(character);
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean collisionDetectionVertical(double newPosition){
+		List<Characters> characters = world.getAllObjects();
+		if (getVerticalVelocity() > 0.0){
+			for (Characters character : characters){
+				if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
+						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
+						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
+					this.collision(character);
+					return false;
+				}
+			}
+		}
+		if (getVerticalVelocity() < 0.0){
+			for (Characters character : characters){
+				if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
+						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
+						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
+					this.collision(character);
+					return false;
+				}
 			}
 		}
 		return true;
@@ -1021,5 +1100,51 @@ public abstract class Characters {
 	 * 			| result == 0
 	 */
 	protected static final int Y_MIN = 0;
+	
+	public abstract void collision(Characters other);
 
+	protected void terminate() {
+		if (! isTerminated()){
+			getWorld().removeAsObject(this);
+			this.setTerminated(true);
+		}
+	}
+	
+	protected void damage(int damage){
+		if (Util.fuzzyLessThanOrEqualTo(this.getHitPoints(), damage)){
+			this.setHitPoints(0);
+			this.terminate();
+		}
+		else
+			this.setHitPoints(this.getHitPoints() - damage);		
+	}
+	
+	public boolean canHaveAsHitpoints(int hitpoints){
+		if (hitpoints < 0)
+			return false;
+		return true;
+	}
+	
+	public int getHitPoints() {
+		return hitPoints;
+	}
+
+	public void setHitPoints(int hitPoints) {
+		this.hitPoints = hitPoints;
+	}
+	
+	public int hitPoints;
+	
+	public boolean notFullyDeadYet() {
+		return notFullyDeadYet;
+	}
+
+	public void setNotFullyDeadYet(boolean notFullyDeadYet) {
+		this.notFullyDeadYet = notFullyDeadYet;
+	}
+
+	
+	public boolean notFullyDeadYet = false;
+
+	
 }
