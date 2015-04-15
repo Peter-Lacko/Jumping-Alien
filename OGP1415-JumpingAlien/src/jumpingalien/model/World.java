@@ -4,8 +4,6 @@
 package jumpingalien.model;
 
 import java.util.*;
-
-import jumpingalien.model.*;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 
@@ -92,7 +90,7 @@ public class World {
 //	}
 	
 	@Basic
-	public Position getTargetPosition(){
+	private Position getTargetPosition(){
 		return TARGET_TILE;
 	}
 	
@@ -100,7 +98,7 @@ public class World {
 	 * 
 	 * @return	|result == TARGET_TILE.getIntPosition()
 	 */
-	public int[] getTargetTile(){
+	private int[] getTargetTile(){
 		return getTargetPosition().getIntPosition();
 	}
 	
@@ -169,7 +167,7 @@ public class World {
 	 * 			|else
 	 * 			|	result == false
 	 */
-	public boolean checkIfWin(Characters mazub){
+	protected boolean checkIfWin(Characters mazub){
 //		Position mazubPosition = mazub.getPositionValue().toScale(Scale.TILE);
 		Position mazubPosition = new Position(mazub.getPositionAt(1), mazub.getPositionAt(2));
 		mazubPosition = mazubPosition.toScale(Scale.TILE);
@@ -190,7 +188,7 @@ public class World {
 	 * @param flag
 	 * @post new.hasPlayerWon() == flag
 	 */
-	public void setPlayerWon(boolean flag){
+	protected void setPlayerWon(boolean flag){
 		hasPlayerWon = flag;
 	}
 	
@@ -206,14 +204,14 @@ public class World {
 	 * @return	| result == (length >= 1)
 	 */
 	@Raw
-	private boolean isValidTileLength(int length){
+	public boolean isValidTileLength(int length){
 		return (length >= 1);
 	}
 	
 //	private final int TILE_LENGTH;
 	
 	@Basic
-	public int getMaxXTiles(){
+	private int getMaxXTiles(){
 		return MAX_X_TILES;
 	}
 	
@@ -252,7 +250,7 @@ public class World {
 	private final int MAX_X_TILES;
 	
 	@Basic
-	public int getMaxYTiles(){
+	private int getMaxYTiles(){
 		return MAX_Y_TILES;
 	}
 	
@@ -292,14 +290,14 @@ public class World {
 	}
 	
 	/**
-	 * Return the coordinates of the tile that contain the given coordinates.
+	 * Return the coordinates of the tile that contain the given pixel coordinates.
 	 * @param xPixel
 	 * 			the x-coordinate
 	 * @param yPixel
 	 * 			the y-coordinate
 	 * @return	| result == new Position (xPixel, yPixel).toScale(Scale.TILE).getIntPosition()
 	 */
-	public int[] getTilePosition(int xPixel, int yPixel){
+	private int[] getTilePosition(int xPixel, int yPixel){
 //		int[] position = {(xPixel-xPixel%getTileLength())/getTileLength(),
 //				(yPixel-yPixel%getTileLength())/getTileLength()};
 //		return position;
@@ -314,7 +312,7 @@ public class World {
 	 * @effect	|getBottomLeftPixelOfTile(getTilePosition(xPixel, yPixel)[0], 
 	 * 			|	getTilePosition(xPixel, yPixel)[1])
 	 */
-	public int[] getPixelOfTileContaining(int xPixel, int yPixel){
+	protected int[] getPixelOfTileContaining(int xPixel, int yPixel){
 		int[] tile = getTilePosition(xPixel, yPixel);
 		return getBottomLeftPixelOfTile(tile[0], tile[1]);
 	}
@@ -379,7 +377,7 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			| ! isValidGeoFeature(feature)
 	 */
-	public void setGeoFeatureAt(int xTile, int yTile, GeoFeature feature) throws IllegalArgumentException{
+	private void setGeoFeatureAt(int xTile, int yTile, GeoFeature feature) throws IllegalArgumentException{
 //		int[] position = {xPixel, yPixel};
 		Position pos = new Position(xTile, yTile, Scale.TILE);
 //		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
@@ -418,7 +416,7 @@ public class World {
 	 * @return	| result == (feature == GeoFeature.AIR || feature == GeoFeature.GROUND 
 	 * 			|	|| feature == GeoFeature.WATER || feature == GeoFeature.MAGMA)
 	 */
-	private boolean isValidGeoFeature(GeoFeature feature){
+	public boolean isValidGeoFeature(GeoFeature feature){
 		return (feature == GeoFeature.AIR || feature == GeoFeature.GROUND 
 				|| feature == GeoFeature.WATER || feature == GeoFeature.MAGMA);
 	}
@@ -432,7 +430,7 @@ public class World {
 	 *			|	&& (pos[1]%getTileLength()==0) && (pos[0] < getWorldSize()[0])
 	 *			|	&& (pos[1] < getWorldSize()[1]))
 	 */
-	private boolean isValidGeoPosition(Position position){
+	public boolean isValidGeoPosition(Position position){
 		int[] pos = position.toScale(Scale.PIXEL).getIntPosition();
 		return ((pos.length == 2) && (pos[0]%getTileLength() == 0) 
 				&& (pos[1]%getTileLength()==0) && (pos[0] < getWorldSize()[0])
@@ -446,7 +444,7 @@ public class World {
 	 * 			|			for y in 0..getMaxYTiles():
 	 * 			|				isValidGeoFeature(getGeoFeatureAt(x,y));
 	 */
-	private boolean hasProperGeoFeatures(){
+	public boolean hasProperGeoFeatures(){
 		for (int xIndex=0 ; xIndex <= getMaxXTiles() ; xIndex++){
 			for (int yIndex=0 ; yIndex <= getMaxYTiles() ; yIndex++){
 				if (! isValidGeoFeature(getGeoFeatureAt(xIndex, yIndex)))
@@ -538,7 +536,7 @@ public class World {
 	 * 			|else
 	 * 			|	result == (object != null)
 	 */
-	private boolean canHaveAsObject(Characters object){
+	public boolean canHaveAsObject(Characters object){
 		int xPos = object.getIntPositionAt(1);
 		int yPos = object.getIntPositionAt(2);
 		if ((xPos < 0) || (yPos < 0) || (xPos > getWorldSize()[0]-1) || (yPos > getWorldSize()[1]-1))
@@ -563,7 +561,7 @@ public class World {
 	 * 			|		for each i in 1..getNbObjects():
 	 * 			|			((i == index) || (getObjectAt(i) != object))
 	 */
-	private boolean canHaveAsObjectAt(Characters object, int index){
+	public boolean canHaveAsObjectAt(Characters object, int index){
 		if (! canHaveAsObject(object))
 			return false;
 		else if ((index < 1) || index > getNbObjects() +1)
@@ -650,7 +648,7 @@ public class World {
 	 * 			|		&& (getObjectAt(i).getWorld() == this))
 	 * 			|	&& canHaveAsNbObjects(getNbObjects())
 	 */
-	private boolean hasProperObjects(){
+	public boolean hasProperObjects(){
 		for (int index = 1; index <= getNbObjects(); index++){
 			if ((! canHaveAsObjectAt(getObjectAt(index),index)) || (getObjectAt(index).getWorld() != this))
 				return false;
@@ -702,7 +700,7 @@ public class World {
 	 * @throws IndexOutOfBoundsException
 	 * 			|(index < 1) || (index >= getNbObjects() +1)
 	 */
-	public void removeObjectAt(int index) throws IndexOutOfBoundsException{
+	private void removeObjectAt(int index) throws IndexOutOfBoundsException{
 		int indexOfObject = getInternalIndexOfObjectAt(index);
 		Characters objectToRemove = objects.get(indexOfObject);
 		objectToRemove.setWorld(null);
@@ -740,7 +738,7 @@ public class World {
 	 * @effect	|if hasAsObject(object):
 	 * 			|	then removeObjectAt(getIndexOfObject(object))
 	 */
-	public void removeAsObject(Characters object){
+	protected void removeAsObject(Characters object){
 //		int firstIndexOfObject = objects.indexOf(object);
 //		while (firstIndexOfObject != -1){
 //			objects.set(firstIndexOfObject, null);
@@ -757,7 +755,7 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			|(! hasAsObject(object))
 	 */
-	public int getIndexOfObject(Characters object) throws IllegalArgumentException{
+	private int getIndexOfObject(Characters object) throws IllegalArgumentException{
 		if (! hasAsObject(object))
 			throw new IllegalArgumentException();
 		int nbObjectsSoFar = 0;
@@ -838,7 +836,7 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			|object.getWorld != this
 	 */
-	public void addAsLeftObject(Characters object) throws IllegalArgumentException{
+	protected void addAsLeftObject(Characters object) throws IllegalArgumentException{
 		if((! canHaveAsObject(object)) || (object.getWorld() != this))
 			throw new IllegalArgumentException();
 		leftObjects.add(object);
@@ -849,7 +847,7 @@ public class World {
 	 * @param object
 	 * @post	|((! hasAsLeftObject(this)) && hasAsRightObject(this))
 	 */
-	public void removeAsLeftObject(Characters object){
+	protected void removeAsLeftObject(Characters object){
 		leftObjects.remove(object);
 		addAsRightObject(object);
 	}
@@ -859,7 +857,7 @@ public class World {
 	 * @return	|for each object in leftObjects:
 	 * 			|	result.contains(object) == hasAsLeftObject(object)
 	 */
-	public Set<Characters> getAllLeftObjects(){
+	protected Set<Characters> getAllLeftObjects(){
 		return new HashSet<Characters>(this.leftObjects);
 	}
 	
@@ -871,7 +869,7 @@ public class World {
 	private Set<Characters> leftObjects = new HashSet<Characters>();
 	
 	@Basic
-	public boolean hasAsRightObject(Characters object){
+	protected boolean hasAsRightObject(Characters object){
 		return rightObjects.contains(object);
 	}
 	
@@ -898,7 +896,7 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			|object.getWorld != this
 	 */
-	public void addAsRightObject(Characters object) throws IllegalArgumentException{
+	protected void addAsRightObject(Characters object) throws IllegalArgumentException{
 		if((! canHaveAsObject(object)) || (object.getWorld() != this))
 			throw new IllegalArgumentException();
 		rightObjects.add(object);
@@ -909,7 +907,7 @@ public class World {
 	 * @param object
 	 * @post	|((! hasAsRightObject(this)) && hasAsLeftObject(this))
 	 */
-	public void removeAsRightObject(Characters object){
+	protected void removeAsRightObject(Characters object){
 		rightObjects.remove(object);
 		addAsLeftObject(object);
 	}
@@ -919,7 +917,7 @@ public class World {
 	 * @return	|for each object in rightObjects:
 	 * 			|	result.contains(object) == hasAsLeftObject(object)
 	 */
-	public Set<Characters> getAllRightObjects(){
+	protected Set<Characters> getAllRightObjects(){
 		return new HashSet<Characters>(this.rightObjects);
 	}
 	
@@ -936,7 +934,7 @@ public class World {
 	 * 			|	for each object in getAllObjects:
 	 * 			|		(hasAsLeftObject(object) || hasAsRightObject(object))
 	 */
-	private boolean allCharactersLeftOrRight(){
+	public boolean allCharactersLeftOrRight(){
 		for (Characters object : getAllObjects())
 			if ((! hasAsLeftObject(object)) && (! hasAsRightObject(object)))
 				return false;
@@ -944,7 +942,7 @@ public class World {
 	}
 	
 	@Basic
-	public int getWindowWidth(){
+	private int getWindowWidth(){
 		return WINDOW_WIDTH;
 	}
 	
@@ -982,7 +980,7 @@ public class World {
 	private final int WINDOW_WIDTH;
 	
 	@Basic
-	public int getWindowHeight(){
+	private int getWindowHeight(){
 		return WINDOW_HEIGHT;
 	}
 	

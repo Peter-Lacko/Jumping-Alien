@@ -1,9 +1,6 @@
 package jumpingalien.model;
 
-import java.util.List;
-
 import jumpingalien.util.*;
-import jumpingalien.model.World.*;
 import be.kuleuven.cs.som.annotate.*;
 
 //TODO documentatie aanpassen

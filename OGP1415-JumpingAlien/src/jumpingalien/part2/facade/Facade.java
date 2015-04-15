@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import jumpingalien.model.Characters;
-import jumpingalien.model.GeoFeature;
 import jumpingalien.model.Mazub;
 import jumpingalien.model.Plant;
 import jumpingalien.model.School;
@@ -172,7 +171,6 @@ public class Facade implements IFacadePart2 {
 	
 	public void setMazub(World world, Mazub alien){
 		world.addObjectAt(alien,1);
-		alien.setWorld(world);
 	}
 	
 	public boolean isImmune(Mazub alien){
@@ -189,7 +187,6 @@ public class Facade implements IFacadePart2 {
 	
 	public void addPlant(World world, Plant plant){
 		world.addAsObject(plant);
-		plant.setWorld(world);
 	}
 	
 	public Collection<Plant> getPlants(World world){
@@ -219,7 +216,6 @@ public class Facade implements IFacadePart2 {
 
 	public void addShark(World world, Shark shark){
 		world.addAsObject(shark);
-		shark.setWorld(world);
 	}
 
 	public Collection<Shark> getSharks(World world){
@@ -254,7 +250,6 @@ public class Facade implements IFacadePart2 {
 	
 	public void addSlime(World world, Slime slime){
 		world.addAsObject(slime);
-		slime.setWorld(world);
 	}
 	
 	public Collection<Slime> getSlimes(World world){
