@@ -241,8 +241,6 @@ public class Shark extends OtherCharacters {
 
 	@Override
 	public boolean canHaveAsWorld(World world) {
-		if (world == null)
-			return true;
 		if (world.isTerminated())
 			return false;
 		return true;
@@ -256,8 +254,7 @@ public class Shark extends OtherCharacters {
 				other.damage(50);
 				((Mazub)other).startImmune();
 			}
-			if (! this.isTerminated())
-				this.endMove();
+			this.endMove();
 			((Mazub) other).endMove("left");
 			((Mazub) other).endMove("right");
 		}

@@ -1077,7 +1077,7 @@ public abstract class Characters {
 			this.terminate();
 		}
 		else
-			this.setHitPoints(this.getHitPoints() - damage);
+			this.setHitPoints(this.getHitPoints() - damage);		
 	}
 	
 	public boolean canHaveAsHitpoints(int hitpoints){

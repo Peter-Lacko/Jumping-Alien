@@ -665,11 +665,11 @@ public class Mazub extends Characters {
 		}
 		else
 			setImmune(false);
-		System.out.println(isImmune()+ "," +getImmuneTime());
+		System.out.println(isImmune());
 	}
 	
 	protected void startImmune(){
-		setImmuneTime(0.6);
+		setImmuneTime(6);
 	}
 
 	public double getImmuneTime() {

@@ -256,8 +256,7 @@ public class Shark extends OtherCharacters {
 				other.damage(50);
 				((Mazub)other).startImmune();
 			}
-			if (! this.isTerminated())
-				this.endMove();
+			this.endMove();
 			((Mazub) other).endMove("left");
 			((Mazub) other).endMove("right");
 		}

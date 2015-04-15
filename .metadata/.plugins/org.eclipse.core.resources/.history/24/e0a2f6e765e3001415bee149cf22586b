@@ -294,8 +294,8 @@ public class Mazub extends Characters {
 			if (this.getTimeSinceEndMove() > 1.0)
 				this.sethasMovedIn(MovementDirection.NONE);
 			this.setSprite(this.getCurrentSprite());
-			this.getWorld().checkIfWin(this);
 			this.immune(duration);
+			this.getWorld().checkIfWin(this);
 		}
 		catch (IllegalArgumentException exc){
 			throw exc;
@@ -665,7 +665,6 @@ public class Mazub extends Characters {
 		}
 		else
 			setImmune(false);
-		System.out.println(isImmune()+ "," +getImmuneTime());
 	}
 	
 	protected void startImmune(){

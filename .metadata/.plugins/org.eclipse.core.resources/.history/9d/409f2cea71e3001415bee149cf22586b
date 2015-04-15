@@ -107,8 +107,6 @@ public class Slime extends OtherCharacters {
 
 	@Override
 	public boolean canHaveAsWorld(World world) {
-		if (world == null)
-			return true;
 		if (world.isTerminated())
 			return false;
 		return true;

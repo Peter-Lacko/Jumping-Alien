@@ -1074,10 +1074,10 @@ public abstract class Characters {
 	protected void damage(int damage){
 		if (Util.fuzzyLessThanOrEqualTo(this.getHitPoints(), damage)){
 			this.setHitPoints(0);
-			this.terminate();
+	//		this.terminate();
 		}
 		else
-			this.setHitPoints(this.getHitPoints() - damage);
+			this.setHitPoints(this.getHitPoints() - damage);		
 	}
 	
 	public boolean canHaveAsHitpoints(int hitpoints){
