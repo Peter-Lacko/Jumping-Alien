@@ -1,0 +1,26 @@
+package jumpingalien.part2.tests;
+
+import static org.junit.Assert.*;
+
+import jumpingalien.model.World;
+
+import org.junit.Test;
+
+public class WorldTest {
+
+	@Test(expected = IllegalArgumentException.class)
+	public void World_InvalidTileLength() {
+		new World(-4, 600, 600, 460, 460, 200, 200);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void World_InvalidWindow() {
+		new World(4, 600, 600, 800, 800, 200, 200);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void World_InvalidTargetTile() {
+		new World(4, 600, 600, 460, 460, 700, 200);
+	}
+	
+}

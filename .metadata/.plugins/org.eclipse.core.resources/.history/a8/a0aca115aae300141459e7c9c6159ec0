@@ -8,15 +8,12 @@ import org.junit.Test;
 
 public class WorldTest {
 
-	private static World worldStandard;
-	
 	private static World worldSmallWindow;
 	
 	private static World worldSmallSize;
 	
 	@BeforeClass
 	public static void setUpImmutableFixture(){
-		worldStandard = new World(4, 300, 300, 500, 500, 150, 150);
 		worldSmallWindow = new World(4, 300, 300, 50, 50, 150, 150);
 		worldSmallSize = new World(4, 20, 20, 80, 80, 10, 10);
 	}
@@ -36,9 +33,6 @@ public class WorldTest {
 		new World(4, 150, 150, 460, 460, 200, 75);
 	}
 	
-	@Test
-	public void getWorldSize_Correct(){
-		assertArrayEquals(worldStandard.getWorldSize(), new int[] {1200, 1200});
-	}
+	
 	
 }

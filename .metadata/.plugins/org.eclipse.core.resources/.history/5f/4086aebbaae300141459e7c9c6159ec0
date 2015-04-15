@@ -36,9 +36,6 @@ public class WorldTest {
 		new World(4, 150, 150, 460, 460, 200, 75);
 	}
 	
-	@Test
-	public void getWorldSize_Correct(){
-		assertArrayEquals(worldStandard.getWorldSize(), new int[] {1200, 1200});
-	}
+	
 	
 }
