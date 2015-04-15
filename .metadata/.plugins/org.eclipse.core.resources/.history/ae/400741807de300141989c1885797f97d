@@ -502,16 +502,16 @@ public class World {
 			throw new IllegalArgumentException();
 		for (Characters object: getAllObjects()){
 			object.advanceTime(duration);
-//			if (hasAsObject(object)){
-//				if (object.getIntPositionAt(1) <= getWorldSize()[0]/2)
-//					addAsLeftObject(object);
-//				else
-//					removeAsLeftObject(object);
-//				if ((object.getIntPositionAt(1) + object.getSize()[0] - 1) >= getWorldSize()[0]/2)
-//					addAsRightObject(object);
-//				else
-//					removeAsRightObject(object);
-//			}
+			if (hasAsObject(object)){
+				if (object.getIntPositionAt(1) <= getWorldSize()[0]/2)
+					addAsLeftObject(object);
+				else
+					removeAsLeftObject(object);
+				if ((object.getIntPositionAt(1) + object.getSize()[0] - 1) >= getWorldSize()[0]/2)
+					addAsRightObject(object);
+				else
+					removeAsRightObject(object);
+			}
 		}
 	}
 	
@@ -709,8 +709,6 @@ public class World {
 			if (objects.get(pos) == objectToRemove)
 				objects.remove(pos);
 		}
-		leftObjects.remove(objectToRemove);
-		rightObjects.remove(objectToRemove);
 	}
 	
 	/**
@@ -739,13 +737,11 @@ public class World {
 	 * 			|	then removeObjectAt(getIndexOfObject(object))
 	 */
 	public void removeAsObject(Characters object){
-//		int firstIndexOfObject = objects.indexOf(object);
-//		while (firstIndexOfObject != -1){
-//			objects.set(firstIndexOfObject, null);
-//			firstIndexOfObject = objects.indexOf(object);
-//		}
-		if (hasAsObject(object))
-			removeObjectAt(getIndexOfObject(object));
+		int firstIndexOfObject = objects.indexOf(object);
+		while (firstIndexOfObject != -1){
+			objects.set(firstIndexOfObject, null);
+			firstIndexOfObject = objects.indexOf(object);
+		}
 	}
 	
 	/**
