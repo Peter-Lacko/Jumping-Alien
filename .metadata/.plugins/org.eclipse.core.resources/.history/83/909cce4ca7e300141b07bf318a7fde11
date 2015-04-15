@@ -72,8 +72,8 @@ public class World {
 			throw new IllegalArgumentException();
 		Scale.setConversion((double)tileLength);
 //		TILE_LENGTH = tileLength;
-		MAX_X_TILES = nbTilesX-1;
-		MAX_Y_TILES = nbTilesY-1;
+		MAX_X_TILES = nbTilesX;
+		MAX_Y_TILES = nbTilesY;
 //		if ((! canHaveAsTargetTile(targetArray)) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
 		if ((! canHaveAsTargetTile(targetPos.getIntPosition())) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))		
 				|| (! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight)))
