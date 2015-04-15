@@ -126,7 +126,7 @@ public class Facade implements IFacadePart2 {
 	}
 	
 	public boolean isGameOver(World world){
-		return (world.getMazub().isTerminated() || world.hasPlayerWon());
+		return (world.isGameOver() || world.hasPlayerWon());
 	}
 	
 	public boolean didPlayerWin(World world){
@@ -138,7 +138,10 @@ public class Facade implements IFacadePart2 {
 	}
 	
 	public int[] getVisibleWindow(World world){
-		return world.getVisibleWindow();
+		if (! isGameOver(world))
+			return world.getVisibleWindow();
+		else
+			return null;
 	}
 	
 	public int[] getBottomLeftPixelOfTile(World world, int tileX, int tileY){

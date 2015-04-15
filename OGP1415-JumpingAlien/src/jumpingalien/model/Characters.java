@@ -959,7 +959,7 @@ public abstract class Characters {
 		}
 		else if (isMovingRight()){
 			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
+				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()+2,i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
 			}

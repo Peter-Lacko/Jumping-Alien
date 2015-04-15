@@ -1,0 +1,275 @@
+package jumpingalien.part2.facade;
+
+import java.util.Collection;
+import java.util.LinkedList;
+
+import jumpingalien.model.Characters;
+import jumpingalien.model.Mazub;
+import jumpingalien.model.Plant;
+import jumpingalien.model.School;
+import jumpingalien.model.Shark;
+import jumpingalien.model.Slime;
+import jumpingalien.model.World;
+import jumpingalien.util.ModelException;
+import jumpingalien.util.Sprite;
+
+public class Facade implements IFacadePart2 {
+	
+	public Mazub createMazub(int pixelLeftX, int pixelBottomY, Sprite[] sprites){
+		try{
+			return new Mazub(pixelLeftX,pixelBottomY,sprites);
+		} catch (IllegalArgumentException exc){
+			throw new ModelException("invalid initialisation");
+		}
+
+	}
+	
+	public int[] getLocation(Mazub mazub){
+		try {
+			return mazub.getIntPosition();
+		}
+		catch (ArrayIndexOutOfBoundsException exc) {
+			throw new ModelException("position error");
+		}
+	}
+	
+	public double[] getVelocity(Mazub mazub){
+	double[] vel = {mazub.getHorizontalVelocity(), mazub.getVerticalVelocity()};
+	return vel;
+	}
+	
+	public double[] getAcceleration(Mazub mazub){
+		double[] acc = {mazub.getHorizontalAcceleration(), mazub.getVerticalAcceleration()};
+		return acc;
+	}
+	
+	public int[] getSize(Mazub mazub){
+		return mazub.getSize();
+	} 
+	
+	public Sprite getCurrentSprite(Mazub mazub){
+		return mazub.getCurrentSprite();
+	}
+	
+	public void startJump(Mazub mazub) {
+		try{
+			mazub.startJump();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("jump error");
+		}
+	}
+	
+	public void endJump(Mazub mazub) {
+		mazub.endJump();
+	}
+	
+	public void startMoveLeft(Mazub mazub) {
+		mazub.startMove("left");
+	}
+	
+	public void endMoveLeft(Mazub mazub) {
+		mazub.endMove("left");
+	}
+	
+	public void startMoveRight(Mazub mazub) {
+		mazub.startMove("right");
+	}
+	
+	public void endMoveRight(Mazub mazub) {
+		mazub.endMove("right");
+	}
+	
+	public void startDuck(Mazub mazub){
+		try {
+			mazub.startDuck();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("startDuck error");
+		}
+	}
+	
+	public void endDuck(Mazub mazub){
+		try {
+			mazub.endDuck();
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("endDuck error");
+		}
+	}
+	
+	public int getNbHitPoints(Mazub alien){
+		return alien.getHitPoints();
+	}
+	
+	public World createWorld(int tileSize, int nbTilesX, int nbTilesY,
+			int visibleWindowWidth, int visibleWindowHeight, int targetTileX,
+			int targetTileY){
+		try{
+			return new World(tileSize, nbTilesX, nbTilesY, visibleWindowWidth, visibleWindowHeight, targetTileX, targetTileY);
+		}
+		catch (IllegalArgumentException exc){
+			throw new ModelException("invalid initialisation");	
+		}
+	}
+	
+	public int[] getWorldSizeInPixels(World world){
+		return world.getWorldSize();
+	}
+	
+	public int getTileLength(World world){
+		return world.getTileLength();
+	}
+	
+	public void startGame(World world){
+		world.startGame();
+	}
+	
+	public boolean isGameOver(World world){
+		return (world.isGameOver() || world.hasPlayerWon());
+	}
+	
+	public boolean didPlayerWin(World world){
+		return world.hasPlayerWon();
+	}
+	
+	public void advanceTime(World world, double dt){
+		world.advanceTime(dt);
+	}
+	
+	public int[] getVisibleWindow(World world){
+		return world.getVisibleWindow();
+	}
+	
+	public int[] getBottomLeftPixelOfTile(World world, int tileX, int tileY){
+		return world.getBottomLeftPixelOfTile(tileX, tileY);
+	}
+	
+	public int[][] getTilePositionsIn(World world, int pixelLeft, int pixelBottom,
+			int pixelRight, int pixelTop){
+		return world.getTilePositionsIn(pixelLeft, pixelBottom, pixelRight, pixelTop);
+	}
+	
+	public int getGeologicalFeature(World world, int pixelX, int pixelY)
+			throws ModelException{
+		try{
+			return world.getGeoFeatureAt(pixelX, pixelY).getValue();
+		} catch (Exception exc){
+			throw new ModelException("get geofeature error");
+		}
+	}
+	
+	public void setGeologicalFeature(World world, int tileX, int tileY, int tileType) 
+			throws ModelException{
+		try{
+//			world.setGeoFeatureAt(tileX, tileY, GeoFeature.values()[tileType]);
+			world.setGeoFeatureAtWithInt(tileX, tileY, tileType);
+		} catch (Exception exc){
+			throw new ModelException("set geofeature error");
+		}
+	}
+	
+	public void setMazub(World world, Mazub alien){
+		world.addObjectAt(alien,1);
+	}
+	
+	public boolean isImmune(Mazub alien){
+		return alien.isImmune();
+	}
+	
+	public Plant createPlant(int x, int y, Sprite[] sprites){
+		try{
+			return new Plant(x,y,sprites);
+		} catch (IllegalArgumentException exc){
+			throw new ModelException("invalid initialisation");
+		}
+	}
+	
+	public void addPlant(World world, Plant plant){
+		world.addAsObject(plant);
+	}
+	
+	public Collection<Plant> getPlants(World world){
+		Collection<Plant> plants = new LinkedList<Plant>();
+		for (Characters object : world.getAllObjects()){
+			if (object instanceof Plant)
+				plants.add((Plant)object);
+		}
+		return plants;
+	}
+	
+	public int[] getLocation(Plant plant){
+		return plant.getIntPosition();
+	}
+	
+	public Sprite getCurrentSprite(Plant plant){
+		return plant.getSprite();
+	}
+	
+	public Shark createShark(int x, int y, Sprite[] sprites){
+		try{
+			return new Shark(x,y,sprites);
+		} catch (IllegalArgumentException exc){
+			throw new ModelException("invalid initialisation");
+		}
+	}
+
+	public void addShark(World world, Shark shark){
+		world.addAsObject(shark);
+	}
+
+	public Collection<Shark> getSharks(World world){
+		Collection<Shark> sharks = new LinkedList<Shark>();
+		for (Characters object : world.getAllObjects()){
+			if (object instanceof Shark)
+				sharks.add((Shark)object);
+		}
+		return sharks;
+	}
+
+	public int[] getLocation(Shark shark){
+		return shark.getIntPosition();
+	}
+
+	public Sprite getCurrentSprite(Shark shark){
+		return shark.getSprite();
+	}
+	
+	public School createSchool(){
+		School school = new School();
+		return school;
+	}
+	
+	public Slime createSlime(int x, int y, Sprite[] sprites, School school){
+		try{
+			return new Slime(x,y,sprites,school);
+		} catch (IllegalArgumentException exc){
+			throw new ModelException("invalid initialisation");
+		}
+	}
+	
+	public void addSlime(World world, Slime slime){
+		world.addAsObject(slime);
+	}
+	
+	public Collection<Slime> getSlimes(World world){
+		Collection<Slime> slimes = new LinkedList<Slime>();
+		for (Characters object : world.getAllObjects()){
+			if (object instanceof Slime)
+				slimes.add((Slime)object);
+		}
+		return slimes;
+	}
+	
+	public int[] getLocation(Slime slime){
+		return slime.getIntPosition();
+	}
+
+	public Sprite getCurrentSprite(Slime slime){
+		return slime.getSprite();
+	}
+
+	public School getSchool(Slime slime){
+		return slime.getSchool();
+	}
+}

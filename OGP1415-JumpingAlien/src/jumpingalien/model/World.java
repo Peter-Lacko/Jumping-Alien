@@ -526,6 +526,17 @@ public class World {
 	
 	private boolean isGameStarted = false;
 	
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+	
+	public boolean gameOver = false;
+	
+
 	/**
 	 * @return	|if ((object.getIntPositionAt(1) < 0) || (object.getIntPositionAt(2) < 0) 
 	 * 			|	|| (object.getIntPositionAt(1) > getWorldSize()[0]-1) 
@@ -704,9 +715,18 @@ public class World {
 		int indexOfObject = getInternalIndexOfObjectAt(index);
 		Characters objectToRemove = objects.get(indexOfObject);
 		objectToRemove.setWorld(null);
-		for (int pos = indexOfObject; pos < objects.size(); pos++){
-			if (objects.get(pos) == objectToRemove)
-				objects.remove(pos);
+		if (objectToRemove instanceof Mazub){
+			setGameOver(true);
+			for (int pos = indexOfObject; pos < objects.size(); pos++){
+				if (objects.get(pos) == objectToRemove)
+					objects.set(pos , null);
+			}
+		}
+		else{
+			for (int pos = indexOfObject; pos < objects.size(); pos++){
+				if (objects.get(pos) == objectToRemove)
+					objects.remove(pos);
+			}
 		}
 		leftObjects.remove(objectToRemove);
 		rightObjects.remove(objectToRemove);

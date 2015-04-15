@@ -113,19 +113,21 @@ public class Shark extends OtherCharacters {
 	@Override
 	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
 		try{
-			if (isInAir()){
-				if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity())))
-					setVerticalVelocity(0.0);
-				else
-					setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
-			}
-			else{
-				if (isJumping())
-					setVerticalVelocity(getInitVerticalVelocity());
-				if (isRising || isDiving)
-					setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
-				else
-					setVerticalVelocity(0.0);
+			if (! isTerminated()){
+				if (isInAir()){
+					if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity())))
+						setVerticalVelocity(0.0);
+					else
+						setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
+				}
+				else{
+					if (isJumping())
+						setVerticalVelocity(getInitVerticalVelocity());
+					if (isRising || isDiving)
+						setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
+					else
+						setVerticalVelocity(0.0);
+				}
 			}
 		}
 		catch (IllegalArgumentException exc){
@@ -157,24 +159,27 @@ public class Shark extends OtherCharacters {
 
 	@Override
 	public boolean isInAir(){
-		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
-			int[] pos1 = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-			int[] pos2 = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getSprite().getHeight());
- 			GeoFeature geobot = getWorld().getGeoFeatureAt(pos1[0],pos1[1]);
-			GeoFeature geotop = getWorld().getGeoFeatureAt(pos2[0],pos2[1]);
-			if (geobot == GeoFeature.GROUND){
+		if (! isTerminated()){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
+				int[] pos1 = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+				int[] pos2 = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getSprite().getHeight());
+ 				GeoFeature geobot = getWorld().getGeoFeatureAt(pos1[0],pos1[1]);
+ 				GeoFeature geotop = getWorld().getGeoFeatureAt(pos2[0],pos2[1]);
+				if (geobot == GeoFeature.GROUND){
 				// (mss niet nodig) this.setInWater(false);
-				setDiving(false);
-				return false;
+					setDiving(false);
+					return false;
+				}
+				if (geotop == GeoFeature.WATER){
+					this.setInWater(true);
+					return false;
+				}
 			}
-			if (geotop == GeoFeature.WATER){
-				this.setInWater(true);
-				return false;
-			}
+			this.setInWater(false);
+			this.setRising(false);
+			return true;
 		}
-		this.setInWater(false);
-		this.setRising(false);
-		return true;
+		return false;
 	}
 	
 	public int getMovementsSinceLastJump() {
