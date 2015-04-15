@@ -142,14 +142,10 @@ public abstract class Characters {
 	 * 			| new.world == world
 	 * @throws IllegalArgumentException
 	 * 			| (! canHaveAsWorld(world))
-	 * @throws IllegalArgumentException
-	 * 			| (! world.hasAsObject(this))
 	 */
 	public void setWorld(World world) throws IllegalArgumentException {
 		if (! canHaveAsWorld(world))
 			throw new IllegalArgumentException("Wrong Arguments");
-		if (! world.hasAsObject(this))
-			throw new IllegalArgumentException();
 		this.world = world;
 	}
 	

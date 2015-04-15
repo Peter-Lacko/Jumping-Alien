@@ -686,7 +686,6 @@ public class World {
 		}
 		else
 			objects.add(object);
-		object.setWorld(this);
 	}
 	
 	/**
@@ -705,7 +704,6 @@ public class World {
 	public void removeObjectAt(int index) throws IndexOutOfBoundsException{
 		int indexOfObject = getInternalIndexOfObjectAt(index);
 		Characters objectToRemove = objects.get(indexOfObject);
-		objectToRemove.setWorld(null);
 		for (int pos = indexOfObject; pos < objects.size(); pos++){
 			if (objects.get(pos) == objectToRemove)
 				objects.remove(pos);
@@ -731,7 +729,6 @@ public class World {
 			objects.set(objects.size()-1, object);
 		else
 			objects.add(object);
-		object.setWorld(this);
 	}
 	
 	/**
@@ -760,9 +757,9 @@ public class World {
 	public int getIndexOfObject(Characters object) throws IllegalArgumentException{
 		if (! hasAsObject(object))
 			throw new IllegalArgumentException();
-		int nbObjectsSoFar = 0;
+		int nbObjectsSoFar = 1;
 		int index = 0;
-		Characters currentObject = null;
+		Characters currentObject = objects.get(index);
 		while (currentObject != object) {
 			currentObject = objects.get(index);
 			if ((currentObject != null) && (objects.indexOf(currentObject) == index))

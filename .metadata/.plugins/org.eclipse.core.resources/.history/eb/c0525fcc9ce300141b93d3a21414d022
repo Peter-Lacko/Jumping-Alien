@@ -6,6 +6,7 @@ package jumpingalien.model;
 import java.util.*;
 
 import jumpingalien.model.*;
+
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Raw;
 
@@ -620,7 +621,7 @@ public class World {
 	 * 			| index >= getNbObjects()
 	 */
 	private int getInternalIndexOfObjectAt(int index) throws IndexOutOfBoundsException{
-		int nbObjectsSoFar = 0;
+		int nbObjectsSoFar = 1;
 		int pos = 0;
 		while (nbObjectsSoFar < index) {
 			Characters currentObject = objects.get(pos);
@@ -686,7 +687,6 @@ public class World {
 		}
 		else
 			objects.add(object);
-		object.setWorld(this);
 	}
 	
 	/**
@@ -705,7 +705,6 @@ public class World {
 	public void removeObjectAt(int index) throws IndexOutOfBoundsException{
 		int indexOfObject = getInternalIndexOfObjectAt(index);
 		Characters objectToRemove = objects.get(indexOfObject);
-		objectToRemove.setWorld(null);
 		for (int pos = indexOfObject; pos < objects.size(); pos++){
 			if (objects.get(pos) == objectToRemove)
 				objects.remove(pos);
@@ -731,7 +730,6 @@ public class World {
 			objects.set(objects.size()-1, object);
 		else
 			objects.add(object);
-		object.setWorld(this);
 	}
 	
 	/**
@@ -762,7 +760,7 @@ public class World {
 			throw new IllegalArgumentException();
 		int nbObjectsSoFar = 0;
 		int index = 0;
-		Characters currentObject = null;
+		Characters currentObject = objects.get(index);
 		while (currentObject != object) {
 			currentObject = objects.get(index);
 			if ((currentObject != null) && (objects.indexOf(currentObject) == index))

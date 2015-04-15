@@ -705,7 +705,6 @@ public class World {
 	public void removeObjectAt(int index) throws IndexOutOfBoundsException{
 		int indexOfObject = getInternalIndexOfObjectAt(index);
 		Characters objectToRemove = objects.get(indexOfObject);
-		objectToRemove.setWorld(null);
 		for (int pos = indexOfObject; pos < objects.size(); pos++){
 			if (objects.get(pos) == objectToRemove)
 				objects.remove(pos);
