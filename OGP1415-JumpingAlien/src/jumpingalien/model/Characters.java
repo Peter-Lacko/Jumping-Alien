@@ -103,8 +103,9 @@ public abstract class Characters {
 			throw new IllegalArgumentException();
 		this.images = sprites.clone();
 		this.setSprite(getImageAt(1));
-		this.Position[0] = ((double) x_pos);
-		this.Position[1] = ((double) y_pos);;
+//		this.Position[0] = ((double) x_pos);
+//		this.Position[1] = ((double) y_pos);
+		this.Position = new Position (x_pos, y_pos);
 		this.setHorizontalAcceleration(hor_acc);
 		this.setMaxHorizontalVelocity(max_hor_vel);
 		this.setInitHorizontalVelocity(init_hor_vel);
@@ -859,32 +860,35 @@ public abstract class Characters {
 	}
 	
 	/**
+	 * Returns the saved Position Value.
+	 */
+	@Basic
+	public Position getPositionValue(){
+		return Position;
+	}
+	
+	/**
 	 * Return the actual coordinate (in the form of a double) ascribed to this character at the given index.
 	 * @param index
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
+	 * @effect	returns the saved X coordinate (index 1) or Y coordinate (index 2) for this character
+	 * 			|result == getPositionValue().getPosition()[index-1]
 	 * @throws ArrayIndexOutOfBoundsException
 	 * 			The given index must be positive and may not be bigger than 2.
 	 * 			| (index <= 0) || (index > 2)
 	 */
-	@Basic
 	public double getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
-		return Position[index-1];
+		return getPositionValue().getPosition()[index-1];
 	}
 	
 	/**
 	 * Return the coordinates of the character in the playing field
-	 * @return	the rounded down coordinates in the form of an int[]
-	 * 			| return [getIntPositionAt(1),getIntPositionAt(2)]
+	 * @effect	return the position array in int form
+	 * 			|result == getPositionValue().getIntPosition()
 	 */
 	public int[] getIntPosition(){
-		try{
-			int[] position = {getIntPositionAt(1),getIntPositionAt(2)};
-			return position;
-		}
-		catch (ArrayIndexOutOfBoundsException exc){
-			throw exc;
-		}
+		return getPositionValue().getIntPosition();
 	}
 	
 	/**
@@ -893,10 +897,10 @@ public abstract class Characters {
 	 * 			The index of coordinate to return (X-coordinate is at the first index, Y-coordinate is at 
 	 * 			the second index)
 	 * @effect	Rounds down the position at the requested index and converts to an int type.
-	 * 			| (int)getPositionAt(index)
+	 * 			| result == getIntPosition()[index-1]
 	 */
 	public int getIntPositionAt(int index) throws ArrayIndexOutOfBoundsException{
-		return (int)getPositionAt(index);
+		return getIntPosition()[index-1];
 	}
 	
 	/**
@@ -922,16 +926,16 @@ public abstract class Characters {
 //	}
 	
 	public boolean canHaveAsNewPosition (double coordinate, int index){
-		if ((index == 1) && (passableTerainHorizontal(coordinate)))
+		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
 			return true;
-		else if ((index == 2) && (passableTerainVertical(coordinate)))
+		else if ((index == 2) && (passableTerrainVertical(coordinate)))
 			return true;
 		return false;
 	}
 	
-	public boolean passableTerainHorizontal(double newPosition){
+	public boolean passableTerrainHorizontal(double newPosition){
 		if (isMovingLeft()){
-			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
+			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
@@ -947,7 +951,7 @@ public abstract class Characters {
 		return this.collisionDetectionHorizontal(newPosition);
 	}
 	
-	public boolean passableTerainVertical(double newPosition){
+	public boolean passableTerrainVertical(double newPosition){
 		if (getVerticalVelocity() > 0.0){
 			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
 				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight());
@@ -968,7 +972,15 @@ public abstract class Characters {
 	}
 	
 	public boolean collisionDetectionHorizontal(double newPosition){
-		List<Characters> characters = this.getWorld().getAllObjects();
+//		List<Characters> characters = world.getAllObjects();
+		World world = getWorld();
+		Iterable<Characters> characters;
+		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
+			characters = world.getAllObjects();
+		else if (world.hasAsLeftObject(this))
+			characters = world.getAllLeftObjects();
+		else
+			characters = world.getAllRightObjects();
 		if (isMovingRight()){
 			for (Characters character : characters){
 				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
@@ -993,7 +1005,15 @@ public abstract class Characters {
 	}
 	
 	public boolean collisionDetectionVertical(double newPosition){
-		List<Characters> characters = world.getAllObjects();
+//		List<Characters> characters = world.getAllObjects();
+		World world = getWorld();
+		Iterable<Characters> characters;
+		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
+			characters = world.getAllObjects();
+		else if (world.hasAsLeftObject(this))
+			characters = world.getAllLeftObjects();
+		else
+			characters = world.getAllRightObjects();
 		if (getVerticalVelocity() > 0.0){
 			for (Characters character : characters){
 				if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
@@ -1020,16 +1040,11 @@ public abstract class Characters {
 	/**
 	 * Return the position for this Mazub character.
 	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
-	 * @return The length of the resulting array is equal to the number of coordinates ascribed to this 
-	 * 			character (2).
-	 * 			| result.length == getNbPosition()
-	 * @return Each element in the resulting array is equal to the coordinate ascribed to this character
-	 * 			at the corresponding index.
-	 * 			| for each I in 0..result.length-1:
-	 * 			|	result[I].equals(getPositionAt(I+1))
+	 * @effect return the array for the stored position value
+	 * 			|result == getPositionValue().getPosition()
 	 */
 	public double[] getPosition() {
-		return this.Position.clone();
+		return getPositionValue().getPosition();
 	}
 	
 	/**
@@ -1052,14 +1067,16 @@ public abstract class Characters {
 	IllegalArgumentException{
 		if (! canHaveAsNewPosition(coordinate, index))
 			throw new IllegalArgumentException();
-		this.Position[index-1] = coordinate;
+		if (index == 1)
+			this.Position = new Position(coordinate, getPositionAt(2));
+		else if (index == 2)
+			this.Position = new Position(getPositionAt(1), coordinate);
 	}
 		
 	/**
 	 * Variable registering the position of the bottom left corner of the Mazub Sprite.
 	 */
-	protected double[] Position = {0.0, 0.0};
-	
+	protected Position Position = new Position(0.0, 0.0);	
 	
 	public abstract void collision(Characters other);
 

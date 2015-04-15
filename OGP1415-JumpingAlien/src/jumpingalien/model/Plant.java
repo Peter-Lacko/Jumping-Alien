@@ -38,9 +38,9 @@ public class Plant extends OtherCharacters {
 	// TODO rekening houden met collisions
 	protected void computeNewHorizontalPositionAfter(double duration) {
 		double newPosition;
-		if (isMovingLeft() || isMovingRight()){
-			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();;
-		}else
+		if (isMovingLeft() || isMovingRight())
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+		else
 			newPosition = this.getPositionAt(1);
 		if (canHaveAsNewPosition(newPosition,1))
 			this.setPositionAt(newPosition, 1);

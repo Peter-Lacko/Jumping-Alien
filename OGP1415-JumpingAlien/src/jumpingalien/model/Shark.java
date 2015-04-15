@@ -21,28 +21,28 @@ public class Shark extends OtherCharacters {
 	
 	public double[] durationrange = {1.0 , 4.0};
 
-	@Override
-	protected void computeNewHorizontalPositionAfter(double duration) {
-		double newPosition;
-		if (isMovingLeft() || isMovingRight())
-			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
-		else
-			newPosition = this.getPositionAt(1);
-		if (canHaveAsNewPosition(newPosition,1))
-			this.setPositionAt(newPosition, 1);
-	}
-
-	@Override
-	protected void computeNewHorizontalVelocityAfter(double duration) {
-		double newVelocity;
-		if (isMovingLeft() || isMovingRight()){
-			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
-			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-			if (isMovingLeft())
-				newVelocity = -1.0*newVelocity;
-			this.setHorizontalVelocity(newVelocity);
-		}
-	}
+//	@Override
+//	protected void computeNewHorizontalPositionAfter(double duration) {
+//		double newPosition;
+//		if (isMovingLeft() || isMovingRight())
+//			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
+//		else
+//			newPosition = this.getPositionAt(1);
+//		if (canHaveAsNewPosition(newPosition,1))
+//			this.setPositionAt(newPosition, 1);
+//	}
+//
+//	@Override
+//	protected void computeNewHorizontalVelocityAfter(double duration) {
+//		double newVelocity;
+//		if (isMovingLeft() || isMovingRight()){
+//			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
+//			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+//			if (isMovingLeft())
+//				newVelocity = -1.0*newVelocity;
+//			this.setHorizontalVelocity(newVelocity);
+//		}
+//	}
 
 	@Override
 	public void startMove() {

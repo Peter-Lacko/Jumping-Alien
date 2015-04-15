@@ -24,6 +24,8 @@ public class Position{
 	 * 			|(! isValidScale(type))
 	 */
 	public Position(double xPos, double yPos, Scale type) throws IllegalArgumentException{
+		if (! isValidScale(type))
+			throw new IllegalArgumentException("invalid scale!");
 		xCo = xPos;
 		yCo = yPos;
 		scale = type;
@@ -163,4 +165,5 @@ public class Position{
 		return "[" + String.valueOf(getXCo()) + ", " + String.valueOf(getYCo()) + "] " 
 				+ getScale().getName();
 	}
+	
 }
