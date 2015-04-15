@@ -38,8 +38,6 @@ public class Shark extends OtherCharacters {
 		if (isMovingLeft() || isMovingRight()){
 			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
 			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-			if (isMovingLeft())
-				newVelocity = -1.0*newVelocity;
 			this.setHorizontalVelocity(newVelocity);
 		}
 	}

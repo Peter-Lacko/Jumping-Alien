@@ -968,7 +968,7 @@ public abstract class Characters {
 	}
 	
 	public boolean collisionDetectionHorizontal(double newPosition){
-		List<Characters> characters = this.getWorld().getAllObjects();
+		List<Characters> characters = world.getAllObjects();
 		if (isMovingRight()){
 			for (Characters character : characters){
 				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 

@@ -652,10 +652,7 @@ public class Mazub extends Characters {
 	}
 	 
 	public void eat(){
-		if (this.getHitPoints() <= 450)
-			this.setHitPoints(this.getHitPoints()+50);
-		else
-			this.setHitPoints(500);
+		 //TODO
 	}
 	
 	protected void immune(double duration){

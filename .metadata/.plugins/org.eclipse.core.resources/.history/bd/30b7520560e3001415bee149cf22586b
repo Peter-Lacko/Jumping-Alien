@@ -48,8 +48,6 @@ public class Slime extends OtherCharacters {
 		if (isMovingLeft() || isMovingRight()){
 			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
 			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-			if (isMovingLeft())
-				newVelocity = -1.0*newVelocity;
 			this.setHorizontalVelocity(newVelocity);
 		}
 	}
@@ -57,6 +55,7 @@ public class Slime extends OtherCharacters {
 	@Override
 	public void startMove() {
 		setMovementDuration(randomDuration(getDurationrange()));
+		System.out.println(getRandomBoolean());
 		if (getRandomBoolean())
 			setMovingLeft(true);
 		else

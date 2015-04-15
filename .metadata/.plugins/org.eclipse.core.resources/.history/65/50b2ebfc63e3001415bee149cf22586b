@@ -789,7 +789,7 @@ public class World {
 	public List<Characters> getAllObjects(){
 		LinkedList<Characters> result = new LinkedList<Characters>();
 		for (Characters object: objects){
-			if (! result.contains(object) && !(object == null))
+			if (! result.contains(object))
 				result.addFirst(object);
 		}
 		return result;
