@@ -836,7 +836,7 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			|object.getWorld != this
 	 */
-	public void addAsLeftObject(Characters object) throws IllegalArgumentException{
+	private void addAsLeftObject(Characters object) throws IllegalArgumentException{
 		if((! canHaveAsObject(object)) || (object.getWorld() != this))
 			throw new IllegalArgumentException();
 		leftObjects.add(object);
@@ -847,7 +847,7 @@ public class World {
 	 * @param object
 	 * @post	|((! hasAsLeftObject(this)) && hasAsRightObject(this))
 	 */
-	public void removeAsLeftObject(Characters object){
+	private void removeAsLeftObject(Characters object){
 		leftObjects.remove(object);
 		addAsRightObject(object);
 	}
@@ -896,7 +896,7 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			|object.getWorld != this
 	 */
-	public void addAsRightObject(Characters object) throws IllegalArgumentException{
+	private void addAsRightObject(Characters object) throws IllegalArgumentException{
 		if((! canHaveAsObject(object)) || (object.getWorld() != this))
 			throw new IllegalArgumentException();
 		rightObjects.add(object);
@@ -907,7 +907,7 @@ public class World {
 	 * @param object
 	 * @post	|((! hasAsRightObject(this)) && hasAsLeftObject(this))
 	 */
-	public void removeAsRightObject(Characters object){
+	private void removeAsRightObject(Characters object){
 		rightObjects.remove(object);
 		addAsLeftObject(object);
 	}

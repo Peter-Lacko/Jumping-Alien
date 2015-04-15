@@ -26,7 +26,6 @@ public enum Scale {
 		this.name = name;
 	}
 	
-	@Basic @Immutable
 	public String getName(){
 		return this.name;
 	}
