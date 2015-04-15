@@ -73,6 +73,7 @@ public class Slime extends OtherCharacters {
 		setTimeSinceStartMovement(0.0);
 		setMovingRight(false);
 		setMovingLeft(false);
+		startMove();
 	}
 
 	@Override
@@ -100,13 +101,11 @@ public class Slime extends OtherCharacters {
 
 	@Override
 	public boolean isInAir(){
-		if (! isTerminated()){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
-				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-				GeoFeature geo = getWorld().getGeoFeatureAt(pos[0],pos[1]);
-				if (geo == GeoFeature.GROUND)
-					return false;
-			}
+		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
+			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+			GeoFeature geo = getWorld().getGeoFeatureAt(pos[0],pos[1]);
+			if (geo == GeoFeature.GROUND)
+				return false;
 		}
 		return true;
 	}

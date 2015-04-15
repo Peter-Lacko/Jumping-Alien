@@ -81,6 +81,7 @@ public class Plant extends OtherCharacters {
 		setTimeSinceStartMovement(0.0);
 		setMovingRight(false);
 		setMovingLeft(false);
+		startMove();
 	}
 
 	@Override

@@ -102,7 +102,7 @@ public abstract class OtherCharacters extends Characters {
 				else{
 					endMove();
 					//setTimeSinceStartMovement(0.0);
-					startMove();
+//					startMove();
 				}
 			}
 		} catch (Exception e) {

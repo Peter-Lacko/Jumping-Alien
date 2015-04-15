@@ -145,13 +145,11 @@ public abstract class Characters {
 	public void setWorld(World world) throws IllegalArgumentException {
 		if (world == null)
 			this.world = world;
-		else{
-			if (! canHaveAsWorld(world))
-				throw new IllegalArgumentException("Wrong Arguments");
-			if (! world.hasAsObject(this))
-				throw new IllegalArgumentException();
-			this.world = world;
-		}
+		if (! canHaveAsWorld(world))
+			throw new IllegalArgumentException("Wrong Arguments");
+		if (! world.hasAsObject(this))
+			throw new IllegalArgumentException();
+		this.world = world;
 	}
 	
 	/**
@@ -952,7 +950,7 @@ public abstract class Characters {
 	public boolean passableTerrainHorizontal(double newPosition){
 		if (isMovingLeft()){
 			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition-2,i);
+				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
 			}

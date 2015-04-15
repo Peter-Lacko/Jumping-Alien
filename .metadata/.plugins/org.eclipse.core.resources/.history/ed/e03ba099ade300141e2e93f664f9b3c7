@@ -381,8 +381,8 @@ public class World {
 //		int[] position = {xPixel, yPixel};
 		Position pos = new Position(xTile, yTile, Scale.TILE);
 //		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
-		if ((! isValidGeoFeature(feature)) || (xTile*getTileLength() < 0) || (xTile > getMaxXTiles())
-				|| (yTile*getTileLength() < 0) || (yTile > getMaxYTiles()))
+		if ((! isValidGeoFeature(feature)) || (xTile*getTileLength() < 0) || (xTile >= getMaxXTiles())
+				|| (yTile*getTileLength() < 0) || (yTile >= getMaxYTiles()))
 			throw new IllegalArgumentException();
 		if (feature == GeoFeature.AIR){
 			if (hasAsKeyGeoFeaturePosition(pos))
