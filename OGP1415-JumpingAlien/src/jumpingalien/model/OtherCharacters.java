@@ -87,24 +87,25 @@ public abstract class OtherCharacters extends Characters {
 	@Override
 	public void advanceTimeLong(double duration){
 		try {
-			if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
-				throw new IllegalArgumentException();
-			if (getTimeSinceStartMovement() < getMovementDuration()){
-					computeNewHorizontalVelocityAfter(duration);
-					computeNewHorizontalPositionAfter(duration);
-					computeNewVerticalPositionAfter(duration);
-					computeNewVerticalVelocityAfter(duration);
-					setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
-			}
-			else if (Util.fuzzyEquals(getTimeSinceStartMovement(), 0.0))
-				startMove();
-			else{
-				endMove();
-				//setTimeSinceStartMovement(0.0);
-				//startMove();
+			if (! this.isTerminated()){
+				if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
+					throw new IllegalArgumentException();
+				if (getTimeSinceStartMovement() < getMovementDuration()){
+						computeNewHorizontalVelocityAfter(duration);
+						computeNewHorizontalPositionAfter(duration);
+						computeNewVerticalPositionAfter(duration);
+						computeNewVerticalVelocityAfter(duration);
+						setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+				}
+				else if (Util.fuzzyEquals(getTimeSinceStartMovement(), 0.0))
+					startMove();
+				else{
+					endMove();
+					//setTimeSinceStartMovement(0.0);
+					//startMove();
+				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

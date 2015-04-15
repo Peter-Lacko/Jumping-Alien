@@ -623,7 +623,7 @@ public class World {
 	private int getInternalIndexOfObjectAt(int index) throws IndexOutOfBoundsException{
 		int nbObjectsSoFar = 0;
 		int pos = 0;
-		while (nbObjectsSoFar < index) {
+		while (nbObjectsSoFar <= index) {
 			Characters currentObject = objects.get(pos);
 			if ((currentObject != null) && (objects.indexOf(currentObject) == pos))
 				nbObjectsSoFar++;

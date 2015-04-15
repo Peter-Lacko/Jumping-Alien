@@ -26,7 +26,12 @@ public class Slime extends OtherCharacters {
 	}
 
 	public void setSchool(School school) {
-		this.school = school;
+		if (school == null)
+			this.school = school;
+		else{
+			school.addAsSlime(this);
+			this.school = school;
+		}
 	}
 	
 	public School school;

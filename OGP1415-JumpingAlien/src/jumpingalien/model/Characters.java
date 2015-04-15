@@ -327,6 +327,18 @@ public abstract class Characters {
 		int iteraties = ((int)(duration/shortduration))+1;
 		for (int i=0 ;i<iteraties ;i++){
 			this.advanceTimeLong(shortduration);
+			if(! this.isTerminated()){
+				if (getWorld().hasAsObject(this)){
+					if (this.getIntPositionAt(1) <= getWorld().getWorldSize()[0]/2)
+						getWorld().addAsLeftObject(this);
+					else
+						getWorld().removeAsLeftObject(this);
+					if ((this.getIntPositionAt(1) + this.getSize()[0] - 1) >= getWorld().getWorldSize()[0]/2)
+						getWorld().addAsRightObject(this);
+					else
+						getWorld().removeAsRightObject(this);
+				}
+		}
 		}
 	}
 	
@@ -337,7 +349,6 @@ public abstract class Characters {
 				getHorizontalVelocity()*getHorizontalVelocity()));
 		double acceleration = Math.sqrt((getVerticalAcceleration()*getVerticalAcceleration()+
 				getHorizontalAcceleration()*getHorizontalAcceleration()));
-	
 		return Math.min((0.01 / (speed + acceleration * duration)),duration/10.1);
 		
 	}
@@ -962,7 +973,7 @@ public abstract class Characters {
 			}
 		}
 		else if (getVerticalVelocity() < 0.0){
-			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth()-1;i++){
 				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
 				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
 					return false;
@@ -1006,31 +1017,33 @@ public abstract class Characters {
 	
 	public boolean collisionDetectionVertical(double newPosition){
 //		List<Characters> characters = world.getAllObjects();
-		World world = getWorld();
-		Iterable<Characters> characters;
-		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
-			characters = world.getAllObjects();
-		else if (world.hasAsLeftObject(this))
-			characters = world.getAllLeftObjects();
-		else
-			characters = world.getAllRightObjects();
-		if (getVerticalVelocity() > 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
+		if (! this.isTerminated()){
+			World world = getWorld();
+			Iterable<Characters> characters;
+			if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
+				characters = world.getAllObjects();
+			else if (world.hasAsLeftObject(this))
+				characters = world.getAllLeftObjects();
+			else
+				characters = world.getAllRightObjects();
+			if (getVerticalVelocity() > 0.0){
+				for (Characters character : characters){
+					if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
+							&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
+							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
+						this.collision(character);
+						return false;
+					}
 				}
 			}
-		}
-		if (getVerticalVelocity() < 0.0){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
-						&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-						&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
-					this.collision(character);
-					return false;
+			if (getVerticalVelocity() < 0.0){
+				for (Characters character : characters){
+					if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
+							&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
+							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
+						this.collision(character);
+						return false;
+					}
 				}
 			}
 		}
@@ -1085,6 +1098,8 @@ public abstract class Characters {
 			getWorld().removeAsObject(this);
 			this.setTerminated(true);
 			this.setWorld(null);
+			this.setHorizontalVelocity(0.0);
+			this.setVerticalVelocity(0.0);
 		}
 	}
 	

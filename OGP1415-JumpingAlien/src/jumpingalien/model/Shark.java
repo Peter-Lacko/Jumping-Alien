@@ -148,7 +148,7 @@ public class Shark extends OtherCharacters {
 		try {
 			if(! isInAir())
 				this.setVerticalVelocity(getInitVerticalVelocity());
-			this.isJumping = true;
+			
 			setMovementsSinceLastJump(0);
 		}
 		catch (IllegalArgumentException exc) {
