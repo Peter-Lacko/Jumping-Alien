@@ -169,7 +169,7 @@ public class World {
 	 */
 	protected boolean checkIfWin(Characters mazub){
 //		Position mazubPosition = mazub.getPositionValue().toScale(Scale.TILE);
-		Position mazubPosition = new Position(mazub.getIntPositionAt(1), mazub.getIntPositionAt(2)+1);
+		Position mazubPosition = new Position(mazub.getPositionAt(1), mazub.getPositionAt(2));
 		mazubPosition = mazubPosition.toScale(Scale.TILE);
 //		if ((mazubPosition[0] == getTargetTile()[0]) && (mazubPosition[1] == getTargetTile()[1])){
 		if (mazubPosition.equals(getTargetPosition())){
