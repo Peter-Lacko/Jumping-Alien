@@ -124,19 +124,21 @@ public class Mazub extends Characters {
 
 	@Override
 	public void computeNewHorizontalPositionAfter(double duration) {
-		if (this.movingInTwoDirections())
-			this.setPositionAt(this.getPositionAt(1),1);
-		else{
-			double newPosition;
-			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
-			if (this.isAccelerating())
-				newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
-			if (canHaveAsNewPosition(newPosition,1))
-				this.setPositionAt(newPosition, 1);
+		if (! isTerminated()){
+			if (this.movingInTwoDirections())
+				this.setPositionAt(this.getPositionAt(1),1);
+			else{
+				double newPosition;
+				newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+				if (this.isAccelerating())
+					newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
+				if (canHaveAsNewPosition(newPosition,1))
+					this.setPositionAt(newPosition, 1);
 //			else{
 //				endMove("left");
 //				endMove("right");
 //			}
+		}
 		}
 	}
 
@@ -160,20 +162,22 @@ public class Mazub extends Characters {
 	 */
 	@Override
 	public void computeNewHorizontalVelocityAfter(double duration) {
-		double newVelocity = 0.0;
-		if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())){
-			newVelocity = computeNewHorizontalVelocityMoving(duration);
+		if (! isTerminated()){
+			double newVelocity = 0.0;
+			if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())){
+				newVelocity = computeNewHorizontalVelocityMoving(duration);
+			}
+			else {
+				newVelocity = 0.0;
+				setHorizontalVelocity(newVelocity);
+			}
+			if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (! Util.fuzzyGreaterThanOrEqualTo(
+					Math.abs(newVelocity),getMaxHorizontalVelocity()))){
+				this.setAccelerating(true);
+			}
+			else
+				this.setAccelerating(false);
 		}
-		else {
-			newVelocity = 0.0;
-			setHorizontalVelocity(newVelocity);
-		}
-		if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (! Util.fuzzyGreaterThanOrEqualTo(
-				Math.abs(newVelocity),getMaxHorizontalVelocity()))){
-			this.setAccelerating(true);
-		}
-		else
-			this.setAccelerating(false);
 	}
 	
 	/**
@@ -287,6 +291,8 @@ public class Mazub extends Characters {
 			this.determineDoubleDirections();
 			this.computeNewHorizontalPositionAfter(duration);
 			this.computeNewHorizontalVelocityAfter(duration);
+			if (this.isEndDuck())
+				this.tryEndDuck();
 			if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
 				setTimeSinceEndMove(getTimeSinceEndMove() + duration);
 			else
@@ -294,7 +300,8 @@ public class Mazub extends Characters {
 			if (this.getTimeSinceEndMove() > 1.0)
 				this.sethasMovedIn(MovementDirection.NONE);
 			this.setSprite(this.getCurrentSprite());
-			this.getWorld().checkIfWin(this);
+			if (! isTerminated())
+				this.getWorld().checkIfWin(this);
 			this.immune(duration);
 		}
 		catch (IllegalArgumentException exc){
@@ -426,19 +433,21 @@ public class Mazub extends Characters {
 //	 */
 	@Override
 	public void computeNewVerticalPositionAfter(double duration){
-		double newYPosition;
-		if (isInAir()){
-			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+		if (! isTerminated()){
+			double newYPosition;
+			if (isInAir()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
 					100*0.5*getVerticalAcceleration()*duration*duration;
-			if (canHaveAsNewPosition(newYPosition,2))
-				this.setPositionAt(newYPosition, 2);
-		}
-		else{
-			if (isJumping()){
-				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
-						100*0.5*getVerticalAcceleration()*duration*duration;
-				if (canHaveAsNewPosition(newYPosition, 2))
+				if (canHaveAsNewPosition(newYPosition,2))
 					this.setPositionAt(newYPosition, 2);
+			}
+			else{
+				if (isJumping()){
+					newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
+							100*0.5*getVerticalAcceleration()*duration*duration;
+					if (canHaveAsNewPosition(newYPosition, 2))
+						this.setPositionAt(newYPosition, 2);
+				}
 			}
 		}
 	}
@@ -539,6 +548,7 @@ public class Mazub extends Characters {
 		try{
 			this.setMaxHorizontalVelocity(1.0);
 			this.isDucked = true;
+			this.setEndDuck(false);
 		}
 		catch (IllegalArgumentException exc) {
 			throw exc;
@@ -554,12 +564,33 @@ public class Mazub extends Characters {
 	 */
 	public void endDuck() throws IllegalArgumentException{
 		try{
-			this.setMaxHorizontalVelocity(3.0);
-			this.isDucked = false;
+			setEndDuck(true);
 		}
 		catch (IllegalArgumentException exc) {
 			throw exc;
 		}
+	}
+	
+	public void tryEndDuck(){
+		if (canEndDuck()){
+			this.isDucked = false;
+			this.setMaxHorizontalVelocity(3.0);
+			this.setEndDuck(false);
+		}
+	}
+	
+	public boolean canEndDuck(){
+		this.getPositionAt(2);
+		int nbTiles = (int)((this.getImageAt(1).getHeight()-this.getSprite().getHeight())/getWorld().getTileLength());
+		for (int j=1;j<=nbTiles+1;j++){
+			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getWorld().getTileLength()*j+1);
+				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	/**
@@ -567,6 +598,16 @@ public class Mazub extends Characters {
 	 */
 	private boolean isDucked = false;
 	
+	public boolean isEndDuck() {
+		return endDuck;
+	}
+
+	public void setEndDuck(boolean endduck) {
+		this.endDuck = endduck;
+	}
+	
+	private boolean endDuck = false;
+
 	/**
 	 * A getter method for the variable timeSinceEndMove
 	 */

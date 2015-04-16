@@ -139,10 +139,31 @@ public class Slime extends OtherCharacters {
 			((Shark) other).endMove();
 		}
 		else if (other instanceof Slime){
-			this.getSchool().changeSchool(this,(Slime)other);
+			this.changeSchool((Slime)other);
 		}
 		else
 			other.collision(this);
+	}
+	
+	private void changeSchool(Slime other){
+		if (this.getSchool().getNbSlimes() < other.getSchool().getNbSlimes()){
+			this.getSchool().removeAsSlime(this);
+			for (Slime slime : this.getSchool().getSlimes())
+				slime.damage(-1);
+			for (Slime slime2 : other.getSchool().getSlimes())
+				slime2.damage(1);
+			this.damage(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes());
+			this.setSchool(other.getSchool());
+		}
+		else if (this.getSchool().getNbSlimes() > other.getSchool().getNbSlimes()){
+			other.getSchool().removeAsSlime(other);
+			for (Slime slime : other.getSchool().getSlimes())
+				slime.damage(-1);
+			for (Slime slime2 : this.getSchool().getSlimes())
+				slime2.damage(1);
+			this.damage(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes());
+			other.setSchool(school);
+		}
 	}
 	
 	@Override
