@@ -173,12 +173,10 @@ public class World {
 		mazubPosition = mazubPosition.toScale(Scale.TILE);
 //		if ((mazubPosition[0] == getTargetTile()[0]) && (mazubPosition[1] == getTargetTile()[1])){
 		if (mazubPosition.equals(getTargetPosition())){
-			System.out.println(getTargetPosition()+","+mazubPosition);
 			this.setPlayerWon(true);
 			return true;
 		}
 		else{
-			System.out.println(getTargetPosition()+","+mazubPosition);
 			return false;
 		}
 	}

@@ -291,6 +291,8 @@ public class Mazub extends Characters {
 			this.determineDoubleDirections();
 			this.computeNewHorizontalPositionAfter(duration);
 			this.computeNewHorizontalVelocityAfter(duration);
+			if (this.isEndDuck())
+				this.tryEndDuck();
 			if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
 				setTimeSinceEndMove(getTimeSinceEndMove() + duration);
 			else
@@ -546,6 +548,7 @@ public class Mazub extends Characters {
 		try{
 			this.setMaxHorizontalVelocity(1.0);
 			this.isDucked = true;
+			this.setEndDuck(false);
 		}
 		catch (IllegalArgumentException exc) {
 			throw exc;
@@ -561,12 +564,33 @@ public class Mazub extends Characters {
 	 */
 	public void endDuck() throws IllegalArgumentException{
 		try{
-			this.setMaxHorizontalVelocity(3.0);
-			this.isDucked = false;
+			setEndDuck(true);
 		}
 		catch (IllegalArgumentException exc) {
 			throw exc;
 		}
+	}
+	
+	public void tryEndDuck(){
+		if (canEndDuck()){
+			this.isDucked = false;
+			this.setMaxHorizontalVelocity(3.0);
+			this.setEndDuck(false);
+		}
+	}
+	
+	public boolean canEndDuck(){
+		this.getPositionAt(2);
+		int nbTiles = (int)((this.getImageAt(1).getHeight()-this.getSprite().getHeight())/getWorld().getTileLength());
+		for (int j=1;j<=nbTiles+1;j++){
+			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getWorld().getTileLength()*j+1);
+				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	/**
@@ -574,6 +598,16 @@ public class Mazub extends Characters {
 	 */
 	private boolean isDucked = false;
 	
+	public boolean isEndDuck() {
+		return endDuck;
+	}
+
+	public void setEndDuck(boolean endduck) {
+		this.endDuck = endduck;
+	}
+	
+	private boolean endDuck = false;
+
 	/**
 	 * A getter method for the variable timeSinceEndMove
 	 */
