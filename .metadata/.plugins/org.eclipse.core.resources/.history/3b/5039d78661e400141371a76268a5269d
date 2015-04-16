@@ -12,6 +12,7 @@ public class School {
 	
 	public void addAsSlime(Slime slime){
 		slimes.add(slime);
+		slime.setSchool(this);
 	}
 	
 	public void removeAsSlime(Slime slime){

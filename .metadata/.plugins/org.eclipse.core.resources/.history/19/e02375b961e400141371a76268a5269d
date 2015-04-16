@@ -152,8 +152,9 @@ public class Slime extends OtherCharacters {
 				slime.damage(-1);
 			for (Slime slime2 : other.getSchool().getSlimes())
 				slime2.damage(1);
+			System.out.println(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes());
 			this.damage(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes());
-			this.setSchool(other.getSchool());
+			other.getSchool().addAsSlime(this);
 		}
 		else if (this.getSchool().getNbSlimes() > other.getSchool().getNbSlimes()){
 			other.getSchool().removeAsSlime(other);
@@ -161,8 +162,9 @@ public class Slime extends OtherCharacters {
 				slime.damage(-1);
 			for (Slime slime2 : this.getSchool().getSlimes())
 				slime2.damage(1);
+			System.out.println(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes());
 			this.damage(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes());
-			other.setSchool(school);
+			this.getSchool().addAsSlime(other);
 		}
 	}
 	

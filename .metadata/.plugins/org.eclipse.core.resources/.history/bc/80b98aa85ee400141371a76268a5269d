@@ -23,10 +23,6 @@ public class School {
 		slimes.remove(index);
 	}
 	
-	public List<Slime> getSlimes(){
-		return this.slimes;
-	}
-	
 	public int getIndexOfObject(Slime slime) throws IllegalArgumentException{
 		if (! hasAsSlime(slime))
 			throw new IllegalArgumentException();
