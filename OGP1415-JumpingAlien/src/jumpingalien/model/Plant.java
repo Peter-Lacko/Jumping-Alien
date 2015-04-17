@@ -105,22 +105,17 @@ public class Plant extends OtherCharacters {
 	}
 
 	@Override
-	public boolean canHaveAsWorld(World world) {
-		if (world == null)
-			return true;
-		else{
-			if (world.isTerminated())
-				return false;
-			return true;
-		}
-	}
-
-	@Override
 	public void collision(Characters other) {
 		if (other instanceof Mazub){
 			this.terminate();
 			((Mazub) other).eat();
 		}
+	}
+
+	@Override
+	public void environmentDamage(double duration) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

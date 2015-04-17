@@ -1,6 +1,7 @@
 package jumpingalien.model;
 
 import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
 
 
 public class Slime extends OtherCharacters {
@@ -112,15 +113,6 @@ public class Slime extends OtherCharacters {
 	}
 
 	@Override
-	public boolean canHaveAsWorld(World world) {
-		if (world == null)
-			return true;
-		if (world.isTerminated())
-			return false;
-		return true;
-	}
-	
-	@Override
 	public void collision(Characters other) {
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){
@@ -129,8 +121,8 @@ public class Slime extends OtherCharacters {
 				((Mazub)other).startImmune();
 			}
 			this.endMove();
-			((Mazub) other).endMove("left");
-			((Mazub) other).endMove("right");
+//			((Mazub) other).endMove("left");
+//			((Mazub) other).endMove("right");
 		}
 		else if (other instanceof Shark){
 			this.damage(50);
@@ -148,18 +140,18 @@ public class Slime extends OtherCharacters {
 	private void changeSchool(Slime other){
 		if (this.getSchool().getNbSlimes() < other.getSchool().getNbSlimes()){
 			this.getSchool().removeAsSlime(this);
-			for (Slime slime : this.getSchool().getSlimes())
+			for (Characters slime : this.getSchool().getSlimes())
 				slime.damage(-1);
-			for (Slime slime2 : other.getSchool().getSlimes())
+			for (Characters slime2 : other.getSchool().getSlimes())
 				slime2.damage(1);
 			this.damage(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes());
 			this.setSchool(other.getSchool());
 		}
 		else if (this.getSchool().getNbSlimes() > other.getSchool().getNbSlimes()){
 			other.getSchool().removeAsSlime(other);
-			for (Slime slime : other.getSchool().getSlimes())
+			for (Characters slime : other.getSchool().getSlimes())
 				slime.damage(-1);
-			for (Slime slime2 : this.getSchool().getSlimes())
+			for (Characters slime2 : this.getSchool().getSlimes())
 				slime2.damage(1);
 			this.damage(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes());
 			other.setSchool(school);
@@ -176,4 +168,76 @@ public class Slime extends OtherCharacters {
 			this.setTerminated(true);
 		}
 	}
+	
+	@Override
+	public boolean collisionDetectionHorizontal(double newPosition){
+//		List<Characters> characters = world.getAllObjects();
+		World world = getWorld();
+		Iterable<Characters> characters;
+		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
+			characters = world.getAllObjects();
+		else if (world.hasAsLeftObject(this))
+			characters = world.getAllLeftObjects();
+		else
+			characters = world.getAllRightObjects();
+		if (isMovingRight()){
+			for (Characters character : characters){
+				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
+						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+						this.collision(character);
+						if (character instanceof Slime)
+							return true;
+						else
+							return false;
+				}
+			}
+		}
+		if (isMovingLeft()){
+			for (Characters character : characters){
+				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
+						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+						this.collision(character);
+						if (character instanceof Slime)
+							return true;
+						else
+							return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public void environmentDamage(double duration) {
+		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
+		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
+		int[] pos2 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)+getSprite().getHeight()};
+		if ((environment(getIntPosition()) == GeoFeature.MAGMA) || (environment(pos) == GeoFeature.MAGMA)
+				|| (environment(pos1) == GeoFeature.MAGMA) || (environment(pos2) == GeoFeature.MAGMA)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
+				this.damage(50);
+		} else{
+			this.setBadEnvironment(false);
+		}
+		if (this.isBadEnvironment()){
+			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
+				setTimeSinceEnvironmentalDamage(0.0);
+		}else{
+			this.setTimeSinceEnvironmentalDamage(0.0);
+		}
+	}
+	
+	public boolean isBadEnvironment() {
+		return badEnvironment;
+	}
+
+	public void setBadEnvironment(boolean badEnvironment) {
+		this.badEnvironment = badEnvironment;
+	}
+
+	public boolean badEnvironment = false;
 }

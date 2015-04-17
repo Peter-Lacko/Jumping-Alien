@@ -31,7 +31,7 @@ public class School {
 		if (! hasAsSlime(slime))
 			throw new IllegalArgumentException();
 		int index = 0;
-		for (Slime blob : slimes){
+		for (Characters blob : slimes){
 			if (blob == slime)
 				return index;
 			index ++;

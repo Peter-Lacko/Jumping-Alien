@@ -2,6 +2,7 @@ package jumpingalien.part2.facade;
 
 import java.util.Collection;
 
+import jumpingalien.model.Characters;
 import jumpingalien.model.Plant;
 import jumpingalien.model.Shark;
 import jumpingalien.model.Mazub;
@@ -468,7 +469,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * @return A new slime, located at the provided location and part of the
 	 *         given school. The returned slime should not belong to a world.
 	 */
-	Slime createSlime(int x, int y, Sprite[] sprites, School school);
+	Characters createSlime(int x, int y, Sprite[] sprites, School school);
 
 	/**
 	 * Add the given slime as a game object to the given world.
@@ -478,7 +479,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * @param slime
 	 *            The slime that needs to be added to the world.
 	 */
-	void addSlime(World world, Slime slime);
+	void addSlime(World world, Characters slime);
 
 	/**
 	 * Returns all the slimes currently located in the given world.
@@ -499,7 +500,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * @return An array, consisting of 2 integers {x, y}, that represents the
 	 *         coordinates of the given slime's bottom left pixel in the world.
 	 */
-	int[] getLocation(Slime slime);
+	int[] getLocation(Characters slime);
 
 	/**
 	 * Return the current sprite image for the given slime.
@@ -510,7 +511,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * @return The current sprite image for the given slime, determined by its
 	 *         orientation as defined in the assignment.
 	 */
-	public Sprite getCurrentSprite(Slime slime);
+	public Sprite getCurrentSprite(Characters slime);
 
 	/**
 	 * Returns the current school to which the given slime belongs.

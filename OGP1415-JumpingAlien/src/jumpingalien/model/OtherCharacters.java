@@ -104,6 +104,8 @@ public abstract class OtherCharacters extends Characters {
 					//setTimeSinceStartMovement(0.0);
 					startMove();
 				}
+				if (!this.isTerminated())
+					this.environmentDamage(duration);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

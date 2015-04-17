@@ -18,6 +18,7 @@ import jumpingalien.part2.internal.tmxfile.data.Layer;
 import jumpingalien.part2.internal.tmxfile.data.Map;
 import jumpingalien.part2.internal.tmxfile.data.MapObject;
 import jumpingalien.part2.internal.tmxfile.data.ImageTile.TileType;
+import jumpingalien.model.Characters;
 import jumpingalien.model.Plant;
 import jumpingalien.model.School;
 import jumpingalien.model.Shark;
@@ -357,7 +358,7 @@ public class JumpingAlienGamePart2 extends JumpingAlienGame {
 			}
 
 			@Override
-			public Optional<int[]> getLocation(Slime slime) {
+			public Optional<int[]> getLocation(Characters slime) {
 				return Optional.of(getFacade().getLocation(slime));
 			}
 
@@ -402,7 +403,7 @@ public class JumpingAlienGamePart2 extends JumpingAlienGame {
 			}
 
 			@Override
-			public Optional<ImageSprite> getCurrentSprite(Slime slime) {
+			public Optional<ImageSprite> getCurrentSprite(Characters slime) {
 				return Optional.of((ImageSprite) getFacade().getCurrentSprite(
 						slime));
 			}

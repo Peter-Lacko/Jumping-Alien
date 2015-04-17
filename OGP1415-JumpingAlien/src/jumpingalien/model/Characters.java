@@ -121,7 +121,7 @@ public abstract class Characters {
 		this.isTerminated = isTerminated;
 	}
 
-	public abstract boolean canHaveAsWorld(World world);
+//	public abstract boolean canHaveAsWorld(World world);
 	
 	/**
 	 * returns the world of the character
@@ -958,7 +958,7 @@ public abstract class Characters {
 			}
 		}
 		else if (isMovingRight()){
-			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
+			for (int i = getIntPositionAt(2)+2;i<getIntPositionAt(2)+getSprite().getHeight();i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
@@ -1035,7 +1035,8 @@ public abstract class Characters {
 				for (Characters character : characters){
 					if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
 							&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
+							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())
+							&& (this.collide(character))){
 						this.collision(character);
 						return false;
 					}
@@ -1045,13 +1046,26 @@ public abstract class Characters {
 				for (Characters character : characters){
 					if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
 							&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())){
+							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())
+							&& ((this.collide(character)))	){
 						this.collision(character);
 						return false;
 					}
 				}
 			}
 		}
+		return true;
+	}
+	
+	public boolean collide(Characters other){
+		if ((this instanceof Plant) && (other instanceof Slime))
+			return false;
+		else if ((other instanceof Plant) && (this instanceof Slime))
+			return false;
+		if ((this instanceof Plant) && (other instanceof Shark))
+			return false;
+		else if ((other instanceof Plant) && (this instanceof Shark))
+			return false;
 		return true;
 	}
 	
@@ -1100,8 +1114,8 @@ public abstract class Characters {
 
 	protected void terminate() {
 		if (! isTerminated()){
-			getWorld().removeAsObject(this);
 			this.setTerminated(true);
+			getWorld().removeAsObject(this);
 //			this.setWorld(null);
 			this.setHorizontalVelocity(0.0);
 			this.setVerticalVelocity(0.0);
@@ -1145,4 +1159,30 @@ public abstract class Characters {
 	public boolean notFullyDeadYet = false;
 
 	
+	public GeoFeature environment(int[] position){
+		int[] pos = getWorld().getPixelOfTileContaining(position[0], position[1]);	
+		return getWorld().getGeoFeatureAt(pos[0], pos[1]);
+	}
+	
+	public abstract void environmentDamage(double duration);
+	
+	public double getTimeSinceEnvironmentalDamage() {
+		return timeSinceEnvironmentalDamage;
+	}
+
+	public void setTimeSinceEnvironmentalDamage(double timeSinceEnvironmentalDamage) {
+		this.timeSinceEnvironmentalDamage = timeSinceEnvironmentalDamage;
+	}
+	
+	public boolean canHaveAsWorld(World world) {
+		if (this.isTerminated()){
+			if (world == null)
+				return true;
+		}
+		if (world.isTerminated())
+			return false;
+		return true;
+	}
+
+	public double timeSinceEnvironmentalDamage = 0.0;
 }

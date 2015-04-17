@@ -244,15 +244,6 @@ public class Shark extends OtherCharacters {
 	public int movementsSinceLastJump = 0;
 
 	@Override
-	public boolean canHaveAsWorld(World world) {
-		if (world == null)
-			return true;
-		if (world.isTerminated())
-			return false;
-		return true;
-	}
-
-	@Override
 	public void collision(Characters other) {
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){
@@ -262,8 +253,8 @@ public class Shark extends OtherCharacters {
 			}
 			if (! this.isTerminated())
 				this.endMove();
-			((Mazub) other).endMove("left");
-			((Mazub) other).endMove("right");
+//			((Mazub) other).endMove("left");
+//			((Mazub) other).endMove("right");
 		}
 		else if (other instanceof Shark){
 			this.endMove();
@@ -272,5 +263,43 @@ public class Shark extends OtherCharacters {
 		else
 			other.collision(this);
 	}
+
+	@Override
+	public void environmentDamage(double duration) {
+		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
+		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
+		int[] pos2 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)+getSprite().getHeight()};
+		if ((environment(getIntPosition()) == GeoFeature.MAGMA) || (environment(pos) == GeoFeature.MAGMA)
+				|| (environment(pos1) == GeoFeature.MAGMA) || (environment(pos2) == GeoFeature.MAGMA)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
+				this.damage(50);
+		} else if ((environment(getIntPosition()) == GeoFeature.AIR) || (environment(pos) == GeoFeature.AIR)
+				|| (environment(pos1) == GeoFeature.AIR) || (environment(pos2) == GeoFeature.AIR)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage()+duration, 0.2))
+				this.damage(6);
+		}else{
+			this.setBadEnvironment(false);
+		}
+		if (this.isBadEnvironment()){
+			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
+				setTimeSinceEnvironmentalDamage(0.0);
+		}else{
+			this.setTimeSinceEnvironmentalDamage(0.0);
+		}
+	}
+	
+	public boolean isBadEnvironment() {
+		return badEnvironment;
+	}
+
+	public void setBadEnvironment(boolean badEnvironment) {
+		this.badEnvironment = badEnvironment;
+	}
+
+	public boolean badEnvironment = false;
+	
 
 }

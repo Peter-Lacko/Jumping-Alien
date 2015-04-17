@@ -243,7 +243,7 @@ public class Facade implements IFacadePart2 {
 		return school;
 	}
 	
-	public Slime createSlime(int x, int y, Sprite[] sprites, School school){
+	public Characters createSlime(int x, int y, Sprite[] sprites, School school){
 		try{
 			return new Slime(x,y,sprites,school);
 		} catch (IllegalArgumentException exc){
@@ -251,7 +251,7 @@ public class Facade implements IFacadePart2 {
 		}
 	}
 	
-	public void addSlime(World world, Slime slime){
+	public void addSlime(World world, Characters slime){
 		world.addAsObject(slime);
 	}
 	
@@ -264,11 +264,11 @@ public class Facade implements IFacadePart2 {
 		return slimes;
 	}
 	
-	public int[] getLocation(Slime slime){
+	public int[] getLocation(Characters slime){
 		return slime.getIntPosition();
 	}
 
-	public Sprite getCurrentSprite(Slime slime){
+	public Sprite getCurrentSprite(Characters slime){
 		return slime.getSprite();
 	}
 
