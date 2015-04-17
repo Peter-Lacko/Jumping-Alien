@@ -4,9 +4,7 @@
 package jumpingalien.model;
 
 import java.util.*;
-
 import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 
 /**
@@ -109,7 +107,6 @@ public class World {
 	 * @param target
 	 * @return	|result == ((target.length == 2) && (target[0] >= 0) && (target[1] >= 0))
 	 */
-	@Raw
 	public boolean isPossibleTargetTile(int[] target){
 		return ((target.length == 2) && (target[0] >= 0) && (target[1] >= 0));
 	}
@@ -120,7 +117,6 @@ public class World {
 	 * @return	|result == ( isPossibleTargetTile(target) && matchesMaxXTilesMaxYTilesTargetTile(
 	 * 			|			getMaxXTiles(), getMaxYTiles(), target))
 	 */
-	@Raw
 	public boolean canHaveAsTargetTile(int[] target){
 		return ( isPossibleTargetTile(target) && matchesMaxXTilesMaxYTilesTargetTile(
 				getMaxXTiles(), getMaxYTiles(), target));
@@ -133,7 +129,6 @@ public class World {
 	 * @param targetTile
 	 * @return	|result == ((targetTile[0] <= maxXTiles) && (targetTile[1] <= maxYTiles))
 	 */
-	@Raw
 	public boolean matchesMaxXTilesMaxYTilesTargetTile(int maxXTiles, int maxYTiles, int[] targetTile){
 		return ((targetTile[0] <= maxXTiles) && (targetTile[1] <= maxYTiles));
 	}
@@ -202,7 +197,7 @@ public class World {
 	
 	private boolean hasPlayerWon = false;
 	
-	@Basic @Raw
+	@Basic
 	public int getTileLength(){
 		return Scale.getRatio();
 //		return TILE_LENGTH;
@@ -228,7 +223,6 @@ public class World {
 	 * @param amount
 	 * @return	|result == (amount > 0)
 	 */
-	@Raw
 	public boolean isPossibleMaxTiles(int amount){
 		return (amount > 0);
 	}
@@ -306,7 +300,6 @@ public class World {
 	 * 			the y-coordinate
 	 * @return	| result == new Position (xPixel, yPixel).toScale(Scale.TILE).getIntPosition()
 	 */
-	@Model
 	private int[] getTilePosition(int xPixel, int yPixel){
 //		int[] position = {(xPixel-xPixel%getTileLength())/getTileLength(),
 //				(yPixel-yPixel%getTileLength())/getTileLength()};
@@ -379,21 +372,20 @@ public class World {
 	}
 	
 	/**
-	 * @param xTile
-	 * @param yTile
-	 * @post	|new.getGeoFeatureAt(xTile, yTile) == feature
+	 * @param xPixel
+	 * @param yPixel
+	 * @post	|new.getGeoFeatureAt(xPixel, yPixel) == feature
 	 * @throws IllegalArgumentException
-	 * 			| ! isValidGeoPosition(new Position(xTile, yTile))
+	 * 			| ! isValidGeoPosition(new Position(xPixel, yPixel))
 	 * @throws IllegalArgumentException
 	 * 			| ! isValidGeoFeature(feature)
 	 */
-	@Model
 	private void setGeoFeatureAt(int xTile, int yTile, GeoFeature feature) throws IllegalArgumentException{
 //		int[] position = {xPixel, yPixel};
 		Position pos = new Position(xTile, yTile, Scale.TILE);
 //		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
-		if ((! isValidGeoFeature(feature)) || (xTile < 0) || (xTile > getMaxXTiles())
-				|| (yTile < 0) || (yTile > getMaxYTiles()))
+		if ((! isValidGeoFeature(feature)) || (xTile*getTileLength() < 0) || (xTile > getMaxXTiles())
+				|| (yTile*getTileLength() < 0) || (yTile > getMaxYTiles()))
 			throw new IllegalArgumentException();
 		if (feature == GeoFeature.AIR){
 			if (hasAsKeyGeoFeaturePosition(pos))
@@ -492,6 +484,16 @@ public class World {
 	 * @param duration
 	 * @effect	|for each object in getAllObjects():
 	 * 			|	object.advanceTime(duration);
+	 * @post	|for each object in getAllObjects():
+	 * 			|	if(object.getIntPositionAt(1) <= getWorldSize()[0]/2)
+	 * 			|		then hasAsLeftObject(object);
+	 * 			|	else
+	 * 			|		(! hasAsLeftObject(object));
+	 * @post	|for each object in getAllObjects():
+	 * 			|	if((object.getIntPositionAt(1) + object.getSize()[0] - 1) >= getWorldSize()[0]/2)
+	 * 			|		then hasAsRightObject(object);
+	 * 			|	else
+	 * 			|		(! hasAsRightObject(object));
 	 * @throws	IllegalArgumentException
 	 * 			| (duration >= 0.2) || (duration < 0.0)
 	 */
@@ -576,7 +578,7 @@ public class World {
 	public boolean canHaveAsObjectAt(Characters object, int index){
 		if (! canHaveAsObject(object))
 			return false;
-		else if ((index < 1) || (index > getNbObjects() +1))
+		else if ((index < 1) || index > getNbObjects() +1)
 			return false;
 		for (int newIndex=1; newIndex <= getNbObjects(); newIndex++){
 			if ((newIndex != index) && (getObjectAt(newIndex) == object))
@@ -661,12 +663,12 @@ public class World {
 	 * 			|	&& canHaveAsNbObjects(getNbObjects())
 	 */
 	public boolean hasProperObjects(){
-		if (! canHaveAsNbObjects(getNbObjects()))
-			return false;
 		for (int index = 1; index <= getNbObjects(); index++){
 			if ((! canHaveAsObjectAt(getObjectAt(index),index)) || (getObjectAt(index).getWorld() != this))
 				return false;
 		}
+		if (! canHaveAsNbObjects(getNbObjects()))
+			return false;
 		return true;
 	}
 	
@@ -712,7 +714,6 @@ public class World {
 	 * @throws IndexOutOfBoundsException
 	 * 			|(index < 1) || (index >= getNbObjects() +1)
 	 */
-	@Model
 	private void removeObjectAt(int index) throws IndexOutOfBoundsException{
 		int indexOfObject = getInternalIndexOfObjectAt(index);
 		Characters objectToRemove = objects.get(indexOfObject);
@@ -777,7 +778,6 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			|(! hasAsObject(object))
 	 */
-	@Model
 	private int getIndexOfObject(Characters object) throws IllegalArgumentException{
 		if (! hasAsObject(object))
 			throw new IllegalArgumentException();
@@ -964,7 +964,7 @@ public class World {
 		return true;
 	}
 	
-	@Basic @Model
+	@Basic
 	private int getWindowWidth(){
 		return WINDOW_WIDTH;
 	}
@@ -986,7 +986,6 @@ public class World {
 	 * @param WindowWidth
 	 * @return	|result == ((MaxXTiles+1)*getTileLength() >= WindowWidth)
 	 */
-	@Raw
 	public boolean matchesMaxXTilesWindowWidth(int MaxXTiles, int WindowWidth){
 		return ((MaxXTiles+1)*getTileLength() >= WindowWidth);
 	}
@@ -1003,7 +1002,7 @@ public class World {
 	
 	private final int WINDOW_WIDTH;
 	
-	@Basic @Model
+	@Basic
 	private int getWindowHeight(){
 		return WINDOW_HEIGHT;
 	}
@@ -1025,7 +1024,6 @@ public class World {
 	 * @param WindowHeight
 	 * @return	|result == ((MaxYTiles+1)*getTileLength() >= WindowHeight)
 	 */
-	@Raw
 	public boolean matchesMaxYTilesWindowHeight(int MaxYTiles, int WindowHeight){
 		return ((MaxYTiles+1)*getTileLength() >= WindowHeight);
 	}
@@ -1062,7 +1060,6 @@ public class World {
 	 * 			|		(result[1] == result[0] + dimension -1)
 	 * @return	|result.length == 2
 	 */
-	@Model
 	private int[] getVisibleWindow1D(Mazub mazub, int mSize, int wSize, int mazubPos, int dimension){
 		int firstPos = (mazubPos -(dimension -mSize)/2);
 		if (dimension == wSize)
@@ -1077,13 +1074,13 @@ public class World {
 	
 	/**
 	 * 
-	 * @effect	|result == {getVisibleWindow1D(getMazub(), getMazub.getSize()[0], getWorldSize()[0], 
+	 * @effect	|result == {getVisibleWindowWidth(getMazub(), getMazub.getSize()[0], getWorldSize()[0], 
 	 * 			|				getMazub().getIntPositionAt(1), getWindowWidth())[0], 
-	 * 			|				getVisibleWindow1D(getMazub(), getMazub().getSize()[1], getWorldSize()[1], 
+	 * 			|				getVisibleWindowHeight(getMazub(), getMazub().getSize()[1], getWorldSize()[1], 
 	 * 			|				getMazub.getIntPositionAt(2), getWindowHeight())[0],
-	 * 			|				getVisibleWindow1D(getMazub(), getMazub.getSize()[0], getWorldSize()[0], 
+	 * 			|				getVisibleWindowWidth(getMazub(), getMazub.getSize()[0], getWorldSize()[0], 
 	 * 			|				getMazub().getIntPositionAt(1), getWindowWidth())[1], 
-	 * 			|				getVisibleWindow1D(getMazub(), getMazub.getSize()[1], getWorldSize()[1], 
+	 * 			|				getVisibleWindowHeight(getMazub(), getMazub.getSize()[1], getWorldSize()[1], 
 	 * 			|				getMazub().getIntPositionAt(2), getWindowHeight())[1]}
 	 * @return	|result.length == 2
 	 */

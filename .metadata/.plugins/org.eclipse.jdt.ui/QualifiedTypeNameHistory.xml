@@ -5,4 +5,5 @@
 <fullyQualifiedTypeName name="jumpingalien.model.World"/>
 <fullyQualifiedTypeName name="org.junit.BeforeClass"/>
 <fullyQualifiedTypeName name="org.junit.Before"/>
+<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Model"/>
 </qualifiedTypeNameHistroy>

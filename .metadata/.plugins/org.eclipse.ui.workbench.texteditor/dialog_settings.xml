@@ -2,57 +2,29 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-<<<<<<< HEAD
-		<item value="startGame" key="selection"/>
-=======
-		<item value="Won" key="selection"/>
->>>>>>> ec99f75b4b9802a3a44d61999cf54b94eadbf231
+		<item value="canHaveAsObject" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-<<<<<<< HEAD
-			<item value="startGame"/>
-			<item value="maxXTile"/>
-			<item value="setGeoFeatureAtWith"/>
-			<item value="getWorldSize"/>
-			<item value="maxxtiles"/>
-			<item value="getMaxXTiles"/>
-			<item value="world"/>
-			<item value="matchesMaxXTilesWin"/>
-=======
-			<item value="won"/>
-			<item value="haspla"/>
-			<item value="hasp"/>
-			<item value="setG"/>
-			<item value="remove"/>
-			<item value="adv"/>
-			<item value="ad"/>
-			<item value="Term"/>
->>>>>>> ec99f75b4b9802a3a44d61999cf54b94eadbf231
+			<item value="canHaveAsObject"/>
+			<item value="canHaveAsWorld"/>
+			<item value="canHaveAsObjectAt"/>
+			<item value="getGeoFeatureAt"/>
+			<item value="hasProperGeoFeatures()"/>
+			<item value="hasProperObjects()"/>
+			<item value="getNbObjects"/>
+			<item value="hasProperRightObjects()"/>
 		</list>
 		<list key="replacehistory">
-			<item value="this"/>
-			<item value="Terrain"/>
-			<item value="terrain"/>
-			<item value="acceleration"/>
-			<item value="advanceTimeLong"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-<<<<<<< HEAD
 		<item value="305" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="444" key="DIALOG_HEIGHT"/>
-		<item value="1559" key="DIALOG_X_ORIGIN"/>
-		<item value="252" key="DIALOG_Y_ORIGIN"/>
-=======
-		<item value="353" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="513" key="DIALOG_HEIGHT"/>
-		<item value="1203" key="DIALOG_X_ORIGIN"/>
-		<item value="437" key="DIALOG_Y_ORIGIN"/>
->>>>>>> ec99f75b4b9802a3a44d61999cf54b94eadbf231
+		<item value="1572" key="DIALOG_X_ORIGIN"/>
+		<item value="239" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
