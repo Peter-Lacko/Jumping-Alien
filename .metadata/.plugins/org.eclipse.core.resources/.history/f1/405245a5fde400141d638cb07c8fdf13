@@ -118,14 +118,5 @@ public class Plant extends OtherCharacters {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	protected void terminate() {
-		if (! isTerminated()){
-			this.setTerminated(true);
-			this.getWorld().removeAsObject(this);
-			this.setHorizontalVelocity(0.0);
-			this.setVerticalVelocity(0.0);
-		}
-	}
 
 }
