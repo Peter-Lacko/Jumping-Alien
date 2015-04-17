@@ -121,7 +121,7 @@ public abstract class Characters {
 		this.isTerminated = isTerminated;
 	}
 
-//	public abstract boolean canHaveAsWorld(World world);
+	public abstract boolean canHaveAsWorld(World world);
 	
 	/**
 	 * returns the world of the character
@@ -1174,13 +1174,5 @@ public abstract class Characters {
 		this.timeSinceEnvironmentalDamage = timeSinceEnvironmentalDamage;
 	}
 	
-	public boolean canHaveAsWorld(World world) {
-		if (world == null)
-			return true;
-		if (world.isTerminated())
-			return false;
-		return true;
-	}
-
 	public double timeSinceEnvironmentalDamage = 0.0;
 }

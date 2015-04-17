@@ -244,6 +244,15 @@ public class Shark extends OtherCharacters {
 	public int movementsSinceLastJump = 0;
 
 	@Override
+	public boolean canHaveAsWorld(World world) {
+		if (world == null)
+			return true;
+		if (world.isTerminated())
+			return false;
+		return true;
+	}
+
+	@Override
 	public void collision(Characters other) {
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){

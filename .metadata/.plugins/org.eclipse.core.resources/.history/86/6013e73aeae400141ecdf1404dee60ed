@@ -113,6 +113,15 @@ public class Slime extends OtherCharacters {
 	}
 
 	@Override
+	public boolean canHaveAsWorld(World world) {
+		if (world == null)
+			return true;
+		if (world.isTerminated())
+			return false;
+		return true;
+	}
+	
+	@Override
 	public void collision(Characters other) {
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){
@@ -140,18 +149,18 @@ public class Slime extends OtherCharacters {
 	private void changeSchool(Slime other){
 		if (this.getSchool().getNbSlimes() < other.getSchool().getNbSlimes()){
 			this.getSchool().removeAsSlime(this);
-			for (Characters slime : this.getSchool().getSlimes())
+			for (Slime slime : this.getSchool().getSlimes())
 				slime.damage(-1);
-			for (Characters slime2 : other.getSchool().getSlimes())
+			for (Slime slime2 : other.getSchool().getSlimes())
 				slime2.damage(1);
 			this.damage(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes());
 			this.setSchool(other.getSchool());
 		}
 		else if (this.getSchool().getNbSlimes() > other.getSchool().getNbSlimes()){
 			other.getSchool().removeAsSlime(other);
-			for (Characters slime : other.getSchool().getSlimes())
+			for (Slime slime : other.getSchool().getSlimes())
 				slime.damage(-1);
-			for (Characters slime2 : this.getSchool().getSlimes())
+			for (Slime slime2 : this.getSchool().getSlimes())
 				slime2.damage(1);
 			this.damage(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes());
 			other.setSchool(school);

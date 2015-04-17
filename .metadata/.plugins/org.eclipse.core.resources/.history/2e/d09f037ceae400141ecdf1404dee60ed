@@ -681,6 +681,15 @@ public class Mazub extends Characters {
 	 * a variable containing the time since the character has stepped (in the run cycle).
 	 */
 	private double timeSinceStep = 0.0;
+
+	@Override
+	public boolean canHaveAsWorld(World world) {
+		if (world == null)
+			return true;
+		if (world.isTerminated())
+			return false;
+		return true;
+	}
 	
 	@Override
 	public void collision(Characters other){

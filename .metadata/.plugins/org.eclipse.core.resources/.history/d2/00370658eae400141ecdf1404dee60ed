@@ -1174,6 +1174,7 @@ public abstract class Characters {
 		this.timeSinceEnvironmentalDamage = timeSinceEnvironmentalDamage;
 	}
 	
+	@Override
 	public boolean canHaveAsWorld(World world) {
 		if (world == null)
 			return true;
