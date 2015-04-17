@@ -647,7 +647,7 @@ public class World {
 	 * 			|	for some i in 1..getNbObjects():
 	 * 			|		(getObjectAt(i) == object);
 	 */
-	public boolean hasAsObject(@Raw Characters object){
+	public boolean hasAsObject(Characters object){
 		return objects.contains(object);
 	}
 	
@@ -690,7 +690,7 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			| ((index == 1) && (! (object instanceof Mazub)))
 	 */
-	public void addObjectAt(@Raw Characters object, int index) throws IllegalArgumentException{
+	public void addObjectAt(Characters object, int index) throws IllegalArgumentException{
 //		if (! canHaveAsObjectAt(object, index))
 //			throw new IllegalArgumentException("Invalid object");
 		assert (object != null);

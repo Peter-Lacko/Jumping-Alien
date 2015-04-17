@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="isImmune" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="notfully"/>
-			<item value="notFully"/>
-			<item value="addAsObject"/>
-			<item value="canHaveAsObject"/>
-			<item value="canHaveAsWorld"/>
-			<item value="canHaveAsWorld()"/>
+			<item value="isImmune"/>
+			<item value="timesinceenvir"/>
+			<item value="timesincee"/>
 			<item value="time"/>
-			<item value="enviro"/>
+			<item value="canHaveAsWorld"/>
+			<item value="setWorld"/>
+			<item value="getIntPositionAt"/>
+			<item value="canHaveAsObject"/>
 		</list>
 		<list key="replacehistory">
 		</list>

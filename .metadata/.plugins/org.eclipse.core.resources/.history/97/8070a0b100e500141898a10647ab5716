@@ -142,8 +142,7 @@ public abstract class Characters {
 	 * @throws IllegalArgumentException
 	 * 			| (! world.hasAsObject(this))
 	 */
-	@Raw
-	public void setWorld(@Raw World world) throws IllegalArgumentException {
+	public void setWorld(World world) throws IllegalArgumentException {
 		if (world == null)
 			this.world = world;
 		else{
@@ -916,7 +915,6 @@ public abstract class Characters {
 	 * @effect	Rounds down the position at the requested index and converts to an int type.
 	 * 			| result == getIntPosition()[index-1]
 	 */
-	@Raw
 	public int getIntPositionAt(int index) throws ArrayIndexOutOfBoundsException{
 		return getIntPosition()[index-1];
 	}
@@ -1162,7 +1160,6 @@ public abstract class Characters {
 		this.timeSinceEnvironmentalDamage = timeSinceEnvironmentalDamage;
 	}
 	
-	@Raw
 	public boolean canHaveAsWorld(World world) {
 		if (this.isTerminated()){
 			if (world == null)

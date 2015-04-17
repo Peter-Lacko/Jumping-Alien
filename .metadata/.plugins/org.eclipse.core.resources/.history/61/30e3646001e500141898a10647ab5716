@@ -581,8 +581,8 @@ public class World {
 			if ((newIndex != index) && (getObjectAt(newIndex) == object))
 				return false;
 		}
-//		if ((index == 1) && (! (object instanceof Mazub)))
-//			return false;
+		if ((index == 1) && (! (object instanceof Mazub)))
+			return false;
 		return true;
 	}
 	

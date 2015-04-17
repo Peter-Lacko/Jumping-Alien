@@ -581,8 +581,8 @@ public class World {
 			if ((newIndex != index) && (getObjectAt(newIndex) == object))
 				return false;
 		}
-//		if ((index == 1) && (! (object instanceof Mazub)))
-//			return false;
+		if ((index == 1) && (! (object instanceof Mazub)))
+			return false;
 		return true;
 	}
 	
@@ -647,7 +647,7 @@ public class World {
 	 * 			|	for some i in 1..getNbObjects():
 	 * 			|		(getObjectAt(i) == object);
 	 */
-	public boolean hasAsObject(@Raw Characters object){
+	public boolean hasAsObject(Characters object){
 		return objects.contains(object);
 	}
 	
