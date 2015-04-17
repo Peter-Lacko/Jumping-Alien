@@ -2,25 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-<<<<<<< HEAD
-		<item value="canHaveAsObject" key="selection"/>
-=======
-		<item value="getWorld" key="selection"/>
->>>>>>> 1bfa6856851f9fe3b30cbec54f36fe647bc5f9af
+		<item value="notFully" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-<<<<<<< HEAD
+			<item value="notFully"/>
+			<item value="addAsObject"/>
 			<item value="canHaveAsObject"/>
 			<item value="canHaveAsWorld"/>
-			<item value="canHaveAsObjectAt"/>
-			<item value="getGeoFeatureAt"/>
-			<item value="hasProperGeoFeatures()"/>
-			<item value="hasProperObjects()"/>
-			<item value="getNbObjects"/>
-			<item value="hasProperRightObjects()"/>
+			<item value="canHaveAsWorld()"/>
+			<item value="time"/>
+			<item value="enviro"/>
+			<item value="terminatetime"/>
 		</list>
 		<list key="replacehistory">
 		</list>
@@ -29,28 +24,7 @@
 		<item value="305" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="444" key="DIALOG_HEIGHT"/>
-		<item value="1572" key="DIALOG_X_ORIGIN"/>
-		<item value="239" key="DIALOG_Y_ORIGIN"/>
-=======
-			<item value="getworld"/>
-			<item value="canHaveAsWo"/>
-			<item value="termµ"/>
-			<item value="term"/>
-			<item value="ter"/>
-			<item value="canHaveasw"/>
-			<item value="canH"/>
-			<item value="can"/>
-		</list>
-		<list key="replacehistory">
-			<item value=""/>
-		</list>
-	</section>
-	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="353" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="513" key="DIALOG_HEIGHT"/>
-		<item value="1134" key="DIALOG_X_ORIGIN"/>
-		<item value="180" key="DIALOG_Y_ORIGIN"/>
->>>>>>> 1bfa6856851f9fe3b30cbec54f36fe647bc5f9af
+		<item value="1600" key="DIALOG_X_ORIGIN"/>
+		<item value="256" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
