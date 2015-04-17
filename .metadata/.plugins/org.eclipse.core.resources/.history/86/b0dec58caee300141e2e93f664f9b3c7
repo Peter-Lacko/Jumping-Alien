@@ -3,7 +3,6 @@ package jumpingalien.part2.tests;
 import static org.junit.Assert.*;
 import jumpingalien.model.World;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,13 +14,9 @@ public class WorldTest {
 	
 	private static World worldSmallSize;
 	
-	@Before
-	public void setUpMutableFixture(){
-		worldStandard = new World(4, 300, 300, 500, 500, 150, 150);
-	}
-	
 	@BeforeClass
 	public static void setUpImmutableFixture(){
+		worldStandard = new World(4, 300, 300, 500, 500, 150, 150);
 		worldSmallWindow = new World(4, 300, 300, 50, 50, 150, 150);
 		worldSmallSize = new World(4, 20, 20, 80, 80, 10, 10);
 	}
@@ -49,12 +44,6 @@ public class WorldTest {
 	@Test
 	public void getTileLength_Correct(){
 		assertEquals(worldStandard.getTileLength(), 4);
-	}
-	
-	@Test
-	public void startGame_Correct(){
-		worldStandard.startGame();
-		assertEquals(worldStandard.isGameStarted(), true);
 	}
 	
 }

@@ -53,8 +53,7 @@ public class WorldTest {
 	
 	@Test
 	public void startGame_Correct(){
-		worldStandard.startGame();
-		assertEquals(worldStandard.isGameStarted(), true);
+		
 	}
 	
 }
