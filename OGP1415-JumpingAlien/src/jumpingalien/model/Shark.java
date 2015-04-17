@@ -262,8 +262,8 @@ public class Shark extends OtherCharacters {
 			}
 			if (! this.isTerminated())
 				this.endMove();
-			((Mazub) other).endMove("left");
-			((Mazub) other).endMove("right");
+//			((Mazub) other).endMove("left");
+//			((Mazub) other).endMove("right");
 		}
 		else if (other instanceof Shark){
 			this.endMove();
