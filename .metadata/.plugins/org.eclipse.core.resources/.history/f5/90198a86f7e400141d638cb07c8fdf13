@@ -1177,8 +1177,7 @@ public abstract class Characters {
 			if (world == null)
 				return true;
 		}
-		if ((! world.canHaveAsObject(this)) || (! world.hasAsObject(this)))
-			return false;
+		if (! this.getWorld().canHaveAsObject(this))
 		if (world.isTerminated())
 			return false;
 		return true;
