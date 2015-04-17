@@ -306,8 +306,8 @@ public class Mazub extends Characters {
 			}
 			else{
 				this.setTerminateTime(getTerminateTime()+duration);
-				if ((this.getTerminateTime() > 0.6) &&(! (this.getWorld() == null)))
-					this.getWorld().removeAsObject(this);
+				if (this.getTerminateTime() > 5.0)
+					getWorld().removeAsObject(this);
 			}
 			this.immune(duration);
 		}
@@ -773,6 +773,7 @@ public class Mazub extends Characters {
 	protected void terminate() {
 		if (! isTerminated()){
 			this.setTerminated(true);
+//			this.setWorld(null);
 			this.setHorizontalVelocity(0.0);
 			this.setVerticalVelocity(0.0);
 		}

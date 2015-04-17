@@ -1114,8 +1114,8 @@ public abstract class Characters {
 
 	protected void terminate() {
 		if (! isTerminated()){
-			this.setTerminated(true);
 			getWorld().removeAsObject(this);
+			this.setTerminated(true);
 //			this.setWorld(null);
 			this.setHorizontalVelocity(0.0);
 			this.setVerticalVelocity(0.0);
@@ -1175,10 +1175,8 @@ public abstract class Characters {
 	}
 	
 	public boolean canHaveAsWorld(World world) {
-		if (this.isTerminated()){
-			if (world == null)
-				return true;
-		}
+		if (world == null)
+			return true;
 		if (world.isTerminated())
 			return false;
 		return true;

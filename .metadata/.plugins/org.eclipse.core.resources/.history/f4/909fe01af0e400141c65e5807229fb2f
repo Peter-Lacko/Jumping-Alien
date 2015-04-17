@@ -306,8 +306,10 @@ public class Mazub extends Characters {
 			}
 			else{
 				this.setTerminateTime(getTerminateTime()+duration);
-				if ((this.getTerminateTime() > 0.6) &&(! (this.getWorld() == null)))
-					this.getWorld().removeAsObject(this);
+				if (this.getTerminateTime() > 0.6){
+					System.out.println(getWorld());
+					getWorld().removeAsObject(this);
+				}
 			}
 			this.immune(duration);
 		}
