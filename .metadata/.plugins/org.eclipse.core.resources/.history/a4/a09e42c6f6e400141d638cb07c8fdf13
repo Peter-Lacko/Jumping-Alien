@@ -958,8 +958,8 @@ public abstract class Characters {
 			}
 		}
 		else if (isMovingRight()){
-			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()+2,i);
+			for (int i = getIntPositionAt(2)+2;i<getIntPositionAt(2)+getSprite().getHeight();i++){
+				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
 			}
@@ -1177,8 +1177,6 @@ public abstract class Characters {
 			if (world == null)
 				return true;
 		}
-		if ((! world.canHaveAsObject(this)) || (! world.hasAsObject(this)))
-			return false;
 		if (world.isTerminated())
 			return false;
 		return true;
