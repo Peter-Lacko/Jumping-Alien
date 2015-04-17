@@ -549,14 +549,13 @@ public class World {
 	 * 			|	result == (object != null)
 	 */
 	public boolean canHaveAsObject(Characters object){
+		if (object == null)
+			return false;
 		int xPos = object.getIntPositionAt(1);
 		int yPos = object.getIntPositionAt(2);
 		if ((xPos < 0) || (yPos < 0) || (xPos > getWorldSize()[0]-1) || (yPos > getWorldSize()[1]-1))
 			return false;
-		if (object.isTerminated())
-			return ((object.notFullyDeadYet()) && (object != null));
-		else
-			return (object != null);
+		return ((object.canHaveAsWorld(this)) && (object.getWorld() == this));
 	}
 	
 	/**
@@ -674,6 +673,14 @@ public class World {
 	 * 
 	 * @param object
 	 * @param index
+	 * @pre		|object != null
+	 * @pre		|((object.getIntPositionAt(1) >= 0) 
+	 * 			|&& (object.getIntPositionAt(1) <= getWorldSize()[0]-1)
+	 * @pre		|(object.getIntPositionAt(2) >= 0) 
+	 * 			|&& (object.getIntPositionAt(2) <= getWorldSize()[1]-1)
+	 * @pre		|((index >= 1) && (index <= getNbObjects() +1))
+	 * @pre		|(! hasAsObject(object))
+	 * @pre		|(getNbObjects() +1 <= 100)
 	 * @post	|new.getObjectAt(index) == object
 	 * @post	|new.getNbObjects() == getNbObjects() +1
 	 * @post	|for each i in index..getNbObjects():
@@ -681,11 +688,20 @@ public class World {
 	 * @post	|(new object).getWorld() == this;
 	 * @post	|(new.hasAsLeftObject(object) || new.hasAsRightObject(object))
 	 * @throws IllegalArgumentException
-	 * 			| (! canHaveAsObjectAt(object, index))
+	 * 			| ((index == 1) && (! (object instanceof Mazub)))
 	 */
 	public void addObjectAt(Characters object, int index) throws IllegalArgumentException{
-		if (! canHaveAsObjectAt(object, index))
-			throw new IllegalArgumentException("Invalid object");
+//		if (! canHaveAsObjectAt(object, index))
+//			throw new IllegalArgumentException("Invalid object");
+		assert (object != null);
+		int xPos = object.getIntPositionAt(1);
+		int yPos = object.getIntPositionAt(2);
+		assert((xPos >= 0) && (yPos >= 0) && (xPos <= getWorldSize()[0]-1) && (yPos <= getWorldSize()[1]-1));
+		assert ((index >= 1) && (index <= getNbObjects() +1));
+		assert (! hasAsObject(object));
+		assert (getNbObjects() <= 99);
+		if ((index == 1) && (! (object instanceof Mazub)))
+			throw new IllegalArgumentException();
 		int indexOfNewObject = getInternalIndexOfObjectAt(index-1)+1;
 		if (indexOfNewObject < objects.size()) {
 			Characters oldObject = objects.get(indexOfNewObject);
@@ -737,16 +753,29 @@ public class World {
 	/**
 	 * 
 	 * @param object
+	 * @pre		|object != null
+	 * @pre		|((object.getIntPositionAt(1) >= 0) 
+	 * 			|&& (object.getIntPositionAt(1) <= getWorldSize()[0]-1)
+	 * @pre		|(object.getIntPositionAt(2) >= 0) 
+	 * 			|&& (object.getIntPositionAt(2) <= getWorldSize()[1]-1)
+	 * @pre		|(! hasAsObject(object))
+	 * @pre		|(getNbObjects() +1 <= 100)
 	 * @post	|new.getObjectAt(getNbObjects()+1) == object
 	 * @post	|new.getNbObjects() == getNbObjects()+1
 	 * @post	|(new object).getWorld() == this;
 	 * @post	|(new.hasAsLeftObject(object) || new.hasAsRightObject(object))
 	 * @throws IllegalArgumentException
-	 * 			| (! canHaveAsObjectAt(object, getNbObjects() +1))
+	 * 			| ((getNbObjects() == 0) && (! (object instanceof Mazub)))
 	 */
 	public void addAsObject(Characters object) throws IllegalArgumentException{
-		if (! canHaveAsObjectAt(object, getNbObjects() +1))
-			throw new IllegalArgumentException();
+		assert (object != null);
+		int xPos = object.getIntPositionAt(1);
+		int yPos = object.getIntPositionAt(2);
+		assert((xPos >= 0) && (yPos >= 0) && (xPos <= getWorldSize()[0]-1) && (yPos <= getWorldSize()[1]-1));
+		assert (! hasAsObject(object));
+		assert (getNbObjects() <= 99);
+//		if ((getNbObjects() == 0) && (! (object instanceof Mazub)))
+//			throw new IllegalArgumentException();
 		if ((! objects.isEmpty()) && (objects.get(objects.size()-1) == null))
 			objects.set(objects.size()-1, object);
 		else
@@ -844,7 +873,7 @@ public class World {
 	 */
 	public boolean hasProperLeftObjects(){
 		for (Characters object: getAllLeftObjects()){
-			if ((! canHaveAsObject(object)) || (object.getWorld() != this))
+			if (! canHaveAsObject(object))
 				return false;
 		}
 		return true;
@@ -860,7 +889,7 @@ public class World {
 	 * 			|object.getWorld != this
 	 */
 	protected void addAsLeftObject(Characters object) throws IllegalArgumentException{
-		if((! canHaveAsObject(object)) || (object.getWorld() != this))
+		if(! canHaveAsObject(object))
 			throw new IllegalArgumentException();
 		leftObjects.add(object);
 	}
@@ -904,7 +933,7 @@ public class World {
 	 */
 	public boolean hasProperRightObjects(){
 		for (Characters object: getAllRightObjects()){
-			if ((! canHaveAsObject(object)) || (object.getWorld() != this))
+			if (! canHaveAsObject(object))
 				return false;
 		}
 		return true;
@@ -920,7 +949,7 @@ public class World {
 	 * 			|object.getWorld != this
 	 */
 	protected void addAsRightObject(Characters object) throws IllegalArgumentException{
-		if((! canHaveAsObject(object)) || (object.getWorld() != this))
+		if(! canHaveAsObject(object))
 			throw new IllegalArgumentException();
 		rightObjects.add(object);
 	}

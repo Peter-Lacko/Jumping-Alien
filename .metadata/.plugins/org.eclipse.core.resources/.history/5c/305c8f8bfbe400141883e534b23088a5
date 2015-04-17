@@ -1,0 +1,1146 @@
+/**
+ * 
+ */
+package jumpingalien.model;
+
+import java.util.*;
+
+import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Model;
+import be.kuleuven.cs.som.annotate.Raw;
+
+/**
+ * A class that controls the game world.
+ * @invar	|canHaveAsTargetTile(getTargetTile())
+ * @invar	|isValidTileLength(getTileLength())
+ * @invar	|canHaveAsMaxXTiles(getMaxXTiles())
+ * @invar	|canHaveAsMaxYTiles(getMaxYTiles())
+ * @invar	|hasProperGeoFeatures() 
+ * @invar	|hasProperObjects()
+ * @invar	|hasProperLeftObjects()
+ * @invar	|hasProperRightObjects()
+ * @invar	|allCharactersLeftOrRight()
+ * @invar	|canHaveAsWindowWidth(getWindowWidth())
+ * @invar	|canHaveAsWindowHeight(getWindowHeight())
+ * 
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+public class World {
+
+	/**
+	 * Initialize the world with given parameters.
+	 * @param tileLength
+	 * @param nbTilesX
+	 * @param nbTilesY
+	 * @param windowWidth
+	 * @param windowHeight
+	 * @param targetTileX
+	 * @param targetTileY
+	 * @post	| new.getTargetTile() == {TargetTileX, TargetTileY}
+	 * @post	| new.getTileLength() == tileLength
+	 * @post	| new.getMaxXTiles() == nbTilesX
+	 * @post	| new.getMaxYTiles() == nbTilesY
+	 * @post	| new.getWindowWidth() == windowWidth
+	 * @post	| new.getWindowHeight() == windowHeight
+	 * @throws IllegalArgumentException
+	 * 			| (! isValidTileLength(tileLength))
+	 * @throws IllegalArgumentException
+	 * 			|(! isPossibleMaxTiles(nbTilesX)) !! (! matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|	nbTilesX, nbTilesY, {targetTileX, targetTileY})) || (! matchesMaxXTilesWindowWidth(
+	 * 			|	nbTilesX, WindowWidth))
+	 * @throws IllegalArgumentException
+	 * 			|(! isPossibleMaxTiles(nbTilesX)) || (! matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|	nbTilesX, nbTilesY, {targetTileX, targetTileY})) || (! matchesMaxYTilesWindowHeight(
+	 * 			|	nbTilesY, WindowHeight))
+	 * @throws IllegalArgumentException
+	 * 			|(! isPossibleTargetTile({targetTileX, targetTileY})) || 
+	 * 			|	(! matchesMaxXTilesMaxYTilesTargetTile(nbTilesX, nbTilesY, {targetTileX, targetTileY}))
+	 * @throws IllegalArgumentException
+	 * 			|(! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
+	 * @throws IllegalArgumentException
+	 * 			|(! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight))
+	 */
+	@Raw
+	public World(int tileLength, int nbTilesX, int nbTilesY,
+			int windowWidth, int windowHeight, int targetTileX,
+			int targetTileY) throws IllegalArgumentException{
+//		int [] targetArray = {targetTileX, targetTileY};
+		Position targetPos = new Position(targetTileX, targetTileY, Scale.TILE);
+		if ((! isValidTileLength(tileLength)) || (! isPossibleMaxTiles(nbTilesX)) 
+				|| (! isPossibleMaxTiles(nbTilesY)))
+			throw new IllegalArgumentException();
+		Scale.setConversion((double)tileLength);
+//		TILE_LENGTH = tileLength;
+		MAX_X_TILES = nbTilesX-1;
+		MAX_Y_TILES = nbTilesY-1;
+//		if ((! canHaveAsTargetTile(targetArray)) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
+		if ((! canHaveAsTargetTile(targetPos.getIntPosition())) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))		
+				|| (! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight)))
+			throw new IllegalArgumentException();
+//		TARGET_TILE = targetArray;
+		TARGET_TILE = targetPos;
+		WINDOW_WIDTH = windowWidth;
+		WINDOW_HEIGHT = windowHeight;
+	}
+	
+//	@Basic
+//	public int[] getTargetTile(){
+//		return TARGET_TILE;
+//	}
+	
+	@Basic
+	private Position getTargetPosition(){
+		return TARGET_TILE;
+	}
+	
+	/**
+	 * 
+	 * @return	|result == TARGET_TILE.getIntPosition()
+	 */
+	private int[] getTargetTile(){
+		return getTargetPosition().getIntPosition();
+	}
+	
+	/**
+	 * 
+	 * @param target
+	 * @return	|result == ((target.length == 2) && (target[0] >= 0) && (target[1] >= 0))
+	 */
+	@Raw
+	public boolean isPossibleTargetTile(int[] target){
+		return ((target.length == 2) && (target[0] >= 0) && (target[1] >= 0));
+	}
+	
+	/**
+	 * 
+	 * @param target
+	 * @return	|result == ( isPossibleTargetTile(target) && matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|			getMaxXTiles(), getMaxYTiles(), target))
+	 */
+	@Raw
+	public boolean canHaveAsTargetTile(int[] target){
+		return ( isPossibleTargetTile(target) && matchesMaxXTilesMaxYTilesTargetTile(
+				getMaxXTiles(), getMaxYTiles(), target));
+	}
+	
+	/**
+	 * 
+	 * @param maxXTiles
+	 * @param maxYTiles
+	 * @param targetTile
+	 * @return	|result == ((targetTile[0] <= maxXTiles) && (targetTile[1] <= maxYTiles))
+	 */
+	@Raw
+	public boolean matchesMaxXTilesMaxYTilesTargetTile(int maxXTiles, int maxYTiles, int[] targetTile){
+		return ((targetTile[0] <= maxXTiles) && (targetTile[1] <= maxYTiles));
+	}
+	
+//	/**
+//	 * 
+//	 * @param target
+//	 * @return	|if (target.length != 2):
+//	 * 			|	then result == false
+//	 * 			|else if ((target[0] < 0) || (target[0] > nbXTiles))
+//	 * 			|	then result == false
+//	 * 			|else if ((target[1] < 0) || (target[1] > nbYTiles))
+//	 * 			|	then result == false
+//	 * 			|else
+//	 * 			|	result == true
+//	 */
+//	@Raw
+//	public boolean isValidTargetTile(int[] target, int nbXTiles, int nbYTiles){
+//		if (target.length != 2)
+//			return false;
+//		else if ((target[0] < 0) || (target[0] > nbXTiles))
+//			return false;
+//		else if ((target[1] < 0) || (target[1] > nbYTiles))
+//			return false;
+//		else
+//			return true;
+//	}
+	
+	private final Position TARGET_TILE;
+	
+	/**
+	 * check if the given character's saved position overlaps with the target tile.
+	 * @param mazub
+	 * @return	|if mazub.getIntPosition().toScale(Scale.TILE).equals(getTargetPosition())
+	 * 			|	then result == true
+	 * 			|else
+	 * 			|	result == false
+	 */
+	protected boolean checkIfWin(Characters mazub){
+//		Position mazubPosition = mazub.getPositionValue().toScale(Scale.TILE);
+		Position mazubPosition = new Position(mazub.getIntPositionAt(1), mazub.getIntPositionAt(2)+1);
+		mazubPosition = mazubPosition.toScale(Scale.TILE);
+//		if ((mazubPosition[0] == getTargetTile()[0]) && (mazubPosition[1] == getTargetTile()[1])){
+		if (mazubPosition.equals(getTargetPosition())){
+			this.setPlayerWon(true);
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	@Basic
+	public boolean hasPlayerWon(){
+		return hasPlayerWon;
+	}
+	
+	/**
+	 * 
+	 * @param flag
+	 * @post new.hasPlayerWon() == flag
+	 */
+	protected void setPlayerWon(boolean flag){
+		hasPlayerWon = flag;
+	}
+	
+	private boolean hasPlayerWon = false;
+	
+	@Basic @Raw
+	public int getTileLength(){
+		return Scale.getRatio();
+//		return TILE_LENGTH;
+	}
+	
+	/**
+	 * @return	| result == (length >= 1)
+	 */
+	@Raw
+	public boolean isValidTileLength(int length){
+		return (length >= 1);
+	}
+	
+//	private final int TILE_LENGTH;
+	
+	@Basic
+	private int getMaxXTiles(){
+		return MAX_X_TILES;
+	}
+	
+	/**
+	 * 
+	 * @param amount
+	 * @return	|result == (amount > 0)
+	 */
+	@Raw
+	public boolean isPossibleMaxTiles(int amount){
+		return (amount > 0);
+	}
+	
+	/**
+	 * 
+	 * @param amount
+	 * @return	|result == (isPossibleMaxTiles(amount) && matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|			amount, getMaxYTiles(), getTargetTile()) && matchesMaxXTilesWindowWidth(
+	 * 			|			amount, getWindowWidth()))
+	 */
+	public boolean canHaveAsMaxXTiles(int amount){
+		return (isPossibleMaxTiles(amount) && matchesMaxXTilesMaxYTilesTargetTile(
+				amount, getMaxYTiles(), getTargetTile()) && matchesMaxXTilesWindowWidth(
+						amount, getWindowWidth()));
+	}
+	
+//	/**
+//	 * @return	| result == (amount >= 1)
+//	 */
+//	//misschien maken zodat minstens 1 mazub net past
+//	@Raw
+//	private boolean isValidMaxTiles(int amount){
+//		return (amount >= 1);
+//	}
+	
+	//this is actually the maximum number minus 1
+	private final int MAX_X_TILES;
+	
+	@Basic
+	private int getMaxYTiles(){
+		return MAX_Y_TILES;
+	}
+	
+	/**
+	 * 
+	 * @param amount
+	 * @return	|result == (isPossibleMaxTiles(amount) && matchesMaxXTilesMaxYTilesTargetTile(
+	 * 			|			getMaxXTiles(), amount, getTargetTile()) && matchesMaxYTilesWindowHeight(
+	 * 			|			amount, getWindowHeight()))
+	 */
+	public boolean canHaveAsMaxYTiles(int amount){
+		return (isPossibleMaxTiles(amount) && matchesMaxXTilesMaxYTilesTargetTile(
+				getMaxXTiles(), amount, getTargetTile()) && matchesMaxYTilesWindowHeight(
+						amount, getWindowHeight()));
+	}
+	
+	//this is actually the maximum number minus 1
+	private final int MAX_Y_TILES;
+	
+	
+	/**
+	 * @return	| result == {(getMaxXTiles()+1)*getTileLength(), (getMaxYTiles()+1)*getTileLength()}
+	 */
+	public int[] getWorldSize(){
+		int[] WorldSize = {(getMaxXTiles()+1)*getTileLength(), (getMaxYTiles()+1)*getTileLength()};
+		return WorldSize;
+	}
+	
+	/**
+	 * @param tileX
+	 * @param tileY
+	 * @return	| result == new Position (tileX, tileY, Scale.TILE).toScale(Scale.PIXEL).getIntPosition()
+	 */
+	public int[] getBottomLeftPixelOfTile(int tileX, int tileY){
+		Position pos = new Position (tileX, tileY, Scale.TILE).toScale(Scale.PIXEL);
+		return pos.getIntPosition();
+	}
+	
+	/**
+	 * Return the coordinates of the tile that contain the given pixel coordinates.
+	 * @param xPixel
+	 * 			the x-coordinate
+	 * @param yPixel
+	 * 			the y-coordinate
+	 * @return	| result == new Position (xPixel, yPixel).toScale(Scale.TILE).getIntPosition()
+	 */
+	@Model
+	private int[] getTilePosition(int xPixel, int yPixel){
+//		int[] position = {(xPixel-xPixel%getTileLength())/getTileLength(),
+//				(yPixel-yPixel%getTileLength())/getTileLength()};
+//		return position;
+		Position pos = new Position (xPixel, yPixel).toScale(Scale.TILE);
+		return pos.getIntPosition();
+	}
+	
+	/**
+	 * return the bottom left pixel of the tile containing the given pixel.
+	 * @param xPixel
+	 * @param yPixel
+	 * @effect	|getBottomLeftPixelOfTile(getTilePosition(xPixel, yPixel)[0], 
+	 * 			|	getTilePosition(xPixel, yPixel)[1])
+	 */
+	protected int[] getPixelOfTileContaining(int xPixel, int yPixel){
+		int[] tile = getTilePosition(xPixel, yPixel);
+		return getBottomLeftPixelOfTile(tile[0], tile[1]);
+	}
+	
+	/**
+	 * 
+	 * @param pixelLeft
+	 * @param pixelBottom
+	 * @param pixelRight
+	 * @param pixelTop
+	 * @return	| for (y in getTilePosition(pixelLeft,pixelBottom)[1]
+	 * 			|			..getTilePosition(pixelLeft,pixelTop)[1])
+	 * 			|	for (x in getTilePosition(pixelLeft,pixelBottom)[0]
+	 * 			|			..getTilePosition(pixelRight,pixelBottom)[0])
+	 * 			|		positions.add(new Position(xIndex, yIndex, Scale.TILE).getIntPosition())
+	 * 			| result == positions
+	 */
+	public int[][] getTilePositionsIn(int pixelLeft, int pixelBottom, int pixelRight, int pixelTop){
+		int yStart = getTilePosition(pixelLeft,pixelBottom)[1];	
+		int yEnd = getTilePosition(pixelLeft,pixelTop)[1];
+		int xStart = getTilePosition(pixelLeft,pixelBottom)[0];
+		int xEnd = getTilePosition(pixelRight,pixelBottom)[0];
+		List<int[]> positions = new ArrayList<int[]>();
+		for (int yIndex = yStart ; yIndex <= yEnd ; yIndex++){
+			for (int xIndex = xStart ; xIndex <= xEnd ; xIndex++){
+//				int[] coordinates = {xIndex,yIndex};
+				int[] coordinates = new Position(xIndex, yIndex, Scale.TILE).getIntPosition();
+				positions.add(coordinates);
+			}
+		}
+		int[][] positionArray = new int[positions.size()][];
+		positions.toArray( positionArray );
+		return positionArray;
+	}
+	
+	/**
+	 * 
+	 * @param xPixel
+	 * @param yPixel
+	 * @throws IllegalArgumentException
+	 * 			| ! isValidGeoPosition(new Position(xPixel, yPixel))
+	 */
+	@Basic
+	public GeoFeature getGeoFeatureAt(int xPixel, int yPixel) throws IllegalArgumentException{
+//		int[] position = {xPixel, yPixel};
+		Position pos = new Position(xPixel, yPixel);
+		if (! isValidGeoPosition(pos)){
+			throw new IllegalArgumentException();
+		}
+		GeoFeature geoFeature = geoFeatures.get(pos);
+		if (geoFeature == null)
+			geoFeature = GeoFeature.AIR;
+		return geoFeature;
+	}
+	
+	/**
+	 * @param xTile
+	 * @param yTile
+	 * @post	|new.getGeoFeatureAt(xTile, yTile) == feature
+	 * @throws IllegalArgumentException
+	 * 			| ! isValidGeoPosition(new Position(xTile, yTile))
+	 * @throws IllegalArgumentException
+	 * 			| ! isValidGeoFeature(feature)
+	 */
+	@Model
+	private void setGeoFeatureAt(int xTile, int yTile, GeoFeature feature) throws IllegalArgumentException{
+//		int[] position = {xPixel, yPixel};
+		Position pos = new Position(xTile, yTile, Scale.TILE);
+//		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
+		if ((! isValidGeoFeature(feature)) || (xTile < 0) || (xTile > getMaxXTiles())
+				|| (yTile < 0) || (yTile > getMaxYTiles()))
+			throw new IllegalArgumentException();
+		if (feature == GeoFeature.AIR){
+			if (hasAsKeyGeoFeaturePosition(pos))
+				geoFeatures.remove(pos);
+		}
+		else
+			geoFeatures.put(pos, feature);
+	}
+	
+	/**
+	 * 
+	 * @param xPixel
+	 * @param yPixel
+	 * @param feature
+	 * @effect	|let
+	 * 			|	if (feature == 0) then type = GeoFeature.AIR
+	 * 			|	if (feature == 1) then type = GeoFeature.GROUND
+	 * 			|	if (feature == 2) then type = GeoFeature.WATER
+	 * 			|	if (feature == 3) then type = GeoFeature.MAGMA
+	 * 			|setGeoFeatureAt(xPixel, yPixel, type)
+	 */
+	public void setGeoFeatureAtWithInt(int xTile, int yTile, int feature) throws IllegalArgumentException{
+		for (GeoFeature type : GeoFeature.values()){
+			if (type.getValue() == feature)
+				setGeoFeatureAt(xTile, yTile, type);
+		}
+	}
+	
+	/**
+	 * @param feature
+	 * @return	| result == (feature == GeoFeature.AIR || feature == GeoFeature.GROUND 
+	 * 			|	|| feature == GeoFeature.WATER || feature == GeoFeature.MAGMA)
+	 */
+	public boolean isValidGeoFeature(GeoFeature feature){
+		return (feature == GeoFeature.AIR || feature == GeoFeature.GROUND 
+				|| feature == GeoFeature.WATER || feature == GeoFeature.MAGMA);
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @return	|let
+	 * 			|	pos = position.getIntPosition()
+	 * 			|result == ((position.getScale() == Scale.PIXEL) && (pos.length == 2) && (pos[0]%getTileLength() == 0) 
+	 *			|	&& (pos[1]%getTileLength()==0) && (pos[0] < getWorldSize()[0])
+	 *			|	&& (pos[1] < getWorldSize()[1]))
+	 */
+	public boolean isValidGeoPosition(Position position){
+		int[] pos = position.toScale(Scale.PIXEL).getIntPosition();
+		return ((pos.length == 2) && (pos[0]%getTileLength() == 0) 
+				&& (pos[1]%getTileLength()==0) && (pos[0] < getWorldSize()[0])
+				&& (pos[1] < getWorldSize()[1]));
+	}
+	
+	/**
+	 * 
+	 * @return	|result ==
+	 * 			|	for x in 0..getMaxXTiles():
+	 * 			|			for y in 0..getMaxYTiles():
+	 * 			|				isValidGeoFeature(getGeoFeatureAt(x,y));
+	 */
+	public boolean hasProperGeoFeatures(){
+		for (int xIndex=0 ; xIndex <= getMaxXTiles() ; xIndex++){
+			for (int yIndex=0 ; yIndex <= getMaxYTiles() ; yIndex++){
+				if (! isValidGeoFeature(getGeoFeatureAt(xIndex, yIndex)))
+					return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param position
+	 * @return	|result == for one I in geoFeatures:
+	 * 			|		key == position;
+	 */
+	private boolean hasAsKeyGeoFeaturePosition(Position position){
+		return geoFeatures.containsKey(position);
+	}
+	
+	/**
+	 * @invar	|geoFeatures != null
+	 * @invar	|for each key in geoFeatures.keySet():
+	 * 			|	isValidGeoPosition(key);
+	 * @invar	The default state is air, thus AIR shall not be saved in the effective Map
+	 * 			(if a position (key) is asked that has no value, that means the tile is an AIR tile)
+	 * 			|for each value in geoFeatures:
+	 * 			|	value == GeoFeature.GROUND || value == GeoFeature.WATER || value == GeoFeature.MAGMA
+	 */
+//	private final Map<int[], GeoFeature> geoFeatures = new HashMap<int[], GeoFeature>();
+	private final Map<Position, GeoFeature> geoFeatures = new HashMap<>();
+	
+	/**
+	 * 
+	 * @param duration
+	 * @effect	|for each object in getAllObjects():
+	 * 			|	object.advanceTime(duration);
+	 * @throws	IllegalArgumentException
+	 * 			| (duration >= 0.2) || (duration < 0.0)
+	 */
+	public void advanceTime(double duration) throws IllegalArgumentException{
+		if ((duration >= 0.2) || (duration < 0.0))
+			throw new IllegalArgumentException();
+		for (Characters object: getAllObjects()){
+			object.advanceTime(duration);
+//			if (hasAsObject(object)){
+//				if (object.getIntPositionAt(1) <= getWorldSize()[0]/2)
+//					addAsLeftObject(object);
+//				else
+//					removeAsLeftObject(object);
+//				if ((object.getIntPositionAt(1) + object.getSize()[0] - 1) >= getWorldSize()[0]/2)
+//					addAsRightObject(object);
+//				else
+//					removeAsRightObject(object);
+//			}
+		}
+	}
+	
+	/**
+	 * @post new.isGameStarted() == true;
+	 */
+	public void startGame(){
+		isGameStarted = true;
+	}
+	
+	@Basic
+	public boolean isGameStarted(){
+		return isGameStarted;
+	}
+	
+	private boolean isGameStarted = false;
+	
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+	
+	public boolean gameOver = false;
+	
+
+	/**
+	 * @return	|if ((object.getIntPositionAt(1) < 0) || (object.getIntPositionAt(2) < 0) 
+	 * 			|	|| (object.getIntPositionAt(1) > getWorldSize()[0]-1) 
+	 * 			|	|| (object.getIntPositionAt(2) > getWorldSize()[1]-1))
+	 *			|		then result == false;
+	 * @return	|if object.isTerminated()
+	 * 			|	then result == ((object.terminationTime() <= 0.6) && (object != null))
+	 * 			|else
+	 * 			|	result == (object != null)
+	 */
+	public boolean canHaveAsObject(Characters object){
+		if (object == null)
+			return false;
+		int xPos = object.getIntPositionAt(1);
+		int yPos = object.getIntPositionAt(2);
+		if ((xPos < 0) || (yPos < 0) || (xPos > getWorldSize()[0]-1) || (yPos > getWorldSize()[1]-1))
+			return false;
+		return ((object.canHaveAsWorld(this)) && (object.getWorld() == this));
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @param index
+	 * @return	| if (! canHaveAsObject())
+	 * 			|	then result == false;
+	 * 			|else if ((index < 1) || index > getNbObjects() +1)
+	 * 			|	then result == false;
+	 * 			|else if ((index == 1) && (! (object instanceof Mazub)))
+	 * 			|	then result == false
+	 * 			|else result ==
+	 * 			|		for each i in 1..getNbObjects():
+	 * 			|			((i == index) || (getObjectAt(i) != object))
+	 */
+	public boolean canHaveAsObjectAt(Characters object, int index){
+		if (! canHaveAsObject(object))
+			return false;
+		else if ((index < 1) || (index > getNbObjects() +1))
+			return false;
+		for (int newIndex=1; newIndex <= getNbObjects(); newIndex++){
+			if ((newIndex != index) && (getObjectAt(newIndex) == object))
+				return false;
+		}
+		if ((index == 1) && (! (object instanceof Mazub)))
+			return false;
+		return true;
+	}
+	
+	@Basic
+	public int getNbObjects(){
+		int nbObjectsSoFar = 0;
+		for (int index=0; index < objects.size(); index++){
+			Characters currentObject = objects.get(index);
+			if ((currentObject != null) && (objects.indexOf(currentObject) == index))
+					nbObjectsSoFar++;
+		}
+		return nbObjectsSoFar;
+	}
+	
+	/**
+	 * 
+	 * @param number
+	 * @return	|result == (number <= 100)
+	 */
+	private boolean canHaveAsNbObjects(int number){
+		return ((number >=0) && (number <= 100) );
+	}
+	
+	@Basic
+	public Characters getObjectAt(int index) throws IndexOutOfBoundsException{
+		return objects.get(getInternalIndexOfObjectAt(index));
+	}
+	
+	/**
+	 * 
+	 * @param index
+	 * @return	|if (index <= 0)
+	 * 			|	then result == -1
+	 * @return	|if (index > 0)
+	 * 			|	then objects.get(result) != null
+	 * @return	|if (index > 0)
+	 * 			|	then for each i in 0..result-1:
+	 * 			|		(objects.get(i) != objects.get(result))
+	 * @return	|if (index > 0)
+	 * 			|	then index == card ({{ object in Characters | 
+	 * 			|							for some i in 0..result:
+	 * 			|								(object == objects.get(i)) }})
+	 * @throws IndexOutOfBoundsException
+	 * 			| index >= getNbObjects()
+	 */
+	private int getInternalIndexOfObjectAt(int index) throws IndexOutOfBoundsException{
+		int nbObjectsSoFar = 0;
+		int pos = 0;
+		while (nbObjectsSoFar < index) {
+			Characters currentObject = objects.get(pos);
+			if ((currentObject != null) && (objects.indexOf(currentObject) == pos))
+				nbObjectsSoFar++;
+			pos++;
+		}
+		return pos - 1;
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @return	|result ==
+	 * 			|	for some i in 1..getNbObjects():
+	 * 			|		(getObjectAt(i) == object);
+	 */
+	public boolean hasAsObject(Characters object){
+		return objects.contains(object);
+	}
+	
+	/**
+	 * 
+	 * @return	|result ==
+	 * 			|	for each i in 1..getNbObjects():
+	 * 			|		((canHaveAsObjectAt(getObjectAt(i),i))
+	 * 			|		&& (getObjectAt(i).getWorld() == this))
+	 * 			|	&& canHaveAsNbObjects(getNbObjects())
+	 */
+	public boolean hasProperObjects(){
+		if (! canHaveAsNbObjects(getNbObjects()))
+			return false;
+		for (int index = 1; index <= getNbObjects(); index++){
+			if ((! canHaveAsObjectAt(getObjectAt(index),index)) || (getObjectAt(index).getWorld() != this))
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @param index
+	 * @pre		|object != null
+	 * @pre		|((object.getIntPositionAt(1) >= 0) 
+	 * 			|&& (object.getIntPositionAt(1) <= getWorldSize()[0]-1)
+	 * @pre		|(object.getIntPositionAt(2) >= 0) 
+	 * 			|&& (object.getIntPositionAt(2) <= getWorldSize()[1]-1)
+	 * @pre		|((index >= 1) && (index <= getNbObjects() +1))
+	 * @pre		|(! hasAsObject(object))
+	 * @pre		|(getNbObjects() +1 <= 100)
+	 * @post	|new.getObjectAt(index) == object
+	 * @post	|new.getNbObjects() == getNbObjects() +1
+	 * @post	|for each i in index..getNbObjects():
+	 * 			|	(new.getObjectAt(i+1) == getObjectAt(i));
+	 * @post	|(new object).getWorld() == this;
+	 * @post	|(new.hasAsLeftObject(object) || new.hasAsRightObject(object))
+	 * @throws IllegalArgumentException
+	 * 			| ((index == 1) && (! (object instanceof Mazub)))
+	 */
+	public void addObjectAt(Characters object, int index) throws IllegalArgumentException{
+//		if (! canHaveAsObjectAt(object, index))
+//			throw new IllegalArgumentException("Invalid object");
+		assert (object != null);
+		int xPos = object.getIntPositionAt(1);
+		int yPos = object.getIntPositionAt(2);
+		assert((xPos >= 0) && (yPos >= 0) && (xPos <= getWorldSize()[0]-1) && (yPos <= getWorldSize()[1]-1));
+		assert ((index >= 1) && (index <= getNbObjects() +1));
+		assert (! hasAsObject(object));
+		assert (getNbObjects() <= 99);
+		if ((index == 1) && (! (object instanceof Mazub)))
+			throw new IllegalArgumentException();
+		int indexOfNewObject = getInternalIndexOfObjectAt(index-1)+1;
+		if (indexOfNewObject < objects.size()) {
+			Characters oldObject = objects.get(indexOfNewObject);
+			if ((oldObject == null) || (objects.indexOf(oldObject) < indexOfNewObject))
+				objects.set(indexOfNewObject, object);
+			else
+				objects.add(indexOfNewObject, object);
+		}
+		else
+			objects.add(object);
+		object.setWorld(this);
+	}
+	
+	/**
+	 * 
+	 * @param index
+	 * @post	|new.hasAsObject(object) == false
+	 * @post	|new.getNbObjects() == getNbObjects() -1
+	 * @post	|for each i in index..getNbObjects():
+	 * 			|	(new.getObjectAt(i-1) == getObjectAt(i));
+	 * @post	|if (hasAsObject(object)):
+	 * 			|	then ((new object).getWorld() == null)
+	 * @post	|((! hasAsLeftObject(object)) && (! hasAsRightObject(object))
+	 * @throws IndexOutOfBoundsException
+	 * 			|(index < 1) || (index >= getNbObjects() +1)
+	 */
+	@Model
+	private void removeObjectAt(int index) throws IndexOutOfBoundsException{
+		int indexOfObject = getInternalIndexOfObjectAt(index);
+		Characters objectToRemove = objects.get(indexOfObject);
+		objectToRemove.setWorld(null);
+		if (objectToRemove instanceof Mazub){
+			setGameOver(true);
+			for (int pos = indexOfObject; pos < objects.size(); pos++){
+				if (objects.get(pos) == objectToRemove)
+					objects.set(pos , null);
+			}
+		}
+		else{
+			for (int pos = indexOfObject; pos < objects.size(); pos++){
+				if (objects.get(pos) == objectToRemove)
+					objects.remove(pos);
+			}
+		}
+		leftObjects.remove(objectToRemove);
+		rightObjects.remove(objectToRemove);
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @pre		|object != null
+	 * @pre		|((object.getIntPositionAt(1) >= 0) 
+	 * 			|&& (object.getIntPositionAt(1) <= getWorldSize()[0]-1)
+	 * @pre		|(object.getIntPositionAt(2) >= 0) 
+	 * 			|&& (object.getIntPositionAt(2) <= getWorldSize()[1]-1)
+	 * @pre		|(! hasAsObject(object))
+	 * @pre		|(getNbObjects() +1 <= 100)
+	 * @post	|new.getObjectAt(getNbObjects()+1) == object
+	 * @post	|new.getNbObjects() == getNbObjects()+1
+	 * @post	|(new object).getWorld() == this;
+	 * @post	|(new.hasAsLeftObject(object) || new.hasAsRightObject(object))
+	 * @throws IllegalArgumentException
+	 * 			| ((getNbObjects() == 0) && (! (object instanceof Mazub)))
+	 */
+	public void addAsObject(Characters object) throws IllegalArgumentException{
+		assert (object != null);
+		int xPos = object.getIntPositionAt(1);
+		int yPos = object.getIntPositionAt(2);
+		assert((xPos >= 0) && (yPos >= 0) && (xPos <= getWorldSize()[0]-1) && (yPos <= getWorldSize()[1]-1));
+		assert (! hasAsObject(object));
+		assert (getNbObjects() <= 99);
+		if ((getNbObjects() == 0) && (! (object instanceof Mazub)))
+			throw new IllegalArgumentException();
+		if ((! objects.isEmpty()) && (objects.get(objects.size()-1) == null))
+			objects.set(objects.size()-1, object);
+		else
+			objects.add(object);
+		object.setWorld(this);
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @effect	|if hasAsObject(object):
+	 * 			|	then removeObjectAt(getIndexOfObject(object))
+	 */
+	protected void removeAsObject(Characters object){
+//		int firstIndexOfObject = objects.indexOf(object);
+//		while (firstIndexOfObject != -1){
+//			objects.set(firstIndexOfObject, null);
+//			firstIndexOfObject = objects.indexOf(object);
+//		}
+		if (hasAsObject(object))
+			removeObjectAt(getIndexOfObject(object));
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @return	|getObjectAt(result) == object
+	 * @throws IllegalArgumentException
+	 * 			|(! hasAsObject(object))
+	 */
+	@Model
+	private int getIndexOfObject(Characters object) throws IllegalArgumentException{
+		if (! hasAsObject(object))
+			throw new IllegalArgumentException();
+		int nbObjectsSoFar = 0;
+		int index = 0;
+		Characters currentObject = null;
+		while (currentObject != object) {
+			currentObject = objects.get(index);
+			if ((currentObject != null) && (objects.indexOf(currentObject) == index))
+				nbObjectsSoFar++;
+			index++;
+		}
+		return nbObjectsSoFar;
+	}
+	
+	/**
+	 * 
+	 * @effect	|getObjectAt(1)
+	 */
+	public Mazub getMazub() throws IndexOutOfBoundsException{
+		return (Mazub)getObjectAt(1);
+	}
+	
+	/**
+	 * 
+	 * @return 	|for each i in 0..getNbObjects()-1:
+	 * 			|	(result.get(i) == getObjectAt(i+1))
+	 * @return	| result.length() == getNbObjects()
+	 */
+//	public List<Characters> getAllObjects(){
+//		LinkedList<Characters> result = new LinkedList<Characters>();
+//		for(int index = getNbObjects(); index <= 1; index--)
+//			result.addFirst(getObjectAt(index));
+//		return result;
+//	}
+	public List<Characters> getAllObjects(){
+		LinkedList<Characters> result = new LinkedList<Characters>();
+		for (Characters object: objects){
+			if (! result.contains(object) && !(object == null))
+				result.addFirst(object);
+		}
+		return result;
+	}
+	
+	/**
+	 * @invar	|objects != null
+	 * @invar	|for each object in objects:
+	 * 			|	((object == null) || (canHaveAsObject(object)))
+	 * @invar	|if objects.size() >= 1:
+	 * 			|	((objects.getFirst() == null) || (objects.getFirst() instanceOf Mazub)
+	 */
+	private List<Characters> objects = new LinkedList<Characters>();
+	
+	@Basic
+	public boolean hasAsLeftObject(Characters object){
+		return leftObjects.contains(object);
+	}
+	
+	/**
+	 * @return	|result ==
+	 * 			|	for each object in getAllLeftObjects:
+	 * 			|		canHaveAsObject(object);
+	 * 			|	&& object.getWorld() == this
+	 */
+	public boolean hasProperLeftObjects(){
+		for (Characters object: getAllLeftObjects()){
+			if (! canHaveAsObject(object))
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @post	|new.hasAsLeftObject(object)
+	 * @throws IllegalArgumentException
+	 * 			|(! canHaveAsObject(object))
+	 * @throws IllegalArgumentException
+	 * 			|object.getWorld != this
+	 */
+	protected void addAsLeftObject(Characters object) throws IllegalArgumentException{
+		if((! canHaveAsObject(object)) || (object.getWorld() != this))
+			throw new IllegalArgumentException();
+		leftObjects.add(object);
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @post	|((! hasAsLeftObject(this)) && hasAsRightObject(this))
+	 */
+	protected void removeAsLeftObject(Characters object){
+		leftObjects.remove(object);
+		addAsRightObject(object);
+	}
+	
+	/**
+	 * @return	|result != null
+	 * @return	|for each object in leftObjects:
+	 * 			|	result.contains(object) == hasAsLeftObject(object)
+	 */
+	protected Set<Characters> getAllLeftObjects(){
+		return new HashSet<Characters>(this.leftObjects);
+	}
+	
+	/**
+	 * @invar	|leftObjects != null
+	 * @invar	|for each object in objects:
+	 * 			|	(canHaveAsObject(object) && object.getWorld() == this)
+	 */
+	private Set<Characters> leftObjects = new HashSet<Characters>();
+	
+	@Basic
+	protected boolean hasAsRightObject(Characters object){
+		return rightObjects.contains(object);
+	}
+	
+	/**
+	 * @return	|result ==
+	 * 			|	for each object in getAllRightObjects:
+	 * 			|		canHaveAsObject(object);
+	 * 			|	&& object.getWorld() == this
+	 */
+	public boolean hasProperRightObjects(){
+		for (Characters object: getAllRightObjects()){
+			if ((! canHaveAsObject(object)) || (object.getWorld() != this))
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @post	|new.hasAsRightObject(object)
+	 * @throws IllegalArgumentException
+	 * 			|(! canHaveAsObject(object))
+	 * @throws IllegalArgumentException
+	 * 			|object.getWorld != this
+	 */
+	protected void addAsRightObject(Characters object) throws IllegalArgumentException{
+		if((! canHaveAsObject(object)) || (object.getWorld() != this))
+			throw new IllegalArgumentException();
+		rightObjects.add(object);
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @post	|((! hasAsRightObject(this)) && hasAsLeftObject(this))
+	 */
+	protected void removeAsRightObject(Characters object){
+		rightObjects.remove(object);
+		addAsLeftObject(object);
+	}
+	
+	/**
+	 * @return	|result != null
+	 * @return	|for each object in rightObjects:
+	 * 			|	result.contains(object) == hasAsLeftObject(object)
+	 */
+	protected Set<Characters> getAllRightObjects(){
+		return new HashSet<Characters>(this.rightObjects);
+	}
+	
+	/**
+	 * @invar	|rightObjects != null
+	 * @invar	|for each object in objects:
+	 * 			|	(canHaveAsObject(object) && object.getWorld() == this)
+	 */
+	private Set<Characters> rightObjects = new HashSet<Characters>();
+	
+	/**
+	 * 
+	 * @return	|result ==
+	 * 			|	for each object in getAllObjects:
+	 * 			|		(hasAsLeftObject(object) || hasAsRightObject(object))
+	 */
+	public boolean allCharactersLeftOrRight(){
+		for (Characters object : getAllObjects())
+			if ((! hasAsLeftObject(object)) && (! hasAsRightObject(object)))
+				return false;
+		return true;
+	}
+	
+	@Basic @Model
+	private int getWindowWidth(){
+		return WINDOW_WIDTH;
+	}
+	
+	/**
+	 * 
+	 * @param width
+	 * @return	|result == ((matchesMaxXTilesWindowWidth(getMaxXTiles(), width)) &&
+	 * 			|			((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])))
+	 */
+	public boolean canHaveAsWindowWidth(int width){
+		return ((matchesMaxXTilesWindowWidth(getMaxXTiles(), width)) &&
+				((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])));
+	}
+	
+	/**
+	 * 
+	 * @param MaxXTiles
+	 * @param WindowWidth
+	 * @return	|result == ((MaxXTiles+1)*getTileLength() >= WindowWidth)
+	 */
+	@Raw
+	public boolean matchesMaxXTilesWindowWidth(int MaxXTiles, int WindowWidth){
+		return ((MaxXTiles+1)*getTileLength() >= WindowWidth);
+	}
+	
+//	/**
+//	 * 
+//	 * @param width
+//	 * @return	|result == ((width > 0) && (width <= nbXTiles))
+//	 */
+//	@Raw
+//	public boolean isValidWindowWidth(int width, int nbXTiles){
+//		return ((width > 0) && (width <= nbXTiles));
+//	}
+	
+	private final int WINDOW_WIDTH;
+	
+	@Basic @Model
+	private int getWindowHeight(){
+		return WINDOW_HEIGHT;
+	}
+	
+	/**
+	 * 
+	 * @param height
+	 * @return	|result == ((matchesMaxYTilesWindowHeight(getMaxYTiles(), height)) &&
+	 * 			|			((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])))
+	 */
+	public boolean canHaveAsWindowHeight(int height){
+		return ((matchesMaxYTilesWindowHeight(getMaxYTiles(), height)) &&
+				((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])));
+	}
+	
+	/**
+	 * 
+	 * @param MaxYTiles
+	 * @param WindowHeight
+	 * @return	|result == ((MaxYTiles+1)*getTileLength() >= WindowHeight)
+	 */
+	@Raw
+	public boolean matchesMaxYTilesWindowHeight(int MaxYTiles, int WindowHeight){
+		return ((MaxYTiles+1)*getTileLength() >= WindowHeight);
+	}
+	
+//	/**
+//	 * 
+//	 * @param height
+//	 * @return	|result == ((height > 0) && (height <= nbYTiles))
+//	 */
+//	@Raw
+//	public boolean isValidWindowHeight(int height, int nbYTiles){
+//		return ((height > 0) && (height <= nbYTiles));
+//	}
+	
+	private final int WINDOW_HEIGHT;
+	
+	/**
+	 * 
+	 * @param mazub
+	 * @param mSize
+	 * @param wSize
+	 * @param mazubPos
+	 * @param dimension
+	 * @return	|if (dimension == wSize)
+	 * 			|	then (result[0] == 0) && (result[1] == wSize)
+	 * 			|else if (mazubPos <= (dimension-mSize)/2)
+	 * 			|	then (result[0] == 0) && (result[1] == dimension -1)
+	 * 			|else if (wSize -mSize -mazubPos
+	 * 			|			<= (dimension-mSize)/2)
+	 * 			|	then (result[1] == wSize) && (result[0] == wSize 
+	 * 			|			-dimension)
+	 * 			|else
+	 * 			|	(result[0] == mazubPos -(dimension -mSize)/2) &&
+	 * 			|		(result[1] == result[0] + dimension -1)
+	 * @return	|result.length == 2
+	 */
+	@Model
+	private int[] getVisibleWindow1D(Mazub mazub, int mSize, int wSize, int mazubPos, int dimension){
+		int firstPos = (mazubPos -(dimension -mSize)/2);
+		if (dimension == wSize)
+			return new int[] {0 , wSize};
+		else if (mazubPos <= (dimension -mSize)/2)
+			return new int[] {0, dimension -1};
+		else if ((wSize -mSize -mazubPos) <= (dimension-mSize)/2)
+			return new int[] {wSize -dimension, wSize};
+		else
+			return new int[] {firstPos, firstPos + dimension};
+	}
+	
+	/**
+	 * 
+	 * @effect	|result == {getVisibleWindow1D(getMazub(), getMazub.getSize()[0], getWorldSize()[0], 
+	 * 			|				getMazub().getIntPositionAt(1), getWindowWidth())[0], 
+	 * 			|				getVisibleWindow1D(getMazub(), getMazub().getSize()[1], getWorldSize()[1], 
+	 * 			|				getMazub.getIntPositionAt(2), getWindowHeight())[0],
+	 * 			|				getVisibleWindow1D(getMazub(), getMazub.getSize()[0], getWorldSize()[0], 
+	 * 			|				getMazub().getIntPositionAt(1), getWindowWidth())[1], 
+	 * 			|				getVisibleWindow1D(getMazub(), getMazub.getSize()[1], getWorldSize()[1], 
+	 * 			|				getMazub().getIntPositionAt(2), getWindowHeight())[1]}
+	 * @return	|result.length == 2
+	 */
+	public int[] getVisibleWindow(){
+		Mazub mazub = getMazub();
+		int[] mSize = mazub.getSize();
+		int[] wSize = getWorldSize();
+		int mPos1 = mazub.getIntPositionAt(1);
+		int mPos2 = mazub.getIntPositionAt(2);
+		int width = getWindowWidth();
+		int height = getWindowHeight();
+		int[] widthArray = getVisibleWindow1D(mazub, mSize[0], wSize[0], mPos1,width);
+		int[] heightArray = getVisibleWindow1D(mazub, mSize[1], wSize[1], mPos2,height);
+		return new int[] {widthArray[0], heightArray[0], widthArray[1], heightArray[1]};
+	}
+	
+	/**
+	 * @post	| new.isTerminated()
+	 */
+	public void terminate(){
+		isTerminated = false;
+	}
+	
+	@Basic
+	public boolean isTerminated(){
+		return isTerminated;
+	}
+	
+	private boolean isTerminated = false;
+	
+}
