@@ -1,7 +1,6 @@
 package jumpingalien.model;
 
 import jumpingalien.util.Sprite;
-import jumpingalien.util.Util;
 
 
 public class Slime extends OtherCharacters {
@@ -217,36 +216,4 @@ public class Slime extends OtherCharacters {
 		}
 		return true;
 	}
-	
-	@Override
-	public void environmentDamage(double duration) {
-		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
-		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
-		int[] pos2 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)+getSprite().getHeight()};
-		if ((environment(getIntPosition()) == GeoFeature.MAGMA) || (environment(pos) == GeoFeature.MAGMA)
-				|| (environment(pos1) == GeoFeature.MAGMA) || (environment(pos2) == GeoFeature.MAGMA)){
-			this.setBadEnvironment(true);
-			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
-				this.damage(50);
-		} else{
-			this.setBadEnvironment(false);
-		}
-		if (this.isBadEnvironment()){
-			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
-			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
-				setTimeSinceEnvironmentalDamage(0.0);
-		}else{
-			this.setTimeSinceEnvironmentalDamage(0.0);
-		}
-	}
-	
-	public boolean isBadEnvironment() {
-		return badEnvironment;
-	}
-
-	public void setBadEnvironment(boolean badEnvironment) {
-		this.badEnvironment = badEnvironment;
-	}
-
-	public boolean badEnvironment = false;
 }

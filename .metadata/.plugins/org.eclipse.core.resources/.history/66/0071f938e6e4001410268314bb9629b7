@@ -228,7 +228,12 @@ public class Slime extends OtherCharacters {
 			this.setBadEnvironment(true);
 			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
 				this.damage(50);
-		} else{
+		} else if ((environment(getIntPosition()) == GeoFeature.AIR) || (environment(pos) == GeoFeature.AIR)
+				|| (environment(pos1) == GeoFeature.AIR) || (environment(pos2) == GeoFeature.AIR)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage()+duration, 0.2))
+				this.damage(6);
+		}else{
 			this.setBadEnvironment(false);
 		}
 		if (this.isBadEnvironment()){

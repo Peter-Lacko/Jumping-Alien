@@ -301,7 +301,8 @@ public class Mazub extends Characters {
 			if (! isTerminated()){
 				if (this.isEndDuck())
 					this.tryEndDuck();
-				this.getWorld().checkIfWin(this);	
+				this.getWorld().checkIfWin(this);
+//				
 				this.environmentDamage(duration);
 			}
 			this.immune(duration);

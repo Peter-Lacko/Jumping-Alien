@@ -123,10 +123,4 @@ public class Plant extends OtherCharacters {
 		}
 	}
 
-	@Override
-	public void environmentDamage(double duration) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

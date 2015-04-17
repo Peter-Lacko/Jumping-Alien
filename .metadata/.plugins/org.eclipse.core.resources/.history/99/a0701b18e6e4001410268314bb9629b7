@@ -283,11 +283,11 @@ public class Shark extends OtherCharacters {
 			this.setBadEnvironment(true);
 			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
 				this.damage(50);
-		} else if ((environment(getIntPosition()) == GeoFeature.AIR) || (environment(pos) == GeoFeature.AIR)
-				|| (environment(pos1) == GeoFeature.AIR) || (environment(pos2) == GeoFeature.AIR)){
+		} else if ((environment(getIntPosition()) == GeoFeature.WATER) || (environment(pos) == GeoFeature.WATER)
+				|| (environment(pos1) == GeoFeature.WATER) || (environment(pos2) == GeoFeature.WATER)){
 			this.setBadEnvironment(true);
 			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage()+duration, 0.2))
-				this.damage(6);
+				this.damage(2);
 		}else{
 			this.setBadEnvironment(false);
 		}
