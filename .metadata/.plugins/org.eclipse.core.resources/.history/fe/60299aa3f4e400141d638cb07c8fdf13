@@ -106,11 +106,11 @@ public abstract class OtherCharacters extends Characters {
 				}
 				if (!this.isTerminated())
 					this.environmentDamage(duration);
+				else{
+					this.setTerminateTime(getTerminateTime()+duration);
+					if ((this.getTerminateTime() > 0.6) &&(! (this.getWorld() == null)))
+						this.getWorld().removeAsObject(this);
 				}
-			else{
-				this.setTerminateTime(getTerminateTime()+duration);
-				if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
-					this.getWorld().removeAsObject(this);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -162,15 +162,5 @@ public abstract class OtherCharacters extends Characters {
 
 	@Override
 	public abstract void startJump() ;
-	
-	public double terminateTime = 0.0;
-
-	public double getTerminateTime() {
-		return terminateTime;
-	}
-
-	public void setTerminateTime(double terminateTime) {
-		this.terminateTime = terminateTime;
-	}
 
 }

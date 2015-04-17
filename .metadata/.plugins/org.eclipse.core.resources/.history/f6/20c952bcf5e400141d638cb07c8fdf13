@@ -109,7 +109,7 @@ public abstract class OtherCharacters extends Characters {
 				}
 			else{
 				this.setTerminateTime(getTerminateTime()+duration);
-				if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				if ((this.getTerminateTime() > 0.6))
 					this.getWorld().removeAsObject(this);
 			}
 		} catch (Exception e) {

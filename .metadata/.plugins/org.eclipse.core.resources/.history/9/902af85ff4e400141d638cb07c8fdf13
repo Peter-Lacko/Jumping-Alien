@@ -769,7 +769,16 @@ public class Mazub extends Characters {
 
 	public boolean badEnvironment = false;
 	
-	public double terminateTime = 0.0;
+	@Override
+	protected void terminate() {
+		if (! isTerminated()){
+			this.setTerminated(true);
+			this.setHorizontalVelocity(0.0);
+			this.setVerticalVelocity(0.0);
+		}
+	}
+	
+	public double terminateTime;
 
 	public double getTerminateTime() {
 		return terminateTime;

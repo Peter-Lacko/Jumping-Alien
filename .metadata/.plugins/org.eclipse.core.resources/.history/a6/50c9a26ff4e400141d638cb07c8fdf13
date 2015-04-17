@@ -1115,6 +1115,8 @@ public abstract class Characters {
 	protected void terminate() {
 		if (! isTerminated()){
 			this.setTerminated(true);
+			getWorld().removeAsObject(this);
+//			this.setWorld(null);
 			this.setHorizontalVelocity(0.0);
 			this.setVerticalVelocity(0.0);
 		}
