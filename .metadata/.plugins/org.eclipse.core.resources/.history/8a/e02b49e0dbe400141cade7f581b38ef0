@@ -392,8 +392,8 @@ public class World {
 //		int[] position = {xPixel, yPixel};
 		Position pos = new Position(xTile, yTile, Scale.TILE);
 //		if ((! isValidGeoPosition(pos)) || (! isValidGeoFeature(feature)))
-		if ((! isValidGeoFeature(feature)) || (xTile < 0) || (xTile > getMaxXTiles())
-				|| (yTile < 0) || (yTile > getMaxYTiles()))
+		if ((! isValidGeoFeature(feature)) || (xTile*getTileLength() < 0) || (xTile > getMaxXTiles())
+				|| (yTile*getTileLength() < 0) || (yTile > getMaxYTiles()))
 			throw new IllegalArgumentException();
 		if (feature == GeoFeature.AIR){
 			if (hasAsKeyGeoFeaturePosition(pos))
@@ -576,7 +576,7 @@ public class World {
 	public boolean canHaveAsObjectAt(Characters object, int index){
 		if (! canHaveAsObject(object))
 			return false;
-		else if ((index < 1) || (index > getNbObjects() +1))
+		else if ((index < 1) || index > getNbObjects() +1)
 			return false;
 		for (int newIndex=1; newIndex <= getNbObjects(); newIndex++){
 			if ((newIndex != index) && (getObjectAt(newIndex) == object))
