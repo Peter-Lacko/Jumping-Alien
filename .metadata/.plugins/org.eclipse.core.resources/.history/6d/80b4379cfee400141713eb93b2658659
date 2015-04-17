@@ -1145,6 +1145,18 @@ public abstract class Characters {
 	
 	public int hitPoints;
 	
+	public boolean notFullyDeadYet() {
+		return notFullyDeadYet;
+	}
+
+	public void setNotFullyDeadYet(boolean notFullyDeadYet) {
+		this.notFullyDeadYet = notFullyDeadYet;
+	}
+
+	
+	public boolean notFullyDeadYet = false;
+
+	
 	public GeoFeature environment(int[] position){
 		int[] pos = getWorld().getPixelOfTileContaining(position[0], position[1]);	
 		return getWorld().getGeoFeatureAt(pos[0], pos[1]);
