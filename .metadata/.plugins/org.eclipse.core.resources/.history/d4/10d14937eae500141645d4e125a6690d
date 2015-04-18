@@ -330,7 +330,7 @@ public abstract class Characters {
 	
 	public void advanceTime (double duration){
 		double shortduration = shortDuration(duration);
-		int iteraties = ((int)(duration/shortduration+0.5));
+		int iteraties = ((int)(duration/shortduration))+1;
 		for (int i=0 ;i<iteraties ;i++){
 			this.advanceTimeLong(shortduration);
 			if(! this.isTerminated()){
