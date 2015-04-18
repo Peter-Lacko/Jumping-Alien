@@ -298,6 +298,7 @@ public class Mazub extends Characters {
 			if (this.getTimeSinceEndMove() > 1.0)
 				this.sethasMovedIn(MovementDirection.NONE);
 			this.setSprite(this.getCurrentSprite());
+			this.setPositionAt(this.getPositionAt(1)+1, 1);
 			if (! isTerminated()){
 				if (this.isEndDuck())
 					this.tryEndDuck();
