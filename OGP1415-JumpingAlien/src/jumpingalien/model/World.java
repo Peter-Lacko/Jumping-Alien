@@ -323,7 +323,7 @@ public class World {
 	 * @effect	|getBottomLeftPixelOfTile(getTilePosition(xPixel, yPixel)[0], 
 	 * 			|	getTilePosition(xPixel, yPixel)[1])
 	 */
-	protected int[] getPixelOfTileContaining(int xPixel, int yPixel){
+	public int[] getPixelOfTileContaining(int xPixel, int yPixel){
 		int[] tile = getTilePosition(xPixel, yPixel);
 		return getBottomLeftPixelOfTile(tile[0], tile[1]);
 	}

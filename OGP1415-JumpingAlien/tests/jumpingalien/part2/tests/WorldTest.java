@@ -88,4 +88,11 @@ public class WorldTest {
 		assertEquals(worldStandard.getGeoFeatureAt(28,16), GeoFeature.GROUND);
 	}
 	
+	@Test
+	public void getPixelOfTileContaining(){
+		for (int i=0; i <= 3; i++)
+			for (int k=0; k <= 3; k++)
+				assertArrayEquals(worldStandard.getPixelOfTileContaining(i, k), new int[] {0,0});
+	}
+	
 }
