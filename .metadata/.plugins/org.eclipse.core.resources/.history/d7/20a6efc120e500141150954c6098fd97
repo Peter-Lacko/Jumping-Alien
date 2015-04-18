@@ -1,6 +1,5 @@
 package jumpingalien.part2.tests;
 
-import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.*;
 import jumpingalien.model.GeoFeature;
 import jumpingalien.model.Mazub;
@@ -21,19 +20,16 @@ public class WorldTest {
 	
 	private static Mazub mazub;
 	
-	private static Sprite[] sprites;
-	
 	@Before
 	public void setUpMutableFixture(){
 		worldStandard = new World(4, 300, 300, 500, 500, 150, 150);
-		mazub = new Mazub(4,4, sprites);
 	}
 	
 	@BeforeClass
 	public static void setUpImmutableFixture(){
 		worldSmallWindow = new World(4, 300, 300, 50, 50, 150, 150);
 		worldSmallSize = new World(4, 20, 20, 80, 80, 10, 10);
-		sprites = spriteArrayForSize(2, 2);
+		mazub = new Mazub(4,4,)
 	}
 	
 	@Test(expected = IllegalArgumentException.class)

@@ -1,11 +1,8 @@
 package jumpingalien.part2.tests;
 
-import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.*;
 import jumpingalien.model.GeoFeature;
-import jumpingalien.model.Mazub;
 import jumpingalien.model.World;
-import jumpingalien.util.Sprite;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,21 +16,15 @@ public class WorldTest {
 	
 	private static World worldSmallSize;
 	
-	private static Mazub mazub;
-	
-	private static Sprite[] sprites;
-	
 	@Before
 	public void setUpMutableFixture(){
 		worldStandard = new World(4, 300, 300, 500, 500, 150, 150);
-		mazub = new Mazub(4,4, sprites);
 	}
 	
 	@BeforeClass
 	public static void setUpImmutableFixture(){
 		worldSmallWindow = new World(4, 300, 300, 50, 50, 150, 150);
 		worldSmallSize = new World(4, 20, 20, 80, 80, 10, 10);
-		sprites = spriteArrayForSize(2, 2);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -59,6 +50,12 @@ public class WorldTest {
 	@Test
 	public void getTileLength_Correct(){
 		assertEquals(worldStandard.getTileLength(), 4);
+	}
+	
+	@Test
+	public void startGame_Correct(){
+		worldStandard.startGame();
+		assertEquals(worldStandard.isGameStarted(), true);
 	}
 	
 	@Test

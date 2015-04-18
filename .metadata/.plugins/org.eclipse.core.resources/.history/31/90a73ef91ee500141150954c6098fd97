@@ -1,11 +1,7 @@
 package jumpingalien.part2.tests;
 
-import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.*;
-import jumpingalien.model.GeoFeature;
-import jumpingalien.model.Mazub;
 import jumpingalien.model.World;
-import jumpingalien.util.Sprite;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,21 +15,15 @@ public class WorldTest {
 	
 	private static World worldSmallSize;
 	
-	private static Mazub mazub;
-	
-	private static Sprite[] sprites;
-	
 	@Before
 	public void setUpMutableFixture(){
 		worldStandard = new World(4, 300, 300, 500, 500, 150, 150);
-		mazub = new Mazub(4,4, sprites);
 	}
 	
 	@BeforeClass
 	public static void setUpImmutableFixture(){
 		worldSmallWindow = new World(4, 300, 300, 50, 50, 150, 150);
 		worldSmallSize = new World(4, 20, 20, 80, 80, 10, 10);
-		sprites = spriteArrayForSize(2, 2);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -62,30 +52,20 @@ public class WorldTest {
 	}
 	
 	@Test
+	public void startGame_Correct(){
+		worldStandard.startGame();
+		assertEquals(worldStandard.isGameStarted(), true);
+	}
+	
+	@Test
 	public void getBottomLeftPixelOfTile_Correct(){
-		assertArrayEquals(worldStandard.getBottomLeftPixelOfTile(1, 1), new int[] {4,4});
+		assertEquals(worldStandard.getBottomLeftPixelOfTile(1, 1), new int[] {4,4});
 	}
 	
 	@Test
 	public void getTilePositionsIn_Correct(){
 		assertArrayEquals(worldStandard.getTilePositionsIn(5, 5, 15, 8), 
 				new int[][] {{1,1},{2,1},{3,1},{1,2},{2,2},{3,2}});
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void getGeoFeatureAt_IllegalCase(){
-		worldStandard.getGeoFeatureAt(1, 1);
-	}
-	
-	@Test
-	public void getGeoFeatureAt_Air(){
-		assertEquals(worldStandard.getGeoFeatureAt(20, 20), GeoFeature.AIR);
-	}
-	
-	@Test
-	public void setGeoFeatureAtWithInt_Ground(){
-		worldStandard.setGeoFeatureAtWithInt(7, 4, 1);
-		assertEquals(worldStandard.getGeoFeatureAt(28,16), GeoFeature.GROUND);
 	}
 	
 }

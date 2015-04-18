@@ -5,7 +5,6 @@ package jumpingalien.model;
 
 import java.util.*;
 
-import jumpingalien.util.Util;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
@@ -494,10 +493,10 @@ public class World {
 	 * @effect	|for each object in getAllObjects():
 	 * 			|	object.advanceTime(duration);
 	 * @throws	IllegalArgumentException
-	 * 			| (duration > 0.2) || (duration < 0.0)
+	 * 			| (duration >= 0.2) || (duration < 0.0)
 	 */
 	public void advanceTime(double duration) throws IllegalArgumentException{
-		if ((! Util.fuzzyLessThanOrEqualTo(duration, 0.2)) || Util.fuzzyLessThanOrEqualTo(duration, 0.0))
+		if ((duration > 0.2) || (duration < 0.0))
 			throw new IllegalArgumentException();
 		for (Characters object: getAllObjects()){
 			object.advanceTime(duration);
