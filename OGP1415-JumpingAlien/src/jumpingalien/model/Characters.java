@@ -943,20 +943,21 @@ public abstract class Characters {
 //		return false;
 //	}
 	
-	public boolean testHor(double coordinate){
-		for (int i=getIntPositionAt(2)+1; i <= getIntPositionAt(2)+getSprite().getHeight() -1; i++){
-			int[] newPos1 = new int[] {(int)coordinate, i};
-			int[] newPos2 = new int[] {(int)(coordinate + getSprite().getWidth() -1), i};
-			int[] tileCheck1 =getWorld().getPixelOfTileContaining(newPos1[0], newPos1[1]);
-			int[] tileCheck2 =getWorld().getPixelOfTileContaining(newPos2[0], newPos2[1]);
-			if ((getWorld().getGeoFeatureAt(tileCheck1[0], tileCheck1[1]) == GeoFeature.GROUND)
-					|| (getWorld().getGeoFeatureAt(tileCheck2[0], tileCheck2[1]) == GeoFeature.GROUND))
-				return false;
-		}
-		return collisionDetectionHorizontal(coordinate);
-	}
+//	public boolean testHor(double coordinate){
+//		for (int i=getIntPositionAt(2)+1; i <= getIntPositionAt(2)+getSprite().getHeight() -1; i++){
+//			int[] newPos1 = new int[] {(int)coordinate, i};
+//			int[] newPos2 = new int[] {(int)(coordinate + getSprite().getWidth() -1), i};
+//			int[] tileCheck1 =getWorld().getPixelOfTileContaining(newPos1[0], newPos1[1]);
+//			int[] tileCheck2 =getWorld().getPixelOfTileContaining(newPos2[0], newPos2[1]);
+//			if ((getWorld().getGeoFeatureAt(tileCheck1[0], tileCheck1[1]) == GeoFeature.GROUND)
+//					|| (getWorld().getGeoFeatureAt(tileCheck2[0], tileCheck2[1]) == GeoFeature.GROUND))
+//				return false;
+//		}
+//		return collisionDetectionHorizontal(coordinate);
+//	}
 	
 	public boolean canHaveAsNewPosition (double coordinate, int index){
+		if (! isTerminated())
 		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
 //		if ((index == 1) && (testHor(coordinate)))
 			return true;
@@ -984,17 +985,17 @@ public abstract class Characters {
 //	}
 	
 	public boolean passableTerrainHorizontal(double newPosition){
-		if (this.getHorizontalVelocity() < 0.0){
+		if (this.getHorizontalVelocity() <= 0.0){
 //			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
-			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight()-1; i++){
+			for (int i = getIntPositionAt(2)+1; i<=getIntPositionAt(2)+getSprite().getHeight()-1; i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
 			}
 		}
-		else if (this.getHorizontalVelocity() > 0.0){
+		else if (this.getHorizontalVelocity() >= 0.0){
 //			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
-			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight()-1;i++){
+			for (int i = getIntPositionAt(2)+1;i<=getIntPositionAt(2)+getSprite().getHeight()-1;i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
@@ -1004,21 +1005,22 @@ public abstract class Characters {
 	}
 	
 	public boolean passableTerrainVertical(double newPosition){
-		if (getVerticalVelocity() > 0.0){
+		if (getVerticalVelocity() >= 0.0){
 //			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
-			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth()-1;i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight());
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight()-1);
 				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND){
-					setVerticalVelocity(0.0);
+//					setVerticalVelocity(0.0);
 					return false;
 				}
 			}
 		}
-		else if (getVerticalVelocity() < 0.0){
+		else if (getVerticalVelocity() <= 0.0){
 //			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
-			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth()-1;i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition);
+				if ((getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
+						&& (((int)newPosition +1)%getWorld().getTileLength() != 0))
 					return false;
 			}
 		}
@@ -1035,23 +1037,29 @@ public abstract class Characters {
 			characters = world.getAllLeftObjects();
 		else
 			characters = world.getAllRightObjects();
-		if (isMovingRight()){
+		if (Util.fuzzyGreaterThanOrEqualTo(getHorizontalVelocity(), 0.0)){
 			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()-1) 
+						&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
+						&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)
+						&& (this.collide(character))){
 						this.collision(character);
-						return false;
+						return (((this instanceof Slime) && (character instanceof Slime))
+								|| ((this instanceof Mazub) && (character instanceof Plant))
+								|| ((this instanceof Plant) && (character instanceof Mazub)));
 				}
 			}
 		}
-		if (isMovingLeft()){
+		if (Util.fuzzyGreaterThanOrEqualTo(0.0, getHorizontalVelocity())){
 			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+				if ((character.getIntPositionAt(1) + character.getSprite().getWidth()-1 == (int)newPosition) 
+						&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
+						&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)
+						&& (this.collide(character))){
 						this.collision(character);
-						return false;
+						return (((this instanceof Slime) && (character instanceof Slime))
+								|| ((this instanceof Mazub) && (character instanceof Plant))
+								|| ((this instanceof Plant) && (character instanceof Mazub)));
 				}
 			}
 		}
@@ -1060,35 +1068,37 @@ public abstract class Characters {
 	
 	public boolean collisionDetectionVertical(double newPosition){
 //		List<Characters> characters = world.getAllObjects();
-		if (! this.isTerminated()){
-			World world = getWorld();
-			Iterable<Characters> characters;
-			if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
-				characters = world.getAllObjects();
-			else if (world.hasAsLeftObject(this))
-				characters = world.getAllLeftObjects();
-			else
-				characters = world.getAllRightObjects();
-			if (getVerticalVelocity() > 0.0){
-				for (Characters character : characters){
-					if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
-							&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())
-							&& (this.collide(character))){
-						this.collision(character);
-						return false;
-					}
+		World world = getWorld();
+		Iterable<Characters> characters;
+		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
+			characters = world.getAllObjects();
+		else if (world.hasAsLeftObject(this))
+			characters = world.getAllLeftObjects();
+		else
+			characters = world.getAllRightObjects();
+		if (Util.fuzzyGreaterThanOrEqualTo(getVerticalVelocity(), 0.0)){
+			for (Characters character : characters){
+				if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()-1) 
+						&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
+						&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)
+						&& (this.collide(character))){
+					this.collision(character);
+					return (((this instanceof Slime) && (character instanceof Slime))
+							|| ((this instanceof Mazub) && (character instanceof Plant))
+							|| ((this instanceof Plant) && (character instanceof Mazub)));
 				}
 			}
-			if (getVerticalVelocity() < 0.0){
-				for (Characters character : characters){
-					if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
-							&& (character.getPositionAt(1) > (this.getPositionAt(1) - character.getSprite().getWidth())) 
-							&& (character.getPositionAt(1) < this.getPositionAt(1) + this.getSprite().getWidth())
-							&& ((this.collide(character)))	){
-						this.collision(character);
-						return false;
-					}
+		}
+		if (Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity())){
+			for (Characters character : characters){
+				if ((character.getIntPositionAt(2) + character.getSprite().getHeight()-1 == (int)newPosition) 
+						&& (character.getPositionAt(1) +character.getSprite().getWidth() -1>= (this.getPositionAt(1))) 
+						&& (character.getPositionAt(1) <= this.getPositionAt(1) + this.getSprite().getWidth() -1)
+						&& ((this.collide(character)))	){
+					this.collision(character);
+					return (((this instanceof Slime) && (character instanceof Slime))
+							|| ((this instanceof Mazub) && (character instanceof Plant))
+							|| ((this instanceof Plant) && (character instanceof Mazub)));
 				}
 			}
 		}

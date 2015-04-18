@@ -385,8 +385,8 @@ public class Mazub extends Characters {
 		else if (direction == "right") {
 			this.setMovingRight(true);
 		}
-		this.setAccelerating(true);
-		this.setHorizontalVelocity(getInitHorizontalVelocity());
+//		this.setAccelerating(true);
+//		this.setHorizontalVelocity(getInitHorizontalVelocity());
 	}
 
 	/**
@@ -448,6 +448,8 @@ public class Mazub extends Characters {
 					100*0.5*getVerticalAcceleration()*duration*duration;
 				if (canHaveAsNewPosition(newYPosition,2))
 					this.setPositionAt(newYPosition, 2);
+				else
+					endJump();
 			}
 			else{
 				if (isJumping()){
@@ -455,6 +457,8 @@ public class Mazub extends Characters {
 							100*0.5*getVerticalAcceleration()*duration*duration;
 					if (canHaveAsNewPosition(newYPosition, 2))
 						this.setPositionAt(newYPosition, 2);
+					else
+						endJump();
 				}
 			}
 		}
@@ -501,13 +505,20 @@ public class Mazub extends Characters {
 	}
 
 
+	public int isInAirInt(){
+		if (isInAir())
+			return 1;
+		else
+			return 0;
+	}
+	
 	@Override
 	public boolean isInAir(){
 		if (getWorld() == null){
 			return false;
 			}
 		else{
-			for (int i = getIntPositionAt(1)+3;i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
 				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
@@ -530,8 +541,8 @@ public class Mazub extends Characters {
 	@Override
 	public void startJump() throws IllegalArgumentException{
 		try {
-			if(! isInAir())
-				this.setVerticalVelocity(getInitVerticalVelocity());
+//			if(! isInAir())
+//				this.setVerticalVelocity(getInitVerticalVelocity());
 			this.isJumping = true;
 		}
 		catch (IllegalArgumentException exc) {

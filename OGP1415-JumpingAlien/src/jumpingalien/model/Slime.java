@@ -169,45 +169,45 @@ public class Slime extends OtherCharacters {
 		}
 	}
 	
-	@Override
-	public boolean collisionDetectionHorizontal(double newPosition){
-//		List<Characters> characters = world.getAllObjects();
-		World world = getWorld();
-		Iterable<Characters> characters;
-		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
-			characters = world.getAllObjects();
-		else if (world.hasAsLeftObject(this))
-			characters = world.getAllLeftObjects();
-		else
-			characters = world.getAllRightObjects();
-		if (isMovingRight()){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-						this.collision(character);
-						if (character instanceof Slime)
-							return true;
-						else
-							return false;
-				}
-			}
-		}
-		if (isMovingLeft()){
-			for (Characters character : characters){
-				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
-						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-						this.collision(character);
-						if (character instanceof Slime)
-							return true;
-						else
-							return false;
-				}
-			}
-		}
-		return true;
-	}
+//	@Override
+//	public boolean collisionDetectionHorizontal(double newPosition){
+////		List<Characters> characters = world.getAllObjects();
+//		World world = getWorld();
+//		Iterable<Characters> characters;
+//		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
+//			characters = world.getAllObjects();
+//		else if (world.hasAsLeftObject(this))
+//			characters = world.getAllLeftObjects();
+//		else
+//			characters = world.getAllRightObjects();
+//		if (isMovingRight()){
+//			for (Characters character : characters){
+//				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
+//						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+//						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+//						this.collision(character);
+//						if (character instanceof Slime)
+//							return true;
+//						else
+//							return false;
+//				}
+//			}
+//		}
+//		if (isMovingLeft()){
+//			for (Characters character : characters){
+//				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
+//						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+//						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+//						this.collision(character);
+//						if (character instanceof Slime)
+//							return true;
+//						else
+//							return false;
+//				}
+//			}
+//		}
+//		return true;
+//	}
 	
 	@Override
 	public void environmentDamage(double duration) {

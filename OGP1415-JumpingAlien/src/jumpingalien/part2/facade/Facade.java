@@ -34,7 +34,8 @@ public class Facade implements IFacadePart2 {
 	}
 	
 	public double[] getVelocity(Mazub mazub){
-	double[] vel = {mazub.getHorizontalVelocity(), mazub.getVerticalVelocity()};
+//	double[] vel = {mazub.getHorizontalVelocity(), mazub.getVerticalVelocity()};
+		double[] vel = {mazub.isInAirInt(), mazub.getVerticalVelocity()};	
 	return vel;
 	}
 	
