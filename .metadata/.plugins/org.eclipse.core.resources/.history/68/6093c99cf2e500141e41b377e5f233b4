@@ -953,12 +953,12 @@ public abstract class Characters {
 					|| (getWorld().getGeoFeatureAt(tileCheck2[0], tileCheck2[1]) == GeoFeature.GROUND))
 				return false;
 		}
-		return collisionDetectionHorizontal(coordinate);
+		return true;
 	}
 	
 	public boolean canHaveAsNewPosition (double coordinate, int index){
-		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
-//		if ((index == 1) && (testHor(coordinate)))
+//		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
+		if ((index == 1) && (testHor(coordinate)))
 			return true;
 		else if ((index == 2) && (passableTerrainVertical(coordinate)))
 			return true;
@@ -984,16 +984,16 @@ public abstract class Characters {
 //	}
 	
 	public boolean passableTerrainHorizontal(double newPosition){
-		if (this.getHorizontalVelocity() < 0.0){
+		if (isMovingLeft()){
 			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
 				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
 			}
 		}
-		else if (this.getHorizontalVelocity() > 0.0){
+		else if (isMovingRight()){
 			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,i);
+				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
 				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
 					return false;
 			}

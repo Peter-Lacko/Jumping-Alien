@@ -957,8 +957,8 @@ public abstract class Characters {
 	}
 	
 	public boolean canHaveAsNewPosition (double coordinate, int index){
-		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
-//		if ((index == 1) && (testHor(coordinate)))
+//		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
+		if ((index == 1) && (testHor(coordinate)))
 			return true;
 		else if ((index == 2) && (passableTerrainVertical(coordinate)))
 			return true;
