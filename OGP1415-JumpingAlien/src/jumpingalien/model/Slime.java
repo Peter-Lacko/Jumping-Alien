@@ -112,13 +112,40 @@ public class Slime extends OtherCharacters {
 		return true;
 	}
 
+//	@Override
+//	public void collision(Characters other) {
+//		if (other instanceof Mazub){
+//			if (! ((Mazub)other).isImmune()){
+//				this.damage(50);
+//				other.damage(50);
+//				((Mazub)other).startImmune();
+//			}
+//			this.endMove();
+////			((Mazub) other).endMove("left");
+////			((Mazub) other).endMove("right");
+//		}
+//		else if (other instanceof Shark){
+//			this.damage(50);
+//			other.damage(50);
+//			this.endMove();
+//			((Shark) other).endMove();
+//		}
+//		else if (other instanceof Slime){
+//			this.changeSchool((Slime)other);
+//		}
+//		else
+//			other.collision(this);
+//	}
+	
 	@Override
-	public void collision(Characters other) {
+	public void collision(Characters other, boolean isBelow) {
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){
+				if (! isBelow){
+					other.damage(50);
+					((Mazub)other).startImmune();
+				}
 				this.damage(50);
-				other.damage(50);
-				((Mazub)other).startImmune();
 			}
 			this.endMove();
 //			((Mazub) other).endMove("left");
@@ -134,7 +161,7 @@ public class Slime extends OtherCharacters {
 			this.changeSchool((Slime)other);
 		}
 		else
-			other.collision(this);
+			other.collision(this, isBelow);
 	}
 	
 	private void changeSchool(Slime other){

@@ -4,4 +4,7 @@
 <fullyQualifiedTypeName name="jumpingalien.model.GeoFeature"/>
 <fullyQualifiedTypeName name="jumpingalien.model.Mazub"/>
 <fullyQualifiedTypeName name="jumpingalien.util.Util"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
+<fullyQualifiedTypeName name="java.util.HashSet"/>
+<fullyQualifiedTypeName name="jumpingalien.model.Slime"/>
 </qualifiedTypeNameHistroy>

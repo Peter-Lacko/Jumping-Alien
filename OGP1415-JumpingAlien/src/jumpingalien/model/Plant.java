@@ -105,11 +105,11 @@ public class Plant extends OtherCharacters {
 	}
 
 	@Override
-	public void collision(Characters other) {
+	public void collision(Characters other, boolean isBelow) {
 		if (other instanceof Mazub){
 			if (! this.isTerminated())
-				((Mazub) other).eat();
-			this.terminate();
+				((Mazub) other).eat(this);
+//			this.terminate();
 		}
 	}
 

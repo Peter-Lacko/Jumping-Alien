@@ -124,7 +124,7 @@ public class Mazub extends Characters {
 
 	@Override
 	public void computeNewHorizontalPositionAfter(double duration) {
-		if (! isTerminated()){
+//		if (! isTerminated()){
 //			if (this.movingInTwoDirections())
 //				this.setPositionAt(this.getPositionAt(1),1);
 //			else{
@@ -140,7 +140,17 @@ public class Mazub extends Characters {
 //				endMove("right");
 //			}
 			}
+//		}
+	}
+	
+	public double calculateNewHorizontalPositionAfter(double duration) {
+		double newPosition = getPositionAt(1);
+		if (! this.movingInTwoDirections()){
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+			if (this.isAccelerating())
+				newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
 		}
+		return newPosition;
 	}
 
 	/**
@@ -284,36 +294,240 @@ public class Mazub extends Characters {
 	 */
 	@Override
 	public void advanceTimeLong (double duration) throws IllegalArgumentException {
-		try{
-			if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
-				throw new IllegalArgumentException();
-			this.computeNewVerticalPositionAfter(duration);
-			this.computeNewVerticalVelocityAfter(duration);
-			this.determineDoubleDirections();
-			this.computeNewHorizontalPositionAfter(duration);
-			this.computeNewHorizontalVelocityAfter(duration);
-			if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
-				setTimeSinceEndMove(getTimeSinceEndMove() + duration);
-			else
-				setTimeSinceStep(getTimeSinceStep() + duration);
-			if (this.getTimeSinceEndMove() > 1.0)
-				this.sethasMovedIn(MovementDirection.NONE);
-			this.setSprite(this.getCurrentSprite());
-			if (! isTerminated()){
-				if (this.isEndDuck())
-					this.tryEndDuck();
-				this.getWorld().checkIfWin(this);	
-				this.environmentDamage(duration);
+		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
+			throw new IllegalArgumentException();
+		removeAllCloseCharacters();
+		this.determineDoubleDirections();
+		if (isEndDuck())
+			if (canEndDuck())
+				finishDuck();
+		this.computeHorizontalMovement(duration);
+		removeAllCloseCharacters();
+		this.computeVerticalMovement(duration);
+//		this.computeNewVerticalPositionAfter(duration);
+//		this.computeNewVerticalVelocityAfter(duration);
+		if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
+			setTimeSinceEndMove(getTimeSinceEndMove() + duration);
+		else
+			setTimeSinceStep(getTimeSinceStep() + duration);
+		if (this.getTimeSinceEndMove() > 1.0)
+			this.sethasMovedIn(MovementDirection.NONE);
+		this.setSprite(this.getCurrentSprite());
+		this.getWorld().checkIfWin(this);	
+		this.environmentDamage(duration);
+		this.immune(duration);
+	}
+//	public void advanceTimeLong (double duration) throws IllegalArgumentException {
+//		try{
+//			if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
+//				throw new IllegalArgumentException();
+//			this.computeNewVerticalPositionAfter(duration);
+//			this.computeNewVerticalVelocityAfter(duration);
+//			this.determineDoubleDirections();
+//			this.computeNewHorizontalPositionAfter(duration);
+//			this.computeNewHorizontalVelocityAfter(duration);
+//			if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
+//				setTimeSinceEndMove(getTimeSinceEndMove() + duration);
+//			else
+//				setTimeSinceStep(getTimeSinceStep() + duration);
+//			if (this.getTimeSinceEndMove() > 1.0)
+//				this.sethasMovedIn(MovementDirection.NONE);
+//			this.setSprite(this.getCurrentSprite());
+//			if (! isTerminated()){
+//				if (this.isEndDuck())
+//					this.tryEndDuck();
+//				this.getWorld().checkIfWin(this);	
+//				this.environmentDamage(duration);
+//			}
+//			else{
+//				this.setTerminateTime(getTerminateTime()+duration);
+//				if ((this.getTerminateTime() > 0.6) &&(! (this.getWorld() == null)))
+//					this.getWorld().removeAsObject(this);
+//			}
+//			this.immune(duration);
+//		}
+//		catch (IllegalArgumentException exc){
+//			throw exc;
+//		}
+//	}
+	
+	private void computeHorizontalMovement(double duration) {
+		double newPos = calculateNewHorizontalPositionAfter(duration);
+		int oldPos = getIntPositionAt(1);
+		boolean canMove = true;
+		if ((int)newPos > oldPos){
+			collisionDetectionRight(newPos);
+			for (Characters character: getAllCloseCharacters()){
+				if (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 
+						== getIntPositionAt(2))
+					collision(character, true);
+				else{
+					collision(character, false);
+					if ((character instanceof Slime) || (character instanceof Shark))
+						canMove = false;
+				}
 			}
-			else{
-				this.setTerminateTime(getTerminateTime()+duration);
-				if ((this.getTerminateTime() > 0.6) &&(! (this.getWorld() == null)))
-					this.getWorld().removeAsObject(this);
+			if (canMove){
+				canMove = passableTerrainRight(newPos);
 			}
-			this.immune(duration);
 		}
-		catch (IllegalArgumentException exc){
-			throw exc;
+		if ((int)newPos < oldPos){
+			collisionDetectionLeft(newPos);
+			for (Characters character: getAllCloseCharacters()){
+				if (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 
+						== getIntPositionAt(2))
+					collision(character, true);
+				else{
+					collision(character, false);
+					if ((character instanceof Slime) || (character instanceof Shark))
+						canMove = false;
+				}
+			}
+			if (canMove){
+				canMove = passableTerrainLeft(newPos);
+			}
+		}
+		if (canMove){
+			setPositionAt(newPos, 1);
+			//calculate new hor velocity
+		}
+		else{
+			// new hor velocity = 0.0
+		}
+		computeNewHorizontalVelocityAfter(duration);
+	}
+
+	private void computeVerticalMovement(double duration) {
+		double newPos = calculateNewVerticalPositionAfter(duration);
+		int oldPos = getIntPositionAt(2);
+		boolean canMove = true;
+		if ((int)newPos > oldPos){
+			collisionDetectionUp(newPos);
+			for (Characters character: getAllCloseCharacters()){
+				collision(character, false);
+				if ((character instanceof Slime) || (character instanceof Shark))
+					canMove = false;
+			}
+			if (canMove){
+				canMove = passableTerrainUp(newPos);
+			}
+		}
+		if ((int)newPos < oldPos){
+			collisionDetectionDown(newPos);
+			for (Characters character: getAllCloseCharacters()){
+				collision(character, true);
+			}
+			canMove = passableTerrainDown(newPos);
+		}
+		if (canMove){
+			setPositionAt(newPos, 2);
+			//calculate new hor velocity
+		}
+		else{
+			setVerticalVelocity(0.0);
+		}
+		computeNewVerticalVelocityAfter(duration);
+	}
+	
+	public boolean passableTerrainRight(double newPosition){
+		//		for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
+		int[] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,
+				getIntPositionAt(2));
+		if ((getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				&& ((getIntPositionAt(2) +1) % getWorld().getTileLength() != 0))
+			return false;
+		for (int i = getIntPositionAt(2)+1; i <= getIntPositionAt(2)+getSprite().getHeight()-1;i++){
+			pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,i);
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				return false;
+		}
+		return true;
+	}
+
+	public boolean passableTerrainLeft(double newPosition){
+		int[] pos = getWorld().getPixelOfTileContaining((int)newPosition, getIntPositionAt(2));
+		if ((getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				&& ((getIntPositionAt(2) +1) % getWorld().getTileLength() != 0))
+			return false;
+		for (int i = getIntPositionAt(2)+1; i<=getIntPositionAt(2)+getSprite().getHeight()-1; i++){
+			pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+				return false;
+		}
+		return true;
+	}
+	
+	public boolean passableTerrainUp(double newPosition){
+		//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+			int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight()-1);
+			if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND){
+				//					setVerticalVelocity(0.0);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean passableTerrainDown(double newPosition){
+		//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+		if (((int)newPosition +1) % getWorld().getTileLength() == 0)
+			return true;
+		else{
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition);
+				if ((getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND))
+					return false;
+			}
+			return true;
+		}
+	}
+	
+	public void collisionDetectionRight(double newPosition){
+		Iterable<Characters> characters = getNearbyCharacters();
+		for (Characters character : characters){
+			if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()-1) 
+					&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
+					&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)){
+				addAsCloseCharacter(character);
+			}
+		}
+	}
+	
+	public void collisionDetectionLeft(double newPosition){
+//		List<Characters> characters = world.getAllObjects();
+		Iterable<Characters> characters = getNearbyCharacters();
+		for (Characters character : characters){
+			if ((character.getIntPositionAt(1) + character.getSprite().getWidth()-1 == (int)newPosition) 
+					&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
+					&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)){
+				addAsCloseCharacter(character);
+			}
+		}
+	}
+	
+	public void collisionDetectionUp(double newPosition){
+		//		List<Characters> characters = world.getAllObjects();
+		Iterable<Characters> characters = getNearbyCharacters();
+		for (Characters character : characters){
+			if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()-1) 
+					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
+					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)){
+				//					this.collision(character);
+				addAsCloseCharacter(character);
+			}
+		}
+	}
+
+	public void collisionDetectionDown(double newPosition){
+		Iterable<Characters> characters = getNearbyCharacters();
+		for (Characters character : characters){
+			if ((character.getIntPositionAt(2) + character.getSprite().getHeight()-1 == (int)newPosition) 
+					&& (character.getPositionAt(1) +character.getSprite().getWidth() -1>= (this.getPositionAt(1))) 
+					&& (character.getPositionAt(1) <= this.getPositionAt(1) + this.getSprite().getWidth() -1)){
+				//					this.collision(character);
+				addAsCloseCharacter(character);
+			}
 		}
 	}
 	
@@ -463,6 +677,27 @@ public class Mazub extends Characters {
 			}
 		}
 	}
+	
+	public double calculateNewVerticalPositionAfter(double duration){
+		if (! isTerminated()){
+			double newYPosition = 0.0;;
+			if (isInAir()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+					100*0.5*getVerticalAcceleration()*duration*duration;
+				return newYPosition;
+			}
+			else{
+				if (isJumping()){
+					newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
+							100*0.5*getVerticalAcceleration()*duration*duration;
+					return newYPosition;
+				}
+				return newYPosition;
+			}
+		}
+		else
+			return 0.0;
+	}
 
 	/**
 	 * Compute the new vertical speed after a given duration.
@@ -504,9 +739,15 @@ public class Mazub extends Characters {
 		}
 	}
 
-
 	public int isInAirInt(){
 		if (isInAir())
+			return 1;
+		else
+			return 0;
+	}
+	
+	public int isJumpingInt(){
+		if (isJumping())
 			return 1;
 		else
 			return 0;
@@ -549,14 +790,6 @@ public class Mazub extends Characters {
 			throw exc;
 		}
 	}
-	
-	/**
-	 * A getter method for the boolean isDucked.
-	 */
-	@Basic
-	public boolean isDucked() {
-		return this.isDucked;
-	}
 
 	/**
 	 * A method that starts the character's duck
@@ -568,7 +801,7 @@ public class Mazub extends Characters {
 	public void startDuck() throws IllegalArgumentException{
 		try{
 			this.setMaxHorizontalVelocity(1.0);
-			this.isDucked = true;
+			this.setIsDucked(true);
 			this.setEndDuck(false);
 		}
 		catch (IllegalArgumentException exc) {
@@ -592,26 +825,62 @@ public class Mazub extends Characters {
 		}
 	}
 	
-	public void tryEndDuck(){
-		if (canEndDuck()){
-			this.isDucked = false;
-			this.setMaxHorizontalVelocity(3.0);
-			this.setEndDuck(false);
-		}
-	}
-	
 	public boolean canEndDuck(){
-		this.getPositionAt(2);
-		int nbTiles = (int)((this.getImageAt(1).getHeight()-this.getSprite().getHeight())/getWorld().getTileLength());
-		for (int j=1;j<=nbTiles+1;j++){
-			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getWorld().getTileLength()*j+1);
+		boolean oldDuck = isDucked();
+		this.setIsDucked(false);
+		Sprite standingSprite = getCurrentSprite();
+		this.setIsDucked(oldDuck);
+		int nbPixelsHeight = standingSprite.getHeight() - getSprite().getHeight();
+		for (int j=0;j <=nbPixelsHeight -1; j++){
+			for (int i = 0; i <=standingSprite.getWidth() -1; i++){
+				int [] pos = new int[] {getIntPositionAt(1) +i, getIntPositionAt(2) + getSprite().getHeight() +j};
+				pos = getWorld().getPixelOfTileContaining(pos[0], pos[1]);
 				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
 					return false;
 				}
 			}
 		}
 		return true;
+	}
+	
+	public void finishDuck(){
+		setEndDuck(false);
+		setIsDucked(false);
+		setMaxHorizontalVelocity(3.0);
+	}
+	
+//	public void tryEndDuck(){
+//		if (canEndDuck()){
+//			this.isDucked = false;
+//			this.setMaxHorizontalVelocity(3.0);
+//			this.setEndDuck(false);
+//		}
+//	}
+//	
+//	public boolean canEndDuck(){
+//		this.getPositionAt(2);
+//		int nbTiles = (int)((this.getImageAt(1).getHeight()-this.getSprite().getHeight())/getWorld().getTileLength());
+//		for (int j=1;j<=nbTiles+1;j++){
+//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+//				int [] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getWorld().getTileLength()*j+1);
+//				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
+//					return false;
+//				}
+//			}
+//		}
+//		return true;
+//	}
+	
+	/**
+	 * A getter method for the boolean isDucked.
+	 */
+	@Basic
+	public boolean isDucked() {
+		return this.isDucked;
+	}
+	
+	public void setIsDucked(boolean flag){
+		this.isDucked = flag;
 	}
 	
 	/**
@@ -627,6 +896,9 @@ public class Mazub extends Characters {
 		this.endDuck = endduck;
 	}
 	
+	/**
+	 * For when the character is ducking, but has a signal to end the duck, this is true.
+	 */
 	private boolean endDuck = false;
 
 	/**
@@ -700,15 +972,18 @@ public class Mazub extends Characters {
 	private double timeSinceStep = 0.0;
 	
 	@Override
-	public void collision(Characters other){
-		 other.collision(this);
+	public void collision(Characters other, boolean isOnTop){
+		 other.collision(this, isOnTop);
 	}
 	 
-	public void eat(){
-		if (this.getHitPoints() <= 450)
-			this.setHitPoints(this.getHitPoints()+50);
-		else
-			this.setHitPoints(500);
+	public void eat(Plant plant){
+//		if (this.getHitPoints() <= 450)
+//			this.setHitPoints(this.getHitPoints()+50);
+//		else
+//			this.setHitPoints(500);
+		if (getHitPoints() < 500)
+			setHitPoints(Math.min(500, getHitPoints()+50));
+			plant.terminate();
 	}
 	
 	protected void immune(double duration){

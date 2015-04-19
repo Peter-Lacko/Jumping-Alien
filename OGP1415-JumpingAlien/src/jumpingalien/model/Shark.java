@@ -244,12 +244,14 @@ public class Shark extends OtherCharacters {
 	public int movementsSinceLastJump = 0;
 
 	@Override
-	public void collision(Characters other) {
+	public void collision(Characters other, boolean isBelow) {
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){
+				if (! isBelow){
+					other.damage(50);
+					((Mazub)other).startImmune();
+				}
 				this.damage(50);
-				other.damage(50);
-				((Mazub)other).startImmune();
 			}
 			if (! this.isTerminated())
 				this.endMove();
@@ -261,7 +263,7 @@ public class Shark extends OtherCharacters {
 			((Shark)other).endMove();
 		}
 		else
-			other.collision(this);
+			other.collision(this, isBelow);
 	}
 
 	@Override
