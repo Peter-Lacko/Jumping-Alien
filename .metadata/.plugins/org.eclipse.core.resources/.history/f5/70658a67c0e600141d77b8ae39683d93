@@ -1146,8 +1146,8 @@ public abstract class Characters {
 	 */
 	protected void setPositionAt(double coordinate, int index) throws ArrayIndexOutOfBoundsException, 
 	IllegalArgumentException{
-//		if (! canHaveAsNewPosition(coordinate, index))
-//			throw new IllegalArgumentException();
+		if (! canHaveAsNewPosition(coordinate, index))
+			throw new IllegalArgumentException();
 		if (index == 1)
 			this.Position = new Position(coordinate, getPositionAt(2));
 		else if (index == 2)

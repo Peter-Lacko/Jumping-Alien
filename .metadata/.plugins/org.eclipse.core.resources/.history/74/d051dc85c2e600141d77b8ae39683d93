@@ -420,6 +420,8 @@ public class Mazub extends Characters {
 			collisionDetectionDown(newPos);
 			for (Characters character: getAllCloseCharacters()){
 				collision(character, true);
+				if ((character instanceof Slime) || (character instanceof Shark))
+					timeSinceJump = 0.6;
 			}
 			canMove = passableTerrainDown(newPos);
 		}
@@ -432,6 +434,8 @@ public class Mazub extends Characters {
 		}
 		computeNewVerticalVelocityAfter(duration);
 	}
+	
+	public double timeSinceJump = 0.0;
 	
 	public boolean passableTerrainRight(double newPosition){
 		//		for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){

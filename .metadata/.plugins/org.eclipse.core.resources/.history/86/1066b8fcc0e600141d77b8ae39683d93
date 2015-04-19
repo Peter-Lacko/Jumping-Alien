@@ -296,7 +296,6 @@ public class Mazub extends Characters {
 	public void advanceTimeLong (double duration) throws IllegalArgumentException {
 		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 			throw new IllegalArgumentException();
-		if (! isTerminated()){
 		removeAllCloseCharacters();
 		this.determineDoubleDirections();
 		if (isEndDuck())
@@ -317,8 +316,7 @@ public class Mazub extends Characters {
 		this.getWorld().checkIfWin(this);	
 		this.environmentDamage(duration);
 		this.immune(duration);
-		}
-		else if (getWorld() != null)
+		if (isTerminated())
 			getWorld().removeAsObject(this);
 	}
 //	public void advanceTimeLong (double duration) throws IllegalArgumentException {

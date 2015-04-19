@@ -318,7 +318,7 @@ public class Mazub extends Characters {
 		this.environmentDamage(duration);
 		this.immune(duration);
 		}
-		else if (getWorld() != null)
+		else
 			getWorld().removeAsObject(this);
 	}
 //	public void advanceTimeLong (double duration) throws IllegalArgumentException {
