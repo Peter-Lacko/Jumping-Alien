@@ -90,6 +90,28 @@ public class Shark extends OtherCharacters {
 			}
 		}
 	}
+	
+	@Override
+	public double calculateNewVerticalPositionAfter(double duration){
+		if (! isTerminated()){
+			double newYPosition = 0.0;;
+			if (isInAir()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+					100*0.5*getVerticalAcceleration()*duration*duration;
+				return newYPosition;
+			}
+			else{
+				if (isJumping()|| isInWater()){
+					newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
+							100*0.5*getVerticalAcceleration()*duration*duration;
+					return newYPosition;
+				}
+				return newYPosition;
+			}
+		}
+		else
+			return 0.0;
+	}
 
 	/**
 	 * Compute the new vertical speed after a given duration.

@@ -1093,7 +1093,7 @@ public class World {
 	 * @return	|result.length == 2
 	 */
 	@Model
-	private int[] getVisibleWindow1D(Mazub mazub, int mSize, int wSize, int mazubPos, int dimension){
+	private int[] getVisibleWindow1D(Characters mazub, int mSize, int wSize, int mazubPos, int dimension){
 		int firstPos = (mazubPos -(dimension -mSize)/2);
 		if (dimension == wSize)
 			return new int[] {0 , wSize};

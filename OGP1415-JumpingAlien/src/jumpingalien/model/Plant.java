@@ -54,6 +54,15 @@ public class Plant extends OtherCharacters {
 			this.setHorizontalVelocity(0.5);
 	}
 	
+	@Override
+	public double calculateNewVerticalPositionAfter(double duration){
+		if (! isTerminated()){		
+			return this.getPositionAt(2);
+		}
+		else
+			return 0.0;
+	}
+	
 	public MovementDirection getLastDirection() {
 		return lastDirection;
 	}

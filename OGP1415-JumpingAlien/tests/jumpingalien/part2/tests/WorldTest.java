@@ -2,6 +2,7 @@ package jumpingalien.part2.tests;
 
 import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.*;
+import jumpingalien.model.Characters;
 import jumpingalien.model.GeoFeature;
 import jumpingalien.model.Mazub;
 import jumpingalien.model.World;
@@ -19,7 +20,7 @@ public class WorldTest {
 	
 	private static World worldSmallSize;
 	
-	private static Mazub mazub;
+	private static Characters mazub;
 	
 	private static Sprite[] sprites;
 	

@@ -86,6 +86,22 @@ public class Slime extends OtherCharacters {
 			}
 		}
 	}
+	
+	@Override
+	public double calculateNewVerticalPositionAfter(double duration){
+		if (! isTerminated()){
+			double newYPosition = 0.0;;
+			if (isInAir()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+					100*0.5*getVerticalAcceleration()*duration*duration;
+				return newYPosition;
+			}
+			else
+				return this.getPositionAt(2);
+		}
+		else
+			return 0.0;
+	}
 
 	@Override
 	public void computeNewVerticalVelocityAfter(double duration){

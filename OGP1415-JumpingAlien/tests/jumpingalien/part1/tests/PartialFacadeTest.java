@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import jumpingalien.part1.facade.Facade;
 import jumpingalien.part1.facade.IFacade;
+import jumpingalien.model.Characters;
 import jumpingalien.model.Mazub;
 import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
@@ -149,14 +150,14 @@ public class PartialFacadeTest {
 	public void testCreatMazub(){
 		IFacade facade = new Facade();
 		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
-		Mazub alien = facade.createMazub(1024, 0, sprites);
+		Characters alien = facade.createMazub(1024, 0, sprites);
 	}
 	
 	@Test(expected = ModelException.class)
 	public void test2CreatMazub(){
 		IFacade facade = new Facade();
 		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
-		Mazub alien = facade.createMazub(0, -1, sprites);
+		Characters alien = facade.createMazub(0, -1, sprites);
 	}
 	
 	@Test

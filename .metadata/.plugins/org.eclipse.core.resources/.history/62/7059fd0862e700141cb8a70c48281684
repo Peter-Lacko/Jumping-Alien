@@ -1,0 +1,208 @@
+package jumpingalien.part1.tests;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import jumpingalien.part1.facade.Facade;
+import jumpingalien.part1.facade.IFacade;
+import jumpingalien.model.Mazub;
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+import jumpingalien.util.ModelException;
+import jumpingalien.common.sprites.*;
+
+import org.junit.Test;
+
+import static jumpingalien.tests.util.TestUtils.*;
+
+public class PartialFacadeTest {
+
+	@Test
+	public void startMoveRightCorrect() {
+		IFacade facade = new Facade();
+
+		Mazub alien = facade.createMazub(0, 0, spriteArrayForSize(2, 2));
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.1);
+
+		// x_new [m] = 0 + 1 [m/s] * 0.1 [s] + 1/2 0.9 [m/s^2] * (0.1 [s])^2 =
+		// 0.1045 [m] = 10.45 [cm], which falls into pixel (10, 0)
+
+		assertArrayEquals(intArray(10, 0), facade.getLocation(alien));
+	}
+
+	@Test
+	public void startMoveRightMaxSpeedAtRightTime() {
+		IFacade facade = new Facade();
+
+		Mazub alien = facade.createMazub(0, 0, spriteArrayForSize(2, 2));
+		facade.startMoveRight(alien);
+		// maximum speed reached after 20/9 seconds
+		for (int i = 0; i < 100; i++) {
+			facade.advanceTime(alien, 0.2 /9);
+		}
+
+		assertArrayEquals(doubleArray(3.0, 0), facade.getVelocity(alien),
+				Util.DEFAULT_EPSILON);
+	}
+
+	@Test
+	public void testAccellerationZeroWhenNotMoving() {
+		IFacade facade = new Facade();
+
+		Mazub alien = facade.createMazub(0, 0, spriteArrayForSize(2, 2));
+		assertArrayEquals(doubleArray(0.0, 0.0), facade.getAcceleration(alien),
+				Util.DEFAULT_EPSILON);
+	}
+
+	@Test
+	public void testWalkAnimationLastFrame() {
+		IFacade facade = new Facade();
+
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+
+		facade.startMoveRight(alien);
+
+		facade.advanceTime(alien, 0.005);
+		for (int i = 0; i < m; i++) {
+			facade.advanceTime(alien, 0.075);
+		}
+
+		assertEquals(sprites[8+m], facade.getCurrentSprite(alien));
+	}
+
+	@Test
+	public void testGetSize(){
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		assertArrayEquals(intArray(66,92), facade.getSize(alien));
+	}
+	
+	@Test
+	public void testJumping(){
+		IFacade facade = new Facade();
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(66, 92, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		facade.startJump(alien);
+		facade.advanceTime(alien, 0.1);
+		assertArrayEquals(intArray(0,75),facade.getLocation(alien));
+		facade.endJump(alien);
+		facade.advanceTime(alien, 0.1);
+		assertEquals(0.0,facade.getVelocity(alien)[1],Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void testJumpingForward(){
+		IFacade facade = new Facade();
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(66, 92, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		facade.startJump(alien);
+		facade.startMoveRight(alien);
+		facade.advanceTime(alien, 0.1);
+		assertArrayEquals(intArray(10, 75), facade.getLocation(alien));
+	}
+	
+	@Test
+	public void testStopAtLeftEdge(){
+		IFacade facade = new Facade();
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(66, 92, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		facade.startMoveLeft(alien);
+		facade.advanceTime(alien, 0.1);
+		facade.advanceTime(alien, 0.1);
+		assertArrayEquals(intArray(0,0), facade.getLocation(alien));
+		assertEquals(0.0, facade.getVelocity(alien)[0],Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void testDuckMaxSpeed(){
+		IFacade facade = new Facade();
+
+		int m = 10;
+		Sprite[] sprites = spriteArrayForSize(2, 2, 10 + 2 * m);
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		facade.startMoveRight(alien);
+		for (int i = 0; i < 10 ; i++) {
+			facade.advanceTime(alien, 0.1);
+		}
+		facade.startDuck(alien);
+		facade.advanceTime(alien, 0.1);
+		assertEquals(1.0, facade.getVelocity(alien)[0],Util.DEFAULT_EPSILON);
+	}
+	
+	@Test 
+	public void testDuckSize(){
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		facade.startDuck(alien);
+		facade.advanceTime(alien, 0.1);
+		assertArrayEquals(intArray(68,70),facade.getSize(alien));
+	}
+	
+	@Test(expected = ModelException.class)
+	public void testCreatMazub(){
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(1024, 0, sprites);
+	}
+	
+	@Test(expected = ModelException.class)
+	public void test2CreatMazub(){
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(0, -1, sprites);
+	}
+	
+	@Test
+	public void testEndMove(){
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		facade.startMoveRight(alien);
+		for (int i = 0; i < 10 ; i++) {
+			facade.advanceTime(alien, 0.1);
+		}
+		facade.endMoveRight(alien);
+		facade.advanceTime(alien, 0.1);
+		assertEquals(0.0, facade.getVelocity(alien)[0],Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void testStopWhenBothDirections(){
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(0, 0, sprites);
+		facade.startMoveRight(alien);
+		for (int i = 0; i < 10 ; i++) {
+			facade.advanceTime(alien, 0.1);
+		}
+		facade.startMoveLeft(alien);
+		facade.advanceTime(alien, 0.1);
+		assertEquals(0.0, facade.getVelocity(alien)[0],Util.DEFAULT_EPSILON);
+		}
+
+	@Test(expected = ModelException.class)
+	public void testToBigDt() {
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(0,0, sprites);
+		facade.advanceTime(alien,2.01);
+	}	
+	
+	@Test
+	public void noJumphenInAir(){
+		IFacade facade = new Facade();
+		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+		Mazub alien = facade.createMazub(0,1, sprites);
+		facade.startJump(alien);
+		facade.advanceTime(alien, 0.1);
+		assertArrayEquals(intArray(0,0), facade.getLocation(alien));
+	}
+	
+}

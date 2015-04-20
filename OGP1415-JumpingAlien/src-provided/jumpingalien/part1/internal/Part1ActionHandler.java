@@ -2,6 +2,7 @@ package jumpingalien.part1.internal;
 
 import jumpingalien.common.game.AbstractActionHandler;
 import jumpingalien.part1.facade.IFacade;
+import jumpingalien.model.Characters;
 import jumpingalien.model.Mazub;
 
 public class Part1ActionHandler extends AbstractActionHandler<Mazub, IFacade> {
@@ -61,7 +62,7 @@ public class Part1ActionHandler extends AbstractActionHandler<Mazub, IFacade> {
 	}
 
 	@Override
-	protected Mazub getAlien() {
+	protected Characters getAlien() {
 		return getGame().getAlien();
 	}
 }
