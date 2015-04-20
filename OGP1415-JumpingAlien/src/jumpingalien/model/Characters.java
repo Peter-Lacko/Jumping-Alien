@@ -421,9 +421,11 @@ public abstract class Characters {
 	// moving in two directions aanpassen naar nieuwe richtlijnen aanpassen
 	@Basic
 	public double getHorizontalAcceleration() {
-		if (this.isAccelerating() && this.isMovingLeft() && (! this.movingInTwoDirections()))
+//		if (this.isAccelerating() && this.isMovingLeft() && (! this.movingInTwoDirections()))
+		if (this.isMovingLeft() && (! this.movingInTwoDirections()))
 			return -getAbsHorizontalAcceleration();
-		else if (this.isAccelerating() && this.isMovingRight() && (! this.movingInTwoDirections()))
+//		else if (this.isAccelerating() && this.isMovingRight() && (! this.movingInTwoDirections()))
+		else if (this.isMovingRight() && (! this.movingInTwoDirections()))			
 			return getAbsHorizontalAcceleration();
 		else
 			return 0.0;
@@ -571,11 +573,7 @@ public abstract class Characters {
 	/**
 	 * value stating whether the character is accelerating
 	 */
-	protected boolean isAccelerating = true;
-	
-	
-	
-
+	protected boolean isAccelerating = false;
 	
 
 	/**

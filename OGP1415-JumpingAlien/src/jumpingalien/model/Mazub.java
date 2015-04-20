@@ -356,7 +356,6 @@ public class Mazub extends Characters {
 //	}
 	
 	private void computeHorizontalMovement(double duration) {
-		computeNewHorizontalVelocityAfter(duration);
 		double newPos = calculateNewHorizontalPositionAfter(duration);
 		int oldPos = getIntPositionAt(1);
 		boolean canMove = true;
@@ -399,7 +398,7 @@ public class Mazub extends Characters {
 		else{
 			// new hor velocity = 0.0
 		}
-		
+		computeNewHorizontalVelocityAfter(duration);
 	}
 
 	private void computeVerticalMovement(double duration) {
@@ -498,9 +497,11 @@ public class Mazub extends Characters {
 		assert (direction == "left" || direction == "right");
 		if (direction == "left") {
 			this.setMovingLeft(true);
+			this.setHorizontalVelocity(getInitHorizontalVelocity());
 		}
 		else if (direction == "right") {
 			this.setMovingRight(true);
+			this.setHorizontalVelocity(getInitHorizontalVelocity());
 		}
 //		this.setAccelerating(true);
 //		this.setHorizontalVelocity(getInitHorizontalVelocity());
