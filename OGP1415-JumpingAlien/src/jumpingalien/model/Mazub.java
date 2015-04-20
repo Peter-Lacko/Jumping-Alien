@@ -356,6 +356,7 @@ public class Mazub extends Characters {
 //	}
 	
 	private void computeHorizontalMovement(double duration) {
+		computeNewHorizontalVelocityAfter(duration);
 		double newPos = calculateNewHorizontalPositionAfter(duration);
 		int oldPos = getIntPositionAt(1);
 		boolean canMove = true;
@@ -398,10 +399,11 @@ public class Mazub extends Characters {
 		else{
 			// new hor velocity = 0.0
 		}
-		computeNewHorizontalVelocityAfter(duration);
+		
 	}
 
 	private void computeVerticalMovement(double duration) {
+		computeNewVerticalVelocityAfter(duration);
 		double newPos = calculateNewVerticalPositionAfter(duration);
 		int oldPos = getIntPositionAt(2);
 		boolean canMove = true;
@@ -430,7 +432,6 @@ public class Mazub extends Characters {
 		else{
 			setVerticalVelocity(0.0);
 		}
-		computeNewVerticalVelocityAfter(duration);
 	}
 	
 	/**
