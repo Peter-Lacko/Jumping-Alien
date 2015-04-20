@@ -45,6 +45,12 @@ public class Plant extends OtherCharacters {
 		if (canHaveAsNewPosition(newPosition,1))
 			this.setPositionAt(newPosition, 1);
 	}
+	
+	public double calculateNewHorizontalPositionAfter(double duration) {
+		double newPosition = getPositionAt(1);
+		newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+		return newPosition;
+	}
 
 	
 	@Override

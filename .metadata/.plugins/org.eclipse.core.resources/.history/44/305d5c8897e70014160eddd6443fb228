@@ -45,7 +45,6 @@ public class Plant extends OtherCharacters {
 		if (canHaveAsNewPosition(newPosition,1))
 			this.setPositionAt(newPosition, 1);
 	}
-
 	
 	@Override
 	protected void computeNewHorizontalVelocityAfter(double duration) {
