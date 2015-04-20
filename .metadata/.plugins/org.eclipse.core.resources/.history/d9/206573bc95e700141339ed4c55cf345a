@@ -6,7 +6,6 @@ import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import jumpingalien.model.Mazub;
-import jumpingalien.model.MovementDirection;
 import jumpingalien.model.World;
 import jumpingalien.part2.facade.Facade;
 import jumpingalien.part2.facade.IFacadePart2;
@@ -133,6 +132,7 @@ public class PartialFacadeTest {
 		for (int i = 0; i < m; i++) {
 			facade.advanceTime(world, 0.075);
 		}
+
 		assertEquals(sprites[8 + m], facade.getCurrentSprite(alien));
 	}
 

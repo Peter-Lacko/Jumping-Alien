@@ -51,12 +51,13 @@ public class Mazub extends Characters {
 	 * 			correct sided sprite for all other cases.
 	 */
 	private Sprite getCurrentWalkCycleSprite() {
+		System.out.println(getTimeSinceStep());
 		if (getTimeSinceStep() > 0.075){
 			if (getIndex() < getNbRunningCycle()-1)
 				setIndex(getIndex() + 1);
 			else 
 				setIndex(0);
-			setTimeSinceStep(getTimeSinceStep() - 0.075);
+			setTimeSinceStep(0.0);
 		}
 		if (movingInTwoDirections())
 			return leftOrRightSprite(2);

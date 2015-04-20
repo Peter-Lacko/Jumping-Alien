@@ -56,7 +56,7 @@ public class Mazub extends Characters {
 				setIndex(getIndex() + 1);
 			else 
 				setIndex(0);
-			setTimeSinceStep(getTimeSinceStep() - 0.075);
+			setTimeSinceStep(0.0);
 		}
 		if (movingInTwoDirections())
 			return leftOrRightSprite(2);
@@ -297,6 +297,7 @@ public class Mazub extends Characters {
 		if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 			throw new IllegalArgumentException();
 		if (! isTerminated()){
+		this.setSprite(this.getCurrentSprite());
 		removeAllCloseCharacters();
 		this.determineDoubleDirections();
 		if (isEndDuck())
@@ -313,7 +314,6 @@ public class Mazub extends Characters {
 			setTimeSinceStep(getTimeSinceStep() + duration);
 		if (this.getTimeSinceEndMove() > 1.0)
 			this.sethasMovedIn(MovementDirection.NONE);
-		this.setSprite(this.getCurrentSprite());
 		this.getWorld().checkIfWin(this);	
 		this.environmentDamage(duration);
 		this.immune(duration);

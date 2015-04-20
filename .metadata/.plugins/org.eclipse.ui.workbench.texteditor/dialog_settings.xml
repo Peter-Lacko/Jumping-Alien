@@ -2,12 +2,17 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
 		<item value="getTimeSinceStep()" key="selection"/>
+=======
+		<item value="getIndex" key="selection"/>
+>>>>>>> 065dffa5e3488dfb59cb439a90101ad4b4d18714
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
 			<item value="getTimeSinceStep()"/>
 			<item value="start"/>
 			<item value="sta"/>
@@ -16,6 +21,16 @@
 			<item value="paas"/>
 			<item value="collision"/>
 			<item value="check"/>
+=======
+			<item value="getIndex"/>
+			<item value="TimeSinceSte"/>
+			<item value="setHasMovedIn"/>
+			<item value="setHasMoveIn"/>
+			<item value="getCurrentSprite"/>
+			<item value="advanceTime"/>
+			<item value="advanceTimeLong"/>
+			<item value="getinitho"/>
+>>>>>>> 065dffa5e3488dfb59cb439a90101ad4b4d18714
 		</list>
 		<list key="replacehistory">
 		</list>
