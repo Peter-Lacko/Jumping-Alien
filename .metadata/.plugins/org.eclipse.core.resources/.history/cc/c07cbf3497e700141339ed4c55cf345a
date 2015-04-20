@@ -56,14 +56,14 @@ public class Mazub extends Characters {
 				setIndex(getIndex() + 1);
 			else 
 				setIndex(0);
-			setTimeSinceStep(getTimeSinceStep() - 0.075);
+			setTimeSinceStep(0.0);
 		}
 		if (movingInTwoDirections())
 			return leftOrRightSprite(2);
 		else if (isMovingRight())
-			return getImageAt(9+getIndex());
+			return getImageAt(10+getIndex());
 		else if (isMovingLeft()) 
-			return getImageAt(9+getNbRunningCycle()+getIndex());
+			return getImageAt(10+getNbRunningCycle()+getIndex());
 		else {
 			return leftOrRightSprite(2);
 		}

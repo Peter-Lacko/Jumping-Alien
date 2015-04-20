@@ -56,7 +56,7 @@ public class Mazub extends Characters {
 				setIndex(getIndex() + 1);
 			else 
 				setIndex(0);
-			setTimeSinceStep(getTimeSinceStep() - 0.075);
+			setTimeSinceStep(0.0);
 		}
 		if (movingInTwoDirections())
 			return leftOrRightSprite(2);
@@ -313,6 +313,7 @@ public class Mazub extends Characters {
 			setTimeSinceStep(getTimeSinceStep() + duration);
 		if (this.getTimeSinceEndMove() > 1.0)
 			this.sethasMovedIn(MovementDirection.NONE);
+		System.out.println(this.getHasMovedIn() == MovementDirection.NONE);
 		this.setSprite(this.getCurrentSprite());
 		this.getWorld().checkIfWin(this);	
 		this.environmentDamage(duration);
