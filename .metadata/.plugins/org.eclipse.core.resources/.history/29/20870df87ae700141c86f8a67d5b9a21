@@ -168,17 +168,10 @@ public class World {
 	/**
 	 * 
 	 * @param mazub
-	 * @effect	if any of Mazub's edges are in the same tile as the target tile, then the character has won.
-	 * 			|let	pos = mazub.getIntPosition()
-	 * 			|		width = mazub.getSprite().getWidth()
-	 * 			|		height = mazub.getSprite().getHeight()
-	 * 			|if
-	 * 			|	(for some position in {pos[0]..pos[0]+width-1, pos[1]}, 
-	 * 			|						{pos[0]..pos[0]+width-1, pos[1]+height-1},
-	 * 			|						{pos[0], pos[1]..pos[1]+height-1},
-	 * 			|						{pos[0]+width-1, pos[1]..pos[1]+height-1}
-	 * 			|		getTilePosition(position) == getTargetTile())
-	 * 			|	then setPlayerWon(true)
+	 * @return	|if mazub.getIntPosition().toScale(Scale.TILE).equals(getTargetPosition())
+	 * 			|	then result == true
+	 * 			|else
+	 * 			|	result == false
 	 */
 	protected void checkIfWin(Characters mazub){
 		int[] startPos = mazub.getIntPosition();
@@ -1119,7 +1112,7 @@ public class World {
 	 * @return	|result.length == 2
 	 */
 	@Model
-	private int[] getVisibleWindow1D(Characters mazub, int mSize, int wSize, int mazubPos, int dimension){
+	private int[] getVisibleWindow1D(Mazub mazub, int mSize, int wSize, int mazubPos, int dimension){
 		int firstPos = (mazubPos -(dimension -mSize)/2);
 		if (dimension == wSize)
 			return new int[] {0 , wSize};

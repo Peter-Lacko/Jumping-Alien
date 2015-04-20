@@ -166,52 +166,30 @@ public class World {
 	private final Position TARGET_TILE;
 	
 	/**
-	 * 
+	 * check if the given character's saved position overlaps with the target tile.
 	 * @param mazub
-	 * @effect	if any of Mazub's edges are in the same tile as the target tile, then the character has won.
-	 * 			|let	pos = mazub.getIntPosition()
-	 * 			|		width = mazub.getSprite().getWidth()
-	 * 			|		height = mazub.getSprite().getHeight()
-	 * 			|if
-	 * 			|	(for some position in {pos[0]..pos[0]+width-1, pos[1]}, 
-	 * 			|						{pos[0]..pos[0]+width-1, pos[1]+height-1},
-	 * 			|						{pos[0], pos[1]..pos[1]+height-1},
-	 * 			|						{pos[0]+width-1, pos[1]..pos[1]+height-1}
-	 * 			|		getTilePosition(position) == getTargetTile())
-	 * 			|	then setPlayerWon(true)
+	 * @return	|if mazub.getIntPosition().toScale(Scale.TILE).equals(getTargetPosition())
+	 * 			|	then result == true
+	 * 			|else
+	 * 			|	result == false
 	 */
-	protected void checkIfWin(Characters mazub){
-		int[] startPos = mazub.getIntPosition();
-		startPos = getTilePosition(startPos[0], startPos[1]);
-		int width = (mazub.getSprite().getWidth() / getTileLength());
-		int height = (mazub.getSprite().getHeight() / getTileLength());
-		int[] target = getTargetTile();
-		for (int i=0 ; i <= width ; i++)
-			if ((startPos[0] +i == target[0]) && ((startPos[1] == target[1])
-					|| (startPos[1] + height == target[1])))
-				setPlayerWon(true);
-		for (int i=1 ; i <= height -1 ; i++)
-			if ((startPos[1] +i == target[1]) && ((startPos[0] == target[0])
-					|| (startPos[0] + width == target[0])))
-				setPlayerWon(true);
-			
+	protected boolean checkIfWin(Characters mazub){
+//		Position mazubPosition = mazub.getPositionValue().toScale(Scale.TILE);
+		int[] mazubPos1 = {mazub.getIntPositionAt(1), mazub.getIntPositionAt(2)};
+		int[] mazubPos2 = {mazub.getIntPositionAt(1) + mazub.getSprite().getWidth(), mazub.getIntPositionAt(2)};
+		mazubPos1 = getPixelOfTileContaining(mazubPos1[0], mazubPos1[1]);
+		mazubPos2 = getPixelOfTileContaining(mazubPos2[0], mazubPos2[1]);
+		int [] target = getBottomLeftPixelOfTile(getTargetTile()[0], getTargetTile()[1]);
+//		if ((mazubPosition[0] == getTargetTile()[0]) && (mazubPosition[1] == getTargetTile()[1])){
+		if (((mazubPos1[0] == target[0]) && (mazubPos1[1] == target[1])) 
+				|| ((mazubPos2[0] == target[0]) && (mazubPos2[1] == target[1]))){
+			this.setPlayerWon(true);
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
-////		Position mazubPosition = mazub.getPositionValue().toScale(Scale.TILE);
-//		int[] mazubPos1 = {mazub.getIntPositionAt(1), mazub.getIntPositionAt(2)};
-//		int[] mazubPos2 = {mazub.getIntPositionAt(1) + mazub.getSprite().getWidth(), mazub.getIntPositionAt(2)};
-//		mazubPos1 = getPixelOfTileContaining(mazubPos1[0], mazubPos1[1]);
-//		mazubPos2 = getPixelOfTileContaining(mazubPos2[0], mazubPos2[1]);
-//		int [] target = getBottomLeftPixelOfTile(getTargetTile()[0], getTargetTile()[1]);
-////		if ((mazubPosition[0] == getTargetTile()[0]) && (mazubPosition[1] == getTargetTile()[1])){
-//		if (((mazubPos1[0] == target[0]) && (mazubPos1[1] == target[1])) 
-//				|| ((mazubPos2[0] == target[0]) && (mazubPos2[1] == target[1]))){
-//			this.setPlayerWon(true);
-//			return true;
-//		}
-//		else{
-//			return false;
-//		}
-//	}
 	
 	@Basic
 	public boolean hasPlayerWon(){
@@ -1119,7 +1097,7 @@ public class World {
 	 * @return	|result.length == 2
 	 */
 	@Model
-	private int[] getVisibleWindow1D(Characters mazub, int mSize, int wSize, int mazubPos, int dimension){
+	private int[] getVisibleWindow1D(Mazub mazub, int mSize, int wSize, int mazubPos, int dimension){
 		int firstPos = (mazubPos -(dimension -mSize)/2);
 		if (dimension == wSize)
 			return new int[] {0 , wSize};
