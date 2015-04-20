@@ -740,6 +740,29 @@ public class World {
 		else
 			objects.add(object);
 		object.setWorld(this);
+		if (object.getIntPositionAt(1) <= getWorldSize()[0]/2)
+			addAsLeftObject(object);
+		else
+			removeAsLeftObject(object);
+		if ((object.getIntPositionAt(1) + object.getSize()[0] - 1) >= getWorldSize()[0]/2)
+			addAsRightObject(object);
+		else
+			removeAsRightObject(object);
+	}
+	
+	/**
+	 * 
+	 * @param mazub
+	 * @effect	|addObjectAt(mazub, 1)
+	 */
+	public void addMazub(Mazub mazub){
+		assert (mazub != null);
+		int xPos = mazub.getIntPositionAt(1);
+		int yPos = mazub.getIntPositionAt(2);
+		assert((xPos >= 0) && (yPos >= 0) && (xPos <= getWorldSize()[0]-1) && (yPos <= getWorldSize()[1]-1));
+		assert (! hasAsObject(mazub));
+		assert (getNbObjects() <= 99);
+		addObjectAt(mazub, 1);
 	}
 	
 	/**
@@ -808,6 +831,14 @@ public class World {
 		else
 			objects.add(object);
 		object.setWorld(this);
+		if (object.getIntPositionAt(1) <= getWorldSize()[0]/2)
+			addAsLeftObject(object);
+		else
+			removeAsLeftObject(object);
+		if ((object.getIntPositionAt(1) + object.getSize()[0] - 1) >= getWorldSize()[0]/2)
+			addAsRightObject(object);
+		else
+			removeAsRightObject(object);
 	}
 	
 	/**
@@ -816,7 +847,7 @@ public class World {
 	 * @effect	|if hasAsObject(object):
 	 * 			|	then removeObjectAt(getIndexOfObject(object))
 	 */
-	protected void removeAsObject(Characters object){
+	public void removeAsObject(Characters object){
 //		int firstIndexOfObject = objects.indexOf(object);
 //		while (firstIndexOfObject != -1){
 //			objects.set(firstIndexOfObject, null);
@@ -948,7 +979,7 @@ public class World {
 	private Set<Characters> leftObjects = new HashSet<Characters>();
 	
 	@Basic
-	protected boolean hasAsRightObject(Characters object){
+	public boolean hasAsRightObject(Characters object){
 		return rightObjects.contains(object);
 	}
 	
