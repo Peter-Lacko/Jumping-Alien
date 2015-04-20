@@ -51,7 +51,7 @@ public class Mazub extends Characters {
 	 * 			correct sided sprite for all other cases.
 	 */
 	private Sprite getCurrentWalkCycleSprite() {
-		if (getTimeSinceStep() > 0.075){
+		if (getTimeSinceStep() >= 0.075){
 			if (getIndex() < getNbRunningCycle()-1)
 				setIndex(getIndex() + 1);
 			else 

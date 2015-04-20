@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="PartialFacadeTest (1)" project="OGP1415-JumpingAlien" tests="6" started="6" failures="0" errors="0" ignored="0">
+  <testsuite name="jumpingalien.part2.tests.PartialFacadeTest" time="0.04">
+    <testcase name="testZeroAccellerationOnGround" classname="jumpingalien.part2.tests.PartialFacadeTest" time="0.012"/>
+    <testcase name="testWalkAnimationLastFrame" classname="jumpingalien.part2.tests.PartialFacadeTest" time="0.01"/>
+    <testcase name="testGetBottomLeftPixelOfRandomTile" classname="jumpingalien.part2.tests.PartialFacadeTest" time="0.001"/>
+    <testcase name="startMoveRightMaxSpeedAtRightTime" classname="jumpingalien.part2.tests.PartialFacadeTest" time="0.015"/>
+    <testcase name="startMoveRightCorrect" classname="jumpingalien.part2.tests.PartialFacadeTest" time="0.001"/>
+    <testcase name="testTilesInRegion" classname="jumpingalien.part2.tests.PartialFacadeTest" time="0.001"/>
+  </testsuite>
+</testrun>
