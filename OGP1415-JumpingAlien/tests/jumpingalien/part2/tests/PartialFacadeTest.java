@@ -35,11 +35,12 @@ public class PartialFacadeTest {
 		IFacadePart2 facade = new Facade();
 
 		// 2 vertical tiles, size 500px
+		// NEW: 2x2 vertical Tiles, otherwise the given target Tile is invalid!!
 		// ....
 		// a...
 		// XXXX
 		// XXXX
-		World world = facade.createWorld(500, 1, 2, 1, 1, 1, 1);
+		World world = facade.createWorld(500, 2, 2, 1, 1, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
 		Mazub alien = facade.createMazub(0, 499, spriteArrayForSize(3, 3));
 		facade.setMazub(world, alien);
@@ -66,11 +67,12 @@ public class PartialFacadeTest {
 		IFacadePart2 facade = new Facade();
 
 		// 2 vertical tiles, size 500px
+		// NEW: 2x2 vertical Tiles, otherwise the given target Tile is invalid!!
 		// ....
 		// a...
 		// XXXX
 		// XXXX
-		World world = facade.createWorld(500, 1, 2, 1, 1, 1, 1);
+		World world = facade.createWorld(500, 2, 2, 1, 1, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
 		Mazub alien = facade.createMazub(0, 499, spriteArrayForSize(3, 3));
 		facade.setMazub(world, alien);
@@ -88,11 +90,12 @@ public class PartialFacadeTest {
 		IFacadePart2 facade = new Facade();
 
 		// 2 vertical tiles, size 500px
+		// NEW: 2x2 vertical Tiles, otherwise the given target Tile is invalid!!
 		// ....
 		// a...
 		// XXXX
 		// XXXX
-		World world = facade.createWorld(500, 1, 2, 1, 1, 1, 1);
+		World world = facade.createWorld(500, 2, 2, 1, 1, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
 		Mazub alien = facade.createMazub(0, 499, spriteArrayForSize(3, 3));
 		facade.setMazub(world, alien);
@@ -111,11 +114,12 @@ public class PartialFacadeTest {
 		IFacadePart2 facade = new Facade();
 
 		// 2 vertical tiles, size 500px
+		// NEW: 2x2 vertical Tiles, otherwise the given target Tile is invalid!!
 		// ....
 		// a...
 		// XXXX
 		// XXXX
-		World world = facade.createWorld(500, 1, 2, 1, 1, 1, 1);
+		World world = facade.createWorld(500, 2, 2, 1, 1, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
 
 		int m = 10;

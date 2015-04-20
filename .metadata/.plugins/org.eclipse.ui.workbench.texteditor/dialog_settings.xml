@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="setWorld(null)" key="selection"/>
+		<item value="collide" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="setWorld(null)"/>
-			<item value="acceler"/>
-			<item value="computeNewVerticalVelocityAfter"/>
-			<item value="computeNew"/>
-			<item value="initvert"/>
-			<item value="inityvert"/>
-			<item value="System"/>
-			<item value="system"/>
+			<item value="collide"/>
+			<item value="targetTile"/>
+			<item value="equals"/>
+			<item value="checkifwin("/>
+			<item value="matches"/>
+			<item value="matching"/>
+			<item value="eat(pl"/>
+			<item value="eat(p"/>
 		</list>
 		<list key="replacehistory">
 		</list>
