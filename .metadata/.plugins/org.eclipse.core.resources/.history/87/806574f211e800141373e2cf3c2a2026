@@ -169,11 +169,10 @@ public class Shark extends OtherCharacters {
 	@Override
 	public void startJump() throws IllegalArgumentException{
 		try {
-			if(! isInAir()){
+			if(! isInAir())
 				this.setVerticalVelocity(getInitVerticalVelocity());
-				setMovementsSinceLastJump(0);
-				this.isJumping = true;
-			}
+			
+			setMovementsSinceLastJump(0);
 		}
 		catch (IllegalArgumentException exc) {
 			throw exc;

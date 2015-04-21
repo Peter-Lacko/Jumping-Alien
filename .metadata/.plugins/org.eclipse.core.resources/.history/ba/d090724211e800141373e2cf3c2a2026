@@ -106,8 +106,8 @@ public abstract class OtherCharacters extends Characters {
 					this.computeVerticalMovement(duration);
 					setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
 				}
-//				else if (Util.fuzzyLessThanOrEqualTo(getTimeSinceStartMovement(), 0.0))
-//					startMove();
+				else if (Util.fuzzyLessThanOrEqualTo(getTimeSinceStartMovement(), 0.0))
+					startMove();
 				else{
 					endMove();
 					//setTimeSinceStartMovement(0.0);
@@ -139,7 +139,7 @@ public abstract class OtherCharacters extends Characters {
 				else{
 					collision(character, false);
 					if ((character instanceof Slime) || (character instanceof Shark)){
-						if ((!(this instanceof Slime)) || (!(character instanceof Slime)))
+//						if ((!(this instanceof Slime)) || (!(character instanceof Slime)))
 							canMove = false;
 					}
 				}
@@ -157,7 +157,7 @@ public abstract class OtherCharacters extends Characters {
 				else{
 					collision(character, false);
 					if ((character instanceof Slime) || (character instanceof Shark)){
-						if ((!(this instanceof Slime)) || (!(character instanceof Slime)))
+//						if ((!(this instanceof Slime)) || (!(character instanceof Slime)))
 							canMove = false;
 					}
 				}
@@ -197,11 +197,8 @@ public abstract class OtherCharacters extends Characters {
 			collisionDetectionDown(newPos);
 			for (Characters character: getAllCloseCharacters()){
 				collision(character, false );
-				if ((character instanceof Slime) || (character instanceof Shark))
-					canMove = false;
 			}
-			if (canMove)
-				canMove = passableTerrainDown(newPos);
+			canMove = passableTerrainDown(newPos);
 		}
 		if (canMove){
 			setPositionAt(newPos, 2);

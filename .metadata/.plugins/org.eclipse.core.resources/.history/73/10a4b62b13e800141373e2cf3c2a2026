@@ -106,8 +106,8 @@ public abstract class OtherCharacters extends Characters {
 					this.computeVerticalMovement(duration);
 					setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
 				}
-//				else if (Util.fuzzyLessThanOrEqualTo(getTimeSinceStartMovement(), 0.0))
-//					startMove();
+				else if (Util.fuzzyLessThanOrEqualTo(getTimeSinceStartMovement(), 0.0))
+					startMove();
 				else{
 					endMove();
 					//setTimeSinceStartMovement(0.0);
