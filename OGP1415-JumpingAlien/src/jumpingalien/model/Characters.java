@@ -190,19 +190,19 @@ public abstract class Characters {
 	public Sprite leftOrRightSprite(int number){
 		assert (number >= 0);
 		assert (number + 1 < getNbImages());
-		if (! movingInTwoDirections()){
-			if ((isMovingLeft()) || (getHasMovedIn() == MovementDirection.LEFT)){
+//		if (! movingInTwoDirections()){
+			if ((this.getHorizontalVelocity() < 0) || (getHasMovedIn() == MovementDirection.LEFT)){
 				return getImageAt(number + 2);
 			} else{
 				return getImageAt(number + 1);
 			}
-		}
-		else{
-			if (getHasMovedIn() == MovementDirection.LEFT)
-				return getImageAt(number + 2);
-			else
-				return getImageAt(number + 1);
-		}
+//		}
+//		else{
+//			if (getHasMovedIn() == MovementDirection.LEFT)
+//				return getImageAt(number + 2);
+//			else
+//				return getImageAt(number + 1);
+//		}
 	}
 	
 
@@ -374,7 +374,7 @@ public abstract class Characters {
 		return Math.min((0.01 / (speed + acceleration * duration)),duration);
 		
 	}
-	
+
 	/**
 	 * Check whether the given horizontal acceleration is valid.
 	 * @param acceleration

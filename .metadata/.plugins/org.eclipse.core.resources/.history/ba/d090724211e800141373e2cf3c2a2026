@@ -1,0 +1,269 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+import java.util.Random;
+
+public abstract class OtherCharacters extends Characters {
+
+	public OtherCharacters(int x_pos, int y_pos, Sprite[] sprites,double hor_acc, double max_hor_vel, 
+			double init_hor_vel, double init_ver_vel,int hitPoints) throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitPoints);
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| leftOrRightSprite(0)
+	 */
+	@Override
+	public Sprite getCurrentSprite() {
+		return leftOrRightSprite(0);
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number >= 0 && number <2)
+	 */
+	@Override
+	public boolean canHaveAsIndex(int number) {
+		return ((number >= 0) && (number < 2));
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number == 2)
+	 */
+	@Override
+	public boolean isValidNbImages(int nbImages) {
+		return (nbImages == 2);
+	}
+
+//	@Override
+//	protected abstract void computeNewHorizontalPositionAfter(double duration) ;
+//
+//	@Override
+//	protected abstract void computeNewHorizontalVelocityAfter(double duration) ;
+	
+	public double calculateNewHorizontalPositionAfter(double duration) {
+		double newPosition = getPositionAt(1);
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity()
+				 + 100*0.5*getHorizontalAcceleration()*duration*duration;
+		return newPosition;
+	}
+
+	
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		double newPosition;
+		if (isMovingLeft() || isMovingRight())
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
+		else
+			newPosition = this.getPositionAt(1);
+		if (canHaveAsNewPosition(newPosition,1))
+			this.setPositionAt(newPosition, 1);
+	}
+
+	@Override
+	protected void computeNewHorizontalVelocityAfter(double duration) {
+		double newVelocity;
+		if (isMovingLeft() || isMovingRight()){
+			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+			if (isMovingLeft())
+				newVelocity = -1.0*newVelocity;
+			this.setHorizontalVelocity(newVelocity);
+		}
+	}
+	
+	@Override
+	public double getHorizontalAcceleration() {
+		if (this.isMovingLeft())
+			return -getAbsHorizontalAcceleration();
+		else if (this.isMovingRight())
+			return getAbsHorizontalAcceleration();
+		else
+			return 0.0;
+	}
+	
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void advanceTimeLong(double duration){
+		try {
+			if (! this.isTerminated()){
+				if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
+					throw new IllegalArgumentException();
+				if (getTimeSinceStartMovement() < getMovementDuration()){
+					removeAllCloseCharacters();
+					this.computeHorizontalMovement(duration);
+					removeAllCloseCharacters();
+					this.computeVerticalMovement(duration);
+					setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+				}
+				else if (Util.fuzzyLessThanOrEqualTo(getTimeSinceStartMovement(), 0.0))
+					startMove();
+				else{
+					endMove();
+					//setTimeSinceStartMovement(0.0);
+					startMove();
+				}
+				if (!this.isTerminated())
+					this.environmentDamage(duration);
+				}
+			else{
+				this.setTerminateTime(getTerminateTime()+duration);
+				if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+					this.getWorld().removeAsObject(this);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void computeHorizontalMovement(double duration) {
+		double newPos = calculateNewHorizontalPositionAfter(duration);
+		int oldPos = getIntPositionAt(1);
+		boolean canMove = true;
+		if ((int)newPos > oldPos){
+			collisionDetectionRight(newPos);
+			for (Characters character: getAllCloseCharacters()){
+				if (character.getIntPositionAt(2) -this.getSprite().getHeight() -1 
+						== getIntPositionAt(2))
+					collision(character, true);
+				else{
+					collision(character, false);
+					if ((character instanceof Slime) || (character instanceof Shark)){
+//						if ((!(this instanceof Slime)) || (!(character instanceof Slime)))
+							canMove = false;
+					}
+				}
+			}
+			if (canMove){
+				canMove = passableTerrainRight(newPos);
+			}
+		}
+		if ((int)newPos < oldPos){
+			collisionDetectionLeft(newPos);
+			for (Characters character: getAllCloseCharacters()){
+				if (character.getIntPositionAt(2)  -this.getSprite().getHeight() -1 
+						== getIntPositionAt(2))
+					collision(character, true);
+				else{
+					collision(character, false);
+					if ((character instanceof Slime) || (character instanceof Shark)){
+//						if ((!(this instanceof Slime)) || (!(character instanceof Slime)))
+							canMove = false;
+					}
+				}
+			}
+			if (canMove){
+				canMove = passableTerrainLeft(newPos);
+			}
+		}
+		if (canMove){
+			setPositionAt(newPos, 1);
+			//calculate new hor velocity
+		}
+		else{
+			// new hor velocity = 0.0
+		}
+		computeNewHorizontalVelocityAfter(duration);
+	}
+
+	public abstract double calculateNewVerticalPositionAfter(double duration);
+	
+	private void computeVerticalMovement(double duration) {
+		double newPos = calculateNewVerticalPositionAfter(duration);
+		int oldPos = getIntPositionAt(2);
+		boolean canMove = true;
+		if ((int)newPos > oldPos){
+			collisionDetectionUp(newPos);
+			for (Characters character: getAllCloseCharacters()){
+				collision(character,true);
+				if ((character instanceof Slime) || (character instanceof Shark))
+					canMove = false;
+			}
+			if (canMove){
+				canMove = passableTerrainUp(newPos);
+			}
+		}
+		if ((int)newPos < oldPos){
+			collisionDetectionDown(newPos);
+			for (Characters character: getAllCloseCharacters()){
+				collision(character, false );
+			}
+			canMove = passableTerrainDown(newPos);
+		}
+		if (canMove){
+			setPositionAt(newPos, 2);
+			//calculate new hor velocity
+		}
+		else{
+			setVerticalVelocity(0.0);
+		}
+		computeNewVerticalVelocityAfter(duration);
+	}
+
+	public abstract void startMove();
+
+	public abstract void endMove();
+	
+	public boolean getRandomBoolean() {
+	    Random random = new Random();
+	    return random.nextBoolean();
+	}
+	
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	public void setTimeSinceStartMovement(double timeSinceStartMovement) {
+		this.timeSinceStartMovement = timeSinceStartMovement;
+	}
+	
+	public double timeSinceStartMovement = 0.0;
+
+	public double getMovementDuration() {
+		return movementDuration;
+	}
+
+	public void setMovementDuration(double movementDuration) {
+		this.movementDuration = movementDuration;
+	}
+	
+	public double randomDuration(double[] range){
+		Random r = new Random();
+		double duration = range[0] + (range[1]-range[0])*r.nextDouble();
+		return duration;
+	}
+	
+	public double movementDuration;
+
+	@Override
+	protected abstract void computeNewVerticalPositionAfter(double duration) ;
+
+	@Override
+	protected abstract void computeNewVerticalVelocityAfter(double duration) ;
+
+
+
+	@Override
+	public abstract void startJump() ;
+	
+	public double terminateTime = 0.0;
+
+	public double getTerminateTime() {
+		return terminateTime;
+	}
+
+	public void setTerminateTime(double terminateTime) {
+		this.terminateTime = terminateTime;
+	}
+
+}

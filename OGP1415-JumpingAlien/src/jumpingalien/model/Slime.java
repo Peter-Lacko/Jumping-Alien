@@ -118,7 +118,7 @@ public class Slime extends OtherCharacters {
 	@Override
 	public boolean isInAir(){
 		if (! isTerminated()){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
+			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth()-1;i++){
 				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
 				GeoFeature geo = getWorld().getGeoFeatureAt(pos[0],pos[1]);
 				if (geo == GeoFeature.GROUND)

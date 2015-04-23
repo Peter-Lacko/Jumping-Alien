@@ -51,6 +51,7 @@ public class Mazub extends Characters {
 	 * 			correct sided sprite for all other cases.
 	 */
 	private Sprite getCurrentWalkCycleSprite() {
+		System.out.println(getIndex());
 		if (getTimeSinceStep() > 0.075){
 			if (getIndex() < getNbRunningCycle()-1)
 				setIndex(getIndex() + 1);
@@ -58,11 +59,11 @@ public class Mazub extends Characters {
 				setIndex(0);
 			setTimeSinceStep(getTimeSinceStep() - 0.075);
 		}
-		if (movingInTwoDirections())
-			return leftOrRightSprite(2);
-		else if (isMovingRight())
+//		if (movingInTwoDirections())
+//			return leftOrRightSprite(2);
+		if (this.getHorizontalVelocity() > 0)
 			return getImageAt(9+getIndex());
-		else if (isMovingLeft()) 
+		else if (this.getHorizontalVelocity() < 0) 
 			return getImageAt(9+getNbRunningCycle()+getIndex());
 		else {
 			return leftOrRightSprite(2);
@@ -145,11 +146,11 @@ public class Mazub extends Characters {
 	
 	public double calculateNewHorizontalPositionAfter(double duration) {
 		double newPosition = getPositionAt(1);
-		if (! this.movingInTwoDirections()){
+//		if (! this.movingInTwoDirections()){
 			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
 			if (this.isAccelerating())
 				newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
-		}
+//		}
 		return newPosition;
 	}
 
@@ -175,7 +176,7 @@ public class Mazub extends Characters {
 	public void computeNewHorizontalVelocityAfter(double duration) {
 		if (! isTerminated()){
 			double newVelocity = 0.0;
-			if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())){
+			if ((this.isMovingLeft() || this.isMovingRight()) ){
 				newVelocity = computeNewHorizontalVelocityMoving(duration);
 			}
 			else {
@@ -461,9 +462,9 @@ public class Mazub extends Characters {
 	 */
 	@Model
 	private void determineDoubleDirections() {
-		if (isMovingLeft() && isMovingRight())
-			this.setMovingInTwoDirections(true);
-		else {
+//		if (isMovingLeft() && isMovingRight())
+//			this.setMovingInTwoDirections(true);
+//		else {
 			this.setMovingInTwoDirections(false);
 			if (this.isMovingRight()){
 				this.sethasMovedIn(MovementDirection.RIGHT);
@@ -473,7 +474,7 @@ public class Mazub extends Characters {
 				this.sethasMovedIn(MovementDirection.LEFT);
 				setTimeSinceEndMove(0.0);
 			}
-		}
+//		}
 	}
 	
 	/**
