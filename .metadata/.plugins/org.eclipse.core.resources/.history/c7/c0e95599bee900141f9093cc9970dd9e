@@ -103,10 +103,10 @@ public class CharacterTest {
 		alien.advanceTime(0.1);
 		assertArrayEquals(intArray(70,144),alien.getIntPosition());
 		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(70,209),alien.getIntPosition());
+		assertArrayEquals(intArray(70,144),alien.getIntPosition());
 		alien.endJump();
 		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(70,204),alien.getIntPosition());
+		assertEquals(0.0,alien.getVerticalVelocity(),Util.DEFAULT_EPSILON);
 	}
 	
 	@Test
@@ -185,6 +185,7 @@ public class CharacterTest {
 	public void noJumpInAir(){
 		alienInAir.startJump();
 		alienInAir.advanceTime(0.1);
+		System.out.println(alienInAir.getPosition()[1]);
 		assertArrayEquals(intArray(70, 95), alienInAir.getIntPosition());
 	}
 }

@@ -185,6 +185,7 @@ public class CharacterTest {
 	public void noJumpInAir(){
 		alienInAir.startJump();
 		alienInAir.advanceTime(0.1);
+		System.out.println(alienInAir.getPosition()[1]);
 		assertArrayEquals(intArray(70, 95), alienInAir.getIntPosition());
 	}
 }

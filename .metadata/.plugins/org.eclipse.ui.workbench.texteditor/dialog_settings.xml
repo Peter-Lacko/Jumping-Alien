@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="canEndDuckWithoutMove(" key="selection"/>
+		<item value="System" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="system"/>
 			<item value="canEndDuckWithoutMove("/>
 			<item value="advanceTime"/>
 			<item value="verticalaccel"/>
@@ -15,7 +16,6 @@
 			<item value="vertical"/>
 			<item value="advanceTim"/>
 			<item value="barry"/>
-			<item value="joske"/>
 		</list>
 		<list key="replacehistory">
 			<item value="plant2"/>

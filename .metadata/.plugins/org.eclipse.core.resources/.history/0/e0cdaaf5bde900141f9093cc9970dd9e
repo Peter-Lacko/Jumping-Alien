@@ -27,7 +27,7 @@ public class CharacterTest {
 
 	private static Plant plant1;
 	
-//	private static Plant plant2;
+	private static Plant plant2;
 	
 	private static Sprite[] sprites;
 	
@@ -60,7 +60,7 @@ public class CharacterTest {
 		plant1 = new Plant(500, 500,newSprites);
 //		plant2 = new Plant(1023, 1000,newSprites);
 		alien = new Mazub(70, 69, mazubSprites2);
-		alienInAir = new Mazub(70, 100, mazubSprites1);
+		alienInAir = new Mazub(70, 90, mazubSprites1);
 		worldStandard.addMazub(alien);
 		worldStandard.addAsObject(plant1);
 //		worldStandard.addAsObject(plant2);
@@ -101,12 +101,10 @@ public class CharacterTest {
 	public void testJumping(){
 		alien.startJump();
 		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(70,144),alien.getIntPosition());
-		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(70,209),alien.getIntPosition());
+		assertArrayEquals(intArray(70,99),alien.getIntPosition());
 		alien.endJump();
 		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(70,204),alien.getIntPosition());
+		assertEquals(0.0,alien.getVerticalVelocity(),Util.DEFAULT_EPSILON);
 	}
 	
 	@Test
@@ -114,7 +112,7 @@ public class CharacterTest {
 		alien.startJump();
 		alien.startMove("right");
 		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(80, 144), alien.getIntPosition());
+		assertArrayEquals(intArray(10, 75), alien.getIntPosition());
 	}
 	
 	@Test
@@ -183,8 +181,9 @@ public class CharacterTest {
 	
 	@Test
 	public void noJumpInAir(){
-		alienInAir.startJump();
-		alienInAir.advanceTime(0.1);
-		assertArrayEquals(intArray(70, 95), alienInAir.getIntPosition());
+//		alienInAir.startJump();
+//		alienInAir.advanceTime(0.05);
+		System.out.println(alienInAir.getPosition()[1]);
+		assertArrayEquals(intArray(70, 78), alienInAir.getIntPosition());
 	}
 }
