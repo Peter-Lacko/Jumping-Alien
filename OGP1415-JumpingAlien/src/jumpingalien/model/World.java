@@ -523,7 +523,7 @@ public class World {
 	 * 			| (duration > 0.2) || (duration < 0.0)
 	 */
 	public void advanceTime(double duration) throws IllegalArgumentException{
-		if ((! Util.fuzzyLessThanOrEqualTo(duration, 0.2)) || Util.fuzzyLessThanOrEqualTo(duration, 0.0))
+		if ((! Util.fuzzyGreaterThanOrEqualTo(0.2, duration)) || Util.fuzzyLessThanOrEqualTo(duration, 0.0))
 			throw new IllegalArgumentException();
 		for (Characters object: getAllObjects()){
 			object.advanceTime(duration);
@@ -1052,17 +1052,20 @@ public class World {
 	}
 	
 	@Basic @Model
-	private int getWindowWidth(){
+	public int getWindowWidth(){
 		return WINDOW_WIDTH;
 	}
 	
 	/**
-	 * 
+	 * The valid Window width is determined along with Mazub's width.
+	 * @pre		|getObjectAt(1) instanceof Mazub
 	 * @param width
 	 * @return	|result == ((matchesMaxXTilesWindowWidth(getMaxXTiles(), width)) &&
 	 * 			|			((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])))
+	 * @throws	IndexOutOfBoundsException
+	 * 			|(getNbObjects() < 1)
 	 */
-	public boolean canHaveAsWindowWidth(int width){
+	public boolean canHaveAsWindowWidth(int width) throws IndexOutOfBoundsException{
 		return ((matchesMaxXTilesWindowWidth(getMaxXTiles(), width)) &&
 				((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])));
 	}
@@ -1091,17 +1094,20 @@ public class World {
 	private final int WINDOW_WIDTH;
 	
 	@Basic @Model
-	private int getWindowHeight(){
+	public int getWindowHeight(){
 		return WINDOW_HEIGHT;
 	}
 	
 	/**
-	 * 
+	 * The valid Window height is determined along with Mazub's width.
+	 * @pre		|getObjectAt(1) instanceof Mazub
 	 * @param height
 	 * @return	|result == ((matchesMaxYTilesWindowHeight(getMaxYTiles(), height)) &&
 	 * 			|			((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])))
+	 * @throws	IndexOutOfBoundsException
+	 * 			|(getNbObjects() < 1)
 	 */
-	public boolean canHaveAsWindowHeight(int height){
+	public boolean canHaveAsWindowHeight(int height)throws IndexOutOfBoundsException{
 		return ((matchesMaxYTilesWindowHeight(getMaxYTiles(), height)) &&
 				((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])));
 	}

@@ -6,7 +6,6 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
-import jumpingalien.model.Characters;
 import jumpingalien.model.GeoFeature;
 import jumpingalien.model.Mazub;
 import jumpingalien.model.Plant;
@@ -43,6 +42,9 @@ public class WorldTest {
 		worldStandard = new World(4, 300, 300, 500, 500, 150, 150);
 		for (int i = 0; i <= 299; i++)
 			worldStandard.setGeoFeatureAtWithInt(i, 0, 1);
+
+		worldSmallWindow = new World(4, 300, 300, 50, 50, 150, 150);
+		worldSmallSize = new World(4, 20, 20, 80, 80, 10, 10);
 		mazub = new Mazub(4,3, sprites);
 		mazubMiddle = new Mazub(590,3, sprites);
 		plant = new Plant(10,10, newSprites);
@@ -51,8 +53,6 @@ public class WorldTest {
 	
 	@BeforeClass
 	public static void setUpImmutableFixture(){
-		worldSmallWindow = new World(4, 300, 300, 50, 50, 150, 150);
-		worldSmallSize = new World(4, 20, 20, 80, 80, 10, 10);
 		sprites = spriteArrayForSize(70, 70);
 		newSprites = Arrays.copyOfRange(sprites, 0, 2);
 	}
@@ -144,6 +144,13 @@ public class WorldTest {
 		assertArrayEquals(intArray(14, 3), mazub.getIntPosition());
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void advanceTime_IllegalCase(){
+		worldStandard.addMazub(mazub);
+		mazub.startMove("right");
+		worldStandard.advanceTime(0.22);
+	}
+	
 	@Test
 	public void leftRightObjects_Correct(){
 		worldStandard.addMazub(mazub);
@@ -167,5 +174,31 @@ public class WorldTest {
 		assertEquals(worldStandard.hasAsLeftObject(mazubMiddle), true);
 		assertEquals(worldStandard.hasAsRightObject(mazubMiddle), true);
 	}
+	
+	 @Test(expected = IndexOutOfBoundsException.class)
+	 public void checkWindowSize_Invalid(){
+		 worldSmallWindow.canHaveAsWindowHeight(worldSmallWindow.getWindowHeight());
+	 }
+	 
+	 @Test
+	 public void windowSize_ToSmall(){
+		 worldSmallWindow.addMazub(mazub);
+		 assertEquals(worldSmallWindow.canHaveAsWindowHeight(worldSmallWindow.getWindowHeight()), false);
+		 assertEquals(worldSmallWindow.canHaveAsWindowHeight(worldSmallWindow.getWindowWidth()), false);
+	 }
+	 
+	 @Test
+	 public void windowSize_SameAsWorld(){
+		 worldSmallSize.addMazub(mazub);
+		 assertEquals(worldSmallSize.canHaveAsWindowHeight(worldSmallSize.getWindowHeight()), true);
+		 assertEquals(worldSmallSize.canHaveAsWindowHeight(worldSmallSize.getWindowWidth()), true);
+	 }
+	 
+	 @Test
+	 public void windowSize_Correct(){
+		 worldStandard.addMazub(mazub);
+		 assertEquals(worldStandard.canHaveAsWindowHeight(worldStandard.getWindowHeight()), true);
+		 assertEquals(worldStandard.canHaveAsWindowHeight(worldStandard.getWindowWidth()), true);
+	 }
 	
 }

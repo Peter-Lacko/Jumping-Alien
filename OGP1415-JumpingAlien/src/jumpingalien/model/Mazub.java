@@ -300,7 +300,7 @@ public class Mazub extends Characters {
 		removeAllCloseCharacters();
 		this.determineDoubleDirections();
 		if (isEndDuck())
-			if (canEndDuck())
+			if (canEndDuck() && canEndDuckWithoutMove())
 				finishDuck();
 		this.computeHorizontalMovement(duration);
 		removeAllCloseCharacters();
@@ -729,15 +729,18 @@ public class Mazub extends Characters {
 		}
 	}
 	
-	public boolean canEndDuck(){
+	public boolean canEndDuckWithoutMove(){
 		boolean oldDuck = isDucked();
 		this.setIsDucked(false);
 		Sprite standingSprite = getCurrentSprite();
 		this.setIsDucked(oldDuck);
-		int nbPixelsHeight = standingSprite.getHeight() - getSprite().getHeight();
-		for (int j=0;j <=nbPixelsHeight -1; j++){
-			for (int i = 0; i <=standingSprite.getWidth() -1; i++){
-				int [] pos = new int[] {getIntPositionAt(1) +i, getIntPositionAt(2) + getSprite().getHeight() +j};
+		int nbPixelsHeight = standingSprite.getHeight();
+		int nbPixelsWidth = standingSprite.getWidth() - getSprite().getWidth();
+		int tileLength = getWorld().getTileLength();
+		for (int j=1;j <=nbPixelsHeight -1; j = j + tileLength){
+			for (int i = 0; i <=nbPixelsWidth -1; i = i +tileLength){
+				int[] pos = new int[] {getIntPositionAt(1) + getSprite().getWidth() +i,
+						getIntPositionAt(2) +j};
 				pos = getWorld().getPixelOfTileContaining(pos[0], pos[1]);
 				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
 					return false;
@@ -747,7 +750,41 @@ public class Mazub extends Characters {
 		return true;
 	}
 	
-	public void finishDuck(){
+	public boolean canEndDuck(){
+		boolean oldDuck = isDucked();
+		this.setIsDucked(false);
+		Sprite standingSprite = getCurrentSprite();
+		this.setIsDucked(oldDuck);
+		int nbPixelsHeight = standingSprite.getHeight() - getSprite().getHeight();
+		int tileLength = getWorld().getTileLength();
+		for (int j=0;j <=nbPixelsHeight -1; j = j + tileLength){
+			for (int i = 0; i <=getSprite().getWidth() -1; i = i +tileLength){
+				int[] pos = new int[] {getIntPositionAt(1) +i, getIntPositionAt(2) + getSprite().getHeight() +j};
+				pos = getWorld().getPixelOfTileContaining(pos[0], pos[1]);
+				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+//	private void moveAndFinishDuck(){
+//		boolean oldDuck = isDucked();
+//		this.setIsDucked(false);
+//		Sprite standingSprite = getCurrentSprite();
+//		this.setIsDucked(oldDuck);
+//		int nbPixelsHeight = standingSprite.getHeight();
+//		int nbPixelsWidth = standingSprite.getWidth() - getSprite().getWidth();
+//		double currentPos = getPositionAt(1);
+//		for (int j=1 ; j <= nbPixelsWidth ; j++){
+//			setPositionAt(currentPos -j, 1);
+//			
+//		}
+//			
+//	}
+	
+	private void finishDuck(){
 		setEndDuck(false);
 		setIsDucked(false);
 		setMaxHorizontalVelocity(3.0);
@@ -969,4 +1006,29 @@ public class Mazub extends Characters {
 	public void setTerminateTime(double terminateTime) {
 		this.terminateTime = terminateTime;
 	}
+	
+//	/**
+//	 * A method to return the variable blockedPixelsRight
+//	 * @return the amount of pixels to the right that are preventing Mazub from standing up.
+//	 */
+//	@Basic
+//	private int getBlockedPixelsRight(){
+//		return blockedPixelsRight;
+//	}
+//	
+//	/**
+//	 * A method to set the variable blockedPixelsRight
+//	 * @param amount
+//	 * 			the amount to set
+//	 * @post	the new amount of blocked pixels to the right is equal to the given amount.
+//	 * 			|new.getBlockedPixelsRight() == amount
+//	 */
+//	private void setBlockedPixelsRight(int amount){
+//		blockedPixelsRight = amount;
+//	}
+//	
+//	/**
+//	 * A variable storing how many pixels to the right that are preventing Mazub from standing up.
+//	 */
+//	private int blockedPixelsRight = 0;
 }
