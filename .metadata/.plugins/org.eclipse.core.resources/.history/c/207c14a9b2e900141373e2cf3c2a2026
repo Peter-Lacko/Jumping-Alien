@@ -462,9 +462,9 @@ public class Mazub extends Characters {
 	 */
 	@Model
 	private void determineDoubleDirections() {
-//		if (isMovingLeft() && isMovingRight())
-//			this.setMovingInTwoDirections(true);
-//		else {
+		if (isMovingLeft() && isMovingRight())
+			this.setMovingInTwoDirections(true);
+		else {
 			this.setMovingInTwoDirections(false);
 			if (this.isMovingRight()){
 				this.sethasMovedIn(MovementDirection.RIGHT);
@@ -474,7 +474,7 @@ public class Mazub extends Characters {
 				this.sethasMovedIn(MovementDirection.LEFT);
 				setTimeSinceEndMove(0.0);
 			}
-//		}
+		}
 	}
 	
 	/**

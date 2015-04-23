@@ -190,19 +190,19 @@ public abstract class Characters {
 	public Sprite leftOrRightSprite(int number){
 		assert (number >= 0);
 		assert (number + 1 < getNbImages());
-//		if (! movingInTwoDirections()){
-			if ((this.getHorizontalVelocity() < 0) || (getHasMovedIn() == MovementDirection.LEFT)){
+		if (! movingInTwoDirections()){
+			if ((isMovingLeft()) || (getHasMovedIn() == MovementDirection.LEFT)){
 				return getImageAt(number + 2);
 			} else{
 				return getImageAt(number + 1);
 			}
-//		}
-//		else{
-//			if (getHasMovedIn() == MovementDirection.LEFT)
-//				return getImageAt(number + 2);
-//			else
-//				return getImageAt(number + 1);
-//		}
+		}
+		else{
+			if (getHasMovedIn() == MovementDirection.LEFT)
+				return getImageAt(number + 2);
+			else
+				return getImageAt(number + 1);
+		}
 	}
 	
 
@@ -365,6 +365,15 @@ public abstract class Characters {
 	}
 	
 	public abstract void advanceTimeLong (double duration);
+	
+	public double shortDuration(double duration){
+		double speed = Math.sqrt((getVerticalVelocity()*getVerticalVelocity()+
+				getHorizontalVelocity()*getHorizontalVelocity()));
+		double acceleration = Math.sqrt((getVerticalAcceleration()*getVerticalAcceleration()+
+				getHorizontalAcceleration()*getHorizontalAcceleration()));
+		return Math.min((0.01 / (speed + acceleration * duration)),duration);
+		
+	}
 	
 	public double shortDuration(double duration){
 		double speed = Math.sqrt((getVerticalVelocity()*getVerticalVelocity()+

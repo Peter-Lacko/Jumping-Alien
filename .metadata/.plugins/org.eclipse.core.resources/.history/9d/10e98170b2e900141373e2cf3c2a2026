@@ -51,7 +51,6 @@ public class Mazub extends Characters {
 	 * 			correct sided sprite for all other cases.
 	 */
 	private Sprite getCurrentWalkCycleSprite() {
-		System.out.println(getIndex());
 		if (getTimeSinceStep() > 0.075){
 			if (getIndex() < getNbRunningCycle()-1)
 				setIndex(getIndex() + 1);
@@ -462,9 +461,9 @@ public class Mazub extends Characters {
 	 */
 	@Model
 	private void determineDoubleDirections() {
-//		if (isMovingLeft() && isMovingRight())
-//			this.setMovingInTwoDirections(true);
-//		else {
+		if (isMovingLeft() && isMovingRight())
+			this.setMovingInTwoDirections(true);
+		else {
 			this.setMovingInTwoDirections(false);
 			if (this.isMovingRight()){
 				this.sethasMovedIn(MovementDirection.RIGHT);
@@ -474,7 +473,7 @@ public class Mazub extends Characters {
 				this.sethasMovedIn(MovementDirection.LEFT);
 				setTimeSinceEndMove(0.0);
 			}
-//		}
+		}
 	}
 	
 	/**
