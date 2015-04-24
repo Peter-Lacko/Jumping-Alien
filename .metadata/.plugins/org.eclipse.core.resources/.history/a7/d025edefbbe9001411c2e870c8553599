@@ -1,0 +1,189 @@
+package jumpingalien.part2.tests;
+
+import static jumpingalien.tests.util.TestUtils.doubleArray;
+import static jumpingalien.tests.util.TestUtils.intArray;
+import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+
+import jumpingalien.common.sprites.JumpingAlienSprites;
+import jumpingalien.model.Characters;
+import jumpingalien.model.Mazub;
+import jumpingalien.model.Plant;
+import jumpingalien.model.Shark;
+import jumpingalien.model.World;
+import jumpingalien.part1.facade.Facade;
+import jumpingalien.part1.facade.IFacade;
+import jumpingalien.util.ModelException;
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class CharacterTest {
+
+	private static Plant plant1;
+	
+	private static Plant plant2;
+	
+	private static Sprite[] sprites;
+	
+	private static Sprite[] newSprites;
+	
+	private static Sprite[] mazubSprites1;
+	
+	private static Sprite[] mazubSprites2;
+	
+	private static Mazub alien;
+	
+	private static World worldStandard;
+	
+	private static World worldStandard2;
+	
+	private static Mazub alienInAir;
+	
+	@Before
+	public void setUpMutableFixture(){
+		worldStandard = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			worldStandard.setGeoFeatureAtWithInt(i, 0, 1);
+			worldStandard.setGeoFeatureAtWithInt(0, i, 1);
+			worldStandard.setGeoFeatureAtWithInt(299, i, 1);
+		}
+		worldStandard2 = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			worldStandard2.setGeoFeatureAtWithInt(i, 0, 1);
+		}
+		plant1 = new Plant(500, 500,newSprites);
+//		plant2 = new Plant(1023, 1000,newSprites);
+		alien = new Mazub(70, 69, mazubSprites2);
+		alienInAir = new Mazub(70, 90, mazubSprites1);
+		worldStandard.addMazub(alien);
+		worldStandard.addAsObject(plant1);
+//		worldStandard.addAsObject(plant2);
+		worldStandard2.addMazub(alienInAir);
+	}
+	
+	@BeforeClass
+	public static void setUpImmutableFixture(){
+		int m = 10;
+		sprites = spriteArrayForSize(2, 2);
+		newSprites = Arrays.copyOfRange(sprites, 0, 2);
+		mazubSprites1 = JumpingAlienSprites.ALIEN_SPRITESET;
+		mazubSprites2 = spriteArrayForSize(66, 92, 10 + 2 * m);
+	}
+	
+	@Test
+	public void testPlant() {
+		for (int i=0 ; i=<2 ; i++){
+			plant1.advanceTime(0.05);
+		}
+		assert(plant1.getHorizontalVelocity() == 0.5);
+		assertArrayEquals(doubleArray(505, 500), plant1.getPosition(),Util.DEFAULT_EPSILON);
+		for (int i=0 ; i<181 ; i++){
+			plant1.advanceTime(0.0050);
+		}
+		assertArrayEquals(doubleArray(500 , 500), plant1.getPosition(),
+				Util.DEFAULT_EPSILON);
+//		plant2.advanceTime(0.1);
+//		assert(plant2.getPositionAt(1) == 1023);
+	}
+
+	@Test
+	public void testGetSize(){
+		assertArrayEquals(intArray(70,97), alienInAir.getSize());
+	}
+	
+	@Test
+	public void testJumping(){
+		alien.startJump();
+		alien.advanceTime(0.1);
+		assertArrayEquals(intArray(70,99),alien.getIntPosition());
+		alien.endJump();
+		alien.advanceTime(0.1);
+		assertEquals(0.0,alien.getVerticalVelocity(),Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void testJumpingForward(){
+		alien.startJump();
+		alien.startMove("right");
+		alien.advanceTime(0.1);
+		assertArrayEquals(intArray(10, 75), alien.getIntPosition());
+	}
+	
+	@Test
+	public void testStopAtLeftEdge(){
+		alien.startMove("left");
+		alien.advanceTime(0.1);
+		assertArrayEquals(intArray(70,69), alien.getIntPosition());
+	}
+	
+	@Test
+	public void testDuckMaxSpeed(){
+		alien.startMove("right");
+		for (int i = 0; i < 10 ; i++) {
+			alien.advanceTime(0.1);
+		}
+		alien.startDuck();
+		alien.advanceTime(0.1);
+		assertEquals(1.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
+	}
+	
+	@Test 
+	public void testDuckSize(){
+		alienInAir.startDuck();
+		alienInAir.advanceTime(0.1);
+		assertArrayEquals(intArray(68, 70), alienInAir.getSize());
+	}
+	
+//	@Test(expected = IllegalArgumentException.class)
+//	public void testCreatMazub_IllegalCase(){
+//		Mazub badMazub = new Mazub(0, 0, mazubSprites);
+//	}
+	
+//	@Test(expected = ModelException.class)
+//	public void test2CreatMazub(){
+//		IFacade facade = new Facade();
+//		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+//		Characters alien = facade.createMazub(0, -1, sprites);
+//	}
+	
+	@Test
+	public void testEndMove(){
+		alien.startMove("right");
+		for (int i = 0; i < 10 ; i++) {
+			alien.advanceTime(0.1);
+		}
+		alien.endMove("right");
+		alien.advanceTime(0.1);
+		assertEquals(0.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void testStopWhenBothDirections(){
+		alien.startMove("right");
+		for (int i = 0; i < 10 ; i++) {
+			alien.advanceTime(0.1);
+		}
+		alien.startMove("left");
+		alien.advanceTime(0.1);
+		assertEquals(0.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
+		}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testTooBigDt() {
+		alien.advanceTime(0.22);
+	}	
+	
+	@Test
+	public void noJumpInAir(){
+//		alienInAir.startJump();
+//		alienInAir.advanceTime(0.05);
+		System.out.println(alienInAir.getPosition()[1]);
+		assertArrayEquals(intArray(70, 78), alienInAir.getIntPosition());
+	}
+}
