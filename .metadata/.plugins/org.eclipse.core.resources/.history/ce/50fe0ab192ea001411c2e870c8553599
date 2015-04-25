@@ -1,6 +1,5 @@
 package jumpingalien.model;
 
-import be.kuleuven.cs.som.annotate.Basic;
 import jumpingalien.util.Sprite;
 
 public class Plant extends OtherCharacters {
@@ -12,15 +11,18 @@ public class Plant extends OtherCharacters {
 		setMovingRight(true);
 	}
 
-	/**
-	 * 
-	 * @param duration
-	 * @effect	...
-	 * 			| if isMovinLeft()
-	 * 			|	then this.setHorizontalVelocity(-0.5)
-	 * 			| if isMovingRight
-	 * 			|	then this.setHorizontalVelocity(0.5)
-	 */
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		double newPosition;
+		if (isMovingLeft() || isMovingRight())
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+		else
+			newPosition = this.getPositionAt(1);
+		if (canHaveAsNewPosition(newPosition,1))
+			this.setPositionAt(newPosition, 1);
+	}
+
+	
 	@Override
 	protected void computeNewHorizontalVelocityAfter(double duration) {
 		 if (isMovingLeft())
@@ -29,16 +31,6 @@ public class Plant extends OtherCharacters {
 			this.setHorizontalVelocity(0.5);
 	}
 	
-	/**
-	 * 
-	 * @param duration
-	 * 
-	 * @return	...
-	 * 			| if not this.isTerminated()
-	 * 			|	then return this.getPositionAt(2)
-	 * 			| else
-	 * 			|	then return 0.0
-	 */
 	@Override
 	public double calculateNewVerticalPositionAfter(double duration){
 		if (! isTerminated()){		
@@ -48,37 +40,19 @@ public class Plant extends OtherCharacters {
 			return 0.0;
 	}
 	
-	/**
-	 * A getter method for the variable lastDirection
-	 */
-	@Basic
 	public MovementDirection getLastDirection() {
 		return lastDirection;
 	}
 
-	/**
-	 * A setter method for the variable lastDirection
-	 */
-	@Basic
 	public void setLastDirection(MovementDirection lastDirection) {
 		this.lastDirection = lastDirection;
 	}
 	
-	/**
-	 * A boolean stating the last movement direction of the plant
-	 */
 	public MovementDirection lastDirection = MovementDirection.RIGHT;
 	
 	/**
 	 * @effect	...
-	 * 			| if getLastDirection() == MovementDirection.RIGHT
-	 * 			|	then setMovingLeft(true)
-	 * 			|		setLastDirection(MovementDirection.LEFT)
-	 * 			|		setHorizontalVelocity(-getInitHorizontalVelocity())
-	 * 			| else
-	 * 			|	then setLastDirection(MovementDirection.RIGHT)
-	 * 			|		setLastDirection(MovementDirection.RIGHT)
-	 * 			|		setHorizontalVelocity(getInitHorizontalVelocity())
+	 * 			| if lastDirection
 	 */
 	@Override
 	public void startMove() {
@@ -131,6 +105,7 @@ public class Plant extends OtherCharacters {
 
 	@Override
 	public void startJump() {
+
 	}
 
 
