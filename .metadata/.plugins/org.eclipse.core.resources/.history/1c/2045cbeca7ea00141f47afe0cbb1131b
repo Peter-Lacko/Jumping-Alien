@@ -11,7 +11,6 @@ import jumpingalien.common.sprites.JumpingAlienSprites;
 import jumpingalien.model.Characters;
 import jumpingalien.model.Mazub;
 import jumpingalien.model.Plant;
-import jumpingalien.model.School;
 import jumpingalien.model.Shark;
 import jumpingalien.model.Slime;
 import jumpingalien.model.World;
@@ -51,8 +50,6 @@ public class CharacterTest {
 	
 	private static Slime slime1;
 	
-	private static School school;
-	
 	@Before
 	public void setUpMutableFixture(){
 		worldStandard = new World(70, 300, 300, 500, 500, 150, 150);
@@ -65,28 +62,15 @@ public class CharacterTest {
 		for (int i = 0; i <= 299; i++){
 			worldStandard2.setGeoFeatureAtWithInt(i, 0, 1);
 		}
-		worldSmall = new World(70, 3, 6, 210, 420, 2, 5);
-		for (int i = 0; i <= 5 ; i++){
-			worldSmall.setGeoFeatureAtWithInt(0, i, 1);
-			worldSmall.setGeoFeatureAtWithInt(2, i, 1);
-		}
-		for (int i = 0; i <= 2 ; i++){
-			worldSmall.setGeoFeatureAtWithInt(i, 0, 1);
-			worldSmall.setGeoFeatureAtWithInt(i, 5, 1);
-		}
-		school = new School();
 		plant1 = new Plant(500, 500,newSprites);
 		plant2 = new Plant(500, 75,newSprites);
 		alien = new Mazub(70, 69, mazubSprites2);
 		alienInAir = new Mazub(70, 100, mazubSprites1);
-		slime1 = new Slime(70,170, newSprites, school);
-		school.addAsSlime(slime1);
+		slime1 = new Slime(70,170, newSprites);
 		worldStandard.addMazub(alien);
 		worldStandard.addAsObject(plant1);
 		worldStandard.addAsObject(plant2);
 		worldStandard2.addMazub(alienInAir);
-		worldSmall.addMazub(alien);
-		worldSmall.addAsObject(slime1);
 	}
 	
 	@BeforeClass

@@ -235,6 +235,7 @@ public class CharacterTest {
 		alien.startMove("right");
 		for (int i = 0 ; i < 251 ; i++)
 			worldStandard.advanceTime(0.15);
+		assertEquals(0, alien.getIntPositionAt(1));
 		assertEquals(150, alien.getHitPoints());
 		assertFalse(worldStandard.hasAsObject(plant2));
 	}

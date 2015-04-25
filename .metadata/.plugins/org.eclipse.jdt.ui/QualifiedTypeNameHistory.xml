@@ -6,8 +6,9 @@
 <fullyQualifiedTypeName name="jumpingalien.util.Util"/>
 <fullyQualifiedTypeName name="java.util.Set"/>
 <fullyQualifiedTypeName name="java.util.HashSet"/>
-<fullyQualifiedTypeName name="jumpingalien.model.Slime"/>
 <fullyQualifiedTypeName name="jumpingalien.model.MovementDirection"/>
 <fullyQualifiedTypeName name="jumpingalien.model.Plant"/>
 <fullyQualifiedTypeName name="jumpingalien.model.Shark"/>
+<fullyQualifiedTypeName name="jumpingalien.model.Slime"/>
+<fullyQualifiedTypeName name="jumpingalien.model.School"/>
 </qualifiedTypeNameHistroy>
