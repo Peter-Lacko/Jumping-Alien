@@ -737,8 +737,8 @@ public class Mazub extends Characters {
 		int nbPixelsHeight = standingSprite.getHeight();
 		int nbPixelsWidth = standingSprite.getWidth() - getSprite().getWidth();
 		int tileLength = getWorld().getTileLength();
-		for (int j=0;j <=nbPixelsHeight -1; j = j + tileLength){
-			for (int i = 0; i <=nbPixelsWidth -1; i = i +tileLength){
+		for (int j=1;j <=nbPixelsHeight -1; j = j + tileLength -1){
+			for (int i = 0; i <=nbPixelsWidth -1; i = i +tileLength -1){
 				int[] pos = new int[] {getIntPositionAt(1) + getSprite().getWidth() +i,
 						getIntPositionAt(2) +j};
 				pos = getWorld().getPixelOfTileContaining(pos[0], pos[1]);

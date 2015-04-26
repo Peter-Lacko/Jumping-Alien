@@ -1358,6 +1358,7 @@ public abstract class Characters {
 	public void collisionDetectionDown(double newPosition) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
+			System.out.println((character.getIntPositionAt(2) + character.getSprite().getHeight()-1 == (int)newPosition) );
 			if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
 					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
 					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)){
