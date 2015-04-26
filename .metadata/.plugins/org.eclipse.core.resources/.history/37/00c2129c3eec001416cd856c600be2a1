@@ -157,13 +157,12 @@ public class CharacterTest {
 			plant1.advanceTime(0.05);
 		}
 		assert(plant1.getHorizontalVelocity() == 0.5);
-		assert(500.0 < plant1.getPositionAt(1));
-		assertEquals(500.0, plant1.getPositionAt(2), Util.DEFAULT_EPSILON);
+		assertArrayEquals(doubleArray(505, 500), plant1.getPosition(),Util.DEFAULT_EPSILON);
 		for (int i=0 ; i<181 ; i++){
 			plant1.advanceTime(0.0050);
 		}
-		assert(500.0 > plant1.getPositionAt(1));
-		assertEquals(500.0, plant1.getPositionAt(2), Util.DEFAULT_EPSILON);
+		assertArrayEquals(doubleArray(500 , 500), plant1.getPosition(),
+				Util.DEFAULT_EPSILON);
 //		plant2.advanceTime(0.1);
 //		assert(plant2.getPositionAt(1) == 1023);
 	}
@@ -177,7 +176,7 @@ public class CharacterTest {
 	public void testJumping(){
 		alien.startJump();
 		alien.advanceTime(0.1);
-		assertEquals(144.0,alien.getPositionAt(2), 1.5);
+		assertArrayEquals(intArray(70,144),alien.getIntPosition());
 		alien.advanceTime(0.1);
 		assertArrayEquals(intArray(70,209),alien.getIntPosition());
 		alien.endJump();
@@ -206,7 +205,7 @@ public class CharacterTest {
 		// y = 0.69m + 8m/s * 0.3s - 0.5 * 10m/s² * (0.3s)² = 2.64
 		// x = 0.7m + 1 * 0.3m/s = 1
 		assertEquals(100.0, alien.getPositionAt(1), Util.DEFAULT_EPSILON);
-		assertEquals(264.0, alien.getPositionAt(2), 1.5);
+		assertEquals(264.0, alien.getPositionAt(2), Util.DEFAULT_EPSILON);
 	}
 	
 	@Test
@@ -291,7 +290,7 @@ public class CharacterTest {
 	public void noJumpInAir(){
 		alienInAir.startJump();
 		alienInAir.advanceTime(0.1);
-		assertEquals(95.0, alienInAir.getPositionAt(2), 1.5);
+		assertArrayEquals(intArray(70, 95), alienInAir.getIntPosition());
 	}
 	
 	@Test
@@ -309,7 +308,7 @@ public class CharacterTest {
 			worldSmall.advanceTime(0.1);
 		assertEquals(50, slime1.getHitPoints());
 		assertEquals(50, alien2.getHitPoints());
-		assert(100 > slime2.getHitPoints());
+		assertEquals(99, slime2.getHitPoints());
 	}
 	
 	@Test
