@@ -60,10 +60,8 @@ public class CharacterTest {
 	private static Slime slime2;
 	
 	private static Slime slime3;
-
-	private static School school;
 	
-	private static School school2;
+	private static School school;
 	
 	@Before
 	public void setUpMutableFixture(){
@@ -92,7 +90,6 @@ public class CharacterTest {
 		}
 		worldSmall2.setGeoFeatureAtWithInt(1, 0, 1);
 		school = new School();
-		school2 = new School();
 		plant1 = new Plant(500, 500,newSprites);
 		plant2 = new Plant(500, 75,newSprites);
 		alien = new Mazub(70, 69, mazubSprites2);
@@ -101,10 +98,8 @@ public class CharacterTest {
 		alienInAir = new Mazub(70, 100, mazubSprites1);
 		slime1 = new Slime(75,250, newSprites, school);
 		slime2 = new Slime(75,440, newSprites, school);
-		slime3 = new Slime(75,70, newSprites, school2);
+		slime2 = new Slime(75,70, newSprites, school);
 		school.addAsSlime(slime1);
-		school.addAsSlime(slime2);
-		school2.addAsSlime(slime3);
 		worldStandard.addMazub(alien);
 		worldStandard.addAsObject(plant1);
 		worldStandard.addAsObject(plant2);
