@@ -238,8 +238,6 @@ public class Slime extends OtherCharacters {
 					((Mazub)other).startImmune();
 				}
 				this.damage(50);
-				for (Slime slime : this.getSchool().getSlimes())
-					slime.damage(1);
 			}
 			this.endMove();
 			((Mazub) other).endMove("left");
