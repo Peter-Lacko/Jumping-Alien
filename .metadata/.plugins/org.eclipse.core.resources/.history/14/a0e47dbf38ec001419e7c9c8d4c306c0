@@ -115,7 +115,7 @@ public abstract class OtherCharacters extends Characters {
 					//setTimeSinceStartMovement(0.0);
 					startMove();
 				}
-//				if (!this.isTerminated())
+				if (!this.isTerminated())
 					this.environmentDamage(duration);
 				}
 			else{
@@ -123,8 +123,6 @@ public abstract class OtherCharacters extends Characters {
 				if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
 					this.getWorld().removeAsObject(this);
 			}
-			if (this.getHitPoints() == 0)
-				this.terminate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

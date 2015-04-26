@@ -317,8 +317,6 @@ public class Mazub extends Characters {
 		this.getWorld().checkIfWin(this);	
 		this.environmentDamage(duration);
 		this.immune(duration);
-		if (this.getHitPoints() == 0)
-			this.terminate();
 		}
 		else if (getWorld() != null)
 			getWorld().removeAsObject(this);
