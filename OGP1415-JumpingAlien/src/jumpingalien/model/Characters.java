@@ -1359,10 +1359,11 @@ public abstract class Characters {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
 			if ((character.getIntPositionAt(2) + character.getSprite().getHeight()-1 == (int)newPosition) 
-					&& (character.getPositionAt(1) +character.getSprite().getWidth() -1>= (this.getPositionAt(1))) 
-					&& (character.getPositionAt(1) <= this.getPositionAt(1) + this.getSprite().getWidth() -1)){
-				//					this.collision(character);
+					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
+					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)){
+//									this.collision(character);
 				addAsCloseCharacter(character);
+				System.out.println("add down");
 			}
 		}
 	}

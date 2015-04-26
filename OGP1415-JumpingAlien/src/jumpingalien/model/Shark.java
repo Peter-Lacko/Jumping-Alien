@@ -11,14 +11,24 @@ public class Shark extends OtherCharacters {
 		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0, 100);
 	}
 	
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic
 	public double[] getDurationrange() {
 		return durationrange;
 	}
 
+	/**
+	 * A setter method for the variable durationRange
+	 */
 	public void setDurationrange(double[] durationrange) {
 		this.durationrange = durationrange;
 	}
 	
+	/**
+	 * A variable containing the range of the movement durations of the characters
+	 */
 	public double[] durationrange = {1.0 , 4.0};
 
 //	@Override
@@ -44,6 +54,14 @@ public class Shark extends OtherCharacters {
 //		}
 //	}
 
+	/**
+	 * @effect	...
+	 * 			| setMovementDuration(randomDuration(getDurationrange()))
+	 * 			| if getRandomBoolean()
+	 * 			|	then setMovingLeft(true)
+	 * 			| else
+	 * 			|	then setMovingRight(true)
+	 */
 	@Override
 	public void startMove() {
 		setMovementDuration(randomDuration(getDurationrange()));
@@ -62,6 +80,16 @@ public class Shark extends OtherCharacters {
 		setMovementsSinceLastJump(getMovementsSinceLastJump()+1);
 	}
 
+	/**
+	 * @effect	...
+	 * 			| setTimeSinceStartMovement(0.0)
+	 *			| setMovingRight(false)
+	 *			| setMovingLeft(false)
+	 *			| endJump()
+	 *			| setHorizontalVelocity(0.0)
+	 *			| if (getVerticalVelocity() > 0)
+	 *			| 	then setVerticalVelocity(0.0)
+	 */
 	@Override
 	public void endMove() {
 		setTimeSinceStartMovement(0.0);
@@ -73,24 +101,38 @@ public class Shark extends OtherCharacters {
 			setVerticalVelocity(0.0);
 	}
 
+	/**
+	 * @effect	...
+	 * 			|  if isInAir() || isJumping() || isInWater
+	 * 			|	then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration
+	 * 			|	if (canHaveAsNewPosition(newYPosition , 2)
+	 * 			|		then this.setY
+	 */
 	@Override
 	public void computeNewVerticalPositionAfter(double duration){
 		double newYPosition;
-		if (isInAir()){
+		if (isInAir() || isJumping() || isInWater()){
 			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 100*0.5*getVerticalAcceleration()*duration*duration;
 			if (canHaveAsNewPosition(newYPosition,2)){
 				this.setPositionAt(newYPosition, 2);
 			}
 		}
-		else{
-			if (isJumping() || isInWater()){
-				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration;
-				if (canHaveAsNewPosition(newYPosition, 2))
-					this.setPositionAt(newYPosition, 2);
-			}
-		}
 	}
 	
+	/**
+	 * @return	...
+	 * 			| if not isTerminated()
+	 * 			|	if isInAir()
+	 * 			|		then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration
+	 * 			|		return newYPosition
+	 * 			|	else 
+	 * 			|		if isJumping()|| isInWater()
+	 * 			|			then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration
+	 * 			|			return newYposition
+	 * 			|		return 0.0
+	 * 			| else
+	 * 			|	then return 0.0
+	 */
 	@Override
 	public double calculateNewVerticalPositionAfter(double duration){
 		if (! isTerminated()){
@@ -114,23 +156,22 @@ public class Shark extends OtherCharacters {
 	}
 
 	/**
-	 * Compute the new vertical speed after a given duration.
-	 * @param duration
-	 * 			The duration after after which to calculate the new vertical speed.
-	 * @effect if the character is in the air, not jumping and the vertical velocity is bigger than 0,
-	 * 			the vertical velocity is set to 0
-	 * 			| if (isInAir() && (! isJumping()) && (0.0 < getVerticalVelocity()))
-	 * 			|	setVerticalVelocity(0.0)
-	 * 			otherwise, if the character is in the air, the velocity is set to the calculated velocity
-	 * 			| if (isInAir())
-	 * 			|	setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
-	 * 			otherwise, if the character is not in the air, and is jumping, set the velocity to
-	 * 			the initial vertical velocity
-	 * 			| if ((! isInAir()) && isJumping())
-	 * 			|	setVerticalVelocity(getInitVerticalVelocity())
-	 * 			otherwise, set the vertical velocity to 0
-	 * 			| else
-	 * 			| setVerticalVelocity(0.0)
+	 * @throws	illegalArgumentException.
+	 * 			| ((duration < 0.0) || (duration >= 0.2))
+	 * @effect	...
+	 * 			| if not isTerminated()
+	 * 			|	if isInAir()
+	 * 			|		if (! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity()))
+	 * 			|			then setVerticalVelocity(0.0)
+	 * 			|		else
+	 * 			|			then setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
+	 * 			|	else
+	 * 			|		if isJuming()
+	 * 			|			then setVerticalVelocity(getInitVerticalVelocity())
+	 * 			|		if isRising() || isDiving()
+	 * 			|			setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
+	 * 			|		else
+	 * 			|			setVerticalVelocity(0.0)
 	 */
 	@Override
 	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
@@ -145,7 +186,7 @@ public class Shark extends OtherCharacters {
 				else{
 					if (isJumping())
 						setVerticalVelocity(getInitVerticalVelocity());
-					if (isRising || isDiving)
+					if (isRising() || isDiving())
 						setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
 					else
 						setVerticalVelocity(0.0);
@@ -158,13 +199,13 @@ public class Shark extends OtherCharacters {
 	}
 
 	/**
-	 * A method that starts the character's jump.
-	 * @post the character is jumping
-	 * 		| new.isJumping() == true
-	 * @effect if the character isn't already in the air, its new vertical velocity is equal to the initial
-	 * 			vertical velocity
-	 * 			| if (! isInAir())
-	 * 			|	then setVerticalVelocity(getInitVerticalVelocity())
+	 * @effect	...
+	 * 			| if not isInAir
+	 * 			|	then this.setVerticalVelocity(getInitVerticalVelocity())
+	 * 			|		setMovementsSinceLastJump(0)
+	 * @post	...
+	 * 			| if not isInAir
+	 * 			|	then new.isJumping == true
 	 */
 	@Override
 	public void startJump() throws IllegalArgumentException{
@@ -180,6 +221,8 @@ public class Shark extends OtherCharacters {
 		}
 	}
 
+	
+	// TODO mutator/inspector methode mag niet
 	@Override
 	public boolean isInAir(){
 		if (! isTerminated()){
@@ -205,39 +248,75 @@ public class Shark extends OtherCharacters {
 		return false;
 	}
 	
+	/**
+	 * A getter method for the variable movementsSinceLastJump
+	 */
+	@Basic
 	public int getMovementsSinceLastJump() {
 		return movementsSinceLastJump;
 	}
 	
+	/**
+	 * A getter method for the boolean isInWater
+	 */
+	@Basic
 	public boolean isInWater() {
 		return isInWater;
 	}
 
+	/**
+	 * A setter method for the boolean isInWater
+	 */
+	@Basic
 	public void setInWater(boolean isInWater) {
 		this.isInWater = isInWater;
 	}
 	
+	/**
+	 * A boolean stating whether the shark is in water
+	 */
 	public boolean isInWater = false;
 	
+	/**
+	 * A getter method for the boolean isRising
+	 */
+	@Basic
 	public boolean isRising() {
 		return isRising;
 	}
 
+	/**
+	 * A setter method for the boolean isRiving
+	 */
+	@Basic
 	public void setRising(boolean isRising) {
 		this.isRising = isRising;
 	}
 	
+	/**
+	 * A boolean stating whether the shark isRising
+	 */
 	public boolean isRising = false;
 
-
+	/**
+	 * A getter method for the boolean isDiving
+	 */
+	@Basic
 	public boolean isDiving() {
 		return isDiving;
 	}
 
+	/**
+	 * A setter method for the boolean isDiving
+	 */
+	@Basic
 	public void setDiving(boolean isDiving) {
 		this.isDiving = isDiving;
 	}
 
+	/**
+	 * A boolean stating whether the shark is diving
+	 */
 	public boolean isDiving = false;
 	
 	/**
@@ -250,22 +329,50 @@ public class Shark extends OtherCharacters {
 			return VERTICAL_ACCELERATION;
 		else if (this.isInWater() && (!isJumping))
 			if  (isDiving)
-				return -VERTICAL_ACCELERARION_WATER;
+				return -VERTICAL_ACCELERATION_WATER;
 			else if (isRising)
-				return VERTICAL_ACCELERARION_WATER;
+				return VERTICAL_ACCELERATION_WATER;
 			else return 0.0;
 		else
 			return 0.0;
 	}
 	
-	protected static final double VERTICAL_ACCELERARION_WATER = 2.0;
+	protected static final double VERTICAL_ACCELERATION_WATER = 2.0;
 
+	/**
+	 * A setter method for the variable movementsSinceLast
+	 */
+	@Basic
 	public void setMovementsSinceLastJump(int movementsSinceLastJump) {
 		this.movementsSinceLastJump = movementsSinceLastJump;
 	}
 
+	/**
+	 * A variable containing the number of movements since the last jump
+	 */
 	public int movementsSinceLastJump = 0;
 
+	/**
+	 * @param other
+	 * 			the other character in the collision
+	 * @param isBelow
+	 * 			a boolean stating whether this is below other
+	 * @effect	...
+	 * 			| if (other instanceof Mazub) 
+	 * 			|	if (not other.isimmune()) 
+	 * 			|		if (not this.isTerminated())
+	 * 			|			then other.damage(50)
+	 * 			|				other.startImmune()
+	 * 			|		then this.damage(50)
+	 * 			|	then this.endMove()
+	 * 			|		other.endMove("left")
+	 *  		|		other.endMove("right")
+	 *  		| else if (other instanceof Shark)
+	 *  		|	then this.endMove()
+	 *  		|		other.endMove
+	 *  		| else
+	 *  		|	then other.collision(this,not isBelow)
+	 */
 	@Override
 	public void collision(Characters other, boolean isBelow) {
 		if (other instanceof Mazub){
@@ -286,9 +393,30 @@ public class Shark extends OtherCharacters {
 			((Shark)other).endMove();
 		}
 		else
-			other.collision(this, isBelow);
+			other.collision(this,! isBelow);
 	}
 
+	/**
+	 * @effect	...
+	 * 			| if (environment(leftBottom) == MAGMA) || (environment(rightBottom) == MAGMA) ||
+	 * 			|	(environment(leftTop) == MAGMA) || (environment(rightTop) == MAGMA)
+	 * 			|	then this.setBadEnvironment(true)
+	 * 			|		if Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0)
+	 *			|			then this.damage(50)
+	 *			| else if (environment(leftBottom) == AIR) || (environment(rightBottom) == AIR) ||
+	 * 			|	(environment(leftTop) == AIR) || (environment(rightTop) == AIR)
+	 * 			|	then this.setBadEnvironment(true)
+	 * 			|		if Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0)
+	 *			|			then this.damage(6)
+	 *			| else
+	 *			|	then setBadEnvironment(false)
+	 *			| if this.isBadEnvironment
+	 *			|	then this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration)
+	 *			|		if Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2)
+	 *			|			then setTimeSinceEnvironmentalDamage(0.0)
+	 *			| else
+	 *			| 	then this.setTimeSinceEnvironmentalDamage(0.0)
+	 */
 	@Override
 	public void environmentDamage(double duration) {
 		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
@@ -316,14 +444,25 @@ public class Shark extends OtherCharacters {
 		}
 	}
 	
+	/**
+	 * A getter method for the variable badEnvironment
+	 */
+	@Basic
 	public boolean isBadEnvironment() {
 		return badEnvironment;
 	}
-
+	
+	/**
+	 * A setter method for the variable badEnvironment
+	 */
+	@Basic
 	public void setBadEnvironment(boolean badEnvironment) {
 		this.badEnvironment = badEnvironment;
 	}
 
+	/**
+	 * A boolean stating whether the character is in a bad environment
+	 */
 	public boolean badEnvironment = false;
 	
 
