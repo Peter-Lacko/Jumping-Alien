@@ -45,7 +45,6 @@ public class School {
 
 	private List<Slime> slimes = new ArrayList<Slime>();
 	
-	
 	public int getNbSlimes(){
 		return slimes.size();
 	}
@@ -58,9 +57,6 @@ public class School {
         return this.isTerminated;
     }
 	
-    /**
-     * A boolean stating whether the School is terminated
-     */
     private boolean isTerminated = false;
     
 }
