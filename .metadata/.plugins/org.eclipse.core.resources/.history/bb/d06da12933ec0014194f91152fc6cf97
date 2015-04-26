@@ -85,7 +85,7 @@ public class CharacterTest {
 		alien2 = new Mazub(70, 69, mazubSprites2);
 		alienInAir = new Mazub(70, 100, mazubSprites1);
 		slime1 = new Slime(70,170, newSprites, school);
-		slime2 = new Slime(70,220, newSprites, school);
+		slime2 = new Slime(70,270, newSprites, school);
 		school.addAsSlime(slime1);
 		worldStandard.addMazub(alien);
 		worldStandard.addAsObject(plant1);
@@ -252,6 +252,8 @@ public class CharacterTest {
 		alien.startMove("right");
 		for (int i = 0 ; i < 20 ; i++)
 			worldStandard.advanceTime(0.15);
+		System.out.println(alien.getIntPositionAt(1));
+		System.out.println(alien.getIntPositionAt(2));
 		assertEquals(150, alien.getHitPoints());
 		assertFalse(worldStandard.hasAsObject(plant2));
 	}

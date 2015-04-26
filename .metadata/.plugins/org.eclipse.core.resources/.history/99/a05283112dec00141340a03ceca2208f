@@ -53,8 +53,6 @@ public class CharacterTest {
 	
 	private static Slime slime1;
 	
-	private static Slime slime2;
-	
 	private static School school;
 	
 	@Before
@@ -85,7 +83,6 @@ public class CharacterTest {
 		alien2 = new Mazub(70, 69, mazubSprites2);
 		alienInAir = new Mazub(70, 100, mazubSprites1);
 		slime1 = new Slime(70,170, newSprites, school);
-		slime2 = new Slime(70,220, newSprites, school);
 		school.addAsSlime(slime1);
 		worldStandard.addMazub(alien);
 		worldStandard.addAsObject(plant1);
@@ -93,7 +90,6 @@ public class CharacterTest {
 		worldStandard2.addMazub(alienInAir);
 		worldSmall.addMazub(alien2);
 		worldSmall.addAsObject(slime1);
-		worldSmall.addAsObject(slime2);
 	}
 	
 	@BeforeClass
@@ -214,25 +210,15 @@ public class CharacterTest {
 		assertEquals(0.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
 	}
 	
-//	@Test
-//	public void testStopWhenBothDirections(){
-//		alien.startMove("right");
-//		for (int i = 0; i < 10 ; i++) {
-//			alien.advanceTime(0.1);
-//		}
-//		alien.startMove("left");
-//		alien.advanceTime(0.1);
-//		assertEquals(0.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
-//		}
-	
 	@Test
-	public void testLeftWhenBothDirections(){
+	public void testStopWhenBothDirections(){
 		alien.startMove("right");
-		alien.startMove("left");
-		for (int i = 0; i < 30 ; i++) {
+		for (int i = 0; i < 10 ; i++) {
 			alien.advanceTime(0.1);
 		}
-		assertEquals(-3.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
+		alien.startMove("left");
+		alien.advanceTime(0.1);
+		assertEquals(0.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
 		}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -250,24 +236,11 @@ public class CharacterTest {
 	@Test
 	public void MazubEatsPlant(){
 		alien.startMove("right");
-		for (int i = 0 ; i < 20 ; i++)
+		for (int i = 0 ; i < 25 ; i++)
 			worldStandard.advanceTime(0.15);
+		System.out.println(alien.getIntPositionAt(1));
+		System.out.println(alien.getIntPositionAt(2));
 		assertEquals(150, alien.getHitPoints());
 		assertFalse(worldStandard.hasAsObject(plant2));
-	}
-	
-	@Test
-	public void damageWithSlime(){
-		
-	}
-	
-	@Test
-	public void slimesThroughEachOther(){
-		
-	}
-	
-	@Test
-	public void lavaHurts(){
-		
 	}
 }
