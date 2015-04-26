@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+INDEX VERSION 1.127+D:\college\OGP\Jumping-Alien\.metadata\.plugins\org.eclipse.jdt.core
+3520661010.index
+3776425001.index
+3978731755.index
+3097394219.index
+23443905.index
+949515501.index
+=======
 INDEX VERSION 1.127+C:\Users\ik\Desktop\Jumping-Alien\.metadata\.plugins\org.eclipse.jdt.core
 949515501.index
 881303192.index
@@ -5,6 +14,7 @@ INDEX VERSION 1.127+C:\Users\ik\Desktop\Jumping-Alien\.metadata\.plugins\org.ecl
 2394392208.index
 3520661010.index
 1522590495.index
+>>>>>>> ae760c7fd3695fadac55da26e0ee33b32ee013da
 2143716467.index
 847618560.index
 2958705335.index

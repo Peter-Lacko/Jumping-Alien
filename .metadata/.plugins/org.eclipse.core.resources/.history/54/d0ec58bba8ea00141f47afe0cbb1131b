@@ -1078,7 +1078,7 @@ public class World {
 	 */
 	@Raw
 	public boolean matchesMaxXTilesWindowWidth(int MaxXTiles, int WindowWidth){
-		return ((MaxXTiles)*getTileLength() >= WindowWidth);
+		return ((MaxXTiles+1)*getTileLength() >= WindowWidth);
 	}
 	
 //	/**
@@ -1120,7 +1120,7 @@ public class World {
 	 */
 	@Raw
 	public boolean matchesMaxYTilesWindowHeight(int MaxYTiles, int WindowHeight){
-		return ((MaxYTiles)*getTileLength() >= WindowHeight);
+		return ((MaxYTiles+1)*getTileLength() >= WindowHeight);
 	}
 	
 //	/**
