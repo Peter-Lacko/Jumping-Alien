@@ -312,11 +312,10 @@ public class CharacterTest {
 	public void slimesThroughEachOther(){
 		worldSmall2.advanceTime(0.15);
 
-		worldSmall2.advanceTime(0.15);
 //		assertEquals(75, slime3.getHorizontalVelocity(), Util.DEFAULT_EPSILON);
 //		assertEquals(75, slime3.getIntPositionAt(1));
 //		assertEquals(75, slime4.getIntPositionAt(1));
-//		assertEquals(69, slime3.getIntPositionAt(2));
+		assertEquals(69, slime3.getIntPositionAt(2));
 		assertEquals(69, slime4.getIntPositionAt(2));
 		assertEquals(school2, slime4.getSchool());
 	}

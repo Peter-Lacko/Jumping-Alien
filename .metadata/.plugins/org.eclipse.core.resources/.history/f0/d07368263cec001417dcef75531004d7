@@ -316,7 +316,7 @@ public class CharacterTest {
 //		assertEquals(75, slime3.getHorizontalVelocity(), Util.DEFAULT_EPSILON);
 //		assertEquals(75, slime3.getIntPositionAt(1));
 //		assertEquals(75, slime4.getIntPositionAt(1));
-//		assertEquals(69, slime3.getIntPositionAt(2));
+		assertEquals(69, slime3.getIntPositionAt(2));
 		assertEquals(69, slime4.getIntPositionAt(2));
 		assertEquals(school2, slime4.getSchool());
 	}

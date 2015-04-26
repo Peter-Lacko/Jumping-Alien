@@ -110,7 +110,7 @@ public class CharacterTest {
 		alienInAir = new Mazub(70, 100, mazubSprites1);
 		slime1 = new Slime(75,250, newSprites, school);
 		slime2 = new Slime(75,440, newSprites, school);
-		slime3 = new Slime(75,85, newSprites, school2);
+		slime3 = new Slime(75,80, newSprites, school2);
 		slime4 = new Slime(75,69, newSprites, school3);
 		slime5 = new Slime(75,440, newSprites, school2);
 		school.addAsSlime(slime1);
