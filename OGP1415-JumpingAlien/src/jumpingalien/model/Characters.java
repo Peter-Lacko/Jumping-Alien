@@ -1346,7 +1346,7 @@ public abstract class Characters {
 		//		List<Characters> characters = world.getAllObjects();
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
-			if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()-1) 
+			if ((character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
 					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
 					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)){
 				//					this.collision(character);
@@ -1358,10 +1358,10 @@ public abstract class Characters {
 	public void collisionDetectionDown(double newPosition) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
-			if ((character.getIntPositionAt(2) + character.getSprite().getHeight()-1 == (int)newPosition) 
-					&& (character.getPositionAt(1) +character.getSprite().getWidth() -1>= (this.getPositionAt(1))) 
-					&& (character.getPositionAt(1) <= this.getPositionAt(1) + this.getSprite().getWidth() -1)){
-				//					this.collision(character);
+			if ((character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
+					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
+					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)){
+//									this.collision(character);
 				addAsCloseCharacter(character);
 			}
 		}

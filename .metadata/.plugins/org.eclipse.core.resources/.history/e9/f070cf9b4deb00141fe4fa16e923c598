@@ -1,0 +1,425 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.Basic;
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+
+public class Slime extends OtherCharacters {
+
+	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0,100);
+		this.setSchool(school);
+	}
+	
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic
+	public double[] getDurationrange() {
+		return durationrange;
+	}
+
+	/**
+	 * A setter method for the variable durationRange
+	 */
+	public void setDurationrange(double[] durationrange) {
+		this.durationrange = durationrange;
+	}
+	
+	/**
+	 * A variable containing the range of the movement durations of the characters
+	 */
+	public double[] durationrange = {2.0 , 6.0};
+	
+	/**
+	 * A getter method for the variable school
+	 */
+	@Basic
+	public School getSchool() {
+		return school;
+	}
+
+	/**
+	 * A setter method for the variable school
+	 */
+	public void setSchool(School school) {
+		if (school == null)
+			this.school = school;
+		else{
+			school.addAsSlime(this);
+			this.school = school;
+		}
+	}
+	
+	/**
+	 * A variable containing the School of the slime
+	 */
+	public School school;
+
+//	@Override
+//	protected void computeNewHorizontalPositionAfter(double duration) {
+//		double newPosition;
+//		if (isMovingLeft() || isMovingRight())
+//			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
+//		else
+//			newPosition = this.getPositionAt(1);
+//		if (canHaveAsNewPosition(newPosition,1))
+//			this.setPositionAt(newPosition, 1);
+//	}
+//
+//	@Override
+//	protected void computeNewHorizontalVelocityAfter(double duration) {
+//		double newVelocity;
+//		if (isMovingLeft() || isMovingRight()){
+//			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
+//			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+//			if (isMovingLeft())
+//				newVelocity = -1.0*newVelocity;
+//			this.setHorizontalVelocity(newVelocity);
+//		}
+//	}
+
+	/**
+	 * @effect	...
+	 * 			| setMovementDuration(randomDuration(getDurationrange()))
+	 * 			| if getRandomBoolean()
+	 * 			|	then setMovingLeft(true)
+	 * 			| else
+	 * 			|	then setMovingRight(true)
+	 */
+	@Override
+	public void startMove() {
+		setMovementDuration(randomDuration(getDurationrange()));
+		if (getRandomBoolean())
+			setMovingLeft(true);
+		else
+			setMovingRight(true);
+	}
+
+	/**
+	 * @effect	...
+	 * 			| setTimeSinceStartMovement(0.0);
+	 *			| setMovingRight(false);
+	 *			| setMovingLeft(false);
+	 */
+	@Override
+	public void endMove() {
+		setTimeSinceStartMovement(0.0);
+		setMovingRight(false);
+		setMovingLeft(false);
+	}
+
+//	/**
+//	 * @effect	...
+//	 * 			| if isInAir()
+//	 * 			|	then new
+//	 */
+	@Override
+	protected void computeNewVerticalPositionAfter(double duration) {
+	}
+
+	
+	/**
+	 * @return	...
+	 * 			| if not isterminated()
+	 * 			|	if isInAir()
+	 * 			|		then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 100*0.5*getVerticalAcceleration()*duration*duration
+	 * 			|		return newYPosition
+	 * 			|	else
+	 * 			|		then return this.getPositionAt(2)
+	 * 			| else
+	 * 			|	return 0.0
+	 */
+	@Override
+	public double calculateNewVerticalPositionAfter(double duration){
+		if (! isTerminated()){
+			double newYPosition = 0.0;
+			if (isInAir()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+					100*0.5*getVerticalAcceleration()*duration*duration;
+				return newYPosition;
+			}
+			else
+				return this.getPositionAt(2);
+		}
+		else
+			return 0.0;
+	}
+
+	/**
+	 * @effect	...
+	 * 			| if this.isinair()
+	 * 			|	then setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
+	 */
+	@Override
+	public void computeNewVerticalVelocityAfter(double duration){
+		if (isInAir())
+			setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);		
+	}
+
+	@Override
+	public void startJump() {
+	}
+
+	/**
+	 * if not this.isTerminated()
+	 *	 then for (i = getIntPositionAt(1) until i < getIntPositionAt(1)+getSprite().getWidth()-1 with i++
+	 *		pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2))
+	 *		geo = getWorld().getGeoFeatureAt(pos[0],pos[1])
+	 *		if geo == GeoFeature.GROUND
+	 *			then return false
+	 */
+	@Override
+	public boolean isInAir(){
+		if (! isTerminated()){
+			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+				GeoFeature geo = getWorld().getGeoFeatureAt(pos[0],pos[1]);
+				if (geo == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		return true;
+	}
+
+//	@Override
+//	public void collision(Characters other) {
+//		if (other instanceof Mazub){
+//			if (! ((Mazub)other).isImmune()){
+//				this.damage(50);
+//				other.damage(50);
+//				((Mazub)other).startImmune();
+//			}
+//			this.endMove();
+//			((Mazub) other).endMove("left");
+//			((Mazub) other).endMove("right");
+//		}
+//		else if (other instanceof Shark){
+//			this.damage(50);
+//			other.damage(50);
+//			this.endMove();
+//			((Shark) other).endMove();
+//		}
+//		else if (other instanceof Slime){
+//			this.changeSchool((Slime)other);
+//		}
+//		else
+//			other.collision(this);
+//	}
+	
+	/**
+	 * 
+	 * @param other
+	 * 			the other character in the collision
+	 * @param isBelow
+	 * 			a boolean stating whether this is below other
+	 * @effect	...
+	 * 			| if (other instanceof Mazub) 
+	 * 			|	if (not other.isimmune()) 
+	 * 			|		if (not this.isTerminated())
+	 * 			|			then other.damage(50)
+	 * 			|				other.startImmune()
+	 * 			|		then this.damage(50)
+	 * 			|	then this.endMove()
+	 * 			|		other.endMove("left")
+	 *  		|		other.endMove("right")
+	 *  		| else if (other instanceof Shark)
+	 *  		|	then this.damage(50) 
+	 *  		|		other.damage(50)
+	 *  		|		this.endMove()
+	 *  		|		other.endMove
+	 *  		| else if (other instanceof slime)
+	 *  		|	then this.changeschool(other)
+	 *  		| else
+	 *  		|	then other.collision(this, isBelow)
+	 */
+	@Override
+	public void collision(Characters other, boolean isBelow) {
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune()){
+				if (! isBelow){
+					other.damage(50);
+					((Mazub)other).startImmune();
+				}
+				this.damage(50);
+			}
+			this.endMove();
+			((Mazub) other).endMove("left");
+			((Mazub) other).endMove("right");
+		}
+		else if (other instanceof Shark){
+			this.damage(50);
+			other.damage(50);
+			this.endMove();
+			((Shark) other).endMove();
+		}
+		else if (other instanceof Slime){
+			this.changeSchool((Slime)other);
+		}
+		else
+			other.collision(this,! isBelow);
+	}
+	
+	/**
+	 * 
+	 * @param other
+	 * 			the other slime with which the changeschool happens
+	 * @effect	...
+	 * 			| if this.getSchool().getNbSlimes < other.getSchool().getNbSlimes()
+	 * 			|	then this.getSchool().removeAsSlime(this)
+	 * 			|		for slime in this.getSchool().getSlimes()
+	 * 			|			slime.damage(-1)
+	 * 			|		for slime2 in other.getSchool().getSlimes()
+	 * 			|			slime2.damage(1)
+	 * 			|		this.damage(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes())
+	 * 			|		this.setSchool(other.getSchool())
+	 *  		| if this.getSchool().getNbSlimes > other.getSchool().getNbSlimes()
+	 * 			|	then other.getSchool().removeAsSlime(other)
+	 * 			|		for slime in other.getSchool().getSlimes()
+	 * 			|			slime.damage(-1)
+	 * 			|		for slime2 in this.getSchool().getSlimes()
+	 * 			|			slime2.damage(1)
+	 * 			|		other.damage(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes())
+	 * 			|		other.setSchool(this.getSchool())
+	 */
+	private void changeSchool(Slime other){
+		if (this.getSchool().getNbSlimes() < other.getSchool().getNbSlimes()){
+			this.getSchool().removeAsSlime(this);
+			for (Characters slime : this.getSchool().getSlimes())
+				slime.damage(-1);
+			for (Characters slime2 : other.getSchool().getSlimes())
+				slime2.damage(1);
+			this.damage(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes());
+			this.setSchool(other.getSchool());
+		}
+		else if (this.getSchool().getNbSlimes() > other.getSchool().getNbSlimes()){
+			other.getSchool().removeAsSlime(other);
+			for (Characters slime : other.getSchool().getSlimes())
+				slime.damage(-1);
+			for (Characters slime2 : this.getSchool().getSlimes())
+				slime2.damage(1);
+			other.damage(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes());
+			other.setSchool(school);
+		}
+	}
+	
+	/**
+	 * @effect	...
+	 * 			| if not this.isTerminated
+	 * 			|	then this.getWorld().removeAsObject(this)
+	 * 			|		this.getSchool().removeAsSlime(this)
+	 * 			|		this.setSchool(null)
+	 * 			|		this.setTerminated(true)
+	 */
+	@Override
+	protected void terminate() {
+		if (! isTerminated()){
+			getWorld().removeAsObject(this);
+//			this.setWorld(null);
+			getSchool().removeAsSlime(this);
+			this.setSchool(null);
+			this.setTerminated(true);
+		}
+	}
+	
+//	@Override
+//	public boolean collisionDetectionHorizontal(double newPosition){
+////		List<Characters> characters = world.getAllObjects();
+//		World world = getWorld();
+//		Iterable<Characters> characters;
+//		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
+//			characters = world.getAllObjects();
+//		else if (world.hasAsLeftObject(this))
+//			characters = world.getAllLeftObjects();
+//		else
+//			characters = world.getAllRightObjects();
+//		if (isMovingRight()){
+//			for (Characters character : characters){
+//				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
+//						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+//						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+//						this.collision(character);
+//						if (character instanceof Slime)
+//							return true;
+//						else
+//							return false;
+//				}
+//			}
+//		}
+//		if (isMovingLeft()){
+//			for (Characters character : characters){
+//				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
+//						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
+//						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
+//						this.collision(character);
+//						if (character instanceof Slime)
+//							return true;
+//						else
+//							return false;
+//				}
+//			}
+//		}
+//		return true;
+//	}
+	
+	/**
+	 * @effect	...
+	 * 			| if (environment(leftBottom) == MAGMA) || (environment(rightBottom) == MAGMA) ||
+	 * 			|	(environment(leftTop) == MAGMA) || (environment(rightTop) == MAGMA)
+	 * 			|	then this.setBadEnvironment(true)
+	 * 			|		if Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0)
+	 *			|			then this.damage(50)
+	 *			| else
+	 *			|	then setBadEnvironment(false)
+	 *			| if this.isBadEnvironment
+	 *			|	then this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration)
+	 *			|		if Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2)
+	 *			|			then setTimeSinceEnvironmentalDamage(0.0)
+	 *			| else
+	 *			| 	then this.setTimeSinceEnvironmentalDamage(0.0)
+	 */
+	@Override
+	public void environmentDamage(double duration) {
+		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
+		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
+		int[] pos2 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)+getSprite().getHeight()};
+		if ((environment(getIntPosition()) == GeoFeature.MAGMA) || (environment(pos) == GeoFeature.MAGMA)
+				|| (environment(pos1) == GeoFeature.MAGMA) || (environment(pos2) == GeoFeature.MAGMA)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
+				this.damage(50);
+		} else{
+			this.setBadEnvironment(false);
+		}
+		if (this.isBadEnvironment()){
+			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
+				setTimeSinceEnvironmentalDamage(0.0);
+		}else{
+			this.setTimeSinceEnvironmentalDamage(0.0);
+		}
+	}
+	
+	/**
+	 * A getter method for the variable badEnvironment
+	 */
+	@Basic
+	public boolean isBadEnvironment() {
+		return badEnvironment;
+	}
+	
+	/**
+	 * A setter method for the variable badEnvironment
+	 */
+	@Basic
+	public void setBadEnvironment(boolean badEnvironment) {
+		this.badEnvironment = badEnvironment;
+	}
+
+	/**
+	 * A boolean stating whether the character is in a bad environment
+	 */
+	public boolean badEnvironment = false;
+}
