@@ -624,6 +624,8 @@ public abstract class Characters {
 	 */
 	protected boolean isMovingRight = false;
 	
+	protected abstract void computeNewVerticalPositionAfter(double duration);
+	
 	protected abstract void computeNewVerticalVelocityAfter(double duration);
 	
 	public abstract boolean isInAir();
@@ -1302,15 +1304,6 @@ public abstract class Characters {
 		return true;
 	}
 
-	/**
-	 * 
-	 * @param newPosition
-	 * @return	...
-	 * 			| if ((int)newPosition +1) % getWorld().getTileLength() == 0
-	 * 			|	then return true
-	 * 			| else
-	 * 			|	for i  = getIntPositionAt(1) while i<=getIntPositionAt(1)+getSprite().getWidth()-1 with i++
-	 */
 	public boolean passableTerrainDown(double newPosition) {
 		//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
 		if (((int)newPosition +1) % getWorld().getTileLength() == 0)
@@ -1325,16 +1318,6 @@ public abstract class Characters {
 		}
 	}
 
-	/**
-	 * 
-	 * @param newPosition
-	 * @effect	...
-	 * 			| for character in getNearbyCharacters()
-	 * 			|	if (character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()-1) 
-	 *					&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
-	 *					&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)
-	 *			|			addAsCloseCharacter(character)
-	 */
 	public void collisionDetectionRight(double newPosition) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){

@@ -50,13 +50,6 @@ public abstract class OtherCharacters extends Characters {
 //	@Override
 //	protected abstract void computeNewHorizontalVelocityAfter(double duration) ;
 	
-	/**
-	 * 
-	 * @param duration
-	 * @return	...
-	 * 			| newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration
-	 * 			| return newPosition
-	 */
 	public double calculateNewHorizontalPositionAfter(double duration) {
 		double newPosition = getPositionAt(1);
 			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity()
@@ -64,15 +57,18 @@ public abstract class OtherCharacters extends Characters {
 		return newPosition;
 	}
 
-	/**
-	 * @effect	...
-	 * 			| if isMovingLeft() || isMovingRight()
-	 * 			|	then newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration()
-	 * 			|		newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity())
-	 * 			|		if iMovingLeft()
-	 * 			|			then newVelocity = -1.0*newVelocity
-	 * 			|		this.setHorizontalVelocity(newVelocity)
-	 */
+	
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		double newPosition;
+		if (isMovingLeft() || isMovingRight())
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
+		else
+			newPosition = this.getPositionAt(1);
+		if (canHaveAsNewPosition(newPosition,1))
+			this.setPositionAt(newPosition, 1);
+	}
+
 	@Override
 	protected void computeNewHorizontalVelocityAfter(double duration) {
 		double newVelocity;
@@ -87,15 +83,6 @@ public abstract class OtherCharacters extends Characters {
 			this.setHorizontalVelocity(0.0);
 	}
 	
-	/**
-	 * @return	...
-	 * 			| if this.isMovingLeft()
-	 * 			|	then return -getAbsHorizontalAcceleration()
-	 * 			| else if this.isMovingRight()
-	 * 			|	then return getAbsHorizontalAcceleration()
-	 * 			| else
-	 * 			|	return 0.0
-	 */
 	@Override
 	public double getHorizontalAcceleration() {
 		if (this.isMovingLeft())
@@ -110,21 +97,6 @@ public abstract class OtherCharacters extends Characters {
 	/**
 	 * @effect	...
 	 * 			| if not this.isTerminated
-	 * 			|	if getTimeSinceStartMovement() < getMovementDuration()
-	 * 			|		then removeAllCloseCharacters()
-	 * 			|			this.computeHorizontalMovement(duration)
-	 * 			|			removeAllCloseCharacters()
-	 * 			|			this.computeVerticalMovement(duration)
-	 * 			|			setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
-	 * 			|	else
-	 * 			|		then endMove()
-	 * 			|			startMove()
-	 * 			| else
-	 * 			|	then this.setTerminateTime(getTerminateTime()+duration)
-	 * 			|		if (this.getTerminateTime() > 0.6) && (! (this.getWorld() == null))
-	 * 			|			this.getWorld().removeAsObject(this)
-	 * 			| if this.getHitPoints == 0
-	 * 			|	then this.terminate()
 	 *  @throws	...
 	 *  		| ((duration < 0.0) || (duration >= 0.2))
 	 */

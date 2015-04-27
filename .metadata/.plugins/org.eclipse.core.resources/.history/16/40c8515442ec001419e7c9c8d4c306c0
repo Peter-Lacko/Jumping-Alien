@@ -10,12 +10,6 @@ public class School {
 	public School(){
 	}
 	
-	/**
-	 * 
-	 * @param slime
-	 * @effect	...
-	 * 			| slimes.add(slime)
-	 */
 	public void addAsSlime(Slime slime){
 		slimes.add(slime);
 	}

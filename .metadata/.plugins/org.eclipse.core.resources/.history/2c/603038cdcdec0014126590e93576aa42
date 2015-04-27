@@ -50,18 +50,23 @@ public abstract class OtherCharacters extends Characters {
 //	@Override
 //	protected abstract void computeNewHorizontalVelocityAfter(double duration) ;
 	
-	/**
-	 * 
-	 * @param duration
-	 * @return	...
-	 * 			| newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration
-	 * 			| return newPosition
-	 */
 	public double calculateNewHorizontalPositionAfter(double duration) {
 		double newPosition = getPositionAt(1);
 			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity()
 				 + 100*0.5*getHorizontalAcceleration()*duration*duration;
 		return newPosition;
+	}
+
+	
+	@Override
+	protected void computeNewHorizontalPositionAfter(double duration) {
+		double newPosition;
+		if (isMovingLeft() || isMovingRight())
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
+		else
+			newPosition = this.getPositionAt(1);
+		if (canHaveAsNewPosition(newPosition,1))
+			this.setPositionAt(newPosition, 1);
 	}
 
 	/**
