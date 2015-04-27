@@ -121,28 +121,35 @@ public class Mazub extends Characters {
 		return ((nbImages >= 10) && (nbImages % 2 == 0));
 	}
 
-
-	@Override
-	public void computeNewHorizontalPositionAfter(double duration) {
-//		if (! isTerminated()){
-//			if (this.movingInTwoDirections())
-//				this.setPositionAt(this.getPositionAt(1),1);
-//			else{
-			if (! this.movingInTwoDirections()){
-				double newPosition;
-				newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
-				if (this.isAccelerating())
-					newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
-				if (canHaveAsNewPosition(newPosition,1))
-					this.setPositionAt(newPosition, 1);
-//			else{
-//				endMove("left");
-//				endMove("right");
+//	@Override
+//	public void computeNewHorizontalPositionAfter(double duration) {
+////		if (! isTerminated()){
+////			if (this.movingInTwoDirections())
+////				this.setPositionAt(this.getPositionAt(1),1);
+////			else{
+//			if (! this.movingInTwoDirections()){
+//				double newPosition;
+//				newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+//				if (this.isAccelerating())
+//					newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
+//				if (canHaveAsNewPosition(newPosition,1))
+//					this.setPositionAt(newPosition, 1);
+////			else{
+////				endMove("left");
+////				endMove("right");
+////			}
 //			}
-			}
-//		}
-	}
+////		}
+//	}
 	
+	/**
+	 * Calculate the new horizontal position after the given time
+	 * @param duration
+	 * 			the duration of time that passes
+	 * @return	The new position is calculated with specific formulas.
+	 * 			|result == this.getPositionAt(1) + 100*duration*getHorizontalVelocity()
+	 * 			|	+ isAccelerating? 100*0.5*duration²*getHorizontalAcceleration() : 0
+	 */
 	public double calculateNewHorizontalPositionAfter(double duration) {
 		double newPosition = getPositionAt(1);
 //		if (! this.movingInTwoDirections()){
@@ -263,18 +270,22 @@ public class Mazub extends Characters {
 	 * finally, it determines the correct sprite for the character.
 	 * @param duration
 	 * 			The duration of time that passes.
+	 * @effect	if the character Mazub is terminated, destroy the link between it and the world.
+	 * 			|if (isTerminated() && getWorld() != null)
+	 * 			|	then getWorld().removeAsObject(this)
+	 * @effect the next cases only happen when Mazub is not terminated
+	 * 			|if (! this.isTerminated())
 	 * @effect determines whether the character is moving in two directions (ie both direction keys are
-	 * 			pushed, so the character is not moving) and what actions should be taken.
+	 * 			pushed) and what actions should be taken.
 	 * 			|determineDoubleDirections()
-	 * @effect computes the new horizontal position after the given duration.
-	 * 			| computeNewHorizontalPositionAfter(duration)
-	 * @effect computes the new horizontal velocity after the given duration.
-	 * 			| computeNewHorizontalVelocityAfter(duration)
-	 * @effect computes the new vertical position after the given duration.
-	 * 			| computeNewVerticalPositionAfter(duration)
-	 * @effect computes the new vertical velocity after the given duration.
-	 * 			| computeNewVerticalVelocityAfter(duration)
-	 * @effect The new sprite is calculated with the character's current values
+	 * @effect determines if the character can stand up
+	 * 			|if (isEndDuck() && canEndDuck() && canEndDuckWithoutMove())
+	 * 			|	then finishDuck()
+	 * @effect computes the new horizontal position and velocity after the given duration.
+	 * 			| computeHorizontalMovement()
+	 * @effect computes the new vertical position and velocity after the given duration.
+	 * 			| computeVerticalMovement()
+	 * @post The new sprite is calculated with the character's current values
 	 * 			| new.getSprite() == this.getCurrentSprite()
 	 * @effect	if the character isn't moving, the duration is added to the timer counting the time since
 	 * 			the character stopped.
@@ -288,6 +299,15 @@ public class Mazub extends Characters {
 	 * 			character's variable.
 	 * 			|if (this.getTimeSinceEndMove() > 1.0)
 	 * 			|	this.setHasMovedIn((MovementDirection.NONE)
+	 * @effect	check if the mazub character has won yet
+	 * 			|getWorld().checkIfWin(this);
+	 * @effect	the mazub character is dealt environment damage as needed
+	 * 			|environmentDamage(duration);
+	 * @effect	the character Mazub's immune status is updated
+	 * 			|immune(duration)
+	 * @effect	if Mazub has no more hitpoints, it is dead.
+	 * 			|if (getHitPoints() == 0)
+	 * 			|	then terminate()
 	 * @throws IllegalArgumentException
 	 * 			The given duration is an invalid duration of time.
 	 * 			| ((duration < 0.0) || (duration >= 0.2))
@@ -357,6 +377,40 @@ public class Mazub extends Characters {
 //		}
 //	}
 	
+	/**
+	 * Calculate the new horizontal position and velocity of the Mazub character, as well as damage it recieves
+	 * and gives to other characters, after the given duration.
+	 * @param duration
+	 * 			the duration of time that elapses.
+	 * @post	the new horizontal position is set if nothing is in the way.
+	 * 			|let newPos = calculateNewHorizontalPositionAfter(duration)
+	 * 			|for i in 0..getSprite().getHeight()
+	 * 			|	for k in 0.. getSprite().getWidth()
+	 * 			|		if (getWorld().getGeoFeatureAt(
+	 * 			|			getWorld().getBottomLeftPixelOf(newPos[0]+k, newPos[1]+i)[0],
+	 * 			|			getWorld().getBottomLeftPixelOf(newPos[0]+k, newPos[1]+i)[1]) != geoFeature.GROUND
+	 * 			|			&& for each character in Characters: 
+	 * 			|				for j in 0..character.getSprite().getHeight()-1
+	 * 			|					for l in 0..character.getSprite().getWidth()
+	 * 			|						if (character.getIntPositionAt(1)+l != newPos[0]+k	
+	 * 			|							&& character.getIntPositionAt(2)+j != newPos[1]+i)		
+	 * 			|			then new.getPositionAt(1) == newPos
+	 * @post	all necessary damage is dealt to any colliding characters.
+	 * 			|let newPos = calculateNewHorizontalPositionAfter(duration)
+	 * 			|for i in 0..getSprite().getHeight()
+	 * 			|	for k in 0.. getSprite().getWidth()
+	 * 			|		for each character in Characters: 
+	 * 			|			for j in 0..character.getSprite().getHeight()
+	 * 			|				for l in 0..character.getSprite().getWidth()
+	 * 			|					if (character.getIntPositionAt(1)+l == newPos[0]+k	
+	 * 			|						&& character.getIntPositionAt(2)+j == newPos[1]+i)
+	 * 			|						then if (j == character.getSprite().getHeight()
+	 * 			|								&& i == 0)
+	 * 			|							collision(character, true)
+	 * 			|						else collision(character,false)
+	 * @effect the new Horizontal velocity is set
+	 * 			|computeNewHorizontalVelocity()
+	 */
 	private void computeHorizontalMovement(double duration) {
 		double newPos = calculateNewHorizontalPositionAfter(duration);
 		int oldPos = getIntPositionAt(1);
@@ -403,6 +457,41 @@ public class Mazub extends Characters {
 		computeNewHorizontalVelocityAfter(duration);
 	}
 
+	
+	/**
+	 * Calculate the new vertical position and velocity of the Mazub character, as well as damage it recieves
+	 * and gives to other characters, after the given duration.
+	 * @param duration
+	 * 			the duration of time that elapses.
+	 * @post	the new vertical position is set if nothing is in the way.
+	 * 			|let newPos = calculateNewVerticalPositionAfter(duration)
+	 * 			|for i in 0..getSprite().getHeight()
+	 * 			|	for k in 0.. getSprite().getWidth()
+	 * 			|		if (getWorld().getGeoFeatureAt(
+	 * 			|			getWorld().getBottomLeftPixelOf(newPos[0]+k, newPos[1]+i)[0],
+	 * 			|			getWorld().getBottomLeftPixelOf(newPos[0]+k, newPos[1]+i)[1]) != geoFeature.GROUND
+	 * 			|			&& for each character in Characters: 
+	 * 			|				for j in 0..character.getSprite().getHeight()-1
+	 * 			|					for l in 0..character.getSprite().getWidth()
+	 * 			|						if (character.getIntPositionAt(1)+l != newPos[0]+k	
+	 * 			|							&& character.getIntPositionAt(2)+j != newPos[1]+i)		
+	 * 			|			then new.getPositionAt(2) == newPos
+	 * @post	all necessary damage is dealt to any colliding characters.
+	 * 			|let newPos = calculateNewVerticalPositionAfter(duration)
+	 * 			|for i in 0..getSprite().getHeight()
+	 * 			|	for k in 0.. getSprite().getWidth()
+	 * 			|		for each character in Characters: 
+	 * 			|			for j in 0..character.getSprite().getHeight()
+	 * 			|				for l in 0..character.getSprite().getWidth()
+	 * 			|					if (character.getIntPositionAt(1)+l == newPos[0]+k	
+	 * 			|						&& character.getIntPositionAt(2)+j == newPos[1]+i)
+	 * 			|						then if (j == character.getSprite().getHeight()
+	 * 			|								&& i == 0)
+	 * 			|							collision(character, true)
+	 * 			|						else collision(character,false)
+	 * @effect the new vertical velocity is set
+	 * 			|computeNewVerticalVelocity()
+	 */
 	private void computeVerticalMovement(double duration) {
 		computeNewVerticalVelocityAfter(duration);
 		double newPos = calculateNewVerticalPositionAfter(duration);
@@ -559,34 +648,55 @@ public class Mazub extends Characters {
 //	 *			|									*this.getVerticalVelocity()
 //	 *			|									+ 100*0.5*getVerticalAcceleration()*duration*duration;
 //	 */
-	@Override
-	public void computeNewVerticalPositionAfter(double duration){
-		if (! isTerminated()){
-			double newYPosition;
-			if (isInAir()){
-				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
-					100*0.5*getVerticalAcceleration()*duration*duration;
-				if (canHaveAsNewPosition(newYPosition,2))
-					this.setPositionAt(newYPosition, 2);
-				else
-					endJump();
-			}
-			else{
-				if (isJumping()){
-					newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
-							100*0.5*getVerticalAcceleration()*duration*duration;
-					if (canHaveAsNewPosition(newYPosition, 2))
-						this.setPositionAt(newYPosition, 2);
-					else
-						endJump();
-				}
-			}
-		}
-	}
+//	@Override
+//	public void computeNewVerticalPositionAfter(double duration){
+//		if (! isTerminated()){
+//			double newYPosition;
+//			if (isInAir()){
+//				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+//					100*0.5*getVerticalAcceleration()*duration*duration;
+//				if (canHaveAsNewPosition(newYPosition,2))
+//					this.setPositionAt(newYPosition, 2);
+//				else
+//					endJump();
+//			}
+//			else{
+//				if (isJumping()){
+//					newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
+//							100*0.5*getVerticalAcceleration()*duration*duration;
+//					if (canHaveAsNewPosition(newYPosition, 2))
+//						this.setPositionAt(newYPosition, 2);
+//					else
+//						endJump();
+//				}
+//			}
+//		}
+//	}
 	
+	/**
+	 * Calculate the new vertical position after the given duration.
+	 * @param duration
+	 * 			the duration of time that passes
+	 * @return if the character isn't terminated, and is in the air, calculate its new (parabolic) position
+	 * 			after the duration
+	 * 			|if (! isTerminated())
+	 * 			|	if (isInAir())
+	 * 			|		then result == getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+	 *			|			100*0.5*getVerticalAcceleration()*duration²
+	 *			else if the character is terminated and is Jumping, then calculate its new (parabolic)
+	 *			position after the duration
+	 *			|	else if (isJumping())
+	 *			|		then result == getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+	 *			|			100*0.5*getVerticalAcceleration()*duration² 
+	 *			else if the character is terminated, return the old position
+	 *			|	else result == getPösitionAt(2)
+	 *			if the character is terminated, return 0.0
+	 *			|if (isTerminated())
+	 *			|	then result == 0.0
+	 */
 	public double calculateNewVerticalPositionAfter(double duration){
 		if (! isTerminated()){
-			double newYPosition = 0.0;;
+			double newYPosition = this.getPositionAt(2);
 			if (isInAir()){
 				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
 					100*0.5*getVerticalAcceleration()*duration*duration;
@@ -644,21 +754,21 @@ public class Mazub extends Characters {
 			throw exc;
 		}
 	}
-
-	public int isInAirInt(){
-		if (isInAir())
-			return 1;
-		else
-			return 0;
-	}
 	
-	public int isJumpingInt(){
-		if (isJumping())
-			return 1;
-		else
-			return 0;
-	}
-	
+	/**
+	 * Check if the Mazub character is in the Air
+	 * @result if mazub is not in a world, he is not in the air
+	 * 			|if getWorld() == null
+	 * 			|	then result == false
+	 * 			if the bottom row of pixels is not overlapping with anything, then mazub is in the air
+	 * 			|for i in getIntPositionAt(1)..getIntPositionAt(1)+getSprite().getWidth()-1
+	 * 			|	let pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2))
+	 * 			|	if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+	 * 			|		then result == false
+	 * 			|	if (! collisionDetectionVertical(this.getPositionAt(2)-1))
+	 * 			|		then result == false
+	 * 			|else result == true
+	 */
 	@Override
 	public boolean isInAir(){
 		if (getWorld() == null){
@@ -703,6 +813,8 @@ public class Mazub extends Characters {
 	 * 			| new.isDucked() = true
 	 * @effect the maximum horizontal velocity is set to 1
 	 * 			| setMaxHorizontalVelocity(1.0)
+	 * @effect	the character is not trying to end their duck
+	 * 			| setEndDuck(false)
 	 */
 	public void startDuck() throws IllegalArgumentException{
 		try{
@@ -716,11 +828,8 @@ public class Mazub extends Characters {
 	}
 	
 	/**
-	 * A method that ends the character's duck
-	 * @post	the new character is not ducking
-	 * 			| new.isDucked() = false
-	 * @effect the maximum horizontal velocity is set to 3
-	 * 			| setMaxHorizontalVelocity(3.0)
+	 * A method that says when mazub should try to stand up.
+	 * @effect setEndDuck(true);
 	 */
 	public void endDuck() throws IllegalArgumentException{
 		try{
@@ -731,6 +840,19 @@ public class Mazub extends Characters {
 		}
 	}
 	
+	/**
+	 * Check whether mazub can stand up without moving. This is due to the fact that the sprite width of a
+	 * ducked mazub is smaller than the sprite width of a standing mazub.
+	 * @return false if the added width when standing up is in any ground tile.
+	 * 			| let standingSprite = [sprite with mazub's current attributes, but standing]
+	 * 			|for j in 1..standingSprite.getHeight()
+	 * 			|	for i in 1..standingSprite.getWidth() - getSprite().getWidth()
+	 * 			|		let pos = {getIntPositionAt(1) + getSprite().getWidth() +i,getIntPositionAt(2) +j}
+	 * 			|		if (getWorld().getGeoFeatureAt(getWorld().getPixelOfTileContaining(pos[0], pos[1])[0]
+	 * 			|			, getWorld().getPixelOfTileContaining(pos[0], pos[1])[1]) == GeoFeature.GROUND)
+	 * 			|			then result == false
+	 * 			|else result == true
+	 */
 	public boolean canEndDuckWithoutMove(){
 		boolean oldDuck = isDucked();
 		this.setIsDucked(false);
@@ -752,6 +874,19 @@ public class Mazub extends Characters {
 		return true;
 	}
 	
+	/**
+	 * Check whether mazub can stand up. This is calculated in the space above the ducking mazub, not
+	 * including the extra space that it takes up on the side when it stands up.
+	 * @return false if the added width when standing up is in any ground tile.
+	 * 			| let standingSprite = [sprite with mazub's current attributes, but standing]
+	 * 			|for j in 1..standingSprite.getHeight() - getSprite().getHeight()
+	 * 			|	for i in 1..getSprite().getWidth()
+	 * 			|		let pos = {getIntPositionAt(1) +i,getIntPositionAt(2) + getSprite().getHeight() +j}
+	 * 			|		if (getWorld().getGeoFeatureAt(getWorld().getPixelOfTileContaining(pos[0], pos[1])[0]
+	 * 			|			, getWorld().getPixelOfTileContaining(pos[0], pos[1])[1]) == GeoFeature.GROUND)
+	 * 			|			then result == false
+	 * 			|else result == true
+	 */
 	public boolean canEndDuck(){
 		boolean oldDuck = isDucked();
 		this.setIsDucked(false);
@@ -786,6 +921,15 @@ public class Mazub extends Characters {
 //			
 //	}
 	
+	/**
+	 * Effectively end Mazub's duck.
+	 * @effect Mazub is not trying to stand up any more
+	 * 			|setEndDuck(false)
+	 * @effect	Mazub is not ducking anymore
+	 * 			|setIsDucked(false);
+	 * @effect	Mazub's max horizontal speed is set higher
+	 * 			|setMaxHorizontalVelocity(3.0)
+	 */
 	private void finishDuck(){
 		setEndDuck(false);
 		setIsDucked(false);
@@ -822,6 +966,13 @@ public class Mazub extends Characters {
 		return this.isDucked;
 	}
 	
+	/**
+	 * A setter method to change the boolean isDucked
+	 * @param flag
+	 * 			the new value to set the boolean to
+	 * @post	the new value of isDucked is equal to the given one
+	 * 			|new.isDucked() == flag
+	 */
 	public void setIsDucked(boolean flag){
 		this.isDucked = flag;
 	}
@@ -831,10 +982,20 @@ public class Mazub extends Characters {
 	 */
 	private boolean isDucked = false;
 	
+	/**
+	 * A getter method for the boolean endDucked.
+	 */
 	public boolean isEndDuck() {
 		return endDuck;
 	}
 
+	/**
+	 * A setter method to change the boolean endDucked
+	 * @param flag
+	 * 			the new value to set the boolean to
+	 * @post	the new value of endDucked is equal to the given one
+	 * 			|new.endDucked() == flag
+	 */
 	public void setEndDuck(boolean endduck) {
 		this.endDuck = endduck;
 	}
@@ -914,11 +1075,25 @@ public class Mazub extends Characters {
 	 */
 	private double timeSinceStep = 0.0;
 	
+	/**
+	 * A method to determine what to do when colliding with a character.
+	 * @effect	the other character is colliding with this character
+	 * 			|other.collision(this, isOnTop)
+	 */
 	@Override
 	public void collision(Characters other, boolean isOnTop){
 		 other.collision(this, isOnTop);
 	}
 	 
+	/**
+	 * Decide what to do when 'eating' a plant
+	 * @param plant
+	 * 			the plant to eat
+	 * @effect	if Mazub's hitpoints aren't full, add 50 or set to the maximum, and terminate the plant.
+	 * 			|if (getHitPoints() < 500)
+	 * 			|	then{ setHitPoints(Math.min(500, getHitPoints()+50))
+	 * 			|		plant.terminate()}
+	 */
 	public void eat(Plant plant){
 //		if (this.getHitPoints() <= 450)
 //			this.setHitPoints(this.getHitPoints()+50);
@@ -929,6 +1104,19 @@ public class Mazub extends Characters {
 			plant.terminate();
 	}
 	
+	/**
+	 * determine what to do with mazub's immunity.
+	 * @param duration
+	 * 			the duration of time that passes.
+	 * @effect if Mazub still has time left to be immune, then his immunity is set to true
+	 * 			|if (this.getImmuneTime()>0)
+	 * 			|	then setImmune(true)
+	 * 			else set his immunity to false
+	 * 			|else setImmune(false)
+	 * @effect	if Mazub still has time left to be immune, the timer is decreased with the given duration.
+	 * 			|if (this.getImmuneTime()>0)
+	 * 			|	then setImmuneTime(getImmuneTime()-duration)
+	 */
 	protected void immune(double duration){
 		if (this.getImmuneTime()>0){
 			setImmune(true);
@@ -938,30 +1126,96 @@ public class Mazub extends Characters {
 			setImmune(false);
 	}
 	
+	/**
+	 * Mazub starts to be immune
+	 * @effect Mazub's time to be immune is set to 0.6s
+	 * 			|setImmuneTime(0.6)
+	 */
 	protected void startImmune(){
 		setImmuneTime(0.6);
 	}
 
+	/**
+	 * A getter to return Mazub's time left to be immune
+	 * @return the amount of time mazub has left to be immune
+	 */
+	@Basic
 	public double getImmuneTime() {
 		return immuneTime;
 	}
 
+	/**
+	 * A setter to set the amount of time Mazub has left to be immune
+	 * @param immuneTime
+	 * 			the amount of time mazub has to be immune
+	 * @post	mazub's new immune time is equal to the given time.
+	 * 			|new.getImmuneTime() == immuneTime
+	 */
 	public void setImmuneTime(double immuneTime) {
 		this.immuneTime = immuneTime;
 	}
 	
+	/**
+	 * a variable to store how much time mazub has left to be immune
+	 */
 	public double immuneTime;
 	
+	/**
+	 * a getter to tell if mazub is immune
+	 * @return the boolean stating if mazub is immune
+	 */
+	@Basic
 	public boolean isImmune() {
 		return isImmune;
 	}
 
+	/**
+	 * A setter to set whether mazub is immune or not
+	 * @param isImmune
+	 * 			the value to set
+	 * @post mazub's new immune status is equal to the given value
+	 * 			|new.isImmune() == isImmune
+	 */
 	public void setImmune(boolean isImmune) {
 		this.isImmune = isImmune;
 	}
 	
+	/**
+	 * a variable stating whether mazub is immune or not
+	 */
 	public boolean isImmune;
 
+	/**
+	 * A method to determine what damage mazub receives from the environment.
+	 * @effect	if mazub is in lava, it is in a bad environment and receives 50 damage. The timer is 
+	 * 			set correctly.
+	 * 			|for i in 0..getSprite().getWidth()
+	 * 			|	for j in 0..getSprite().getHeight()
+	 * 			|		if (getGeoFeatureAt(getPixelOfTileContaining(getIntPositionAt(1)+i,
+	 * 			|			getIntPositionAt(2)+j)[0], getPixelOfTileContaining(getIntPositionAt(1)+i,
+	 * 			|			getIntPositionAt(2)+j)[1]) == GeoFeature.MAGMA)
+	 * 			|			then {setBadEnvironment(true)
+	 * 			|					if getTimeSinceEnvironmentalDamage() == 0.0
+	 * 			|						then this.damage(50)
+	 * 			|					setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage()+duration)
+	 * 			|					if (getTimeSinceEnvironmentalDamage() >= 0.2))
+	 * 			|						then setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2)
+	 * 			else if mazub is in water, it is in a bad environment and receives 2 damage after the first
+	 * 			0.2 seconds.The timer is set correctly.
+	 * 			|		else if (getGeoFeatureAt(getPixelOfTileContaining(getIntPositionAt(1)+i,
+	 * 			|			getIntPositionAt(2)+j)[0], getPixelOfTileContaining(getIntPositionAt(1)+i,
+	 * 			|			getIntPositionAt(2)+j)[1]) == GeoFeature.WATER)
+	 * 			|		then {setBadEnvironment(true)
+	 * 			|				if getTimeSinceEnvironmentalDamage()+duration >= 0.0
+	 * 			|					then this.damage(2)
+	 * 			|				setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage()+duration)
+	 * 			|				if (getTimeSinceEnvironmentalDamage() >= 0.2))
+	 * 			|					then setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2)
+	 * 			else mazub is not in a badEnvironment. The timer is set correctly.
+	 * 			|		else {setBadEnvironment(false)
+	 * 			|			setTimeSinceEnvironmentalDamage(0.0)}
+	 * 			
+	 */
 	@Override
 	public void environmentDamage(double duration) {
 		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
@@ -983,54 +1237,46 @@ public class Mazub extends Characters {
 		if (this.isBadEnvironment()){
 			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
 			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
-				setTimeSinceEnvironmentalDamage(0.0);
+				setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2);
 		}else{
 			this.setTimeSinceEnvironmentalDamage(0.0);
 		}
 	}
 	
+	/**
+	 * A getter for the variable badEnvironment
+	 * @return the variable badEnvironment
+	 */
+	@Basic
 	public boolean isBadEnvironment() {
 		return badEnvironment;
 	}
 
+	/**
+	 * A setter for the variable badEnvironment
+	 * @param badEnvironment
+	 * 			the value to set
+	 * @post	the new badEnvironment variable is equal to the given value
+	 * 			|new.isBadEnvironmnet() == badEnvironmnet
+	 */
 	public void setBadEnvironment(boolean badEnvironment) {
 		this.badEnvironment = badEnvironment;
 	}
 
+	/**
+	 * A boolean storing whether mazub is in a bad environment.
+	 */
 	public boolean badEnvironment = false;
 	
-	public double terminateTime = 0.0;
-
-	public double getTerminateTime() {
-		return terminateTime;
-	}
-
-	public void setTerminateTime(double terminateTime) {
-		this.terminateTime = terminateTime;
-	}
+//	public double terminateTime = 0.0;
+//
+//	public double getTerminateTime() {
+//		return terminateTime;
+//	}
+//
+//	public void setTerminateTime(double terminateTime) {
+//		this.terminateTime = terminateTime;
+//	}
 	
-//	/**
-//	 * A method to return the variable blockedPixelsRight
-//	 * @return the amount of pixels to the right that are preventing Mazub from standing up.
-//	 */
-//	@Basic
-//	private int getBlockedPixelsRight(){
-//		return blockedPixelsRight;
-//	}
-//	
-//	/**
-//	 * A method to set the variable blockedPixelsRight
-//	 * @param amount
-//	 * 			the amount to set
-//	 * @post	the new amount of blocked pixels to the right is equal to the given amount.
-//	 * 			|new.getBlockedPixelsRight() == amount
-//	 */
-//	private void setBlockedPixelsRight(int amount){
-//		blockedPixelsRight = amount;
-//	}
-//	
-//	/**
-//	 * A variable storing how many pixels to the right that are preventing Mazub from standing up.
-//	 */
-//	private int blockedPixelsRight = 0;
+
 }

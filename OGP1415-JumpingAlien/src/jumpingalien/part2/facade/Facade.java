@@ -40,7 +40,6 @@ public class Facade implements IFacadePart2 {
 	
 	public double[] getAcceleration(Mazub mazub){
 		double[] acc = {mazub.getHorizontalAcceleration(), mazub.getVerticalAcceleration()};
-//		double[] acc = {mazub.isInAirInt(), mazub.isJumpingInt()};
 		return acc;
 	}
 	
