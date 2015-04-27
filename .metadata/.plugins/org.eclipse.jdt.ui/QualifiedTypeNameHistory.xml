@@ -10,5 +10,9 @@
 <fullyQualifiedTypeName name="jumpingalien.model.Shark"/>
 <fullyQualifiedTypeName name="jumpingalien.model.Slime"/>
 <fullyQualifiedTypeName name="jumpingalien.model.School"/>
+<<<<<<< HEAD
+<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Basic"/>
+=======
 <fullyQualifiedTypeName name="jumpingalien.util.Util"/>
+>>>>>>> 2d9cbaec9c2355876dadc639a6a08815e594c725
 </qualifiedTypeNameHistroy>

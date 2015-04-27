@@ -8,7 +8,7 @@ import be.kuleuven.cs.som.annotate.*;
 
 //TODO documentatie aanpassen
 /**
- * A class of Mazub characters, the player controlled character in Jumping Alien.
+ * A class of Characters.
  * 
  * @invar	The saved index for the running cycle is valid.
  * 			| canHaveAsIndex(getIndex())
@@ -113,16 +113,26 @@ public abstract class Characters {
 		this.setHitPoints(hitpoints);
 	}
 	
+	/**
+     * A getter method for the variable isTerminated
+     */
     @Basic @Raw
     public boolean isTerminated() {
         return this.isTerminated;
     }
 	
-    private boolean isTerminated = false;
-	
-	public void setTerminated(boolean isTerminated) {
+    /**
+     * A setter method for the variable isTerminated
+     */
+    @Basic
+    public void setTerminated(boolean isTerminated) {
 		this.isTerminated = isTerminated;
 	}
+    
+    /**
+     * A variable containing whether a character is terminated
+     */
+    private boolean isTerminated = false;
 
 //	public abstract boolean canHaveAsWorld(World world);
 	
@@ -327,10 +337,40 @@ public abstract class Characters {
 	 */
 	protected Sprite[] images;
 	
-	protected abstract void computeNewHorizontalPositionAfter(double duration);
+//	protected abstract void computeNewHorizontalPositionAfter(double duration);
 	
 	protected abstract void computeNewHorizontalVelocityAfter(double duration);
 	
+	/**
+	 * 
+	 * @param duration
+	 * @effect	...
+	 * 			| shortduration = shortDuration(duration)
+	 * 			| iteraties = ((int)(duration/shortduration))
+	 * 			| for i = 0 while i < iteratie with i++
+	 * 			|	this.advanceTimeLong(shortduration)
+	 * 			|	if not this.isTerminated
+	 * 			|		if getWorld().hasAsObject(this)
+	 * 			|			if this.getIntPositionAt(1) <= getWorld().getWorldSize()[0]/2
+	 * 			|				then getWorld().addAsLeftObject(this)
+	 * 			|			else
+	 * 			|				then getWorld().removeAsLeftObject(this)
+	 * 			|			if (this.getIntPositionAt(1) + this.getSize()[0] - 1) >= getWorld().getWorldSize()[0]/2
+	 * 			|				then getWorld().addAsRightObject(this)
+	 * 			|			else
+	 * 			|				then getWorld().removeAsRightObject(this)
+	 * 			| this.advanceTimeLong(duration - shortduration*iteraties)
+	 * 			| if not this.isTerminated
+	 * 			|	if getWorld().hasAsObject(this)
+	 * 			|		if this.getIntPositionAt(1) <= getWorld().getWorldSize()[0]/2
+	 * 			|			then getWorld().addAsLeftObject(this)
+	 * 			|		else
+	 * 			|			then getWorld().removeAsLeftObject(this)
+	 * 			|		if (this.getIntPositionAt(1) + this.getSize()[0] - 1) >= getWorld().getWorldSize()[0]/2
+	 * 			|			then getWorld().addAsRightObject(this)
+	 * 			|		else
+	 * 			|			then getWorld().removeAsRightObject(this)
+	 */
 	public void advanceTime (double duration){
 		double shortduration = shortDuration(duration);
 		int iteraties = ((int)(duration/shortduration));
@@ -366,6 +406,14 @@ public abstract class Characters {
 	
 	public abstract void advanceTimeLong (double duration);
 	
+	/**
+	 * 
+	 * @param duration
+	 * @return	...
+	 * 			| speed = Math.sqrt((getVerticalVelocity()*getVerticalVelocity() + getHorizontalVelocity()*getHorizontalVelocity()));
+	 * 			| acceleration = Math.sqrt((getVerticalAcceleration()*getVerticalAcceleration() + getHorizontalAcceleration()*getHorizontalAcceleration()))
+	 * 			| return Math.min((0.01 / (speed + acceleration * duration)),duration)
+	 */
 	public double shortDuration(double duration){
 		double speed = Math.sqrt((getVerticalVelocity()*getVerticalVelocity()+
 				getHorizontalVelocity()*getHorizontalVelocity()));
@@ -401,7 +449,7 @@ public abstract class Characters {
 	 * @param 	a
 	 * 			the value to which horizontal acceleration has to be set
 	 * @post	horizontal acceleration is set to the given value
-	 * 			new.getAbsHorizontalAcceleration().equals(a)
+	 * 			| new.getAbsHorizontalAcceleration().equals(a)
 	 */
 	protected void setHorizontalAcceleration(double a){
 		assert isValidHorizontalAcceleration(a);
@@ -418,7 +466,6 @@ public abstract class Characters {
 	 * character is moving left, positive if the character is moving right, and 0.0 if the character is
 	 * not moving horizontally.
 	 */
-	// moving in two directions aanpassen naar nieuwe richtlijnen aanpassen
 	@Basic
 	public double getHorizontalAcceleration() {
 //		if (this.isAccelerating() && this.isMovingLeft() && (! this.movingInTwoDirections()))
@@ -623,8 +670,6 @@ public abstract class Characters {
 	 * A value stating if the character is moving right.
 	 */
 	protected boolean isMovingRight = false;
-	
-	protected abstract void computeNewVerticalPositionAfter(double duration);
 	
 	protected abstract void computeNewVerticalVelocityAfter(double duration);
 	
@@ -969,78 +1014,38 @@ public abstract class Characters {
 //		}
 //		return collisionDetectionHorizontal(coordinate);
 //	}
-	
+	/**
+	 * 
+	 * @param coordinate
+	 * @param index
+	 * @return	...
+	 * 			| if index == 1
+	 * 			|	then return true
+	 * 			| else if index == 2
+	 * 			|	then return true
+	 * 			| return false
+	 */
 	public boolean canHaveAsNewPosition (double coordinate, int index){
-		if (! isTerminated())
-		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
+		if (index == 1)
 //		if ((index == 1) && (testHor(coordinate)))
 			return true;
-		else if ((index == 2) && (passableTerrainVertical(coordinate)))
+		else if (index == 2)
 			return true;
 		return false;
 	}
 	
-//	public boolean passableTerrainHorizontal(double newPosition){
-//		if (isMovingLeft()){
-//			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
-//				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition-1,i);
-//				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
-//					return false;
-//			}
-//		}
-//		else if (isMovingRight()){
-//			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
-//				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
-//				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
-//					return false;
-//			}
-//		}
-//		return this.collisionDetectionHorizontal(newPosition);
-//	}
-	
-	public boolean passableTerrainHorizontal(double newPosition){
-		if (this.getHorizontalVelocity() <= 0.0){
-//			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
-			for (int i = getIntPositionAt(2)+1; i<=getIntPositionAt(2)+getSprite().getHeight()-1; i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
-					return false;
-			}
-		}
-		else if (this.getHorizontalVelocity() >= 0.0){
-//			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
-			for (int i = getIntPositionAt(2)+1;i<=getIntPositionAt(2)+getSprite().getHeight()-1;i++){
-				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,i);
-				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
-					return false;
-			}
-		}
-		return this.collisionDetectionHorizontal(newPosition);
-	}
-	
-	public boolean passableTerrainVertical(double newPosition){
-		if (getVerticalVelocity() >= 0.0){
-//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight()-1);
-				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND){
-//					setVerticalVelocity(0.0);
-					return false;
-				}
-			}
-		}
-		else if (getVerticalVelocity() <= 0.0){
-//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
-				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition);
-				if ((getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
-						&& (((int)newPosition +1)%getWorld().getTileLength() != 0))
-					return false;
-			}
-		}
-		return this.collisionDetectionVertical(newPosition);
-	}
-	
+	/**
+	 * 
+	 * @return	...
+	 * 			| world = getWorld()
+	 * 			| if world.hasAsLeftObject(this) && world.hasAsRightObject(this)
+	 * 			|	then characters = world.getAllObjects()
+	 * 			| else if world.hasAsLeftObject(this)
+	 * 			|	then characters = world.getAllLeftObjects()
+	 * 			| else
+	 * 			|	then characters = world.getAllRightObjects()
+	 * 			| return characters
+	 */
 	public Iterable<Characters> getNearbyCharacters(){
 		World world = getWorld();
 		Iterable<Characters> characters;
@@ -1146,9 +1151,6 @@ public abstract class Characters {
 	 * 			The coordinate to register
 	 * @param index
 	 * 			The index for the coordinate to register
-	 * @throws ArrayIndexOutOfBoundsException
-	 * 			The index must be positive and may not be greater than 2
-	 * 			| (index <= 0) || (index > 2)
 	 * @throws IllegalArgumentException
 	 * 			The given coordinate must be a valid coordinate at the given index.
 	 * 			| (! canHaveAsNewPosition(coordinate, index))
@@ -1172,6 +1174,13 @@ public abstract class Characters {
 	
 	public abstract void collision(Characters other, boolean isBelow);
 
+	/**
+	 * @effect	...
+	 * 			| if not isTerminated()
+	 * 			|	then this.setTerminated(true)
+	 * 			|		this.setHorizontalVelocity(0.0)
+	 * 			|		this.setVerticalVelocity(0.0)
+	 */
 	protected void terminate() {
 		if (! isTerminated()){
 			this.setTerminated(true);
@@ -1180,6 +1189,15 @@ public abstract class Characters {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param damage
+	 * @effect	...
+	 * 			| if Util.fuzzyLessThanOrEqualTo(this.getHitPoints() -damage, 0.0)
+	 * 			|	then this.setHitPoints(0)
+	 * 			| else
+	 * 			|	then this.setHitPoints(this.getHitPoints() - damage)
+	 */
 	protected void damage(int damage){
 		if (Util.fuzzyLessThanOrEqualTo(this.getHitPoints() -damage, 0.0)){
 			this.setHitPoints(0);
@@ -1188,22 +1206,48 @@ public abstract class Characters {
 			this.setHitPoints(this.getHitPoints() - damage);
 	}
 	
+	/**
+	 * 
+	 * @param hitpoints
+	 * @return	...
+	 * 			| if hitPoints < 0
+	 * 			|	then return false
+	 * 			| return true
+	 */
 	public boolean canHaveAsHitpoints(int hitpoints){
 		if (hitpoints < 0)
 			return false;
 		return true;
 	}
 	
+	/**
+	 * A getter method for the variable hitPoints
+	 */
+	@Basic
 	public int getHitPoints() {
 		return hitPoints;
 	}
 
+	/**
+	 * A setter method for the variable hitPoints
+	 */
+	@Basic
 	public void setHitPoints(int hitPoints) {
 		this.hitPoints = hitPoints;
 	}
 	
+	/**
+	 * A variable conatining the hitPoints of a character
+	 */
 	public int hitPoints;
 	
+	/**
+	 * 
+	 * @param position
+	 * @return	...
+	 * 			| pos = getWorld().getPixelOfTileContaining(position[0], position[1])
+	 * 			| return getWorld().getGeoFeatureAt(pos[0], pos[1])
+	 */
 	public GeoFeature environment(int[] position){
 		int[] pos = getWorld().getPixelOfTileContaining(position[0], position[1]);	
 		return getWorld().getGeoFeatureAt(pos[0], pos[1]);
@@ -1211,14 +1255,35 @@ public abstract class Characters {
 	
 	public abstract void environmentDamage(double duration);
 	
+	/**
+	 * A setter method for the variable timeSinceEnvironmentalDamage
+	 */
+	@Basic
 	public double getTimeSinceEnvironmentalDamage() {
 		return timeSinceEnvironmentalDamage;
 	}
 
+	/**
+	 * A setter method for the variable timeSinceEnvironmentalDamage
+	 */
+	@Basic
 	public void setTimeSinceEnvironmentalDamage(double timeSinceEnvironmentalDamage) {
 		this.timeSinceEnvironmentalDamage = timeSinceEnvironmentalDamage;
 	}
 	
+	/**
+	 * 
+	 * @param world
+	 * @return	...
+	 * 			| if this.isTerminated()
+	 * 			|	if world == null
+	 * 			|		return true
+	 * 			| if not world.hasAsObject(this)
+	 * 			|	then return false
+	 * 			| if world.isTerminated()
+	 * 			|	then return false
+	 * 			| return true
+	 */
 	@Raw
 	public boolean canHaveAsWorld(World world) {
 		if (this.isTerminated()){
@@ -1232,12 +1297,29 @@ public abstract class Characters {
 		return true;
 	}
 
+	/**
+	 * A double containing the timeSinceEnvironmentDamage
+	 */
 	private double timeSinceEnvironmentalDamage = 0.0;
 	
+	/**
+	 * 
+	 * @param character
+	 * @return	...
+	 * 			| return (character != null)
+	 */
 	public boolean isValidCloseCharacter(Characters character){
 		return (character != null);
 	}
 	
+	/**
+	 * 
+	 * @return	...
+	 * 			| for character in getAllCloseCharacters()
+	 * 			|	if not isValidCloseCharacter(character)
+	 * 			|		then return false
+	 * 			| return true
+	 */
 	public boolean hasProperCloseCharacters(){
 		for (Characters character: getAllCloseCharacters())
 			if (! isValidCloseCharacter(character))
@@ -1245,25 +1327,61 @@ public abstract class Characters {
 		return true;
 	}
 	
+	/**
+	 * @return	...
+	 * 			| return new HashSet<Characters>(closeCharacters)
+	 */
 	public Set<Characters> getAllCloseCharacters(){
 		return new HashSet<Characters>(closeCharacters);
 	}
 	
+	/**
+	 * 
+	 * @param character
+	 * @effect	...
+	 * 			closeCharacters.add(character)
+	 * @throws IllegalArgumentException
+	 * 			| if not isValidCloseCharacter(character)
+	 */
 	public void addAsCloseCharacter(Characters character) throws IllegalArgumentException{
 		if (! isValidCloseCharacter(character))
 			throw new IllegalArgumentException();
 		closeCharacters.add(character);
 	}
 	
+	/**
+	 * 
+	 * @param character
+	 * @effect	...
+	 * 			| closeCharacters.remove(character)
+	 */
 	public void removeAsCloseCharacter(Characters character){
 		closeCharacters.remove(character);
 	}
 	
+	/**
+	 * @effect	...
+	 * 			| for character in getAllCloseCharacters()
+	 * 			|	removeAsCloseCharacter(character)
+	 */
 	public void removeAllCloseCharacters(){
 		for (Characters character: getAllCloseCharacters())
 			removeAsCloseCharacter(character);
 	}
 	
+	/**
+	 * 
+	 * @param newPosition
+	 * @return	...
+	 * 			|  pos = getWorld().getPixelOfTileContaining((int)newPosition, getIntPositionAt(2))
+	 * 			| if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND && ((getIntPositionAt(2) +1) % getWorld().getTileLength() != 0)
+	 * 			|	then return false
+	 * 			| for int i = getIntPositionAt(2)+1 while i<=getIntPositionAt(2)+getSprite().getHeight()-1 with i++
+	 * 			|	pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,i)
+	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND
+	 * 			|		then return false
+	 * 			| return true
+	 */
 	public boolean passableTerrainRight(double newPosition) {
 		//		for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
 		int[] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,
@@ -1279,6 +1397,19 @@ public abstract class Characters {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param newPosition
+	 * @return	...
+	 * 			|  pos = getWorld().getPixelOfTileContaining((int)newPosition, getIntPositionAt(2))
+	 * 			| if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND && ((getIntPositionAt(2) +1) % getWorld().getTileLength() != 0)
+	 * 			|	then return false
+	 * 			| for int i = getIntPositionAt(2)+1 while i<=getIntPositionAt(2)+getSprite().getHeight()-1 with i++
+	 * 			|	pos = getWorld().getPixelOfTileContaining((int)newPosition,i)
+	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND
+	 * 			|		then return false
+	 * 			| return true
+	 */
 	public boolean passableTerrainLeft(double newPosition) {
 		int[] pos = getWorld().getPixelOfTileContaining((int)newPosition, getIntPositionAt(2));
 		if ((getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
@@ -1292,6 +1423,16 @@ public abstract class Characters {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param newPosition
+	 * @return	...
+	 * 			| for i = getIntPositionAt(1) while i<=getIntPositionAt(1)+getSprite().getWidth()-1 with i++
+	 * 			|	pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight()-1)
+	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND
+	 * 			|		return false
+	 * 			| return true
+	 */
 	public boolean passableTerrainUp(double newPosition) {
 		//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
 		for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
@@ -1304,6 +1445,19 @@ public abstract class Characters {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param newPosition
+	 * @return	...
+	 * 			| if ((int)newPosition +1) % getWorld().getTileLength() == 0
+	 * 			|	then return true
+	 * 			| else
+	 * 			|	for i  = getIntPositionAt(1) while i<=getIntPositionAt(1)+getSprite().getWidth()-1 with i++
+	 * 			|		pos = getWorld().getPixelOfTileContaining(i, (int)newPosition)
+	 * 			|		if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
+	 * 			|			then return false
+	 * 			|	return true
+	 */
 	public boolean passableTerrainDown(double newPosition) {
 		//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
 		if (((int)newPosition +1) % getWorld().getTileLength() == 0)
@@ -1318,6 +1472,16 @@ public abstract class Characters {
 		}
 	}
 
+	/**
+	 * 
+	 * @param newPosition
+	 * @effect	...
+	 * 			| for character in getNearbyCharacters()
+	 * 			|	if (character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()-1) 
+	 *					&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
+	 *					&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)
+	 *			|			addAsCloseCharacter(character)
+	 */
 	public void collisionDetectionRight(double newPosition) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
@@ -1329,6 +1493,16 @@ public abstract class Characters {
 		}
 	}
 
+	/**
+	 * 
+	 * @param newPosition
+	 * @effect	...
+	 * 			| for character in getNearbyCharacters()
+	 * 			|	if (character.getIntPositionAt(1) + character.getSprite().getWidth()-1 == (int)newPosition) 
+	 *					&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
+	 *					&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)
+	 *			|			addAsCloseCharacter(character)
+	 */
 	public void collisionDetectionLeft(double newPosition) {
 	//		List<Characters> characters = world.getAllObjects();
 			Iterable<Characters> characters = getNearbyCharacters();
@@ -1341,6 +1515,16 @@ public abstract class Characters {
 			}
 		}
 
+	/**
+	 * 
+	 * @param newPosition
+	 * @effect	...
+	 * 			| for character in getNearbyCharacters()
+	 * 			|	if (character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
+	 *					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
+	 *					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)
+	 *			|			addAsCloseCharacter(character)
+	 */
 	public void collisionDetectionUp(double newPosition) {
 		//		List<Characters> characters = world.getAllObjects();
 		Iterable<Characters> characters = getNearbyCharacters();
@@ -1354,6 +1538,16 @@ public abstract class Characters {
 		}
 	}
 
+	/**
+	 * 
+	 * @param newPosition
+	 * @effect	...
+	 * 			| for character in getNearbyCharacters()
+	 * 			|	if (character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
+	 *					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
+	 *					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)
+	 *			|			addAsCloseCharacter(character)
+	 */
 	public void collisionDetectionDown(double newPosition) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
