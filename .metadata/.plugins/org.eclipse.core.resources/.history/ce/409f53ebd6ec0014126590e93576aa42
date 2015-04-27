@@ -969,15 +969,75 @@ public abstract class Characters {
 //	}
 	
 	public boolean canHaveAsNewPosition (double coordinate, int index){
-		if (index == 1)
+		if (! isTerminated())
+		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
 //		if ((index == 1) && (testHor(coordinate)))
 			return true;
-		else if (index == 2)
+		else if ((index == 2) && (passableTerrainVertical(coordinate)))
 			return true;
 		return false;
 	}
 	
-
+//	public boolean passableTerrainHorizontal(double newPosition){
+//		if (isMovingLeft()){
+//			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
+//				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition-1,i);
+//				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+//					return false;
+//			}
+//		}
+//		else if (isMovingRight()){
+//			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
+//				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
+//				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+//					return false;
+//			}
+//		}
+//		return this.collisionDetectionHorizontal(newPosition);
+//	}
+	
+	public boolean passableTerrainHorizontal(double newPosition){
+		if (this.getHorizontalVelocity() <= 0.0){
+//			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
+			for (int i = getIntPositionAt(2)+1; i<=getIntPositionAt(2)+getSprite().getHeight()-1; i++){
+				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
+				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		else if (this.getHorizontalVelocity() >= 0.0){
+//			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
+			for (int i = getIntPositionAt(2)+1;i<=getIntPositionAt(2)+getSprite().getHeight()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,i);
+				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		return this.collisionDetectionHorizontal(newPosition);
+	}
+	
+	public boolean passableTerrainVertical(double newPosition){
+		if (getVerticalVelocity() >= 0.0){
+//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight()-1);
+				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND){
+//					setVerticalVelocity(0.0);
+					return false;
+				}
+			}
+		}
+		else if (getVerticalVelocity() <= 0.0){
+//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition);
+				if ((getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
+						&& (((int)newPosition +1)%getWorld().getTileLength() != 0))
+					return false;
+			}
+		}
+		return this.collisionDetectionVertical(newPosition);
+	}
 	
 	public Iterable<Characters> getNearbyCharacters(){
 		World world = getWorld();

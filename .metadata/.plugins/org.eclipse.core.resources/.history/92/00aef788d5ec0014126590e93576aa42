@@ -969,15 +969,75 @@ public abstract class Characters {
 //	}
 	
 	public boolean canHaveAsNewPosition (double coordinate, int index){
-		if (index == 1)
+		if (! isTerminated())
+		if ((index == 1) && (passableTerrainHorizontal(coordinate)))
 //		if ((index == 1) && (testHor(coordinate)))
 			return true;
-		else if (index == 2)
+		else if ((index == 2) && (passableTerrainVertical(coordinate)))
 			return true;
 		return false;
 	}
 	
-
+//	public boolean passableTerrainHorizontal(double newPosition){
+//		if (isMovingLeft()){
+//			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
+//				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition-1,i);
+//				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+//					return false;
+//			}
+//		}
+//		else if (isMovingRight()){
+//			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
+//				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth(),i);
+//				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+//					return false;
+//			}
+//		}
+//		return this.collisionDetectionHorizontal(newPosition);
+//	}
+	
+	public boolean passableTerrainHorizontal(double newPosition){
+		if (this.getHorizontalVelocity() <= 0.0){
+//			for (int i = getIntPositionAt(2)+1; i<getIntPositionAt(2)+getSprite().getHeight(); i++){
+			for (int i = getIntPositionAt(2)+1; i<=getIntPositionAt(2)+getSprite().getHeight()-1; i++){
+				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition,i);
+				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		else if (this.getHorizontalVelocity() >= 0.0){
+//			for (int i = getIntPositionAt(2)+1;i<getIntPositionAt(2)+getSprite().getHeight();i++){
+			for (int i = getIntPositionAt(2)+1;i<=getIntPositionAt(2)+getSprite().getHeight()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,i);
+				if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+					return false;
+			}
+		}
+		return this.collisionDetectionHorizontal(newPosition);
+	}
+	
+	public boolean passableTerrainVertical(double newPosition){
+		if (getVerticalVelocity() >= 0.0){
+//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight()-1);
+				if(getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND){
+//					setVerticalVelocity(0.0);
+					return false;
+				}
+			}
+		}
+		else if (getVerticalVelocity() <= 0.0){
+//			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth();i++){
+			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth()-1;i++){
+				int [] pos = getWorld().getPixelOfTileContaining(i, (int)newPosition);
+				if ((getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
+						&& (((int)newPosition +1)%getWorld().getTileLength() != 0))
+					return false;
+			}
+		}
+		return this.collisionDetectionVertical(newPosition);
+	}
 	
 	public Iterable<Characters> getNearbyCharacters(){
 		World world = getWorld();
@@ -1084,6 +1144,9 @@ public abstract class Characters {
 	 * 			The coordinate to register
 	 * @param index
 	 * 			The index for the coordinate to register
+	 * @throws ArrayIndexOutOfBoundsException
+	 * 			The index must be positive and may not be greater than 2
+	 * 			| (index <= 0) || (index > 2)
 	 * @throws IllegalArgumentException
 	 * 			The given coordinate must be a valid coordinate at the given index.
 	 * 			| (! canHaveAsNewPosition(coordinate, index))
@@ -1107,13 +1170,6 @@ public abstract class Characters {
 	
 	public abstract void collision(Characters other, boolean isBelow);
 
-	/**
-	 * @effect	...
-	 * 			| if not isTerminated()
-	 * 			|	then this.setTerminated(true)
-	 * 			|		this.setHorizontalVelocity(0.0)
-	 * 			|		this.setVerticalVelocity(0.0)
-	 */
 	protected void terminate() {
 		if (! isTerminated()){
 			this.setTerminated(true);
@@ -1122,15 +1178,6 @@ public abstract class Characters {
 		}
 	}
 	
-	/**
-	 * 
-	 * @param damage
-	 * @effect	...
-	 * 			| if Util.fuzzyLessThanOrEqualTo(this.getHitPoints() -damage, 0.0)
-	 * 			|	then this.setHitPoints(0)
-	 * 			| else
-	 * 			|	then this.setHitPoints(this.getHitPoints() - damage)
-	 */
 	protected void damage(int damage){
 		if (Util.fuzzyLessThanOrEqualTo(this.getHitPoints() -damage, 0.0)){
 			this.setHitPoints(0);
@@ -1139,48 +1186,22 @@ public abstract class Characters {
 			this.setHitPoints(this.getHitPoints() - damage);
 	}
 	
-	/**
-	 * 
-	 * @param hitpoints
-	 * @return	...
-	 * 			| if hitPoints < 0
-	 * 			|	then return false
-	 * 			| return true
-	 */
 	public boolean canHaveAsHitpoints(int hitpoints){
 		if (hitpoints < 0)
 			return false;
 		return true;
 	}
 	
-	/**
-	 * A getter method for the variable hitPoints
-	 */
-	@Basic
 	public int getHitPoints() {
 		return hitPoints;
 	}
 
-	/**
-	 * A setter method for the variable hitPoints
-	 */
-	@Basic
 	public void setHitPoints(int hitPoints) {
 		this.hitPoints = hitPoints;
 	}
 	
-	/**
-	 * A variable conatining the hitPoints of a character
-	 */
 	public int hitPoints;
 	
-	/**
-	 * 
-	 * @param position
-	 * @return	...
-	 * 			| pos = getWorld().getPixelOfTileContaining(position[0], position[1])
-	 * 			| return getWorld().getGeoFeatureAt(pos[0], pos[1])
-	 */
 	public GeoFeature environment(int[] position){
 		int[] pos = getWorld().getPixelOfTileContaining(position[0], position[1]);	
 		return getWorld().getGeoFeatureAt(pos[0], pos[1]);
@@ -1188,35 +1209,14 @@ public abstract class Characters {
 	
 	public abstract void environmentDamage(double duration);
 	
-	/**
-	 * A setter method for the variable timeSinceEnvironmentalDamage
-	 */
-	@Basic
 	public double getTimeSinceEnvironmentalDamage() {
 		return timeSinceEnvironmentalDamage;
 	}
 
-	/**
-	 * A setter method for the variable timeSinceEnvironmentalDamage
-	 */
-	@Basic
 	public void setTimeSinceEnvironmentalDamage(double timeSinceEnvironmentalDamage) {
 		this.timeSinceEnvironmentalDamage = timeSinceEnvironmentalDamage;
 	}
 	
-	/**
-	 * 
-	 * @param world
-	 * @return	...
-	 * 			| if this.isTerminated()
-	 * 			|	if world == null
-	 * 			|		return true
-	 * 			| if not world.hasAsObject(this)
-	 * 			|	then return false
-	 * 			| if world.isTerminated()
-	 * 			|	then return false
-	 * 			| return true
-	 */
 	@Raw
 	public boolean canHaveAsWorld(World world) {
 		if (this.isTerminated()){
@@ -1230,17 +1230,8 @@ public abstract class Characters {
 		return true;
 	}
 
-	/**
-	 * A double containing the timeSinceEnvironmentDamage
-	 */
 	private double timeSinceEnvironmentalDamage = 0.0;
 	
-	/**
-	 * 
-	 * @param character
-	 * @return	...
-	 * 			| return (character != null)
-	 */
 	public boolean isValidCloseCharacter(Characters character){
 		return (character != null);
 	}
