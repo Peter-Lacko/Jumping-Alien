@@ -206,7 +206,7 @@ public class CharacterTest {
 		// y = 0.69m + 8m/s * 0.3s - 0.5 * 10m/s² * (0.3s)² = 2.64
 		// x = 0.7m + 1 * 0.3m/s = 1
 		assertEquals(100.0, alien.getPositionAt(1), Util.DEFAULT_EPSILON);
-		assertEquals(264.0, alien.getPositionAt(2), 1.5);
+		assertEquals(264.0, alien.getPositionAt(2), Util.DEFAULT_EPSILON);
 	}
 	
 	@Test
@@ -309,7 +309,7 @@ public class CharacterTest {
 			worldSmall.advanceTime(0.1);
 		assertEquals(50, slime1.getHitPoints());
 		assertEquals(50, alien2.getHitPoints());
-		assert(100 > slime2.getHitPoints());
+		assertEquals(99, slime2.getHitPoints());
 	}
 	
 	@Test

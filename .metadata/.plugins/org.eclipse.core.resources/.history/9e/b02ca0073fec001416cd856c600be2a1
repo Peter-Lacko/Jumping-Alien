@@ -309,7 +309,7 @@ public class CharacterTest {
 			worldSmall.advanceTime(0.1);
 		assertEquals(50, slime1.getHitPoints());
 		assertEquals(50, alien2.getHitPoints());
-		assert(100 > slime2.getHitPoints());
+		assertEquals(99, slime2.getHitPoints());
 	}
 	
 	@Test
