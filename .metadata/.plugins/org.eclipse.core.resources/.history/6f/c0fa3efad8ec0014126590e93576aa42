@@ -113,26 +113,16 @@ public abstract class Characters {
 		this.setHitPoints(hitpoints);
 	}
 	
-	/**
-     * A getter method for the variable isTerminated
-     */
     @Basic @Raw
     public boolean isTerminated() {
         return this.isTerminated;
     }
 	
-    /**
-     * A setter method for the variable isTerminated
-     */
-    @Basic
-    public void setTerminated(boolean isTerminated) {
+    private boolean isTerminated = false;
+	
+	public void setTerminated(boolean isTerminated) {
 		this.isTerminated = isTerminated;
 	}
-    
-    /**
-     * A variable containing whether a character is terminated
-     */
-    private boolean isTerminated = false;
 
 //	public abstract boolean canHaveAsWorld(World world);
 	
@@ -341,36 +331,6 @@ public abstract class Characters {
 	
 	protected abstract void computeNewHorizontalVelocityAfter(double duration);
 	
-	/**
-	 * 
-	 * @param duration
-	 * @effect	...
-	 * 			| shortduration = shortDuration(duration)
-	 * 			| iteraties = ((int)(duration/shortduration))
-	 * 			| for i = 0 while i < iteratie with i++
-	 * 			|	this.advanceTimeLong(shortduration)
-	 * 			|	if not this.isTerminated
-	 * 			|		if getWorld().hasAsObject(this)
-	 * 			|			if this.getIntPositionAt(1) <= getWorld().getWorldSize()[0]/2
-	 * 			|				then getWorld().addAsLeftObject(this)
-	 * 			|			else
-	 * 			|				then getWorld().removeAsLeftObject(this)
-	 * 			|			if (this.getIntPositionAt(1) + this.getSize()[0] - 1) >= getWorld().getWorldSize()[0]/2
-	 * 			|				then getWorld().addAsRightObject(this)
-	 * 			|			else
-	 * 			|				then getWorld().removeAsRightObject(this)
-	 * 			| this.advanceTimeLong(duration - shortduration*iteraties)
-	 * 			| if not this.isTerminated
-	 * 			|	if getWorld().hasAsObject(this)
-	 * 			|		if this.getIntPositionAt(1) <= getWorld().getWorldSize()[0]/2
-	 * 			|			then getWorld().addAsLeftObject(this)
-	 * 			|		else
-	 * 			|			then getWorld().removeAsLeftObject(this)
-	 * 			|		if (this.getIntPositionAt(1) + this.getSize()[0] - 1) >= getWorld().getWorldSize()[0]/2
-	 * 			|			then getWorld().addAsRightObject(this)
-	 * 			|		else
-	 * 			|			then getWorld().removeAsRightObject(this)
-	 */
 	public void advanceTime (double duration){
 		double shortduration = shortDuration(duration);
 		int iteraties = ((int)(duration/shortduration));
@@ -406,14 +366,6 @@ public abstract class Characters {
 	
 	public abstract void advanceTimeLong (double duration);
 	
-	/**
-	 * 
-	 * @param duration
-	 * @return	...
-	 * 			| speed = Math.sqrt((getVerticalVelocity()*getVerticalVelocity() + getHorizontalVelocity()*getHorizontalVelocity()));
-	 * 			| acceleration = Math.sqrt((getVerticalAcceleration()*getVerticalAcceleration() + getHorizontalAcceleration()*getHorizontalAcceleration()))
-	 * 			| return Math.min((0.01 / (speed + acceleration * duration)),duration)
-	 */
 	public double shortDuration(double duration){
 		double speed = Math.sqrt((getVerticalVelocity()*getVerticalVelocity()+
 				getHorizontalVelocity()*getHorizontalVelocity()));
@@ -449,7 +401,7 @@ public abstract class Characters {
 	 * @param 	a
 	 * 			the value to which horizontal acceleration has to be set
 	 * @post	horizontal acceleration is set to the given value
-	 * 			| new.getAbsHorizontalAcceleration().equals(a)
+	 * 			new.getAbsHorizontalAcceleration().equals(a)
 	 */
 	protected void setHorizontalAcceleration(double a){
 		assert isValidHorizontalAcceleration(a);
@@ -466,6 +418,7 @@ public abstract class Characters {
 	 * character is moving left, positive if the character is moving right, and 0.0 if the character is
 	 * not moving horizontally.
 	 */
+	// moving in two directions aanpassen naar nieuwe richtlijnen aanpassen
 	@Basic
 	public double getHorizontalAcceleration() {
 //		if (this.isAccelerating() && this.isMovingLeft() && (! this.movingInTwoDirections()))
@@ -1014,17 +967,7 @@ public abstract class Characters {
 //		}
 //		return collisionDetectionHorizontal(coordinate);
 //	}
-	/**
-	 * 
-	 * @param coordinate
-	 * @param index
-	 * @return	...
-	 * 			| if index == 1
-	 * 			|	then return true
-	 * 			| else if index == 2
-	 * 			|	then return true
-	 * 			| return false
-	 */
+	
 	public boolean canHaveAsNewPosition (double coordinate, int index){
 		if (index == 1)
 //		if ((index == 1) && (testHor(coordinate)))
@@ -1034,18 +977,8 @@ public abstract class Characters {
 		return false;
 	}
 	
-	/**
-	 * 
-	 * @return	...
-	 * 			| world = getWorld()
-	 * 			| if world.hasAsLeftObject(this) && world.hasAsRightObject(this)
-	 * 			|	then characters = world.getAllObjects()
-	 * 			| else if world.hasAsLeftObject(this)
-	 * 			|	then characters = world.getAllLeftObjects()
-	 * 			| else
-	 * 			|	then characters = world.getAllRightObjects()
-	 * 			| return characters
-	 */
+
+	
 	public Iterable<Characters> getNearbyCharacters(){
 		World world = getWorld();
 		Iterable<Characters> characters;
