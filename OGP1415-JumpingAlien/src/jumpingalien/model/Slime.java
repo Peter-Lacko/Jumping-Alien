@@ -111,10 +111,7 @@ public class Slime extends OtherCharacters {
 		setMovingLeft(false);
 	}
 
-	@Override
-	protected void computeNewVerticalPositionAfter(double duration) {
-	}
-
+	
 	
 	/**
 	 * @return	...
@@ -251,7 +248,7 @@ public class Slime extends OtherCharacters {
 			this.damage(50);
 			other.damage(50);
 			this.endMove();
-			((Shark) other).endMove();
+			((OtherCharacters) other).endMove();
 		}
 		else if (other instanceof Slime){
 			this.changeSchool((Slime)other);
@@ -415,9 +412,4 @@ public class Slime extends OtherCharacters {
 	public void setBadEnvironment(boolean badEnvironment) {
 		this.badEnvironment = badEnvironment;
 	}
-
-	/**
-	 * A boolean stating whether the character is in a bad environment
-	 */
-	public boolean badEnvironment = false;
 }

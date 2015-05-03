@@ -305,7 +305,6 @@ public abstract class OtherCharacters extends Characters {
 			for (Characters character: getAllCloseCharacters()){
 				collision(character, false );
 				if ((character instanceof Slime) || (character instanceof Shark)){
-					if (! (this instanceof Slime))
 						canMove = false;
 				}
 			}
@@ -392,8 +391,6 @@ public abstract class OtherCharacters extends Characters {
 	 */
 	public double movementDuration;
 
-	@Override
-	protected abstract void computeNewVerticalPositionAfter(double duration) ;
 
 	@Override
 	protected abstract void computeNewVerticalVelocityAfter(double duration) ;

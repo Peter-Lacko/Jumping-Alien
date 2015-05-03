@@ -402,7 +402,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * @return A new shark, located at the provided location. The returned shark
 	 *         should not belong to a world.
 	 */
-	Shark createShark(int x, int y, Sprite[] sprites);
+	Characters createShark(int x, int y, Sprite[] sprites);
 
 	/**
 	 * Add the given shark as a game object to the given world.
@@ -412,7 +412,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * @param shark
 	 *            The shark that needs to be added to the world.
 	 */
-	void addShark(World world, Shark shark);
+	void addShark(World world, Characters shark);
 
 	/**
 	 * Returns all the sharks currently located in the given world.
@@ -433,7 +433,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * @return An array, consisting of 2 integers {x, y}, that represents the
 	 *         coordinates of the given shark's bottom left pixel in the world.
 	 */
-	int[] getLocation(Shark shark);
+	int[] getLocation(Characters shark);
 
 	/**
 	 * Return the current sprite image for the given shark.
@@ -444,7 +444,7 @@ public interface IFacadePart2 extends jumpingalien.part1.facade.IFacade {
 	 * @return The current sprite image for the given shark, determined by its
 	 *         orientation as defined in the assignment.
 	 */
-	public Sprite getCurrentSprite(Shark shark);
+	public Sprite getCurrentSprite(Characters shark);
 
 	/**
 	 * Creates a new slime school.

@@ -372,7 +372,7 @@ public class JumpingAlienGamePart2 extends JumpingAlienGame {
 			}
 
 			@Override
-			public Optional<int[]> getLocation(Shark shark) {
+			public Optional<int[]> getLocation(Characters shark) {
 				return Optional.of(getFacade().getLocation(shark));
 			}
 
@@ -397,7 +397,7 @@ public class JumpingAlienGamePart2 extends JumpingAlienGame {
 			}
 
 			@Override
-			public Optional<ImageSprite> getCurrentSprite(Shark shark) {
+			public Optional<ImageSprite> getCurrentSprite(Characters shark) {
 				return Optional.of((ImageSprite) getFacade().getCurrentSprite(
 						shark));
 			}

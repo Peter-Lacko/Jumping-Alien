@@ -110,17 +110,6 @@ public class Plant extends OtherCharacters {
 	/**
 	 * 
 	 * @param duration
-	 * @effect 
-	 * 			| this.setPositionAt(this.getPositionAt(2), 2)
-	 */
-	@Override
-	protected void computeNewVerticalPositionAfter(double duration) {
-		this.setPositionAt(this.getPositionAt(2), 2);
-	}
-
-	/**
-	 * 
-	 * @param duration
 	 * @effect
 	 * 			| this.setinitVerticalVelocity(0.0);
 	 */
