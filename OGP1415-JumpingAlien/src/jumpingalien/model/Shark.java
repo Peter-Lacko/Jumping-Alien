@@ -99,25 +99,11 @@ public class Shark extends OtherCharacters {
 		setHorizontalVelocity(0.0);
 		if (getVerticalVelocity() > 0)
 			setVerticalVelocity(0.0);
+		setDiving(false);
+		setRising(false);
 	}
 
-	/**
-	 * @effect	...
-	 * 			|  if isInAir() || isJumping() || isInWater
-	 * 			|	then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration
-	 * 			|	if (canHaveAsNewPosition(newYPosition , 2)
-	 * 			|		then this.setY
-	 */
-	@Override
-	public void computeNewVerticalPositionAfter(double duration){
-		double newYPosition;
-		if (isInAir() || isJumping() || isInWater()){
-			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 100*0.5*getVerticalAcceleration()*duration*duration;
-			if (canHaveAsNewPosition(newYPosition,2)){
-				this.setPositionAt(newYPosition, 2);
-			}
-		}
-	}
+
 	
 	/**
 	 * @return	...
@@ -390,7 +376,7 @@ public class Shark extends OtherCharacters {
 		}
 		else if (other instanceof Shark){
 			this.endMove();
-			((Shark)other).endMove();
+			((OtherCharacters)other).endMove();
 		}
 		else
 			other.collision(this,! isBelow);
@@ -443,27 +429,12 @@ public class Shark extends OtherCharacters {
 			this.setTimeSinceEnvironmentalDamage(0.0);
 		}
 	}
-	
-	/**
-	 * A getter method for the variable badEnvironment
-	 */
-	@Basic
-	public boolean isBadEnvironment() {
-		return badEnvironment;
-	}
-	
-	/**
-	 * A setter method for the variable badEnvironment
-	 */
-	@Basic
-	public void setBadEnvironment(boolean badEnvironment) {
-		this.badEnvironment = badEnvironment;
-	}
 
-	/**
-	 * A boolean stating whether the character is in a bad environment
-	 */
-	public boolean badEnvironment = false;
+	@Override
+	public void checkInAir() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }

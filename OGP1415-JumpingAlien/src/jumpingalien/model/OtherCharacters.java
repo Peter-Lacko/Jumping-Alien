@@ -134,6 +134,7 @@ public abstract class OtherCharacters extends Characters {
 			if (! this.isTerminated()){
 				if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
 					throw new IllegalArgumentException();
+				this.checkInAir();
 				if (getTimeSinceStartMovement() < getMovementDuration()){
 					removeAllCloseCharacters();
 					this.computeHorizontalMovement(duration);
@@ -212,8 +213,8 @@ public abstract class OtherCharacters extends Characters {
 					collision(character, true);
 				else{
 					collision(character, false);
-					if ((character instanceof Slime) || (character instanceof Shark)){
-						if (!(this instanceof Slime)) 
+					if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
+						if (!((this instanceof Slime) && (character instanceof Slime)))
 							canMove = false;
 					}
 				}
@@ -230,8 +231,8 @@ public abstract class OtherCharacters extends Characters {
 					collision(character, true);
 				else{
 					collision(character, false);
-					if ((character instanceof Slime) || (character instanceof Shark)){
-						if (!(this instanceof Slime))
+					if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
+						if (!((this instanceof Slime) && (character instanceof Slime)))
 							canMove = false;
 					}
 				}
@@ -250,6 +251,8 @@ public abstract class OtherCharacters extends Characters {
 		computeNewHorizontalVelocityAfter(duration);
 	}
 
+	public abstract void checkInAir();
+	
 	public abstract double calculateNewVerticalPositionAfter(double duration);
 	
 	/**
@@ -291,8 +294,8 @@ public abstract class OtherCharacters extends Characters {
 			collisionDetectionUp(newPos);
 			for (Characters character: getAllCloseCharacters()){
 				collision(character,true);
-				if ((character instanceof Slime) || (character instanceof Shark)){
-					if (! (this instanceof Slime))
+				if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
+					if (!((this instanceof Slime) && (character instanceof Slime)))
 						canMove = false;
 				}
 			}
@@ -304,8 +307,8 @@ public abstract class OtherCharacters extends Characters {
 			collisionDetectionDown(newPos);
 			for (Characters character: getAllCloseCharacters()){
 				collision(character, false );
-				if ((character instanceof Slime) || (character instanceof Shark)){
-					if (! (this instanceof Slime))
+				if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
+					if (!((this instanceof Slime) && (character instanceof Slime)))
 						canMove = false;
 				}
 			}
@@ -392,8 +395,6 @@ public abstract class OtherCharacters extends Characters {
 	 */
 	public double movementDuration;
 
-	@Override
-	protected abstract void computeNewVerticalPositionAfter(double duration) ;
 
 	@Override
 	protected abstract void computeNewVerticalVelocityAfter(double duration) ;

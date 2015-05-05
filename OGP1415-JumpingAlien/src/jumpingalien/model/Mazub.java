@@ -1262,11 +1262,6 @@ public class Mazub extends Characters {
 	public void setBadEnvironment(boolean badEnvironment) {
 		this.badEnvironment = badEnvironment;
 	}
-
-	/**
-	 * A boolean storing whether mazub is in a bad environment.
-	 */
-	public boolean badEnvironment = false;
 	
 //	public double terminateTime = 0.0;
 //

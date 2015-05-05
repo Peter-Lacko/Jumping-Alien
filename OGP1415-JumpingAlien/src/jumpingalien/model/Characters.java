@@ -673,7 +673,15 @@ public abstract class Characters {
 	
 	protected abstract void computeNewVerticalVelocityAfter(double duration);
 	
-	public abstract boolean isInAir();
+	public boolean isInAir(){
+		return this.inAir;
+	}
+	
+	public void setInAir(boolean inAir) {
+		this.inAir = inAir;
+	}
+	
+	public boolean inAir;
 
 	/**
 	 * Return the current vertical velocity.
@@ -1560,6 +1568,26 @@ public abstract class Characters {
 		}
 	}
 
+	/**
+	 * A getter method for the variable badEnvironment
+	 */
+	@Basic
+	public boolean isBadEnvironment() {
+		return badEnvironment;
+	}
+
+	/**
+	 * A setter method for the variable badEnvironment
+	 */
+	@Basic
+	public void setBadEnvironment(boolean badEnvironment) {
+		this.badEnvironment = badEnvironment;
+	}
+
 	protected Set<Characters> closeCharacters = new HashSet<>();
+	/**
+	 * A boolean stating whether the character is in a bad environment
+	 */
+	public boolean badEnvironment = false;
 	
 }

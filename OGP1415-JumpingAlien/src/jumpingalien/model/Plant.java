@@ -110,17 +110,6 @@ public class Plant extends OtherCharacters {
 	/**
 	 * 
 	 * @param duration
-	 * @effect 
-	 * 			| this.setPositionAt(this.getPositionAt(2), 2)
-	 */
-	@Override
-	protected void computeNewVerticalPositionAfter(double duration) {
-		this.setPositionAt(this.getPositionAt(2), 2);
-	}
-
-	/**
-	 * 
-	 * @param duration
 	 * @effect
 	 * 			| this.setinitVerticalVelocity(0.0);
 	 */
@@ -177,6 +166,12 @@ public class Plant extends OtherCharacters {
 			this.setHorizontalVelocity(0.0);
 			this.setVerticalVelocity(0.0);
 		}
+	}
+
+	@Override
+	public void checkInAir() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

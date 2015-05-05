@@ -111,10 +111,7 @@ public class Slime extends OtherCharacters {
 		setMovingLeft(false);
 	}
 
-	@Override
-	protected void computeNewVerticalPositionAfter(double duration) {
-	}
-
+	
 	
 	/**
 	 * @return	...
@@ -131,13 +128,13 @@ public class Slime extends OtherCharacters {
 	public double calculateNewVerticalPositionAfter(double duration){
 		if (! isTerminated()){
 			double newYPosition = 0.0;
-			if (isInAir()){
+//			if (isInAir()){
 				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
 					100*0.5*getVerticalAcceleration()*duration*duration;
 				return newYPosition;
-			}
-			else
-				return this.getPositionAt(2);
+//			}
+//			else
+//				return this.getPositionAt(2);
 		}
 		else
 			return 0.0;
@@ -166,17 +163,17 @@ public class Slime extends OtherCharacters {
 	 *		if geo == GeoFeature.GROUND
 	 *			then return false
 	 */
-	@Override
-	public boolean isInAir(){
+	public void checkInAir(){
 		if (! isTerminated()){
 			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth()-1;i++){
 				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
 				GeoFeature geo = getWorld().getGeoFeatureAt(pos[0],pos[1]);
 				if (geo == GeoFeature.GROUND)
-					return false;
+					setInAir(false);
+				else
+					setInAir(true);
 			}
 		}
-		return true;
 	}
 
 //	@Override
@@ -243,7 +240,7 @@ public class Slime extends OtherCharacters {
 						slime.damage(1);
 				}
 			}
-			this.endMove();
+//			this.endMove();
 			((Mazub) other).endMove("left");
 			((Mazub) other).endMove("right");
 		}
@@ -251,7 +248,7 @@ public class Slime extends OtherCharacters {
 			this.damage(50);
 			other.damage(50);
 			this.endMove();
-			((Shark) other).endMove();
+			((OtherCharacters) other).endMove();
 		}
 		else if (other instanceof Slime){
 			this.changeSchool((Slime)other);
@@ -415,9 +412,4 @@ public class Slime extends OtherCharacters {
 	public void setBadEnvironment(boolean badEnvironment) {
 		this.badEnvironment = badEnvironment;
 	}
-
-	/**
-	 * A boolean stating whether the character is in a bad environment
-	 */
-	public boolean badEnvironment = false;
 }

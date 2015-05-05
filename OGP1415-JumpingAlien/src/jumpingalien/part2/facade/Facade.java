@@ -209,7 +209,7 @@ public class Facade implements IFacadePart2 {
 		return plant.getSprite();
 	}
 	
-	public Shark createShark(int x, int y, Sprite[] sprites){
+	public Characters createShark(int x, int y, Sprite[] sprites){
 		try{
 			return new Shark(x,y,sprites);
 		} catch (IllegalArgumentException exc){
@@ -217,7 +217,7 @@ public class Facade implements IFacadePart2 {
 		}
 	}
 
-	public void addShark(World world, Shark shark){
+	public void addShark(World world, Characters shark){
 		world.addAsObject(shark);
 	}
 
@@ -230,11 +230,11 @@ public class Facade implements IFacadePart2 {
 		return sharks;
 	}
 
-	public int[] getLocation(Shark shark){
+	public int[] getLocation(Characters shark){
 		return shark.getIntPosition();
 	}
 
-	public Sprite getCurrentSprite(Shark shark){
+	public Sprite getCurrentSprite(Characters shark){
 		return shark.getSprite();
 	}
 	
