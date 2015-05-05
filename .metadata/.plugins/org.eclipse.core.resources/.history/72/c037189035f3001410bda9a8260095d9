@@ -240,7 +240,7 @@ public class Slime extends OtherCharacters {
 						slime.damage(1);
 				}
 			}
-//			this.endMove();
+			this.endMove();
 			((Mazub) other).endMove("left");
 			((Mazub) other).endMove("right");
 		}

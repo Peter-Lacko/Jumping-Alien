@@ -673,15 +673,7 @@ public abstract class Characters {
 	
 	protected abstract void computeNewVerticalVelocityAfter(double duration);
 	
-	public boolean isInAir(){
-		return this.inAir;
-	}
-	
-	public void setInAir(boolean inAir) {
-		this.inAir = inAir;
-	}
-	
-	public boolean inAir;
+	public abstract boolean isInAir();
 
 	/**
 	 * Return the current vertical velocity.

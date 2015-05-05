@@ -213,8 +213,8 @@ public abstract class OtherCharacters extends Characters {
 					collision(character, true);
 				else{
 					collision(character, false);
-					if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-						if (!((this instanceof Slime) && (character instanceof Slime)))
+					if ((character instanceof Slime) || (character instanceof Shark)){
+						if (!(this instanceof Slime)) 
 							canMove = false;
 					}
 				}
@@ -231,8 +231,8 @@ public abstract class OtherCharacters extends Characters {
 					collision(character, true);
 				else{
 					collision(character, false);
-					if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-						if (!((this instanceof Slime) && (character instanceof Slime)))
+					if ((character instanceof Slime) || (character instanceof Shark)){
+						if ((!(this instanceof Slime)) )
 							canMove = false;
 					}
 				}
@@ -294,8 +294,8 @@ public abstract class OtherCharacters extends Characters {
 			collisionDetectionUp(newPos);
 			for (Characters character: getAllCloseCharacters()){
 				collision(character,true);
-				if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-					if (!((this instanceof Slime) && (character instanceof Slime)))
+				if ((character instanceof Slime) || (character instanceof Shark)){
+					if (! (this instanceof Slime))
 						canMove = false;
 				}
 			}

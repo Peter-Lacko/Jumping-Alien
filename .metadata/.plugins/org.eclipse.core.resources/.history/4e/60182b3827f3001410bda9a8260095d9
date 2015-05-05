@@ -168,10 +168,4 @@ public class Plant extends OtherCharacters {
 		}
 	}
 
-	@Override
-	public void checkInAir() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

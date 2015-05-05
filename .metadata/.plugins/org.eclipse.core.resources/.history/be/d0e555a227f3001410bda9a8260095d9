@@ -99,8 +99,6 @@ public class Shark extends OtherCharacters {
 		setHorizontalVelocity(0.0);
 		if (getVerticalVelocity() > 0)
 			setVerticalVelocity(0.0);
-		setDiving(false);
-		setRising(false);
 	}
 
 

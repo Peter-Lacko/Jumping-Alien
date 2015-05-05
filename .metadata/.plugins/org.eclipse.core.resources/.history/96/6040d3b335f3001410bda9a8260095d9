@@ -214,7 +214,7 @@ public abstract class OtherCharacters extends Characters {
 				else{
 					collision(character, false);
 					if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-						if (!((this instanceof Slime) && (character instanceof Slime)))
+						if (!(this instanceof Slime)) 
 							canMove = false;
 					}
 				}
@@ -232,7 +232,7 @@ public abstract class OtherCharacters extends Characters {
 				else{
 					collision(character, false);
 					if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-						if (!((this instanceof Slime) && (character instanceof Slime)))
+						if ((!(this instanceof Slime)) )
 							canMove = false;
 					}
 				}
@@ -295,7 +295,7 @@ public abstract class OtherCharacters extends Characters {
 			for (Characters character: getAllCloseCharacters()){
 				collision(character,true);
 				if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-					if (!((this instanceof Slime) && (character instanceof Slime)))
+					if (! (this instanceof Slime))
 						canMove = false;
 				}
 			}
