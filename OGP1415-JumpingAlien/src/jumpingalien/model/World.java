@@ -60,9 +60,9 @@ public class World {
 	 * 			|(! isPossibleTargetTile({targetTileX, targetTileY})) || 
 	 * 			|	(! matchesMaxXTilesMaxYTilesTargetTile(nbTilesX, nbTilesY, {targetTileX, targetTileY}))
 	 * @throws IllegalArgumentException
-	 * 			|(! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
+	 * 			|(! canHaveAsWindowWidth(windowWidth))
 	 * @throws IllegalArgumentException
-	 * 			|(! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight))
+	 * 			|(! canHaveAsWindowHeight(windowHeight))
 	 */
 	@Raw
 	public World(int tileLength, int nbTilesX, int nbTilesY,
@@ -78,9 +78,16 @@ public class World {
 		MAX_X_TILES = nbTilesX-1;
 		MAX_Y_TILES = nbTilesY-1;
 //		if ((! canHaveAsTargetTile(targetArray)) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))
-		if ((! canHaveAsTargetTile(targetPos.getIntPosition())) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))		
-				|| (! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight)))
-			throw new IllegalArgumentException();
+//		if ((! canHaveAsTargetTile(targetPos.getIntPosition())) || (! matchesMaxXTilesWindowWidth(nbTilesX, windowWidth))		
+//				|| (! matchesMaxYTilesWindowHeight(nbTilesY, windowHeight)))
+		if (! canHaveAsTargetTile(targetPos.getIntPosition()))
+			throw new IllegalArgumentException("illegal target");
+		if (! canHaveAsWindowWidth(windowWidth)){
+			System.out.println(getWorldSize()[0]);
+			throw new IllegalArgumentException("illegal width");
+		}
+		if (! canHaveAsWindowHeight(windowHeight))
+			throw new IllegalArgumentException("illegal height");
 //		TARGET_TILE = targetArray;
 		TARGET_TILE = targetPos;
 		WINDOW_WIDTH = windowWidth;
@@ -99,7 +106,7 @@ public class World {
 	
 	/**
 	 * 
-	 * @return	|result == TARGET_TILE.getIntPosition()
+	 * @return	|result == getTargetPosition().getIntPosition()
 	 */
 	private int[] getTargetTile(){
 		return getTargetPosition().getIntPosition();
@@ -554,10 +561,16 @@ public class World {
 	
 	private boolean isGameStarted = false;
 	
+	@Basic
 	public boolean isGameOver() {
 		return gameOver;
 	}
 
+	/**
+	 * 
+	 * @param gameOver
+	 * @post	|new.isGameOver() == gameOver
+	 */
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
@@ -566,14 +579,14 @@ public class World {
 	
 
 	/**
-	 * @return	|if ((object.getIntPositionAt(1) < 0) || (object.getIntPositionAt(2) < 0) 
+	 * @return	|if object == null
+	 * 			|	then result == false
+	 * 			|if ((object.getIntPositionAt(1) < 0) || (object.getIntPositionAt(2) < 0) 
 	 * 			|	|| (object.getIntPositionAt(1) > getWorldSize()[0]-1) 
 	 * 			|	|| (object.getIntPositionAt(2) > getWorldSize()[1]-1))
 	 *			|		then result == false;
-	 * @return	|if object.isTerminated()
-	 * 			|	then result == ((object.terminationTime() <= 0.6) && (object != null))
 	 * 			|else
-	 * 			|	result == (object != null)
+	 * 			|	result == ((object.canHaveAsWorld(this)) && (object.getWorld() == this))
 	 */
 	public boolean canHaveAsObject(Characters object){
 		if (object == null)
@@ -591,7 +604,7 @@ public class World {
 	 * @param index
 	 * @return	| if (! canHaveAsObject())
 	 * 			|	then result == false;
-	 * 			|else if ((index < 1) || index > getNbObjects() +1)
+	 * 			|else if ((index < 1) || (index > getNbObjects() +1) || (index >= 101))
 	 * 			|	then result == false;
 	 * 			|else if ((index == 1) && (! (object instanceof Mazub)))
 	 * 			|	then result == false
@@ -602,14 +615,14 @@ public class World {
 	public boolean canHaveAsObjectAt(Characters object, int index){
 		if (! canHaveAsObject(object))
 			return false;
-		else if ((index < 1) || (index > getNbObjects() +1))
+		else if ((index < 1) || (index > getNbObjects() +1) || (index >= 101))
 			return false;
 		for (int newIndex=1; newIndex <= getNbObjects(); newIndex++){
 			if ((newIndex != index) && (getObjectAt(newIndex) == object))
 				return false;
 		}
-//		if ((index == 1) && (! (object instanceof Mazub)))
-//			return false;
+		if ((index == 1) && (! (object instanceof Mazub)))
+			return false;
 		return true;
 	}
 	
@@ -682,15 +695,14 @@ public class World {
 	 * 
 	 * @return	|result ==
 	 * 			|	for each i in 1..getNbObjects():
-	 * 			|		((canHaveAsObjectAt(getObjectAt(i),i))
-	 * 			|		&& (getObjectAt(i).getWorld() == this))
+	 * 			|		(canHaveAsObjectAt(getObjectAt(i),i))
 	 * 			|	&& canHaveAsNbObjects(getNbObjects())
 	 */
 	public boolean hasProperObjects(){
 		if (! canHaveAsNbObjects(getNbObjects()))
 			return false;
 		for (int index = 1; index <= getNbObjects(); index++){
-			if ((! canHaveAsObjectAt(getObjectAt(index),index)) || (getObjectAt(index).getWorld() != this))
+			if (! canHaveAsObjectAt(getObjectAt(index),index))
 				return false;
 		}
 		return true;
@@ -756,12 +768,12 @@ public class World {
 	 * @effect	|addObjectAt(mazub, 1)
 	 */
 	public void addMazub(Mazub mazub){
-		assert (mazub != null);
-		int xPos = mazub.getIntPositionAt(1);
-		int yPos = mazub.getIntPositionAt(2);
-		assert((xPos >= 0) && (yPos >= 0) && (xPos <= getWorldSize()[0]-1) && (yPos <= getWorldSize()[1]-1));
-		assert (! hasAsObject(mazub));
-		assert (getNbObjects() <= 99);
+//		assert (mazub != null);
+//		int xPos = mazub.getIntPositionAt(1);
+//		int yPos = mazub.getIntPositionAt(2);
+//		assert((xPos >= 0) && (yPos >= 0) && (xPos <= getWorldSize()[0]-1) && (yPos <= getWorldSize()[1]-1));
+//		assert (! hasAsObject(mazub));
+//		assert (getNbObjects() <= 99);
 		addObjectAt(mazub, 1);
 	}
 	
@@ -909,12 +921,25 @@ public class World {
 		return result;
 	}
 	
+//	/**
+//	 * 
+//	 * @param type
+//	 * @return	
+//	 */
+//	public Set<Characters> getAllObjectsOfClass(Class<Characters> type){
+//		Set<Characters> result = new HashSet<Characters>();
+//		for (Characters object : this.getAllObjects()){
+//			//why doesn't instanceof work?
+//			if (object.getClass() == type)
+//				result.add(object);
+//		}
+//		return result;
+//	}
+	
 	/**
 	 * @invar	|objects != null
 	 * @invar	|for each object in objects:
 	 * 			|	((object == null) || (canHaveAsObject(object)))
-	 * @invar	|if objects.size() >= 1:
-	 * 			|	((objects.getFirst() == null) || (objects.getFirst() instanceOf Mazub)
 	 */
 	private List<Characters> objects = new LinkedList<Characters>();
 	
@@ -926,12 +951,13 @@ public class World {
 	/**
 	 * @return	|result ==
 	 * 			|	for each object in getAllLeftObjects:
-	 * 			|		canHaveAsObject(object);
-	 * 			|	&& object.getWorld() == this
+	 * 			|		(canHaveAsObject(object) 
+	 * 			|		&& object.getIntPositionAt(1) <= getWorldSize()[0]/2)
 	 */
 	public boolean hasProperLeftObjects(){
 		for (Characters object: getAllLeftObjects()){
-			if (! canHaveAsObject(object))
+			if ((! canHaveAsObject(object)) 
+					|| (object.getIntPositionAt(1) > getWorldSize()[0]/2))
 				return false;
 		}
 		return true;
@@ -974,7 +1000,7 @@ public class World {
 	/**
 	 * @invar	|leftObjects != null
 	 * @invar	|for each object in objects:
-	 * 			|	(canHaveAsObject(object) && object.getWorld() == this)
+	 * 			|	(canHaveAsObject(object))
 	 */
 	private Set<Characters> leftObjects = new HashSet<Characters>();
 	
@@ -986,12 +1012,13 @@ public class World {
 	/**
 	 * @return	|result ==
 	 * 			|	for each object in getAllRightObjects:
-	 * 			|		canHaveAsObject(object);
-	 * 			|	&& object.getWorld() == this
+	 * 			|		(canHaveAsObject(object) 
+	 * 			|		&& object.getIntPositionAt(1) >= getWorldSize()[0]/2)
 	 */
 	public boolean hasProperRightObjects(){
 		for (Characters object: getAllRightObjects()){
-			if (! canHaveAsObject(object))
+			if ((! canHaveAsObject(object))
+					|| (object.getIntPositionAt(1) < getWorldSize()[0]/2))
 				return false;
 		}
 		return true;
@@ -1061,13 +1088,14 @@ public class World {
 	 * @pre		|getObjectAt(1) instanceof Mazub
 	 * @param width
 	 * @return	|result == ((matchesMaxXTilesWindowWidth(getMaxXTiles(), width)) &&
-	 * 			|			((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])))
+	 * 			|			((70 + 400 <= width) || (width == getWorldSize()[0])))
 	 * @throws	IndexOutOfBoundsException
 	 * 			|(getNbObjects() < 1)
 	 */
 	public boolean canHaveAsWindowWidth(int width) throws IndexOutOfBoundsException{
 		return ((matchesMaxXTilesWindowWidth(getMaxXTiles(), width)) &&
-				((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])));
+//				((getMazub().getSize()[0] + 400 <= width) || (width == getWorldSize()[0])));
+				((70 + 400 <= width) || (width == getWorldSize()[0])));
 	}
 	
 	/**
@@ -1078,7 +1106,7 @@ public class World {
 	 */
 	@Raw
 	public boolean matchesMaxXTilesWindowWidth(int MaxXTiles, int WindowWidth){
-		return ((MaxXTiles)*getTileLength() >= WindowWidth);
+		return ((MaxXTiles+1)*getTileLength() >= WindowWidth);
 	}
 	
 //	/**
@@ -1103,13 +1131,14 @@ public class World {
 	 * @pre		|getObjectAt(1) instanceof Mazub
 	 * @param height
 	 * @return	|result == ((matchesMaxYTilesWindowHeight(getMaxYTiles(), height)) &&
-	 * 			|			((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])))
+	 * 			|			((97 + 400 <= height) || (height == getWorldSize()[1])))
 	 * @throws	IndexOutOfBoundsException
 	 * 			|(getNbObjects() < 1)
 	 */
 	public boolean canHaveAsWindowHeight(int height)throws IndexOutOfBoundsException{
 		return ((matchesMaxYTilesWindowHeight(getMaxYTiles(), height)) &&
-				((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])));
+//				((getMazub().getSize()[1] + 400 <= height) || (height == getWorldSize()[1])));
+				((97 + 400 <= height) || (height == getWorldSize()[1])));
 	}
 	
 	/**
@@ -1120,7 +1149,7 @@ public class World {
 	 */
 	@Raw
 	public boolean matchesMaxYTilesWindowHeight(int MaxYTiles, int WindowHeight){
-		return ((MaxYTiles)*getTileLength() >= WindowHeight);
+		return ((MaxYTiles+1)*getTileLength() >= WindowHeight);
 	}
 	
 //	/**

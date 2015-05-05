@@ -26,7 +26,7 @@ public class PartialFacadeTest {
 	public void testGetBottomLeftPixelOfRandomTile() {
 		IFacadePart2 facade = new Facade();
 
-		World world = facade.createWorld(5, 4, 3, 1, 1, 1, 1);
+		World world = facade.createWorld(5, 4, 3, 20, 15, 1, 1);
 		assertArrayEquals(intArray(15, 10),
 				facade.getBottomLeftPixelOfTile(world, 3, 2));
 	}
@@ -37,11 +37,12 @@ public class PartialFacadeTest {
 
 		// 2 vertical tiles, size 500px
 		// NEW: 2x2 vertical Tiles, otherwise the given target Tile is invalid!!
+		// NEW: window view is 500x500, otherwise the given view is invalid!!
 		// ....
 		// a...
 		// XXXX
 		// XXXX
-		World world = facade.createWorld(500, 2, 2, 1, 1, 1, 1);
+		World world = facade.createWorld(500, 2, 2, 500, 500, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
 		Mazub alien = facade.createMazub(0, 499, spriteArrayForSize(3, 3));
 		facade.setMazub(world, alien);
@@ -54,7 +55,7 @@ public class PartialFacadeTest {
 	public void testTilesInRegion() {
 		IFacadePart2 facade = new Facade();
 
-		World world = facade.createWorld(50, 3, 3, 1, 1, 1, 1);
+		World world = facade.createWorld(50, 3, 3, 150, 150, 1, 1);
 
 		int[][] actualTiles = facade
 				.getTilePositionsIn(world, 20, 20, 105, 105);
@@ -69,11 +70,12 @@ public class PartialFacadeTest {
 
 		// 2 vertical tiles, size 500px
 		// NEW: 2x2 vertical Tiles, otherwise the given target Tile is invalid!!
+		// NEW: window view is 500x500, otherwise the given view is invalid!!
 		// ....
 		// a...
 		// XXXX
 		// XXXX
-		World world = facade.createWorld(500, 2, 2, 1, 1, 1, 1);
+		World world = facade.createWorld(500, 2, 2, 500, 500, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
 		Mazub alien = facade.createMazub(0, 499, spriteArrayForSize(3, 3));
 		facade.setMazub(world, alien);
@@ -91,11 +93,12 @@ public class PartialFacadeTest {
 
 		// 2 vertical tiles, size 500px
 		// NEW: 2x2 vertical Tiles, otherwise the given target Tile is invalid!!
+		// NEW: window view is 500x500, otherwise the given view is invalid!!
 		// ....
 		// a...
 		// XXXX
 		// XXXX
-		World world = facade.createWorld(500, 2, 2, 1, 1, 1, 1);
+		World world = facade.createWorld(500, 2, 2, 500, 500, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
 		Mazub alien = facade.createMazub(0, 499, spriteArrayForSize(3, 3));
 		facade.setMazub(world, alien);
@@ -115,11 +118,12 @@ public class PartialFacadeTest {
 
 		// 2 vertical tiles, size 500px
 		// NEW: 2x2 vertical Tiles, otherwise the given target Tile is invalid!!
+		// NEW: window view is 500x500, otherwise the given view is invalid!!
 		// ....
 		// a...
 		// XXXX
 		// XXXX
-		World world = facade.createWorld(500, 2, 2, 1, 1, 1, 1);
+		World world = facade.createWorld(500, 2, 2, 500, 500, 1, 1);
 		facade.setGeologicalFeature(world, 0, 0, FEATURE_SOLID);
 
 		int m = 10;
