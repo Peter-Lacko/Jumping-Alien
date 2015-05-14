@@ -1,0 +1,16 @@
+package jumpingalien.model.program.expression.unary;
+
+import jumpingalien.model.program.expression.Expression;
+
+public class Sqrt extends Unary<Double> {
+
+	public Sqrt(Expression<Double> operand) {
+		super(operand);
+	}
+
+	@Override
+	public Object compute() {
+		return Math.sqrt((double) this.getExpr().compute());
+	}
+
+}

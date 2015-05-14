@@ -1,0 +1,18 @@
+package jumpingalien.model.program.expression.binary;
+
+import jumpingalien.model.program.Program;
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.util.Util;
+
+public class Equal<Boolean> extends Binary<Boolean> {
+
+	public Equal(Expression<Boolean> operand1, Expression<Boolean> operand2) {
+		super(operand1, operand2);
+	}
+
+	@Override
+	public Object compute() {
+		return Util.fuzzyEquals((double)this.getExpr1().compute(), (double)this.getExpr2().compute());
+	}
+
+}

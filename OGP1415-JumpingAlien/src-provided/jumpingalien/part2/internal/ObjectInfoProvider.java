@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 import jumpingalien.common.sprites.ImageSprite;
-import jumpingalien.model.Characters;
 import jumpingalien.model.Plant;
 import jumpingalien.model.School;
 import jumpingalien.model.Shark;
@@ -20,15 +19,15 @@ public interface ObjectInfoProvider {
 
 	public Optional<int[]> getLocation(Plant plant);
 
-	public Optional<int[]> getLocation(Characters shark);
+	public Optional<int[]> getLocation(Shark shark);
 
-	public Optional<int[]> getLocation(Characters slime);
+	public Optional<int[]> getLocation(Slime slime);
 
 	public Optional<ImageSprite> getCurrentSprite(Plant plant);
 
-	public Optional<ImageSprite> getCurrentSprite(Characters shark);
+	public Optional<ImageSprite> getCurrentSprite(Shark shark);
 
-	public Optional<ImageSprite> getCurrentSprite(Characters slime);
+	public Optional<ImageSprite> getCurrentSprite(Slime slime);
 
 	public Optional<School> getSchool(Slime slime);
 

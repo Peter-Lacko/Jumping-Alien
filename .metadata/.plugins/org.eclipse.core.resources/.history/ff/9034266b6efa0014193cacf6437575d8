@@ -1,0 +1,17 @@
+package jumpingalien.model.program.expression.unary;
+
+import jumpingalien.model.Shark;
+import jumpingalien.model.program.expression.Expression;
+
+public class IsShark<Boolean> extends Unary<Boolean> {
+
+	public IsShark(Expression unary) {
+		super(unary);
+	}
+
+	@Override
+	public Object compute() {
+		return this.getExpr().compute() instanceof Shark ; 
+	}
+
+}

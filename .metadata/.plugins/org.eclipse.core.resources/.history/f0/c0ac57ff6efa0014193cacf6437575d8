@@ -1,0 +1,18 @@
+package jumpingalien.model.program.expression.unary;
+
+import jumpingalien.model.program.Program;
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.*;
+
+public class GetY<Double> extends Unary<Double> {
+
+	public GetY(Expression<Double> unary) {
+		super(unary);
+	}
+
+	@Override
+	public Object compute() {
+		return  ((Characters) this.getExpr().compute()).getPositionAt(2);
+	}
+
+}

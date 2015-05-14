@@ -1,0 +1,17 @@
+package jumpingalien.model.program.expression.unary;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.*;
+
+public class GetHeight extends Unary<Object> {
+
+	public GetHeight(Expression<Object> unary) {
+		super(unary);
+	}
+
+	@Override
+	public Object compute() {
+		return  ((Characters) this.getExpr().compute()).getSprite().getHeight();
+	}
+
+}

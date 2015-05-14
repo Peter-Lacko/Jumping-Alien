@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.internal.QuickAccess">
-		<item value="749" key="dialogHeight"/>
+		<item value="739" key="dialogHeight"/>
 		<item value="1440" key="dialogWidth"/>
 		<list key="textEntries">
 		</list>
@@ -27,6 +27,7 @@
 	<section name="ZipFileImportWizard">
 		<item value="false" key="WizardZipFileResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID"/>
 		<list key="WizardZipFileResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="C:\Users\ik\Downloads\jumpingalien-part3.jar"/>
 			<item value="C:\Users\ik\Desktop\Jumping-Alien\jumpingalien-part2.jar"/>
 			<item value="C:\Users\ik\Desktop\a\Jumping-Alien\jumpingalien-part2.jar"/>
 		</list>

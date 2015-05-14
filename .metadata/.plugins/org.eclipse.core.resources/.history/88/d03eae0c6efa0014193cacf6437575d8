@@ -1,0 +1,5 @@
+package jumpingalien.model.program.expression.unary;
+
+public class IsShark {
+
+}

@@ -1,0 +1,63 @@
+package jumpingalien.model.program.expression;
+
+import java.util.List;
+
+import jumpingalien.model.*;
+import jumpingalien.model.program.Program;
+import jumpingalien.part3.programs.IProgramFactory.Direction;
+
+public class SearchObject<Object> extends Expression<Object>{
+
+	public SearchObject(Program program, Direction direction){
+		this.program = program;
+		this.setCharacter(this.getProgram().getCharacter());
+		this.setWorld(this.getProgram().getWorld());
+		this.getWorld().getAllObjects().forEach();
+	}
+
+	public boolean checkIfInDirection(Direction direction, Object object){
+		if (direction == Direction.UP){
+		}
+	}
+	
+	public Program getProgram(){
+		return this.program;
+	}
+	
+	private Program program;
+	
+	public Characters getCharacter(){
+		return this.character;
+	}
+	
+	public void setCharacter(Characters character){
+		this.character = character;
+	}
+	
+	private Characters character;
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+	
+	private World world;
+	
+	public List<Characters> getInDirection() {
+		return inDirection;
+	}
+	
+	private List<Characters> inDirection;
+	
+	@Override
+	public Object compute() {
+		List<Characters> characters = this.getWorld().getAllObjects();
+		
+	}
+
+	
+
+}

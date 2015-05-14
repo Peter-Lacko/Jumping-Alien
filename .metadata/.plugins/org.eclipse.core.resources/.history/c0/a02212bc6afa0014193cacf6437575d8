@@ -1,0 +1,167 @@
+package jumpingalien.model.program.expression;
+
+import java.util.*;
+
+import jumpingalien.model.*;
+import jumpingalien.model.program.Program;
+import jumpingalien.part3.programs.IProgramFactory.Direction;
+
+public class SearchObject<Object> extends Expression<Object>{
+
+	public SearchObject(Program program, Direction direction){
+		this.program = program;
+		this.setCharacter(this.getProgram().getCharacter());
+		this.setWorld(this.getProgram().getWorld());
+		this.setDirection(direction);
+	}
+
+	public boolean checkIfUp(Object object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2)) &&
+					(((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object).getSprite().getWidth()) &&
+					(((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
+				return true;
+			else
+				return false;
+		}
+		else if (object instanceof Tyle){	
+			if ((((Tyle)object).getPosition()[1] > getCharacter().getIntPositionAt(2)) &&
+					(((Tyle)object).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tyle)object).getTyleLength()) &&
+					(((Tyle)object).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()) &&
+					(((Tyle)object).getGeo() == GeoFeature.GROUND))
+				return true;
+			else 
+				return false;
+		}
+		else
+			return false;
+	}
+	
+	public boolean checkIfDown(Object object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2)) &&
+					(((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object).getSprite().getWidth()) &&
+					(((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
+				return true;
+			else
+				return false;
+		}
+		else if (object instanceof Tyle){	
+			if ((((Tyle)object).getPosition()[1] < getCharacter().getIntPositionAt(2)) &&
+					(((Tyle)object).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tyle)object).getTyleLength()) &&
+					(((Tyle)object).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth())&&
+					(((Tyle)object).getGeo() == GeoFeature.GROUND))
+				return true;
+			else 
+				return false;
+		}
+		else
+			return false;
+	}
+	
+	public boolean checkIfLeft(Object object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1)) &&
+					(((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object).getSprite().getHeight()) &&
+					(((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
+				return true;
+			else
+				return false;
+		}
+		else if (object instanceof Tyle){	
+			if ((((Tyle)object).getPosition()[0] < getCharacter().getIntPositionAt(1)) &&
+					(((Tyle)object).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tyle)object).getTyleLength()) &&
+					(((Tyle)object).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
+					(((Tyle)object).getGeo() == GeoFeature.GROUND))
+				return true;
+			else 
+				return false;
+		}
+		else
+			return false;
+	}
+	
+	public boolean checkIfRight(Object object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1)) &&
+					(((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object).getSprite().getHeight()) &&
+					(((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
+				return true;
+			else
+				return false;
+		}
+		else if (object instanceof Tyle){	
+			if ((((Tyle)object).getPosition()[0] > getCharacter().getIntPositionAt(1)) &&
+					(((Tyle)object).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tyle)object).getTyleLength()) &&
+					(((Tyle)object).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
+					(((Tyle)object).getGeo() == GeoFeature.GROUND))
+				return true;
+			else 
+				return false;
+		}
+		else
+			return false;
+	}
+	
+	public Program getProgram(){
+		return this.program;
+	}
+	
+	private Program program;
+	
+	public Characters getCharacter(){
+		return this.character;
+	}
+	
+	public void setCharacter(Characters character){
+		this.character = character;
+	}
+	
+	private Characters character;
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+	
+	private World world;
+	
+	public Map<Object,Integer> getInDirection() {
+		return inDirection;
+	}
+	
+	private Map<Object,Integer> inDirection;
+	
+	public Direction getDirection(){
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+	
+	private Direction direction;
+	
+	@Override
+	public Object compute() {
+		if (getDirection() == Direction.UP)
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (checkIfUp((Object) object)) {this.getInDirection().add((Object) object);}});
+		else if (getDirection() == Direction.DOWN)
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (checkIfDown((Object) object)) {this.getInDirection().add((Object) object);}});
+		else if (getDirection() == Direction.LEFT)
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (checkIfLeft((Object) object)) {this.getInDirection().add((Object) object);}});
+		else if (getDirection() == Direction.RIGHT)
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (checkIfRight((Object) object)) {this.getInDirection().add((Object) object);}});
+		List<Object> objects = this.getInDirection();
+		Object closest;
+		for (Object object: objects1){
+			
+		}
+	}
+
+	
+
+}

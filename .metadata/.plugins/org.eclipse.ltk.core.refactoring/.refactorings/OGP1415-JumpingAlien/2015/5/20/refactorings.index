@@ -24,3 +24,8 @@
 1431553094122	Rename field 'falling'
 1431557889928	Rename method 'canHaveAsNewPosition'
 1431592804634	Rename local variable 'timeSinceEnvironmentalDamage'
+1431598266148	Encapsulate field 'position'
+1431598306171	Encapsulate field 'world'
+1431600617284	Encapsulate field 'geo'
+1431600700572	Delete element
+1431608710472	Encapsulate field 'tyleLength'

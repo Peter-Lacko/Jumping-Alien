@@ -1,0 +1,25 @@
+package jumpingalien.model.program.expression;
+
+import java.util.Random;
+
+import jumpingalien.model.program.Program;
+
+public class ExpressionRandomDouble<Double> extends ExpressionBasic {
+
+	public ExpressionRandomDouble(double maxValue){
+		this.maxValue = maxValue;
+	}
+	
+	public double getMaxValue() {
+		return maxValue;
+	}
+	
+	private double maxValue;
+	
+	@Override
+	public Object compute() {
+		Random r = new Random(); 
+		return r.nextDouble()*getMaxValue();
+	}
+
+}

@@ -1,0 +1,11 @@
+package jumpingalien.model.program.expression.unary;
+
+public class IsMazub extends Unary {
+
+	@Override
+	public Object compute() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

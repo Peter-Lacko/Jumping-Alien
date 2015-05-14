@@ -18,7 +18,6 @@ import jumpingalien.part2.internal.tmxfile.data.Layer;
 import jumpingalien.part2.internal.tmxfile.data.Map;
 import jumpingalien.part2.internal.tmxfile.data.MapObject;
 import jumpingalien.part2.internal.tmxfile.data.ImageTile.TileType;
-import jumpingalien.model.Characters;
 import jumpingalien.model.Plant;
 import jumpingalien.model.School;
 import jumpingalien.model.Shark;
@@ -226,14 +225,19 @@ public class JumpingAlienGamePart2 extends JumpingAlienGame {
 	}
 
 	@Override
-	public AlienInfoProvider2 getAlienInfoProvider() {
-		return (AlienInfoProvider2) super.getAlienInfoProvider();
+	public AlienInfoProvider2<Mazub> getAlienInfoProvider() {
+		return (AlienInfoProvider2<Mazub>) super.getAlienInfoProvider();
 	}
 
 	@Override
-	protected AlienInfoProvider2 createAlienInfoProvider() {
-		return new AlienInfoProvider2() {
+	protected AlienInfoProvider2<Mazub> createAlienInfoProvider() {
+		return new AlienInfoProvider2<Mazub>() {
 
+			@Override
+			public Mazub getAlien() {
+				return alien;
+			}
+			
 			@Override
 			public Optional<int[]> getAlienXY() {
 				return catchErrorGet(() -> getFacade().getLocation(getAlien()));
@@ -358,7 +362,7 @@ public class JumpingAlienGamePart2 extends JumpingAlienGame {
 			}
 
 			@Override
-			public Optional<int[]> getLocation(Characters slime) {
+			public Optional<int[]> getLocation(Slime slime) {
 				return Optional.of(getFacade().getLocation(slime));
 			}
 
@@ -372,7 +376,7 @@ public class JumpingAlienGamePart2 extends JumpingAlienGame {
 			}
 
 			@Override
-			public Optional<int[]> getLocation(Characters shark) {
+			public Optional<int[]> getLocation(Shark shark) {
 				return Optional.of(getFacade().getLocation(shark));
 			}
 
@@ -397,13 +401,13 @@ public class JumpingAlienGamePart2 extends JumpingAlienGame {
 			}
 
 			@Override
-			public Optional<ImageSprite> getCurrentSprite(Characters shark) {
+			public Optional<ImageSprite> getCurrentSprite(Shark shark) {
 				return Optional.of((ImageSprite) getFacade().getCurrentSprite(
 						shark));
 			}
 
 			@Override
-			public Optional<ImageSprite> getCurrentSprite(Characters slime) {
+			public Optional<ImageSprite> getCurrentSprite(Slime slime) {
 				return Optional.of((ImageSprite) getFacade().getCurrentSprite(
 						slime));
 			}

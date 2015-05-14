@@ -1,0 +1,176 @@
+package jumpingalien.model.program.expression;
+
+import java.util.*;
+
+import jumpingalien.model.*;
+import jumpingalien.model.program.Program;
+import jumpingalien.part3.programs.IProgramFactory.Direction;
+
+public class SearchObject extends Expression<Object>{
+
+	public SearchObject(Program program, Direction direction){
+		this.program = program;
+		this.setCharacter(this.getProgram().getCharacter());
+		this.setWorld(this.getProgram().getWorld());
+		this.setDirection(direction);
+	}
+
+	public int distanceUp(Object object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2)) &&
+					(((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object).getSprite().getWidth()) &&
+					(((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
+				return ((Characters)object).getIntPositionAt(2) - getCharacter().getIntPositionAt(2);
+			else
+				return -1;
+		}
+		else if (object instanceof Tyle){	
+			if ((((Tyle)object).getPosition()[1] > getCharacter().getIntPositionAt(2)) &&
+					(((Tyle)object).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tyle)object).getTyleLength()) &&
+					(((Tyle)object).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()) &&
+					(((Tyle)object).getGeo() == GeoFeature.GROUND))
+				return ((Tyle)object).getPosition()[1] - getCharacter().getIntPositionAt(2);
+			else 
+				return -1;
+		}
+		else
+			return -1;
+	}
+	
+	public int distanceDown(Object object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2)) &&
+					(((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object).getSprite().getWidth()) &&
+					(((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
+				return getCharacter().getIntPositionAt(2) - ((Characters)object).getIntPositionAt(2);
+			else
+				return -1;
+		}
+		else if (object instanceof Tyle){	
+			if ((((Tyle)object).getPosition()[1] < getCharacter().getIntPositionAt(2)) &&
+					(((Tyle)object).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tyle)object).getTyleLength()) &&
+					(((Tyle)object).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth())&&
+					(((Tyle)object).getGeo() == GeoFeature.GROUND))
+				return getCharacter().getIntPositionAt(2) - ((Tyle)object).getPosition()[1];
+			else 
+				return -1;
+		}
+		else
+			return -1;
+	}
+	
+	public int distanceLeft(Object object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1)) &&
+					(((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object).getSprite().getHeight()) &&
+					(((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
+				return getCharacter().getIntPositionAt(1) - ((Characters)object).getIntPositionAt(1);
+			else
+				return -1;
+		}
+		else if (object instanceof Tyle){	
+			if ((((Tyle)object).getPosition()[0] < getCharacter().getIntPositionAt(1)) &&
+					(((Tyle)object).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tyle)object).getTyleLength()) &&
+					(((Tyle)object).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
+					(((Tyle)object).getGeo() == GeoFeature.GROUND))
+				return getCharacter().getIntPositionAt(1) - ((Tyle)object).getPosition()[0];
+			else 
+				return -1;
+		}
+		else
+			return -1;
+	}
+	
+	public int distanceRight(Object object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1)) &&
+					(((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object).getSprite().getHeight()) &&
+					(((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
+				return ((Characters)object).getIntPositionAt(1) - getCharacter().getIntPositionAt(1);
+			else
+				return -1;
+		}
+		else if (object instanceof Tyle){	
+			if ((((Tyle)object).getPosition()[0] > getCharacter().getIntPositionAt(1)) &&
+					(((Tyle)object).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tyle)object).getTyleLength()) &&
+					(((Tyle)object).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
+					(((Tyle)object).getGeo() == GeoFeature.GROUND))
+				return ((Tyle)object).getPosition()[0] - getCharacter().getIntPositionAt(1);
+			else 
+				return -1;
+		}
+		else
+			return -1;
+	}
+	
+	public Program getProgram(){
+		return this.program;
+	}
+	
+	private Program program;
+	
+	public Characters getCharacter(){
+		return this.character;
+	}
+	
+	public void setCharacter(Characters character){
+		this.character = character;
+	}
+	
+	private Characters character;
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+	
+	private World world;
+	
+	public Map<Object,Integer> getInDirection() {
+		return inDirection;
+	}
+	
+	private Map<Object,Integer> inDirection;
+	
+	public Direction getDirection(){
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+	
+	private Direction direction;
+	
+	@Override
+	public Object compute() {
+		if (getDirection() == Direction.UP)
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (distanceUp((Object) object) != -1) {
+				this.getInDirection().put((Object) object,distanceUp((Object) object));}});
+		else if (getDirection() == Direction.DOWN)
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (distanceDown((Object) object) != -1) {
+				this.getInDirection().put((Object) object,distanceDown((Object) object));}});
+		else if (getDirection() == Direction.LEFT)
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (distanceLeft((Object) object) != -1) {
+				this.getInDirection().put((Object) object,distanceLeft((Object) object));}});
+		else if (getDirection() == Direction.RIGHT)
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (distanceRight((Object) object) != -1) {
+				this.getInDirection().put((Object) object,distanceRight((Object) object));}});
+		Map<Object,Integer> objects = this.getInDirection();
+		Object closest = null;
+		int distance = 0;
+		for (Map.Entry<Object, Integer> entry : objects.entrySet()){
+			if ((closest == null) || (entry.getValue() < distance)){
+				distance = entry .getValue();
+				closest = entry.getKey();
+			}
+		}
+		return closest;
+	}
+
+	
+
+}

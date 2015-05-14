@@ -971,6 +971,29 @@ public class World {
 	 */
 	private List<Characters> objects = new LinkedList<Characters>();
 	
+	public List<Tyle> getTiles(){
+		List<Tyle> list = new LinkedList<Tyle>();
+		for (int i = 0; i < this.getWindowWidth() ; i = i+getTileLength()){
+			for (int j = 0 ; j < this.getWindowHeight() ; j = j+getTileLength()){
+				Tyle tyle = new Tyle();
+				int[] pos = getTilePosition(i, j);
+				tyle.setPosition(pos);
+				tyle.setWorld(this);
+				tyle.setGeo(this.getGeoFeatureAt(pos[0], pos[1]));
+				tyle.setTyleLength(this.getTileLength());
+				list.add(tyle);
+			}
+		}
+		return list;
+	}
+	
+	public List<Object> getAllObjectsEnTiles(){
+		List<Object> objects =  new LinkedList<Object>();
+		objects.addAll(this.getAllObjects());
+		objects.addAll(this.getTiles());
+		return objects;
+	}
+	
 	@Basic
 	public boolean hasAsLeftObject(Characters object){
 		return leftObjects.contains(object);
