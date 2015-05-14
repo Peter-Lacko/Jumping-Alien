@@ -2,22 +2,25 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="damage" key="selection"/>
+		<item value="terminate()" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="damage"/>
-			<item value="size"/>
-			<item value="canHaveAsNewPosition"/>
-			<item value="canHaveAsNewPosiion"/>
-			<item value="getabs"/>
-			<item value="canHaveAsWorld("/>
-			<item value="getInit"/>
-			<item value="getSprite"/>
+			<item value="terminate()"/>
+			<item value="durationRange"/>
+			<item value="collision"/>
+			<item value="collide"/>
+			<item value="advanceTimeLong"/>
+			<item value="environmentda"/>
+			<item value="damage(int"/>
+			<item value="damage("/>
 		</list>
 		<list key="replacehistory">
+			<item value="buzam"/>
+			<item value="mazub"/>
+			<item value="this alien"/>
 			<item value="randomValue"/>
 			<item value="DurationRange"/>
 			<item value="Falling"/>

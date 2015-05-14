@@ -1,0 +1,317 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.Basic;
+import jumpingalien.util.Sprite;
+
+public class Plant extends Characters implements OtherCharacters {
+
+	/**
+	 * initialize a plant with a given x_pos, y_pos, and sprites.
+	 * @param x_pos
+	 * 			the initial x-coordinate for this character.
+	 * @param y_pos
+	 * 			the initial y-coordinate for this character.
+	 * @param sprites
+	 * 			the array of sprites used to display the character.
+	 * @post	This character starts at the given position.
+	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
+	 * @post	This character's sprite set is equal to the given one.
+	 * 			| new.getImages().equals(sprites)
+	 * @post	this character's image length is equal to the length of the given sprite array
+	 * 			|new.getNbImages() == sprites.length
+	 * @post	this character's horizontal acceleration is set to 0
+	 * 			| new.getAbsHorizontalAcceleration() == 0.0
+	 * @post	this character's max horizontal velocity is set to 0.5
+	 * 			| new.getMaxHorizontalVelocity == 0.5
+	 * @post	this character's initial horizontal velocity is set to 0.5
+	 * 			| Math.abs(new.getInitHorizontalVelocity()) == 0.5
+	 * @post	this character's initial vertical velocity is set to 0
+	 *			| new.getInitVerticalVelocity() == 0.0
+	 * @post	this character's displayed sprite is the first sprite in the given array of sprites
+	 * 			| new.getSprite() == sprites[0]
+	 * @post	this character's hit points is set to 1
+	 * 			|new.getHitPoints() == 1
+	 * @post	|new.getDurationRange() == {0.5, 0.5}
+	 * @throws IllegalArgumentException
+	 * 			the amount of images provided is invalid
+	 * 			|! isValidNbImages(sprites.length)
+	 */
+	public Plant(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0,1);
+		setMovingRight(true);
+		durationRange = new double[] {0.5,0.5};
+	}
+	
+	/**
+	 * A more specific (detailed) method to advance time.
+	 * @param duration
+	 * 			the amount of time to advance
+	 * @post	if the character's hit points are 0, then the new character is terminated.
+	 * 			|if(getHitPoints() == 0)
+	 * 			|	then isTerminated() == true;
+	 * @post	for the next postconditions, the following condition applies: the characters hitpoints is not 0
+	 * 			|if (getHitPoints() != 0){
+	 * @post	a new horizontal position and velocity is set
+	 * 			|new.getHorizontalPosition() ?= this.getHorizontalPosition()
+	 * 			|new.getHorizontalVelocity() ?= this.getHorizontalVelocity()
+	 * @post	a new vertical position and velocity is set
+	 * 			|new.getVerticalPosition() ?= this.getVerticalPosition()
+	 * 			|new.getVerticalVelocity() ?= this.getVerticalVelocity()
+	 * @post	a new sprite is set
+	 * @effect	the character suffers from possible environmental damage (and loses hit points)
+	 * 			|this.environmentalDamage(duration)
+	 * 			|}
+	 * @effect	|if isTerminated()
+	 * 			|	then {setTerminateTime(getTerminateTime()+duration)
+	 * 			|		if ((this.getTerminateTime()+duration > 0.6) && (! (this.getWorld() == null)))
+	 * 			|			then getWorld().removeAsObject(this)
+	 * @effect	|if ! isTerminated(){
+	 * @effect	|	if (getTimeSinceStartMovement() < getMovementDuration())
+	 * 			|		then setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
+	 * 			|	else selectMovements()
+	 * 			|}
+	 */
+	@Override
+	public void advanceTimeLong(double duration){
+		super.advanceTimeLong(duration);
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+			}
+			else{
+				selectMovements();
+			}
+		}
+		else{
+			this.setTerminateTime(getTerminateTime()+duration);
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				this.getWorld().removeAsObject(this);
+		}
+	}
+
+	/**
+	 * Compute the new horizontal velocity after a given duration (and then set it)
+	 * @param duration
+	 * 			the duration after which to calculate the new horizontal velocity.
+	 * @post	if the character is moving left or right, the new velocity is equal to a velocity calculated
+	 * 			by the standard formula
+	 * 			|if (isMovingLeft() || isMovingRight())
+	 * 			|	then new.getHorizontalVelocity() == computeNewHorizontalVelocityMoving(duration)
+	 * 			otherwise, the new velocity is 0
+	 * 			|else new.getHorizontalVelocity() == 0.0
+	 * @post	if the character is moving, but below their maximum horizontal velocity, 
+	 * 			then they are accelerating
+	 * 			|if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (! Util.fuzzyGreaterThanOrEqualTo(
+	 *			|	Math.abs(newVelocity),getMaxHorizontalVelocity())))
+	 *			|	then new.isAccelerating() == true
+	 *			otherwise, they are not accelerating
+	 *			|else new.isAccelerating() == false
+	 */
+	@Override
+	public void computeNewHorizontalVelocityAfter(double duration) {
+		this.setHorizontalVelocity(getInitHorizontalVelocity());
+	}
+	
+	/**
+	 * Calculate the new vertical position after the given duration.
+	 * @param duration
+	 * 			the duration of time that passes
+	 * @return the new position is calculated with the specific formula y_new = y_old + v_y*duration
+	 * 			+a_y*0.5*duration²
+	 * 			|result == getPositionAt(2) + 100*duration*getVerticalVelocity()
+	 * 			|	+100*0.5*getVerticalAcceleration()*duration²
+	 */
+	@Override
+	public double calculateNewVerticalPositionAfter(double duration){
+		return this.getPositionAt(2);
+	}
+	
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic @Override
+	public double[] getDurationRange() {
+		return durationRange.clone();
+	}
+	
+	/**
+	 * A variable containing the range of the movement durations of the characters
+	 */
+	public final double[] durationRange;
+
+	/**
+	 * @post	|if isMovingRight()
+	 * 			|	then{ new.isMovingRight() == false
+	 * 			|		new.isMovingLeft() == true}
+	 * 			|if isMovingLeft()
+	 * 			|	then{ new.isMovingRight() == true
+	 * 			|		new.isMovingLeft() == false}
+	 * @post	|new.getMovementDuration() == randomValue(getDurationRange())
+	 * @post	|new.getTimeSinceStartMovement() == getTimeSinceStartMovement() - getMovementDuration()
+	 */
+	@Override
+	public void selectMovements(){
+		setTimeSinceStartMovement(getTimeSinceStartMovement() - getMovementDuration());
+		if (isMovingRight()){
+			endMove("right");
+			startMove("left");
+		}
+		else if (isMovingLeft()){
+			endMove("left");
+			startMove("right");
+		}
+	}
+
+	/**
+	 * Compute the new vertical speed after a given duration (and set it).
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical speed.
+	 * @post	if the character is falling, the new velocity is calculated according to the formula
+	 * 			v_y,new = v_y,old+a_y*duration
+	 * 			|if (isFalling())
+	 * 			|	then new.getVerticalVelocity() == getVerticalVelocity()+getVerticalAcceleration()
+	 * 			|		*duration
+	 * 			otherwise, if the character is jumping, the same formula is used, but v_y,old is replaced
+	 * 			with v_init
+	 * 			|else
+	 * 			|	if (isJumping())
+	 * 			|		then new.getVerticalVelocity() == getInitVerticalVelocity()
+	 * 			|			+getVerticalAcceleration()*duration
+	 */
+	@Override
+	public void computeNewVerticalVelocityAfter(double duration) {
+		this.setVerticalVelocity(getInitVerticalVelocity());
+	}
+
+	@Override
+	public boolean isFalling() {
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param other
+	 * 			the other character in the collision
+	 * @param isBelow
+	 * 			a boolean stating whether this is below other
+	 * @effect	...
+	 * 			| if ((other instanceof Mazub) && (not this.isTerminated())
+	 * 			|	then other.eat(this)
+	 */
+	@Override
+	public void collision(Characters other) {
+		if (other instanceof Mazub){
+			if (! this.isTerminated())
+				((Mazub) other).eat(this);
+		}
+		else if ((other instanceof Plant) || (other instanceof Shark)){}
+		else
+			other.collision(this);
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if (other instanceof Mazub)
+			collision(other);
+		else if ((other instanceof Plant) || (other instanceof Shark) || (other instanceof Slime)){}
+		else
+			other.collisionNoDamageTo(this);
+	}
+	
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (other instanceof Mazub)
+			collision(other);
+		else if ((other instanceof Plant) || (other instanceof Shark) || (other instanceof Slime)){}
+		else
+			other.collisionNoDamageFrom(this);
+	}
+	
+	@Override
+	public boolean collide(Characters other){
+		if (other instanceof Plant)
+			return false;
+		else if (other instanceof Slime)
+			return false;
+		else if (other instanceof Shark)
+			return false;
+		else if (other instanceof Mazub)
+			return false;
+		else
+			return other.collide(this);
+	}
+	
+	@Override
+	public void environmentDamage(double duration) {		
+	}
+	
+	/**
+	 * @effect	...
+	 * 			| if not this.isTerminated
+	 * 			|	then this.setTerminated(true)
+	 * 			|		this.getWorld().removeAsObject(this)
+	 * 			|		this.setHorizontalVelocity(0.0)
+	 * 			|		this.setVerticalVelocity(0.0)
+	 */
+	protected void terminate() {
+		if (! isTerminated()){
+			this.setTerminated(true);
+			this.getWorld().removeAsObject(this);
+			this.setHorizontalVelocity(0.0);
+			this.setVerticalVelocity(0.0);
+		}
+	}
+
+	@Override
+	public boolean checkFalling(){
+		return false;
+	}
+
+	@Override
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double time) {
+		timeSinceStartMovement = time;
+	}
+	
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	private double timeSinceStartMovement = 0.0;
+
+	@Override
+	public double getMovementDuration() {
+		return 0.5;
+	}
+
+	@Override
+	public void setMovementDuration(double duration) throws IllegalArgumentException{
+		if (! canHaveAsMovementDuration(duration))
+			throw new IllegalArgumentException();
+	}
+	
+	@Override
+	public double getTerminateTime() {
+		return terminateTime;
+	}
+
+	@Override
+	public void setTerminateTime(double time) {
+		terminateTime = time;
+	}
+	
+	/**
+	 * A double containing the terminate time
+	 */
+	private double terminateTime = 0.0;
+
+	@Override
+	public double getDurationRangeValueAt(int index) {
+		return 0.5;
+	}
+
+}

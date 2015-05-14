@@ -24,3 +24,6 @@
 1431553094122	Rename field 'falling'
 1431557889928	Rename method 'canHaveAsNewPosition'
 1431592804634	Rename local variable 'timeSinceEnvironmentalDamage'
+1431621269798	Rename method 'slimeDamage'
+1431633210784	Delete element
+1431636534868	Delete element
