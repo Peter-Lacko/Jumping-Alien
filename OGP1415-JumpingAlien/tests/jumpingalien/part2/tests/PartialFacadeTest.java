@@ -107,7 +107,6 @@ public class PartialFacadeTest {
 		for (int i = 0; i < 100; i++) {
 			facade.advanceTime(world, 0.2 / 9);
 		}
-
 		assertArrayEquals(doubleArray(3, 0), facade.getVelocity(alien),
 				Util.DEFAULT_EPSILON);
 	}

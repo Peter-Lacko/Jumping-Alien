@@ -1,0 +1,186 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+import java.util.Random;
+
+import be.kuleuven.cs.som.annotate.Basic;
+
+public interface OtherCharacters{
+
+//	/**
+//	 * ...
+//	 * @return	...
+//	 * 			| leftOrRightSprite(0)
+//	 */
+//	public default Sprite getCurrentSprite() {
+//		return leftOrRightSprite(0);
+//	}
+	
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number >= 0 && number <2)
+	 */
+	public default boolean canHaveAsIndex(int number) {
+		return ((number >= 0) && (number < 2));
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number == 2)
+	 */
+	public default boolean isValidNbImages(int nbImages) {
+		return (nbImages == 2);
+	}
+
+	/**
+	 * @effect	...
+	 * 			| if not this.isTerminated
+	 * 			|	if getTimeSinceStartMovement() < getMovementDuration()
+	 * 			|		then removeAllCloseCharacters()
+	 * 			|			this.computeHorizontalMovement(duration)
+	 * 			|			removeAllCloseCharacters()
+	 * 			|			this.computeVerticalMovement(duration)
+	 * 			|			setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
+	 * 			|	else
+	 * 			|		then endMove()
+	 * 			|			startMove()
+	 * 			| else
+	 * 			|	then this.setTerminateTime(getTerminateTime()+duration)
+	 * 			|		if (this.getTerminateTime() > 0.6) && (! (this.getWorld() == null))
+	 * 			|			this.getWorld().removeAsObject(this)
+	 * 			| if this.getHitPoints == 0
+	 * 			|	then this.terminate()
+	 *  @throws	...
+	 *  		| ((duration < 0.0) || (duration >= 0.2))
+	 */
+	public default void advanceTimeLong(double duration){
+		super.advanceTimeLong(duration);
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+			}
+			else{
+				selectMovements();
+			}
+		}
+		else{
+			this.setTerminateTime(getTerminateTime()+duration);
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				this.getWorld().removeAsObject(this);
+		}
+	}
+
+	public abstract World getWorld();
+	
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic
+	public double[] getDurationRange();
+
+	public default void selectMovements(){
+		setTimeSinceStartMovement(getTimeSinceStartMovement() - getMovementDuration());
+		if (isMovingRight())
+			endMove("right");
+		else if (isMovingLeft())
+			endMove("left");
+		setMovementDuration(randomValue(getDurationRange()));
+		if (getRandomBoolean())
+			startMove("left");
+		else
+			startMove("right");
+	}
+
+	/**
+	 * 
+	 * @return	...
+	 * 			| Random random = new Random()
+	 * 			| return random.nextBoolean()
+	 */
+	public default boolean getRandomBoolean() {
+		Random random = new Random();
+		return random.nextBoolean();
+	}
+
+	/**
+	 * A getter method for the variable timeSinceStartMovement
+	 */
+	@Basic
+	public default double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	/**
+	 * A setter method for the variable timeSinceStartMovement
+	 */
+	@Basic
+	public default void setTimeSinceStartMovement(double timeSinceStartMovement) {
+		this.timeSinceStartMovement = timeSinceStartMovement;
+	}
+
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	public double timeSinceStartMovement = 0.0;
+
+	/**
+	 * A getter method for the variable movementDuration
+	 */
+	@Basic
+	public default double getMovementDuration() {
+		return movementDuration;
+	}
+
+	/**
+	 * A setter method for the variable movementDuration
+	 */
+	@Basic
+	public default void setMovementDuration(double movementDuration) {
+		this.movementDuration = movementDuration;
+	}
+
+	/**
+	 * 
+	 * @param range
+	 * @return	...
+	 * 			| Random t = new Random()
+	 * 			| return range[0] + (range[1]-range[0])*r.nextDouble()
+	 */
+	public default double randomValue(double[] range){
+		Random r = new Random();
+		double value = range[0] + (range[1]-range[0])*r.nextDouble();
+		return value;
+	}
+
+	/**
+	 * A double containing the movement duration
+	 */
+	public double movementDuration;
+
+	/**
+	 * A getter method for the variable terminate time
+	 */
+	@Basic
+	public default double getTerminateTime() {
+		return terminateTime;
+	}
+
+	/**
+	 * A setter method for the variable terminate time
+	 */
+	@Basic
+	public default void setTerminateTime(double terminateTime) {
+		this.terminateTime = terminateTime;
+	}
+
+	/**
+	 * A double containing the terminate time
+	 */
+	public double terminateTime = 0.0;
+
+
+}

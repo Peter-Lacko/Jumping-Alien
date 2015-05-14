@@ -1,0 +1,104 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+import java.util.Random;
+
+import be.kuleuven.cs.som.annotate.Basic;
+
+public interface OtherCharacters {
+
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic
+	public abstract double[] getDurationRange();
+
+	public default void selectMovements(){
+		setTimeSinceStartMovement(getTimeSinceStartMovement() - getMovementDuration());
+		if (isMovingRight())
+			endMove("right");
+		else if (isMovingLeft())
+			endMove("left");
+		setMovementDuration(randomValue(getDurationRange()));
+		if (getRandomBoolean())
+			startMove("left");
+		else
+			startMove("right");
+	}
+	
+	public abstract boolean isMovingRight();
+	
+	public abstract boolean isMovingLeft();
+	
+	public abstract void startMove(String Direction);
+	
+	public abstract void endMove(String Direction);
+
+	/**
+	 * 
+	 * @return	...
+	 * 			| Random random = new Random()
+	 * 			| return random.nextBoolean()
+	 */
+	public default boolean getRandomBoolean() {
+		Random random = new Random();
+		return random.nextBoolean();
+	}
+
+	/**
+	 * A getter method for the variable timeSinceStartMovement
+	 */
+	@Basic
+	public abstract double getTimeSinceStartMovement();
+
+	/**
+	 * A setter method for the variable timeSinceStartMovement
+	 */
+	@Basic
+	public abstract void setTimeSinceStartMovement(double timeSinceStartMovement);
+
+	/**
+	 * A getter method for the variable movementDuration
+	 */
+	@Basic
+	public abstract double getMovementDuration();
+
+	/**
+	 * A setter method for the variable movementDuration
+	 */
+	@Basic
+	public abstract void setMovementDuration(double movementDuration);
+
+	/**
+	 * 
+	 * @param range
+	 * @return	...
+	 * 			| Random t = new Random()
+	 * 			| return range[0] + (range[1]-range[0])*r.nextDouble()
+	 */
+	public default double randomValue(double[] range){
+		Random r = new Random();
+		double value = range[0] + (range[1]-range[0])*r.nextDouble();
+		return value;
+	}
+
+	/**
+	 * A getter method for the variable terminate time
+	 */
+	@Basic
+	public abstract double getTerminateTime();
+
+	/**
+	 * A setter method for the variable terminate time
+	 */
+	@Basic
+	public abstract void setTerminateTime(double terminateTime);
+
+	/**
+	 * A double containing the terminate time
+	 */
+	public double terminateTime = 0.0;
+
+}

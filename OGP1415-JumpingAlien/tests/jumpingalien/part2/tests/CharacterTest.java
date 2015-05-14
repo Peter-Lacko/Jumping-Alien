@@ -46,6 +46,8 @@ public class CharacterTest {
 	private static Mazub alien3;
 	
 	private static Mazub alien4;
+	
+	private static Mazub alien5;
 
 	private static Mazub alienInAir;
 	
@@ -59,6 +61,8 @@ public class CharacterTest {
 
 	private static World lavaWorld;
 	
+	private static World waterWorld;
+	
 	private static Slime slime1;
 
 	private static Slime slime2;
@@ -68,6 +72,14 @@ public class CharacterTest {
 	private static Slime slime4;
 	
 	private static Slime slime5;
+	
+	private static Slime slime6;
+	
+	private static Shark shark;
+	
+	private static Shark shark2;
+	
+	private static Shark shark3;
 
 	private static School school;
 	
@@ -108,6 +120,11 @@ public class CharacterTest {
 			lavaWorld.setGeoFeatureAtWithInt(i, 0, 1);
 			lavaWorld.setGeoFeatureAtWithInt(i, 1, 3);
 		}
+		waterWorld = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			waterWorld.setGeoFeatureAtWithInt(i, 0, 1);
+			waterWorld.setGeoFeatureAtWithInt(i, 1, 2);
+		}
 		school = new School();
 		school2 = new School();
 		school3 = new School();
@@ -117,17 +134,17 @@ public class CharacterTest {
 		alien2 = new Mazub(70, 69, mazubSprites2);
 		alien3 = new Mazub(70, 140, mazubSprites2);
 		alien4 = new Mazub(70, 140, mazubSprites2);
+		alien5 = new Mazub(70, 140, mazubSprites2);
 		alienInAir = new Mazub(70, 100, mazubSprites1);
 		slime1 = new Slime(75,250, newSprites, school);
 		slime2 = new Slime(75,440, newSprites, school);
 		slime3 = new Slime(75,85, newSprites, school2);
 		slime4 = new Slime(75,69, newSprites, school3);
 		slime5 = new Slime(75,440, newSprites, school2);
-		school.addAsSlime(slime1);
-		school.addAsSlime(slime2);
-		school2.addAsSlime(slime3);
-		school3.addAsSlime(slime4);
-		school2.addAsSlime(slime5);
+		slime6 = new Slime(750,69, newSprites, school2);
+		shark = new Shark(3000,69, newSprites);
+		shark2 = new Shark(3000,80, newSprites);
+		shark3 = new Shark(3000,750, newSprites);
 		worldStandard.addMazub(alien);
 		worldStandard.addAsObject(plant1);
 		worldStandard.addAsObject(plant2);
@@ -140,6 +157,11 @@ public class CharacterTest {
 		worldSmall2.addAsObject(slime4);
 		worldSmall2.addAsObject(slime5);
 		lavaWorld.addMazub(alien4);
+		waterWorld.addMazub(alien5);
+		waterWorld.addAsObject(slime6);
+		waterWorld.addAsObject(shark);
+		waterWorld.addAsObject(shark2);
+		waterWorld.addAsObject(shark3);
 	}
 	
 	@BeforeClass
@@ -154,15 +176,15 @@ public class CharacterTest {
 	@Test
 	public void testPlant() {
 		for (int i=0 ; i<2 ; i++){
-			plant1.advanceTime(0.05);
+			plant1.advanceTime(0.1);
 		}
 		assert(plant1.getHorizontalVelocity() == 0.5);
-		assert(500.0 < plant1.getPositionAt(1));
+		assertEquals(505.0, plant1.getPositionAt(1), Util.DEFAULT_EPSILON);
 		assertEquals(500.0, plant1.getPositionAt(2), Util.DEFAULT_EPSILON);
-		for (int i=0 ; i<181 ; i++){
-			plant1.advanceTime(0.0050);
+		for (int i=1 ; i<=9 ; i++){
+			plant1.advanceTime(0.1);
 		}
-		assert(500.0 > plant1.getPositionAt(1));
+		assertEquals(500.0, plant1.getPositionAt(1), Util.DEFAULT_EPSILON);
 		assertEquals(500.0, plant1.getPositionAt(2), Util.DEFAULT_EPSILON);
 //		plant2.advanceTime(0.1);
 //		assert(plant2.getPositionAt(1) == 1023);
@@ -177,12 +199,12 @@ public class CharacterTest {
 	public void testJumping(){
 		alien.startJump();
 		alien.advanceTime(0.1);
-		assertEquals(144.0,alien.getPositionAt(2), 1.5);
-		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(70,209),alien.getIntPosition());
+		// y = 0.69 + 8*.1 - 10*.5*.1*.1 = 1.44
+		assertEquals(144,alien.getIntPositionAt(2));
 		alien.endJump();
 		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(70,204),alien.getIntPosition());
+		// y = 1.44 -10*.5*.1*.1 = 1.39
+		assertEquals(139,alien.getIntPositionAt(2));
 	}
 	
 	@Test
@@ -192,8 +214,9 @@ public class CharacterTest {
 		for (int i=0 ; i < 3 ; i++)
 			alien.advanceTime(0.1);
 		// y = 0.69m + 8m/s * 0.3s - 0.5 * 10m/s² * (0.3s)² = 2.64
-		// x = 0.7m + 1 * 0.3m/s + 0.5 * 0.9m/s² * (0.3s)² = 1.0405
-		assertArrayEquals(intArray(104, 264), alien.getIntPosition());
+		// x = 0.7m + 0.3s * 1m/s + 0.5 * 0.9m/s² * (0.3s)² = 1.0405
+		assertEquals(104.05, alien.getPositionAt(1), Util.DEFAULT_EPSILON);
+//		assertArrayEquals(intArray(104, 264), alien.getIntPosition());
 	}
 	
 	@Test
@@ -205,18 +228,19 @@ public class CharacterTest {
 			alien.advanceTime(0.1);
 		// y = 0.69m + 8m/s * 0.3s - 0.5 * 10m/s² * (0.3s)² = 2.64
 		// x = 0.7m + 1 * 0.3m/s = 1
-		assertEquals(100.0, alien.getPositionAt(1), Util.DEFAULT_EPSILON);
-		assertEquals(264.0, alien.getPositionAt(2), 1.5);
+		assertEquals(100, alien.getIntPositionAt(1));
+		assertEquals(264, alien.getIntPositionAt(2));
 	}
 	
 	@Test
 	public void testStopAtLeftEdge(){
 		alien.startMove("left");
 		alien.advanceTime(0.1);
-		assertArrayEquals(intArray(70,69), alien.getIntPosition());
+		assertArrayEquals(intArray(69,69), alien.getIntPosition());
 		for (int i = 0 ; i < 40 ; i++)
 			alien.advanceTime(0.1);
 		// Mazub can run against the wall
+		assertArrayEquals(intArray(69,69), alien.getIntPosition());
 		assertEquals(-3.0, alien.getHorizontalVelocity(), Util.DEFAULT_EPSILON);
 	}
 	
@@ -289,9 +313,10 @@ public class CharacterTest {
 	
 	@Test
 	public void noJumpInAir(){
+		alienInAir.advanceTime(0.1);
 		alienInAir.startJump();
 		alienInAir.advanceTime(0.1);
-		assertEquals(95.0, alienInAir.getPositionAt(2), 1.5);
+		assertEquals(80.0, alienInAir.getPositionAt(2), Util.DEFAULT_EPSILON);
 	}
 	
 	@Test
@@ -307,16 +332,16 @@ public class CharacterTest {
 	public void damageWithSlime(){
 		for (int i = 0 ; i < 5 ; i++)
 			worldSmall.advanceTime(0.1);
-		assertEquals(50, slime1.getHitPoints());
 		assertEquals(50, alien2.getHitPoints());
-		assert(100 > slime2.getHitPoints());
+		assertEquals(50, slime1.getHitPoints());
+		assertEquals(99, slime2.getHitPoints());
 	}
 	
 	@Test
-	public void JumpOnEnemey(){
+	public void JumpOnEnemy(){
 		for (int i = 0 ; i < 5 ; i++)
 			worldSmall2.advanceTime(0.1);
-		assert(100 > slime3.getHitPoints());
+		assert(slime3.getHitPoints() < 100);
 		assertEquals(100, alien3.getHitPoints());
 	}
 	
@@ -328,14 +353,36 @@ public class CharacterTest {
 				|| (76 == slime3.getIntPositionAt(1)));
 		assert((74 == slime4.getIntPositionAt(1)) || (75 == slime4.getIntPositionAt(1)) 
 				|| (76 == slime4.getIntPositionAt(1)));
-		assertEquals(69, slime3.getIntPositionAt(2));
 		assertEquals(69, slime4.getIntPositionAt(2));
+		assertEquals(69, slime3.getIntPositionAt(2));
 		assertEquals(school2, slime4.getSchool());
 	}
 	
 	@Test
 	public void lavaHurts(){
-		lavaWorld.advanceTime(0.01);
+//		lavaWorld.advanceTime(0.1);
+		lavaWorld.advanceTime(0.1);
 		assertEquals(50, alien4.getHitPoints());
+	}
+	
+	@Test
+	public void waterOrAirHurts(){
+//		lavaWorld.advanceTime(0.1);
+		waterWorld.advanceTime(0.1);
+		assertEquals(100, alien5.getHitPoints());
+		assertEquals(100, slime6.getHitPoints());
+		assertEquals(100, shark.getHitPoints());
+		waterWorld.advanceTime(0.11);
+		assertEquals(100, shark.getHitPoints());
+		assertEquals(94, shark3.getHitPoints());
+		assertEquals(98, alien5.getHitPoints());
+		assertEquals(98, slime6.getHitPoints());
+	}
+	
+	@Test
+	public void sharksNotThroughEachOther(){
+		waterWorld.advanceTime(0.05);
+		assertEquals(69, shark.getIntPositionAt(2));
+		assertEquals(80, shark2.getIntPositionAt(2));
 	}
 }

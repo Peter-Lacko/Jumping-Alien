@@ -1,0 +1,203 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+import java.util.Random;
+
+import be.kuleuven.cs.som.annotate.Basic;
+
+public interface OtherCharacters {
+
+	public WeakOtherCharacters(int x_pos, int y_pos, Sprite[] sprites,double hor_acc, double max_hor_vel, 
+			double init_hor_vel, double init_ver_vel,int hitPoints) throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitPoints);
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| leftOrRightSprite(0)
+	 */
+	@Override
+	public Sprite getCurrentSprite() {
+		return leftOrRightSprite(0);
+	}
+
+	@Override
+	public Sprite leftOrRightSprite(int number){
+		assert (number >= 0);
+		assert (number + 1 < getNbImages());
+		if ((this.getHorizontalVelocity() < 0) || (getHasMovedIn() == MovementDirection.LEFT)){
+			return getImageAt(number + 1);
+		} else{
+			return getImageAt(number + 2);
+		}
+	}
+	
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number >= 0 && number <2)
+	 */
+	@Override
+	public boolean canHaveAsIndex(int number) {
+		return ((number >= 0) && (number < 2));
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number == 2)
+	 */
+	@Override
+	public boolean isValidNbImages(int nbImages) {
+		return (nbImages == 2);
+	}
+
+	/**
+	 * @effect	...
+	 * 			| if not this.isTerminated
+	 * 			|	if getTimeSinceStartMovement() < getMovementDuration()
+	 * 			|		then removeAllCloseCharacters()
+	 * 			|			this.computeHorizontalMovement(duration)
+	 * 			|			removeAllCloseCharacters()
+	 * 			|			this.computeVerticalMovement(duration)
+	 * 			|			setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
+	 * 			|	else
+	 * 			|		then endMove()
+	 * 			|			startMove()
+	 * 			| else
+	 * 			|	then this.setTerminateTime(getTerminateTime()+duration)
+	 * 			|		if (this.getTerminateTime() > 0.6) && (! (this.getWorld() == null))
+	 * 			|			this.getWorld().removeAsObject(this)
+	 * 			| if this.getHitPoints == 0
+	 * 			|	then this.terminate()
+	 *  @throws	...
+	 *  		| ((duration < 0.0) || (duration >= 0.2))
+	 */
+	@Override
+	public void advanceTimeLong(double duration){
+		super.advanceTimeLong(duration);
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+			}
+			else{
+				selectMovements();
+			}
+		}
+		else{
+			this.setTerminateTime(getTerminateTime()+duration);
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				this.getWorld().removeAsObject(this);
+		}
+	}
+
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic
+	public abstract double[] getDurationRange();
+
+	public void selectMovements(){
+		setTimeSinceStartMovement(getTimeSinceStartMovement() - getMovementDuration());
+		if (isMovingRight())
+			endMove("right");
+		else if (isMovingLeft())
+			endMove("left");
+		setMovementDuration(randomValue(getDurationRange()));
+		if (getRandomBoolean())
+			startMove("left");
+		else
+			startMove("right");
+	}
+
+	/**
+	 * 
+	 * @return	...
+	 * 			| Random random = new Random()
+	 * 			| return random.nextBoolean()
+	 */
+	public boolean getRandomBoolean() {
+		Random random = new Random();
+		return random.nextBoolean();
+	}
+
+	/**
+	 * A getter method for the variable timeSinceStartMovement
+	 */
+	@Basic
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	/**
+	 * A setter method for the variable timeSinceStartMovement
+	 */
+	@Basic
+	public void setTimeSinceStartMovement(double timeSinceStartMovement) {
+		this.timeSinceStartMovement = timeSinceStartMovement;
+	}
+
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	public double timeSinceStartMovement = 0.0;
+
+	/**
+	 * A getter method for the variable movementDuration
+	 */
+	@Basic
+	public double getMovementDuration() {
+		return movementDuration;
+	}
+
+	/**
+	 * A setter method for the variable movementDuration
+	 */
+	@Basic
+	public void setMovementDuration(double movementDuration) {
+		this.movementDuration = movementDuration;
+	}
+
+	/**
+	 * 
+	 * @param range
+	 * @return	...
+	 * 			| Random t = new Random()
+	 * 			| return range[0] + (range[1]-range[0])*r.nextDouble()
+	 */
+	public double randomValue(double[] range){
+		Random r = new Random();
+		double value = range[0] + (range[1]-range[0])*r.nextDouble();
+		return value;
+	}
+
+	/**
+	 * A double containing the movement duration
+	 */
+	public double movementDuration;
+
+	/**
+	 * A getter method for the variable terminate time
+	 */
+	@Basic
+	public double getTerminateTime() {
+		return terminateTime;
+	}
+
+	/**
+	 * A setter method for the variable terminate time
+	 */
+	@Basic
+	public void setTerminateTime(double terminateTime) {
+		this.terminateTime = terminateTime;
+	}
+
+	/**
+	 * A double containing the terminate time
+	 */
+	public double terminateTime = 0.0;
+
+}

@@ -4,141 +4,71 @@ import be.kuleuven.cs.som.annotate.Basic;
 import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
 
-public class Shark extends OtherCharacters {
+public class Shark extends Characters implements OtherCharacters {
 
 	public Shark(int x_pos, int y_pos, Sprite[] sprites)
 			throws IllegalArgumentException {
 		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0, 100);
+		durationRange = new double[] {1.0, 4.0};
 	}
-	
+
 	/**
 	 * A getter method for the variable durationRange
 	 */
-	@Basic
-	public double[] getDurationrange() {
-		return durationrange;
+	@Basic @Override
+	public double[] getDurationRange() {
+		return durationRange.clone();
 	}
 
-	/**
-	 * A setter method for the variable durationRange
-	 */
-	public void setDurationrange(double[] durationrange) {
-		this.durationrange = durationrange;
-	}
-	
 	/**
 	 * A variable containing the range of the movement durations of the characters
 	 */
-	public double[] durationrange = {1.0 , 4.0};
+	public final double[] durationRange;
 
-//	@Override
-//	protected void computeNewHorizontalPositionAfter(double duration) {
-//		double newPosition;
-//		if (isMovingLeft() || isMovingRight())
-//			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
-//		else
-//			newPosition = this.getPositionAt(1);
-//		if (canHaveAsNewPosition(newPosition,1))
-//			this.setPositionAt(newPosition, 1);
-//	}
-//
-//	@Override
-//	protected void computeNewHorizontalVelocityAfter(double duration) {
-//		double newVelocity;
-//		if (isMovingLeft() || isMovingRight()){
-//			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
-//			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-//			if (isMovingLeft())
-//				newVelocity = -1.0*newVelocity;
-//			this.setHorizontalVelocity(newVelocity);
-//		}
-//	}
-
-	/**
-	 * @effect	...
-	 * 			| setMovementDuration(randomDuration(getDurationrange()))
-	 * 			| if getRandomBoolean()
-	 * 			|	then setMovingLeft(true)
-	 * 			| else
-	 * 			|	then setMovingRight(true)
-	 */
 	@Override
-	public void startMove() {
-		setMovementDuration(randomDuration(getDurationrange()));
-		if (getRandomBoolean())
-			setMovingLeft(true);
-		else
-			setMovingRight(true);
-		if (!isInAir() && getRandomBoolean() && (getMovementsSinceLastJump() >=4))
-			startJump();
-		else if (isInWater()){
-			if (getRandomBoolean())
-				setDiving(true);
+	public void advanceTimeLong(double duration){
+		if (! this.isTerminated()){
+			if (checkSubmerged())
+				setSubmerged(true);
 			else
-				setRising(true);
+				setSubmerged(false);
+			if (checkInWater())
+				setInWater(true);
+			else
+				setInWater(false);
 		}
-		setMovementsSinceLastJump(getMovementsSinceLastJump()+1);
-	}
-
-	/**
-	 * @effect	...
-	 * 			| setTimeSinceStartMovement(0.0)
-	 *			| setMovingRight(false)
-	 *			| setMovingLeft(false)
-	 *			| endJump()
-	 *			| setHorizontalVelocity(0.0)
-	 *			| if (getVerticalVelocity() > 0)
-	 *			| 	then setVerticalVelocity(0.0)
-	 */
-	@Override
-	public void endMove() {
-		setTimeSinceStartMovement(0.0);
-		setMovingRight(false);
-		setMovingLeft(false);
-		endJump();
-		setHorizontalVelocity(0.0);
-		if (getVerticalVelocity() > 0)
-			setVerticalVelocity(0.0);
-		setDiving(false);
-		setRising(false);
-	}
-
-
-	
-	/**
-	 * @return	...
-	 * 			| if not isTerminated()
-	 * 			|	if isInAir()
-	 * 			|		then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration
-	 * 			|		return newYPosition
-	 * 			|	else 
-	 * 			|		if isJumping()|| isInWater()
-	 * 			|			then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 100*0.5*getVerticalAcceleration()*duration*duration
-	 * 			|			return newYposition
-	 * 			|		return 0.0
-	 * 			| else
-	 * 			|	then return 0.0
-	 */
-	@Override
-	public double calculateNewVerticalPositionAfter(double duration){
-		if (! isTerminated()){
-			double newYPosition = 0.0;;
-			if (isInAir()){
-				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
-					100*0.5*getVerticalAcceleration()*duration*duration;
-				return newYPosition;
+		super.advanceTimeLong(duration);
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
 			}
 			else{
-				if (isJumping()|| isInWater()){
-					newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
-							100*0.5*getVerticalAcceleration()*duration*duration;
-					return newYPosition;
-				}
-				return newYPosition;
+				selectMovements();
 			}
 		}
+		else{
+			this.setTerminateTime(getTerminateTime()+duration);
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				this.getWorld().removeAsObject(this);
+		}
+	}
+	
+	@Override
+	public void selectMovements(){
+		if(isSubmerged())
+			setVerticalAccelerationWater(randomValue(new double[] {-0.2, 0.2}));
 		else
-			return 0.0;
+			setVerticalAccelerationWater(0.0);
+		if (getMovementsSinceLastJump()==1)
+			endJump();
+		OtherCharacters.super.selectMovements();
+		if (getMovementsSinceLastJump() != 0)
+			setMovementsSinceLastJump((getMovementsSinceLastJump()+1)%5);
+		else
+			if (getRandomBoolean()){
+				startJump();
+				setMovementsSinceLastJump(1);
+			}
 	}
 
 	/**
@@ -146,7 +76,7 @@ public class Shark extends OtherCharacters {
 	 * 			| ((duration < 0.0) || (duration >= 0.2))
 	 * @effect	...
 	 * 			| if not isTerminated()
-	 * 			|	if isInAir()
+	 * 			|	if isFalling()
 	 * 			|		if (! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity()))
 	 * 			|			then setVerticalVelocity(0.0)
 	 * 			|		else
@@ -162,78 +92,17 @@ public class Shark extends OtherCharacters {
 	@Override
 	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
 		try{
-			if (! isTerminated()){
-				if (isInAir()){
-					if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity())))
-						setVerticalVelocity(0.0);
-					else
-						setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
-				}
-				else{
-					if (isJumping())
-						setVerticalVelocity(getInitVerticalVelocity());
-					if (isRising() || isDiving())
-						setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
-					else
-						setVerticalVelocity(0.0);
-				}
-			}
+			if (isInWater() && ! isJumping())
+				setVerticalVelocity(getVerticalVelocity() + duration*getVerticalAcceleration());
+			else	
+				super.computeNewVerticalVelocityAfter(duration);
 		}
 		catch (IllegalArgumentException exc){
 			throw exc;
 		}
+
 	}
 
-	/**
-	 * @effect	...
-	 * 			| if not isInAir
-	 * 			|	then this.setVerticalVelocity(getInitVerticalVelocity())
-	 * 			|		setMovementsSinceLastJump(0)
-	 * @post	...
-	 * 			| if not isInAir
-	 * 			|	then new.isJumping == true
-	 */
-	@Override
-	public void startJump() throws IllegalArgumentException{
-		try {
-			if(! isInAir()){
-				this.setVerticalVelocity(getInitVerticalVelocity());
-				setMovementsSinceLastJump(0);
-				this.isJumping = true;
-			}
-		}
-		catch (IllegalArgumentException exc) {
-			throw exc;
-		}
-	}
-
-	
-	// TODO mutator/inspector methode mag niet
-	@Override
-	public boolean isInAir(){
-		if (! isTerminated()){
-			for (int i = getIntPositionAt(1);i<=getIntPositionAt(1)+getSprite().getWidth();i++){
-				int[] pos1 = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-				int[] pos2 = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getSprite().getHeight());
- 				GeoFeature geobot = getWorld().getGeoFeatureAt(pos1[0],pos1[1]);
- 				GeoFeature geotop = getWorld().getGeoFeatureAt(pos2[0],pos2[1]);
-				if (geobot == GeoFeature.GROUND){
-				// (mss niet nodig) this.setInWater(false);
-					setDiving(false);
-					return false;
-				}
-				if (geotop == GeoFeature.WATER){
-					this.setInWater(true);
-					return false;
-				}
-			}
-			this.setInWater(false);
-			this.setRising(false);
-			return true;
-		}
-		return false;
-	}
-	
 	/**
 	 * A getter method for the variable movementsSinceLastJump
 	 */
@@ -241,7 +110,49 @@ public class Shark extends OtherCharacters {
 	public int getMovementsSinceLastJump() {
 		return movementsSinceLastJump;
 	}
-	
+
+	@Override
+	public boolean checkFalling(){
+		if (getWorld() == null)
+			return false;
+		else{
+			int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+			boolean looping = true;
+			int i = getIntPositionAt(1)+1;
+			while (looping){
+				if (i == width)
+					looping = false;
+				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+				if ((getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+						|| (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER))
+					return false;
+				i = Math.min(width, i+getWorld().getTileLength());
+			}
+			if (isCharacterBlockingDown(this.getPositionAt(2)-1))
+				return false;
+		}
+		return true;
+	}
+
+	public boolean checkInWater(){
+		if (getWorld() == null)
+			return false;
+		if (isCharacterBlockingDown(this.getPositionAt(2)-1))
+			return false;
+		int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+		boolean looping = true;
+		int i = getIntPositionAt(1)+1;
+		while (looping){
+			if (i == width)
+				looping = false;
+			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER)
+				return true;
+			i = Math.min(width, i+getWorld().getTileLength());
+		}
+		return false;
+	}
+
 	/**
 	 * A getter method for the boolean isInWater
 	 */
@@ -257,73 +168,77 @@ public class Shark extends OtherCharacters {
 	public void setInWater(boolean isInWater) {
 		this.isInWater = isInWater;
 	}
-	
+
 	/**
 	 * A boolean stating whether the shark is in water
 	 */
 	public boolean isInWater = false;
-	
-	/**
-	 * A getter method for the boolean isRising
-	 */
-	@Basic
-	public boolean isRising() {
-		return isRising;
+
+	public boolean checkSubmerged(){
+		if (getWorld() == null)
+			return false;
+		if (isCharacterBlockingUp(this.getPositionAt(2)+getSprite().getHeight()-1))
+			return false;
+		int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+		boolean looping = true;
+		int i = getIntPositionAt(1)+1;
+		while (looping){
+			if (i == width)
+				looping = false;
+			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getSprite().getHeight()-1);
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER)
+				return true;
+			i = Math.min(width, i+getWorld().getTileLength());
+		}
+		return false;
 	}
 
 	/**
-	 * A setter method for the boolean isRiving
+	 * A getter method for the boolean isSubmerged
 	 */
 	@Basic
-	public void setRising(boolean isRising) {
-		this.isRising = isRising;
-	}
-	
-	/**
-	 * A boolean stating whether the shark isRising
-	 */
-	public boolean isRising = false;
-
-	/**
-	 * A getter method for the boolean isDiving
-	 */
-	@Basic
-	public boolean isDiving() {
-		return isDiving;
+	public boolean isSubmerged() {
+		return isSubmerged;
 	}
 
 	/**
-	 * A setter method for the boolean isDiving
+	 * A setter method for the boolean isSubmerged
 	 */
 	@Basic
-	public void setDiving(boolean isDiving) {
-		this.isDiving = isDiving;
+	public void setSubmerged(boolean isSubmerged) {
+		this.isSubmerged = isSubmerged;
 	}
 
 	/**
-	 * A boolean stating whether the shark is diving
+	 * A boolean stating whether the shark is submerged
 	 */
-	public boolean isDiving = false;
-	
+	public boolean isSubmerged = false;
+
 	/**
 	 * Return the current vertical acceleration.
 	 */
-	@Override
-	@Basic
+	@Override @Basic
 	public Double getVerticalAcceleration() {
-		if (this.isInAir() || this.isJumping())
-			return VERTICAL_ACCELERATION;
-		else if (this.isInWater() && (!isJumping))
-			if  (isDiving)
-				return -VERTICAL_ACCELERATION_WATER;
-			else if (isRising)
-				return VERTICAL_ACCELERATION_WATER;
-			else return 0.0;
+		if (isSubmerged() && isInWater())
+			return getVerticalAccelerationWater();
 		else
-			return 0.0;
+			return super.getVerticalAcceleration();
 	}
-	
-	protected static final double VERTICAL_ACCELERATION_WATER = 2.0;
+
+	/**
+	 * 
+	 * @param value
+	 * @post	|new.VERTICAL_ACCELERATION_WATER = value
+	 */
+	protected void setVerticalAccelerationWater(double value){
+		VERTICAL_ACCELERATION_WATER = value;
+	}
+
+	public double getVerticalAccelerationWater(){
+		return VERTICAL_ACCELERATION_WATER;
+	}
+
+	private double VERTICAL_ACCELERATION_WATER = 0.0;
 
 	/**
 	 * A setter method for the variable movementsSinceLast
@@ -360,26 +275,49 @@ public class Shark extends OtherCharacters {
 	 *  		|	then other.collision(this,not isBelow)
 	 */
 	@Override
-	public void collision(Characters other, boolean isBelow) {
+	public void collision(Characters other) {
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){
-				if (! isBelow){
-					other.damage(50);
-					((Mazub)other).startImmune();
-				}
+				other.damage(50);
+				((Mazub)other).startImmune();
 				this.damage(50);
 			}
-			if (! this.isTerminated())
-				this.endMove();
-//			((Mazub) other).endMove("left");
-//			((Mazub) other).endMove("right");
 		}
-		else if (other instanceof Shark){
-			this.endMove();
-			((OtherCharacters)other).endMove();
-		}
+		else if (other instanceof Shark){}
 		else
-			other.collision(this,! isBelow);
+			other.collision(this);
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if ((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime))
+			collision(other);
+		else if (other instanceof Plant){}
+		else
+			other.collisionNoDamageTo(this);
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune())
+				this.damage(50);
+		}
+		else if ((other instanceof Shark) || (other instanceof Slime))
+			collision(other);
+		else if (other instanceof Plant){}
+		else
+			other.collisionNoDamageFrom(this);
+	}
+
+	@Override
+	public boolean collide(Characters other){
+		if (other instanceof Mazub)
+			return true;
+		else if (other instanceof Shark)
+			return true;
+		else
+			return other.collide(this);
 	}
 
 	/**
@@ -431,10 +369,53 @@ public class Shark extends OtherCharacters {
 	}
 
 	@Override
-	public void checkInAir() {
-		// TODO Auto-generated method stub
-		
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double time) {
+		timeSinceStartMovement = time;
 	}
 	
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	private double timeSinceStartMovement = 0.0;
+
+	@Override
+	public double getMovementDuration() {
+		return movementDuration;
+	}
+
+	@Override
+	public void setMovementDuration(double duration) {
+		movementDuration = duration;
+	}
+
+	/**
+	 * A double containing the movement duration
+	 */
+	private double movementDuration;
+	
+	@Override
+	public double getTerminateTime() {
+		return terminateTime;
+	}
+
+	@Override
+	public void setTerminateTime(double time) {
+		terminateTime = time;
+	}	
+	
+	/**
+	 * A double containing the terminate time
+	 */
+	private double terminateTime = 0.0;
+
+	@Override
+	public double getDurationRangeValueAt(int index) {
+		return getDurationRange()[index-1];
+	}
 
 }

@@ -1,0 +1,57 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+import be.kuleuven.cs.som.annotate.*;
+
+public abstract class Aliens extends Characters {
+
+	@Override
+	public Sprite leftOrRightSprite(int number) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Sprite getCurrentSprite() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean canHaveAsIndex(int index) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isValidNbImages(int nbImages) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean collide(Characters other) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void collision(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

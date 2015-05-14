@@ -2,22 +2,25 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="addAsLeft" key="selection"/>
+		<item value="damage" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="addasleft"/>
-			<item value="advanceTimeLong"/>
-			<item value="boolean"/>
-			<item value="canHaveAsObjectAt"/>
-			<item value="worldSmallWindow"/>
-			<item value="matchesMaxXTilesWindowWidth("/>
-			<item value="getWorldSize"/>
-			<item value="canHaveAsWindowWidth("/>
+			<item value="damage"/>
+			<item value="size"/>
+			<item value="canHaveAsNewPosition"/>
+			<item value="canHaveAsNewPosiion"/>
+			<item value="getabs"/>
+			<item value="canHaveAsWorld("/>
+			<item value="getInit"/>
+			<item value="getSprite"/>
 		</list>
 		<list key="replacehistory">
+			<item value="randomValue"/>
+			<item value="DurationRange"/>
+			<item value="Falling"/>
 			<item value="plant2"/>
 			<item value="plant1"/>
 		</list>

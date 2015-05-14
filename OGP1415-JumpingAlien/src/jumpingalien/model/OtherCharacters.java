@@ -7,376 +7,148 @@ import java.util.Random;
 
 import be.kuleuven.cs.som.annotate.Basic;
 
-public abstract class OtherCharacters extends Characters {
+public interface OtherCharacters {
 
-	public OtherCharacters(int x_pos, int y_pos, Sprite[] sprites,double hor_acc, double max_hor_vel, 
-			double init_hor_vel, double init_ver_vel,int hitPoints) throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitPoints);
-	}
-
-	/**
-	 * ...
-	 * @return	...
-	 * 			| leftOrRightSprite(0)
-	 */
-	@Override
-	public Sprite getCurrentSprite() {
-		return leftOrRightSprite(0);
+	public default boolean isValidNbDurationRange(int number){
+		return (number == 2);
 	}
 
-	/**
-	 * ...
-	 * @return	...
-	 * 			| result == (number >= 0 && number <2)
-	 */
-	@Override
-	public boolean canHaveAsIndex(int number) {
-		return ((number >= 0) && (number < 2));
+	public default int getNbDurationRange(){
+		if (getDurationRange() != null)
+			return getDurationRange().length;
+		return 0;
 	}
 
-	/**
-	 * ...
-	 * @return	...
-	 * 			| result == (number == 2)
-	 */
-	@Override
-	public boolean isValidNbImages(int nbImages) {
-		return (nbImages == 2);
+	public default boolean canHaveAsDurationRangeValue(double value){
+		return(Util.fuzzyGreaterThanOrEqualTo(value, 0.0));
 	}
 
-//	@Override
-//	protected abstract void computeNewHorizontalPositionAfter(double duration) ;
-//
-//	@Override
-//	protected abstract void computeNewHorizontalVelocityAfter(double duration) ;
-	
-	/**
-	 * 
-	 * @param duration
-	 * @return	...
-	 * 			| newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration
-	 * 			| return newPosition
-	 */
-	public double calculateNewHorizontalPositionAfter(double duration) {
-		double newPosition = getPositionAt(1);
-			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity()
-				 + 100*0.5*getHorizontalAcceleration()*duration*duration;
-		return newPosition;
-	}
-
-	/**
-	 * @effect	...
-	 * 			| if isMovingLeft() || isMovingRight()
-	 * 			|	then newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration()
-	 * 			|		newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity())
-	 * 			|		if iMovingLeft()
-	 * 			|			then newVelocity = -1.0*newVelocity
-	 * 			|		this.setHorizontalVelocity(newVelocity)
-	 */
-	@Override
-	protected void computeNewHorizontalVelocityAfter(double duration) {
-		double newVelocity;
-		if (isMovingLeft() || isMovingRight()){
-			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
-			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-			if (isMovingLeft())
-				newVelocity = -1.0*newVelocity;
-			this.setHorizontalVelocity(newVelocity);
-		}
-		else
-			this.setHorizontalVelocity(0.0);
-	}
-	
-	/**
-	 * @return	...
-	 * 			| if this.isMovingLeft()
-	 * 			|	then return -getAbsHorizontalAcceleration()
-	 * 			| else if this.isMovingRight()
-	 * 			|	then return getAbsHorizontalAcceleration()
-	 * 			| else
-	 * 			|	return 0.0
-	 */
-	@Override
-	public double getHorizontalAcceleration() {
-		if (this.isMovingLeft())
-			return -getAbsHorizontalAcceleration();
-		else if (this.isMovingRight())
-			return getAbsHorizontalAcceleration();
-		else
-			return 0.0;
-	}
-	
-	
-	/**
-	 * @effect	...
-	 * 			| if not this.isTerminated
-	 * 			|	if getTimeSinceStartMovement() < getMovementDuration()
-	 * 			|		then removeAllCloseCharacters()
-	 * 			|			this.computeHorizontalMovement(duration)
-	 * 			|			removeAllCloseCharacters()
-	 * 			|			this.computeVerticalMovement(duration)
-	 * 			|			setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
-	 * 			|	else
-	 * 			|		then endMove()
-	 * 			|			startMove()
-	 * 			| else
-	 * 			|	then this.setTerminateTime(getTerminateTime()+duration)
-	 * 			|		if (this.getTerminateTime() > 0.6) && (! (this.getWorld() == null))
-	 * 			|			this.getWorld().removeAsObject(this)
-	 * 			| if this.getHitPoints == 0
-	 * 			|	then this.terminate()
-	 *  @throws	...
-	 *  		| ((duration < 0.0) || (duration >= 0.2))
-	 */
-	@Override
-	public void advanceTimeLong(double duration){
-		try {
-			if (! this.isTerminated()){
-				if ((! Util.fuzzyGreaterThanOrEqualTo(duration, 0.0)) || (Util.fuzzyGreaterThanOrEqualTo(duration, 0.2)))
-					throw new IllegalArgumentException();
-				this.checkInAir();
-				if (getTimeSinceStartMovement() < getMovementDuration()){
-					removeAllCloseCharacters();
-					this.computeHorizontalMovement(duration);
-					removeAllCloseCharacters();
-					this.computeVerticalMovement(duration);
-					setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
-				}
-//				else if (Util.fuzzyLessThanOrEqualTo(getTimeSinceStartMovement(), 0.0))
-//					startMove();
-				else{
-					endMove();
-					//setTimeSinceStartMovement(0.0);
-					startMove();
-				}
-//				if (!this.isTerminated())
-					this.environmentDamage(duration);
-				}
-			else{
-				this.setTerminateTime(getTerminateTime()+duration);
-				if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
-					this.getWorld().removeAsObject(this);
-			}
-			if (this.getHitPoints() == 0)
-				this.terminate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * 
-	 * @param duration
-	 * @effect	...
-	 * 			| newPos = calculateNewHorizontalPositionAfter(duration)
-	 * 			| oldPos = getIntPositionAt(1)
-	 * 			| canMove = true
-	 * 			| if (int)newPos > oldPos
-	 * 			| 	then collisionDetectionRight(newPos)
-	 * 			|		for character in getAllCloseCharacters()
-	 * 			|			if character.getIntPositionAt(2) -this.getSprite().getHeight() -1 == getIntPositionAt(2)
-	 * 			|				then collision(character , true)
-	 * 			|			else
-	 * 			|				then collision(character , false)
-	 * 			|		if (character instanceof Slime) || (character instanceof Shark)
-	 * 			|			if not (this instanceof Slime)
-	 * 			|				then canMove = false
-	 * 			|	if canMove
-	 * 			|		canMove = passableTerrainRight(newPos)
-	 * 			| if (int)newPos < oldPos
-	 * 			| 	then collisionDetectionLeft(newPos)
-	 * 			|		for character in getAllCloseCharacters()
-	 * 			|			if character.getIntPositionAt(2) -this.getSprite().getHeight() -1 == getIntPositionAt(2)
-	 * 			|				then collision(character , true)
-	 * 			|			else
-	 * 			|				then collision(character , false)
-	 * 			|		if (character instanceof Slime) || (character instanceof Shark)
-	 * 			|			if not (this instanceof Slime)
-	 * 			|				then canMove = false
-	 * 			|	if canMove
-	 * 			|		canMove = passableTerrainLeft(newPos)
-	 * 			| if canMove
-	 * 			|	then setPositionAt(newPos , 2)
-	 * 			| else
-	 * 			|	then setVerticalVelocity(0.0)
-	 * 			| computeNewVerticalVelocityAfter(duration)
-	 */
-	private void computeHorizontalMovement(double duration) {
-		double newPos = calculateNewHorizontalPositionAfter(duration);
-		int oldPos = getIntPositionAt(1);
-		boolean canMove = true;
-		if ((int)newPos > oldPos){
-			collisionDetectionRight(newPos);
-			for (Characters character: getAllCloseCharacters()){
-				if (character.getIntPositionAt(2) -this.getSprite().getHeight() -1 
-						== getIntPositionAt(2))
-					collision(character, true);
-				else{
-					collision(character, false);
-					if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-						if (!((this instanceof Slime) && (character instanceof Slime)))
-							canMove = false;
-					}
-				}
-			}
-			if (canMove){
-				canMove = passableTerrainRight(newPos);
-			}
-		}
-		if ((int)newPos < oldPos){
-			collisionDetectionLeft(newPos);
-			for (Characters character: getAllCloseCharacters()){
-				if (character.getIntPositionAt(2)  -this.getSprite().getHeight() -1 
-						== getIntPositionAt(2))
-					collision(character, true);
-				else{
-					collision(character, false);
-					if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-						if (!((this instanceof Slime) && (character instanceof Slime)))
-							canMove = false;
-					}
-				}
-			}
-			if (canMove){
-				canMove = passableTerrainLeft(newPos);
-			}
-		}
-		if (canMove){
-			setPositionAt(newPos, 1);
-			//calculate new hor velocity
-		}
-//		else{
-//			// new hor velocity = 0.0
-//		}
-		computeNewHorizontalVelocityAfter(duration);
-	}
-
-	public abstract void checkInAir();
-	
-	public abstract double calculateNewVerticalPositionAfter(double duration);
-	
-	/**
-	 * 
-	 * @param duration
-	 * @effect	...
-	 * 			| newPos = calculateNewVerticalPositionAfter(duration)
-	 * 			| oldPos = getIntPositionAt(2)
-	 * 			| canMove = true
-	 * 			| if (int)newPos > oldPos
-	 * 			| 	then collisionDetectionUp(newPos)
-	 * 			|		for character in getAllCloseCharacters()
-	 * 			|		collision(character , true)
-	 * 			|		if (character instanceof Slime) || (character instanceof Shark)
-	 * 			|			if not (this instanceof Slime)
-	 * 			|				then canMove = false
-	 * 			|	if canMove
-	 * 			|		canMove = passableTerrainUp(newPos)
-	 * 			| if (int)newPos < oldPos
-	 * 			| 	then collisionDetectionDown(newPos)
-	 * 			|		for character in getAllCloseCharacters()
-	 * 			|		collision(character , false)
-	 * 			|		if (character instanceof Slime) || (character instanceof Shark)
-	 * 			|			if not (this instanceof Slime)
-	 * 			|				then canMove = false
-	 * 			|	if canMove
-	 * 			|		canMove = passableTerrainUp(newPos)
-	 * 			| if canMove
-	 * 			|	then setPositionAt(newPos , 2)
-	 * 			| else
-	 * 			|	then setVerticalVelocity(0.0)
-	 * 			| computeNewVerticalVelocityAfter(duration)
-	 */
-	private void computeVerticalMovement(double duration) {
-		double newPos = calculateNewVerticalPositionAfter(duration);
-		int oldPos = getIntPositionAt(2);
-		boolean canMove = true;
-		if ((int)newPos > oldPos){
-			collisionDetectionUp(newPos);
-			for (Characters character: getAllCloseCharacters()){
-				collision(character,true);
-				if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-					if (!((this instanceof Slime) && (character instanceof Slime)))
-						canMove = false;
-				}
-			}
-			if (canMove){
-				canMove = passableTerrainUp(newPos);
-			}
-		}
-		if ((int)newPos < oldPos){
-			collisionDetectionDown(newPos);
-			for (Characters character: getAllCloseCharacters()){
-				collision(character, false );
-				if ((character instanceof Slime) || (character instanceof Shark) || (character instanceof Mazub)){
-					if (!((this instanceof Slime) && (character instanceof Slime)))
-						canMove = false;
-				}
-			}
-			if (canMove)
-				canMove = passableTerrainDown(newPos);
-		}
-		if (canMove){
-			setPositionAt(newPos, 2);
-			//calculate new hor velocity
-		}
+	public default boolean canHaveAsDurationRangeValueAt(double value, int index){
+		if (! canHaveAsDurationRangeValue(value))
+			return false;
 		else{
-			setVerticalVelocity(0.0);
+			if (index == 1){
+				if (Util.fuzzyGreaterThanOrEqualTo(getDurationRangeValueAt(2), value))
+					return true;
+				else 
+					return false;
+			}
+			else if (index == 2){
+				if (Util.fuzzyGreaterThanOrEqualTo(value, getDurationRangeValueAt(1)))
+					return true;
+				else 
+					return false;
+			}
+			else
+				return false;
 		}
-		computeNewVerticalVelocityAfter(duration);
 	}
 
-	public abstract void startMove();
-
-	public abstract void endMove();
+	public default boolean hasProperDurationRange(){
+		if (! isValidNbDurationRange(getNbDurationRange()))
+			return false;
+		else{
+			for(int i=1; i<=getNbDurationRange(); i++)
+				if(! canHaveAsDurationRangeValueAt(getDurationRangeValueAt(i),i))
+					return false;
+			return true;
+		}
+	}
 	
+	public abstract double getDurationRangeValueAt(int index);
+	
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic
+	public abstract double[] getDurationRange();
+
+	public default void selectMovements(){
+		setTimeSinceStartMovement(getTimeSinceStartMovement() - getMovementDuration());
+		if (isMovingRight())
+			endMove("right");
+		else if (isMovingLeft())
+			endMove("left");
+		setMovementDuration(randomValue(getDurationRange()));
+		if (getRandomBoolean())
+			startMove("left");
+		else
+			startMove("right");
+	}
+
+	public abstract boolean isMovingRight();
+
+	public abstract boolean isMovingLeft();
+
+	public abstract void startMove(String Direction);
+
+	public abstract void endMove(String Direction);
+
 	/**
 	 * 
 	 * @return	...
 	 * 			| Random random = new Random()
 	 * 			| return random.nextBoolean()
 	 */
-	public boolean getRandomBoolean() {
-	    Random random = new Random();
-	    return random.nextBoolean();
+	public default boolean getRandomBoolean() {
+		Random random = new Random();
+		return random.nextBoolean();
 	}
-	
+
+	public default boolean canHaveAsTimeSinceStartMovement(double time){
+		return (isPossibleTimeSinceStartMovement(time) && matchesMovementDurationTimeSinceStartMovement(
+				getMovementDuration(), time));
+	}
+
+	public default boolean isPossibleTimeSinceStartMovement(double time){
+		return(Util.fuzzyGreaterThanOrEqualTo(time, 0.0));
+	}
+
 	/**
 	 * A getter method for the variable timeSinceStartMovement
 	 */
 	@Basic
-	public double getTimeSinceStartMovement() {
-		return timeSinceStartMovement;
-	}
+	public abstract double getTimeSinceStartMovement();
 
 	/**
 	 * A setter method for the variable timeSinceStartMovement
 	 */
 	@Basic
-	public void setTimeSinceStartMovement(double timeSinceStartMovement) {
-		this.timeSinceStartMovement = timeSinceStartMovement;
+	public abstract void setTimeSinceStartMovement(double time);
+
+	public default boolean canHaveAsMovementDuration(double duration){
+		return (isPossibleMovementDuration(duration) && matchesMovementDurationDurationRange(
+				duration, getDurationRange()) && matchesMovementDurationTimeSinceStartMovement(
+						duration, getTimeSinceStartMovement()));
 	}
-	
-	/**
-	 * A double containing the time since the start of a movement
-	 */
-	public double timeSinceStartMovement = 0.0;
+
+	public default boolean isPossibleMovementDuration(double duration){
+		return (Util.fuzzyGreaterThanOrEqualTo(duration, 0.0));
+	}
+
+	public default boolean matchesMovementDurationDurationRange(double movementDuration, 
+			double[] durationRange){
+		return (Util.fuzzyGreaterThanOrEqualTo(durationRange[1], movementDuration)
+				&& Util.fuzzyGreaterThanOrEqualTo(movementDuration, durationRange[1]));
+	}
+
+	public default boolean matchesMovementDurationTimeSinceStartMovement(double movementDuration,
+			double timeSinceStartMovement){
+		return (Util.fuzzyGreaterThanOrEqualTo(movementDuration, timeSinceStartMovement));
+	}
 
 	/**
 	 * A getter method for the variable movementDuration
 	 */
 	@Basic
-	public double getMovementDuration() {
-		return movementDuration;
-	}
+	public abstract double getMovementDuration();
 
 	/**
 	 * A setter method for the variable movementDuration
 	 */
 	@Basic
-	public void setMovementDuration(double movementDuration) {
-		this.movementDuration = movementDuration;
-	}
-	
+	public abstract void setMovementDuration(double duration);
+
 	/**
 	 * 
 	 * @param range
@@ -384,44 +156,26 @@ public abstract class OtherCharacters extends Characters {
 	 * 			| Random t = new Random()
 	 * 			| return range[0] + (range[1]-range[0])*r.nextDouble()
 	 */
-	public double randomDuration(double[] range){
+	public default double randomValue(double[] range){
 		Random r = new Random();
-		double duration = range[0] + (range[1]-range[0])*r.nextDouble();
-		return duration;
+		double value = range[0] + (range[1]-range[0])*r.nextDouble();
+		return value;
 	}
-	
-	/**
-	 * A double containing the movement duration
-	 */
-	public double movementDuration;
 
+	public default boolean isValidTerminateTime(double time){
+		return (Util.fuzzyGreaterThanOrEqualTo(time, 0.0));
+	}
 
-	@Override
-	protected abstract void computeNewVerticalVelocityAfter(double duration) ;
-
-	@Override
-	public abstract void startJump() ;
-	
 	/**
 	 * A getter method for the variable terminate time
 	 */
 	@Basic
-	public double getTerminateTime() {
-		return terminateTime;
-	}
+	public abstract double getTerminateTime();
 
 	/**
 	 * A setter method for the variable terminate time
 	 */
 	@Basic
-	public void setTerminateTime(double terminateTime) {
-		this.terminateTime = terminateTime;
-	}
-	
-	/**
-	 * A double containing the terminate time
-	 */
-	public double terminateTime = 0.0;
-
+	public abstract void setTerminateTime(double time);
 
 }

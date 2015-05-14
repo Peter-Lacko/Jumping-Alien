@@ -1,0 +1,128 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+import be.kuleuven.cs.som.annotate.*;
+
+public abstract class Aliens extends Characters {
+
+	public Aliens(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, 
+			double init_hor_vel, double init_ver_vel, int hitpoints)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitpoints);
+	}
+	
+	/**
+	 * A method to determine whether to use the left or right version of a sprite.
+	 * @pre number is in the range of images (minus one).
+	 * 		| (number >=0) && (number + 1 < getNbImages())
+	 * @param number
+	 * 			the index in images where the left and right version of the sprite to be returned, is stored.
+	 * @return return the correct version of the sprite, depending on the state of the character.
+	 * 			if the character isn't moving in both directions, and is moving or has moved left,
+	 * 			then return the left sprite, otherwise the right sprite.
+	 * 			if the character is moving in both directions, and has moved left, return the left
+	 * 			sprite. otherwise return the right sprite.
+	 */
+	@Override
+	public Sprite leftOrRightSprite(int number){
+		assert (number >= 0);
+		assert (number + 1 < getNbImages());
+		if ((this.getHorizontalVelocity() < 0) || (getHasMovedIn() == MovementDirection.LEFT)){
+			return getImageAt(number + 2);
+		} else{
+			return getImageAt(number + 1);
+		}
+	}
+
+	/**
+	 * A method that returns the Sprite for the character with its current variables.
+	 * @return The new Sprite is determined depending on the state of the character.
+	 * 			if the character is in the air and has moved in the last second and is not ducked,
+	 * 			return the correct sided sprite for this case. Otherwise, if the character is ducked and 
+	 * 			has moved in the last second, return the correct sided sprite for this case. Otherwise,
+	 * 			if the character has move in the last second, return the correct sided (walking/ running 
+	 * 			cycle) sprite for this case. otherwise, if the character is ducked and has not moved
+	 * 			in the last second, return the correct sprite for this case. Otherwise, return the last
+	 * 			available sprite.
+	 */
+	@Override
+	public Sprite getCurrentSprite(){
+		if ((isFalling()) && (this.getHasMovedIn() != MovementDirection.NONE) && (! isDucked())){
+			return leftOrRightSprite(4);
+		} else if ((isDucked()) && (this.getHasMovedIn() != MovementDirection.NONE)){
+			return leftOrRightSprite(6);
+		} else if (this.getHasMovedIn() != MovementDirection.NONE){
+			return getCurrentWalkCycleSprite();
+		} else if ((isDucked()) && (this.getHasMovedIn() == MovementDirection.NONE)){
+			return getImageAt(2);
+		} else{
+			return getImageAt(1);
+		}
+	}
+
+	/**
+	 * A method that returns the walking/running cycle sprite for the character. It possibly returns a
+	 * non-cycle sprite if the character is moving in both directions
+	 * @return The new walking/ running cycle Sprite is determined depending on the state of the character.
+	 * 			if there has been sufficient time since the last frame of animation, set the index to the
+	 * 			next frame and reset the timer. if the character is moving in both directions (ie not 
+	 * 			moving) return the correct sided sprite for this case. Otherwise, if the character is 
+	 * 			moving right, return the correct sided sprite for this case. Otherwise, if the character
+	 * 			is moving left, return the correct sided sprite for this case. Otherwise, return the
+	 * 			correct sided sprite for all other cases.
+	 */
+	protected Sprite getCurrentWalkCycleSprite() {
+		if (getTimeSinceStep() > 0.075){
+			if (getIndex() < getNbRunningCycle()-1)
+				setIndex(getIndex() + 1);
+			else 
+				setIndex(0);
+			setTimeSinceStep(getTimeSinceStep() - 0.075);
+		}
+		if (this.getHorizontalVelocity() > 0)
+			return getImageAt(9+getIndex());
+		else if (this.getHorizontalVelocity() < 0) 
+			return getImageAt(9+getNbRunningCycle()+getIndex());
+		else {
+			return leftOrRightSprite(2);
+		}
+	}
+	
+	@Override
+	public boolean canHaveAsIndex(int index) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isValidNbImages(int nbImages) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean collide(Characters other) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void collision(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

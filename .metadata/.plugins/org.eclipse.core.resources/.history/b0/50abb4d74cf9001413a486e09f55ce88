@@ -1,0 +1,71 @@
+package jumpingalien.model;
+
+public class Buzam extends Aliens implements OtherCharacters {
+
+	@Override
+	public double[] getDurationRange() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getTimeSinceStartMovement() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double time) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double getMovementDuration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setMovementDuration(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double getTerminateTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTerminateTime(double time) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean collide(Characters other) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void collision(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

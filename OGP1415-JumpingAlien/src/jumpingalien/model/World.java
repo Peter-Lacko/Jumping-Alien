@@ -188,19 +188,55 @@ public class World {
 	 * 			|	then setPlayerWon(true)
 	 */
 	protected void checkIfWin(Characters mazub){
-		int[] startPos = mazub.getIntPosition();
-		startPos = getTilePosition(startPos[0], startPos[1]);
-		int width = (mazub.getSprite().getWidth() / getTileLength());
-		int height = (mazub.getSprite().getHeight() / getTileLength());
+//		int[] startPos = mazub.getIntPosition();
+//		startPos = getTilePosition(startPos[0], startPos[1]);
+//		int width = (mazub.getSprite().getWidth() / getTileLength());
+//		int height = (mazub.getSprite().getHeight() / getTileLength());
 		int[] target = getTargetTile();
-		for (int i=0 ; i <= width ; i++)
-			if ((startPos[0] +i == target[0]) && ((startPos[1] == target[1])
-					|| (startPos[1] + height == target[1])))
+		int width = mazub.getIntPositionAt(1)+mazub.getSprite().getWidth()-1;
+		int height = mazub.getIntPositionAt(2)+mazub.getSprite().getHeight()-1;
+		boolean looping = true;
+		int i = mazub.getIntPositionAt(1);
+		while (looping){
+			if (i == width)
+				looping = false;
+			int[] pos1 = getTilePosition(i, mazub.getIntPositionAt(2));
+			int[] pos2 = getTilePosition(i, height);
+			if((pos1[0] == target[0]) && (pos1[1] == target[1])){
 				setPlayerWon(true);
-		for (int i=1 ; i <= height -1 ; i++)
-			if ((startPos[1] +i == target[1]) && ((startPos[0] == target[0])
-					|| (startPos[0] + width == target[0])))
+				break;
+			}
+			if((pos2[0] == target[0]) && (pos2[1] == target[1])){
 				setPlayerWon(true);
+				break;
+			}
+			i = Math.min(width, i+getTileLength());
+		}
+		looping = true;
+		i = mazub.getIntPositionAt(2);
+		while (looping){
+			if (i == height)
+				looping = false;
+			int[] pos1 = getTilePosition(mazub.getIntPositionAt(1), i);
+			int[] pos2 = getTilePosition(width, i);
+			if((pos1[0] == target[0]) && (pos1[1] == target[1])){
+				setPlayerWon(true);
+				break;
+			}
+			if((pos2[0] == target[0]) && (pos2[1] == target[1])){
+				setPlayerWon(true);
+				break;
+			}
+			i = Math.min(height, i+getTileLength());
+		}
+//		for (int i=0 ; i <= width ; i++)
+//			if ((startPos[0] +i == target[0]) && ((startPos[1] == target[1])
+//					|| (startPos[1] + height == target[1])))
+//				setPlayerWon(true);
+//		for (int i=1 ; i <= height -1 ; i++)
+//			if ((startPos[1] +i == target[1]) && ((startPos[0] == target[0])
+//					|| (startPos[0] + width == target[0])))
+//				setPlayerWon(true);
 			
 	}
 ////		Position mazubPosition = mazub.getPositionValue().toScale(Scale.TILE);
@@ -534,16 +570,8 @@ public class World {
 			throw new IllegalArgumentException();
 		for (Characters object: getAllObjects()){
 			object.advanceTime(duration);
-//			if (hasAsObject(object)){
-//				if (object.getIntPositionAt(1) <= getWorldSize()[0]/2)
-//					addAsLeftObject(object);
-//				else
-//					removeAsLeftObject(object);
-//				if ((object.getIntPositionAt(1) + object.getSize()[0] - 1) >= getWorldSize()[0]/2)
-//					addAsRightObject(object);
-//				else
-//					removeAsRightObject(object);
-//			}
+			if (! canHaveAsObject(object))
+				object.terminate();
 		}
 	}
 	
@@ -930,7 +958,7 @@ public class World {
 //		Set<Characters> result = new HashSet<Characters>();
 //		for (Characters object : this.getAllObjects()){
 //			//why doesn't instanceof work?
-//			if (object.getClass() == type)
+//			if (object instanceof type)
 //				result.add(object);
 //		}
 //		return result;

@@ -1,0 +1,130 @@
+package jumpingalien.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import be.kuleuven.cs.som.annotate.*;
+
+public class School {
+
+	public School(){
+	}
+	
+	/**
+	 * 
+	 * @param slime
+	 * @effect	...
+	 * 			| slimes.add(slime)
+	 */
+	public void addAsSlime(Slime slime){
+		slimes.add(slime);
+	}
+	
+	/**
+	 * 
+	 * @param slime
+	 * @effect	...
+	 * 			| if this.getIndexOfObject(slime) == -1
+	 * 			|	this.removeAsSlimeAt(this.getIndexOfObject(slime))
+	 */
+	public void removeAsSlime(Slime slime){
+		if (this.getIndexOfObject(slime) == -1)
+			this.removeAsSlimeAt(this.getIndexOfObject(slime));
+	}
+	
+	/**
+	 * 
+	 * @param index
+	 * @effect	...
+	 * 			| slimes.remove(index)
+	 */
+	public void removeAsSlimeAt(int index){
+		slimes.remove(index);
+	}
+	
+	/**
+	 * A getter method for the list slimes
+	 */
+	@Basic
+	public List<Slime> getSlimes(){
+		return this.slimes;
+	}
+	
+	/**
+	 * 
+	 * @param slime
+	 * @return	...
+	 * 			| for character blob in slimes
+	 * 			|	if blob == slime
+	 * 			|		return index
+	 * 			|	index ++
+	 * 			| return -1
+	 * @throws IllegalArgumentException
+	 * 			| if not hasAsSlime(slime)
+	 * 			|	throw new IllegalArgumentException()
+	 */
+	public int getIndexOfObject(Slime slime) throws IllegalArgumentException{
+		if (! hasAsSlime(slime))
+			throw new IllegalArgumentException();
+		int index = 0;
+		for (Characters blob : slimes){
+			if (blob == slime)
+				return index;
+			index ++;
+		}
+		return -1;
+	}
+	
+	/**
+	 * @param slime
+	 * @return	...
+	 * 			| return slimes.contains(slime)
+	 */
+	private boolean hasAsSlime(Slime slime) {
+		return slimes.contains(slime);
+	}
+
+	/**
+	 * A list of Slime characters
+	 */
+	private List<Slime> slimes = new ArrayList<Slime>();
+	
+	/**
+	 * @return	...
+	 * 			| return slimes.size()
+	 */
+	public int getNbSlimes(){
+		return slimes.size();
+	}
+	
+	/**
+	 * 
+	 * @param slime
+	 * @param damage
+	 * @throws IllegalArgumentException
+	 * 			|(! hasAsSlime(slime))
+	 * @post	|for each character in getSlimes(), !slime
+	 * 			|	(new character).getHitPoints() == character.getHitPoints()-damage
+	 */
+	public void damageAllSlimesBut(Slime slime, int damage) throws IllegalArgumentException{
+		if (! hasAsSlime(slime))
+			throw new IllegalArgumentException();
+		for (Slime character : getSlimes())
+			if (character != slime)
+				character.damage(1);
+	}
+	
+    /**
+     * Check whether this School is already terminated.
+     */
+    @Basic @Raw
+    public boolean isTerminated() {
+        return this.isTerminated;
+    }
+	
+    /**
+     * A boolean stating whether the School is terminated
+     */
+    private boolean isTerminated = false;
+    
+}

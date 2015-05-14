@@ -97,6 +97,19 @@ public class School {
 		return slimes.size();
 	}
 	
+	/**
+	 * 
+	 * @param slime
+	 * @param damage
+	 * @post	|for each character in getSlimes(), !slime
+	 * 			|	(new character).getHitPoints() == character.getHitPoints()-damage
+	 */
+	public void damageAllSlimesBut(Slime slime, int damage) throws IllegalArgumentException{
+		for (Slime character : getSlimes())
+			if (character != slime)
+				character.damage(damage);
+	}
+	
     /**
      * Check whether this School is already terminated.
      */

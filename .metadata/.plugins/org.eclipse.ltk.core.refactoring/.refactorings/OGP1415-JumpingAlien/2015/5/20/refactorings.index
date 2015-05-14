@@ -1,0 +1,26 @@
+1431428762497	Rename local variable 'newPosition'
+1431429101367	Rename local variable 'newPosition'
+1431429108945	Rename local variable 'newPosition'
+1431429116518	Rename local variable 'newPosition'
+1431429204180	Rename local variable 'newPosition'
+1431429211258	Rename local variable 'newPosition'
+1431429218365	Rename local variable 'newPosition'
+1431429224901	Rename local variable 'newPosition'
+1431432381725	Rename method 'determineDoubleDirections'
+1431434004316	Rename local variable 'newPosition'
+1431434011840	Rename local variable 'newPosition'
+1431445471312	Delete element
+1431445480781	Delete element
+1431448745861	Rename type 'OtherCharacters'
+1431455615307	Delete element
+1431455661694	Move compilation unit
+1431462408427	Rename local variable 'terminateTime'
+1431462421305	Rename local variable 'timeSinceStartMovement'
+1431462428332	Rename local variable 'movementDuration'
+1431506344586	Delete element
+1431543485106	Rename method 'canHaveAsHitpoints'
+1431544562051	Rename local variable 'hitpoints'
+1431551339394	Rename local variable 'a'
+1431553094122	Rename field 'falling'
+1431557889928	Rename method 'canHaveAsNewPosition'
+1431592804634	Rename local variable 'timeSinceEnvironmentalDamage'

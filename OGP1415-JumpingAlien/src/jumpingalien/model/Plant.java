@@ -3,30 +3,36 @@ package jumpingalien.model;
 import be.kuleuven.cs.som.annotate.Basic;
 import jumpingalien.util.Sprite;
 
-public class Plant extends OtherCharacters {
+public class Plant extends Characters implements OtherCharacters {
 
 	public Plant(int x_pos, int y_pos, Sprite[] sprites)
 			throws IllegalArgumentException {
 		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0,1);
-		setMovementDuration(0.5);
 		setMovingRight(true);
+		durationRange = new double[] {0.5,0.5};
+	}
+	
+	@Override
+	public void advanceTimeLong(double duration){
+		super.advanceTimeLong(duration);
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+			}
+			else{
+				selectMovements();
+			}
+		}
+		else{
+			this.setTerminateTime(getTerminateTime()+duration);
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				this.getWorld().removeAsObject(this);
+		}
 	}
 
-	/**
-	 * 
-	 * @param duration
-	 * @effect	...
-	 * 			| if isMovinLeft()
-	 * 			|	then this.setHorizontalVelocity(-0.5)
-	 * 			| if isMovingRight
-	 * 			|	then this.setHorizontalVelocity(0.5)
-	 */
 	@Override
-	protected void computeNewHorizontalVelocityAfter(double duration) {
-		 if (isMovingLeft())
-			this.setHorizontalVelocity(-0.5);
-		 if (isMovingRight())
-			this.setHorizontalVelocity(0.5);
+	public void computeNewHorizontalVelocityAfter(double duration) {
+		this.setHorizontalVelocity(getInitHorizontalVelocity());
 	}
 	
 	/**
@@ -41,70 +47,33 @@ public class Plant extends OtherCharacters {
 	 */
 	@Override
 	public double calculateNewVerticalPositionAfter(double duration){
-		if (! isTerminated()){		
-			return this.getPositionAt(2);
-		}
-		else
-			return 0.0;
+		return this.getPositionAt(2);
 	}
 	
 	/**
-	 * A getter method for the variable lastDirection
+	 * A getter method for the variable durationRange
 	 */
-	@Basic
-	public MovementDirection getLastDirection() {
-		return lastDirection;
+	@Basic @Override
+	public double[] getDurationRange() {
+		return durationRange.clone();
 	}
+	
+	/**
+	 * A variable containing the range of the movement durations of the characters
+	 */
+	public final double[] durationRange;
 
-	/**
-	 * A setter method for the variable lastDirection
-	 */
-	@Basic
-	public void setLastDirection(MovementDirection lastDirection) {
-		this.lastDirection = lastDirection;
-	}
-	
-	/**
-	 * A boolean stating the last movement direction of the plant
-	 */
-	public MovementDirection lastDirection = MovementDirection.RIGHT;
-	
-	/**
-	 * @effect	...
-	 * 			| if getLastDirection() == MovementDirection.RIGHT
-	 * 			|	then setMovingLeft(true)
-	 * 			|		setLastDirection(MovementDirection.LEFT)
-	 * 			|		setHorizontalVelocity(-getInitHorizontalVelocity())
-	 * 			| else
-	 * 			|	then setLastDirection(MovementDirection.RIGHT)
-	 * 			|		setLastDirection(MovementDirection.RIGHT)
-	 * 			|		setHorizontalVelocity(getInitHorizontalVelocity())
-	 */
 	@Override
-	public void startMove() {
-		if (getLastDirection() == MovementDirection.RIGHT){
-			setMovingLeft(true);
-			setLastDirection(MovementDirection.LEFT);
-			setHorizontalVelocity(-getInitHorizontalVelocity());
+	public void selectMovements(){
+		setTimeSinceStartMovement(getTimeSinceStartMovement() - getMovementDuration());
+		if (isMovingRight()){
+			endMove("right");
+			startMove("left");
 		}
-		else{
-			setLastDirection(MovementDirection.RIGHT);
-			setMovingRight(true);
-			setHorizontalVelocity(getInitHorizontalVelocity());
+		else if (isMovingLeft()){
+			endMove("left");
+			startMove("right");
 		}
-	}
-
-	/**
-	 * @effect	...
-	 * 			|setTimeSinceStartMovement(0.0)
-	 * 			|setMovingRight(false)
-	 * 			|setMovingLeft(false)
-	 */
-	@Override
-	public void endMove() {
-		setTimeSinceStartMovement(0.0);
-		setMovingRight(false);
-		setMovingLeft(false);
 	}
 
 	/**
@@ -114,8 +83,8 @@ public class Plant extends OtherCharacters {
 	 * 			| this.setinitVerticalVelocity(0.0);
 	 */
 	@Override
-	protected void computeNewVerticalVelocityAfter(double duration) {
-		this.setinitVerticalVelocity(0.0);
+	public void computeNewVerticalVelocityAfter(double duration) {
+		this.setVerticalVelocity(getInitVerticalVelocity());
 	}
 
 	@Override
@@ -124,7 +93,7 @@ public class Plant extends OtherCharacters {
 
 
 	@Override
-	public boolean isInAir() {
+	public boolean isFalling() {
 		return false;
 	}
 
@@ -139,14 +108,48 @@ public class Plant extends OtherCharacters {
 	 * 			|	then other.eat(this)
 	 */
 	@Override
-	public void collision(Characters other, boolean isBelow) {
+	public void collision(Characters other) {
 		if (other instanceof Mazub){
 			if (! this.isTerminated())
 				((Mazub) other).eat(this);
-//			this.terminate();
 		}
+		else if ((other instanceof Plant) || (other instanceof Shark)){}
+		else
+			other.collision(this);
 	}
 
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if (other instanceof Mazub)
+			collision(other);
+		else if ((other instanceof Plant) || (other instanceof Shark) || (other instanceof Slime)){}
+		else
+			other.collisionNoDamageTo(this);
+	}
+	
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (other instanceof Mazub)
+			collision(other);
+		else if ((other instanceof Plant) || (other instanceof Shark) || (other instanceof Slime)){}
+		else
+			other.collisionNoDamageFrom(this);
+	}
+	
+	@Override
+	public boolean collide(Characters other){
+		if (other instanceof Plant)
+			return false;
+		else if (other instanceof Slime)
+			return false;
+		else if (other instanceof Shark)
+			return false;
+		else if (other instanceof Mazub)
+			return false;
+		else
+			return other.collide(this);
+	}
+	
 	@Override
 	public void environmentDamage(double duration) {		
 	}
@@ -169,9 +172,52 @@ public class Plant extends OtherCharacters {
 	}
 
 	@Override
-	public void checkInAir() {
-		// TODO Auto-generated method stub
-		
+	public boolean checkFalling(){
+		return false;
+	}
+
+	@Override
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double time) {
+		timeSinceStartMovement = time;
+	}
+	
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	private double timeSinceStartMovement = 0.0;
+
+	@Override
+	public double getMovementDuration() {
+		return 0.5;
+	}
+
+	@Override
+	public void setMovementDuration(double movementDuration) {
+	}
+	
+	@Override
+	public double getTerminateTime() {
+		return terminateTime;
+	}
+
+	@Override
+	public void setTerminateTime(double time) {
+		terminateTime = time;
+	}
+	
+	/**
+	 * A double containing the terminate time
+	 */
+	private double terminateTime = 0.0;
+
+	@Override
+	public double getDurationRangeValueAt(int index) {
+		return 0.5;
 	}
 
 }

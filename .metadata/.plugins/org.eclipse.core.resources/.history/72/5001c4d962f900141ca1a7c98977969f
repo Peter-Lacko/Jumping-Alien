@@ -1,0 +1,129 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.Basic;
+import jumpingalien.util.Sprite;
+
+public class Buzam extends Aliens implements OtherCharacters {
+
+	public Buzam(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 0.9, 3.0, 1.0, 8.0,500);
+		durationRange = new double[] {0.0,0.0};
+	}
+
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic @Override
+	public double[] getDurationRange() {
+		return durationRange;
+	}
+
+	/**
+	 * A variable containing the range of the movement durations of the characters
+	 */
+	public final double[] durationRange;
+
+	@Override
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double time) {
+		timeSinceStartMovement = time;
+	}
+
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	private double timeSinceStartMovement = 0.0;
+
+	@Override
+	public double getMovementDuration() {
+		return movementDuration;
+	}
+
+	@Override
+	public void setMovementDuration(double duration) {
+		movementDuration = duration;
+	}
+
+	/**
+	 * A double containing the movement duration
+	 */
+	private double movementDuration;
+
+	@Override
+	public double getTerminateTime() {
+		return terminateTime;
+	}
+
+	@Override
+	public void setTerminateTime(double time) {
+		terminateTime = time;
+	}	
+
+	/**
+	 * A double containing the terminate time
+	 */
+	private double terminateTime = 0.0;
+
+	@Override
+	public boolean collide(Characters other) {
+		if (other instanceof Mazub)
+			return true;
+		else if (other instanceof Shark)
+			return true;
+		else if (other instanceof Slime)
+			return true;
+		else if (other instanceof Buzam)
+			return true;
+		else if (other instanceof Plant)
+			return false;
+		else
+			return other.collide(this);
+	}
+
+	/**
+	 * A method to determine what to do when colliding with a character.
+	 * @effect	the other character is colliding with this character
+	 * 			|other.collision(this, isOnTop)
+	 */
+	@Override
+	public void collision(Characters other){
+		if (! isImmune()){
+			if (other instanceof Mazub){
+				if (! ((Mazub)other).isImmune()){
+					other.damage(50);
+					((Mazub)other).startImmune();
+					this.damage(50);				
+				}
+			}
+			else if (other instanceof Shark){
+				other.damage(50);
+				this.damage(50);
+			}
+			else if (other instanceof Slime){
+				other.damage(50);
+				this.damage(50);
+				((Slime)other).getSchool().damageAllSlimesBut(this, 1);
+			}
+		}
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if (other instanceof Mazub)
+			throw new IllegalArgumentException();
+		if (!(other instanceof Mazub))
+			other.collisionNoDamageTo(this);
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (!(other instanceof Mazub))
+			other.collisionNoDamageFrom(this);
+	}
+
+}

@@ -1,0 +1,128 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+import be.kuleuven.cs.som.annotate.*;
+
+
+public class Mazub extends Aliens {
+
+	/**
+	 * A constructor for the class Mazub.
+	 * @param x_pos
+	 * 			the starting x position
+	 * @param y_pos
+	 * 			the starting y position
+	 * @param sprites
+	 * 			an array of sprites to display Mazub
+	 * @throws IllegalArgumentException
+	 * 			the given array of sprites has an invalid length
+	 * 			|(! isValidNbImages(sprites.length))
+	 */
+	public Mazub(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 0.9, 3.0, 1.0, 8.0,100);
+	}
+
+	/**
+	 * A method to calculate the new position and velocity after a given duration of time. It also 
+	 * calculates the time since the previous frame of running animation and time since previous stop.
+	 * finally, it determines the correct sprite for the character.
+	 * @param duration
+	 * 			The duration of time that passes.
+	 * @effect	if the character Mazub is terminated, destroy the link between it and the world.
+	 * 			|if (isTerminated() && getWorld() != null)
+	 * 			|	then getWorld().removeAsObject(this)
+	 * @effect the next cases only happen when Mazub is not terminated
+	 * 			|if (! this.isTerminated())
+	 * @effect determines whether the character is moving in two directions (ie both direction keys are
+	 * 			pushed) and what actions should be taken.
+	 * 			|determineDoubleDirections()
+	 * @effect determines if the character can stand up
+	 * 			|if (isEndDuck() && canEndDuck() && canEndDuckWithoutMove())
+	 * 			|	then finishDuck()
+	 * @effect computes the new horizontal position and velocity after the given duration.
+	 * 			| computeHorizontalMovement()
+	 * @effect computes the new vertical position and velocity after the given duration.
+	 * 			| computeVerticalMovement()
+	 * @post The new sprite is calculated with the character's current values
+	 * 			| new.getSprite() == this.getCurrentSprite()
+	 * @effect	if the character isn't moving, the duration is added to the timer counting the time since
+	 * 			the character stopped.
+	 * 			|if (movingInTwoDirections() || ((! isMovingLeft()) && (! isMovingRight())))
+	 * 			|	this.setTimeSinceEndMove(this.getTimeSinceEndMove() + duration)
+	 * 			otherwise, the duration is added to the timer counting the time since the previous frame
+	 * 			of running animation
+	 * 			|else
+	 * 			|	this.setTimeSinceStep(this.getTimeSinceStep() + duration)
+	 * @effect	if the character hasn't moved in the last second, this fact is then registered in the new 
+	 * 			character's variable.
+	 * 			|if (this.getTimeSinceEndMove() > 1.0)
+	 * 			|	this.setHasMovedIn((MovementDirection.NONE)
+	 * @effect	check if the mazub character has won yet
+	 * 			|getWorld().checkIfWin(this);
+	 * @effect	the mazub character is dealt environment damage as needed
+	 * 			|environmentDamage(duration);
+	 * @effect	the character Mazub's immune status is updated
+	 * 			|immune(duration)
+	 * @effect	if Mazub has no more hitpoints, it is dead.
+	 * 			|if (getHitPoints() == 0)
+	 * 			|	then terminate()
+	 * @throws IllegalArgumentException
+	 * 			The given duration is an invalid duration of time.
+	 * 			| ((duration < 0.0) || (duration >= 0.2))
+	 */
+	@Override
+	public void advanceTimeLong (double duration) throws IllegalArgumentException {
+		super.advanceTimeLong(duration);
+		if (! isTerminated()){
+			this.determineDirection();
+			if (isEndDuck())
+				if (canEndDuck() && canEndDuckWithoutMove())
+					finishDuck();
+			if (isMovingLeft() || isMovingRight())
+				setTimeSinceStep(getTimeSinceStep() + duration);
+			else
+				setTimeSinceEndMove(getTimeSinceEndMove() + duration);
+			if (this.getTimeSinceEndMove() > 1.0)
+				this.sethasMovedIn(MovementDirection.NONE);
+			this.getWorld().checkIfWin(this);
+			this.immune(duration);
+		}
+		else
+			getWorld().removeAsObject(this);
+	}
+
+	@Override
+	public boolean collide(Characters other){
+		if (other instanceof Mazub)
+			return true;
+		else
+			return other.collide(this);
+	}
+
+	/**
+	 * A method to determine what to do when colliding with a character.
+	 * @effect	the other character is colliding with this character
+	 * 			|other.collision(this, isOnTop)
+	 */
+	@Override
+	public void collision(Characters other){
+		if (!(other instanceof Mazub))
+			other.collision(this);
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if (other instanceof Mazub)
+			throw new IllegalArgumentException();
+		if (!(other instanceof Mazub))
+			other.collisionNoDamageTo(this);
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (!(other instanceof Mazub))
+			other.collisionNoDamageFrom(this);
+	}
+}

@@ -1,0 +1,381 @@
+package jumpingalien.part2.tests;
+
+import static jumpingalien.tests.util.TestUtils.doubleArray;
+import static jumpingalien.tests.util.TestUtils.intArray;
+import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+
+import jumpingalien.common.sprites.JumpingAlienSprites;
+import jumpingalien.model.Characters;
+import jumpingalien.model.Mazub;
+import jumpingalien.model.Plant;
+import jumpingalien.model.School;
+import jumpingalien.model.Shark;
+import jumpingalien.model.Slime;
+import jumpingalien.model.World;
+import jumpingalien.part1.facade.Facade;
+import jumpingalien.part1.facade.IFacade;
+import jumpingalien.util.ModelException;
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+public class CharacterTest {
+
+	private static Plant plant1;
+	
+	private static Plant plant2;
+	
+	private static Sprite[] sprites;
+	
+	private static Sprite[] newSprites;
+	
+	private static Sprite[] mazubSprites1;
+	
+	private static Sprite[] mazubSprites2;
+	
+	private static Mazub alien;
+
+	private static Mazub alien2;
+
+	private static Mazub alien3;
+	
+	private static Mazub alien4;
+	
+	private static Mazub alien5;
+
+	private static Mazub alienInAir;
+	
+	private static World worldStandard;
+	
+	private static World worldStandard2;
+
+	private static World worldSmall;
+
+	private static World worldSmall2;
+
+	private static World lavaWorld;
+	
+	private static World waterWorld;
+	
+	private static Slime slime1;
+
+	private static Slime slime2;
+	
+	private static Slime slime3;
+	
+	private static Slime slime4;
+	
+	private static Slime slime5;
+	
+	private static Slime slime6;
+	
+	private static Shark shark;
+	
+	private static Shark shark2;
+
+	private static School school;
+	
+	private static School school2;
+	
+	private static School school3;
+	
+	@Before
+	public void setUpMutableFixture(){
+		worldStandard = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			worldStandard.setGeoFeatureAtWithInt(i, 0, 1);
+			worldStandard.setGeoFeatureAtWithInt(0, i, 1);
+			worldStandard.setGeoFeatureAtWithInt(299, i, 1);
+		}
+		worldStandard2 = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			worldStandard2.setGeoFeatureAtWithInt(i, 0, 1);
+		}
+		worldSmall = new World(70, 3, 8, 210, 560, 0, 0);
+		for (int i = 0; i <= 7 ; i++){
+			worldSmall.setGeoFeatureAtWithInt(0, i, 1);
+			worldSmall.setGeoFeatureAtWithInt(2, i, 1);
+		}
+		worldSmall.setGeoFeatureAtWithInt(1, 0, 1);
+		worldSmall.setGeoFeatureAtWithInt(1, 7, 1);
+		worldSmall.setGeoFeatureAtWithInt(1, 5, 1);
+		worldSmall2 = new World(70, 3, 8, 210, 560, 0, 0);
+		for (int i = 0; i <= 7 ; i++){
+			worldSmall2.setGeoFeatureAtWithInt(0, i, 1);
+			worldSmall2.setGeoFeatureAtWithInt(2, i, 1);
+		}
+		worldSmall2.setGeoFeatureAtWithInt(1, 0, 1);
+		worldSmall2.setGeoFeatureAtWithInt(1, 7, 1);
+		worldSmall2.setGeoFeatureAtWithInt(1, 5, 1);
+		lavaWorld = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			lavaWorld.setGeoFeatureAtWithInt(i, 0, 1);
+			lavaWorld.setGeoFeatureAtWithInt(i, 1, 3);
+		}
+		waterWorld = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			waterWorld.setGeoFeatureAtWithInt(i, 0, 1);
+			waterWorld.setGeoFeatureAtWithInt(i, 1, 2);
+		}
+		school = new School();
+		school2 = new School();
+		school3 = new School();
+		plant1 = new Plant(500, 500,newSprites);
+		plant2 = new Plant(500, 75,newSprites);
+		alien = new Mazub(70, 69, mazubSprites2);
+		alien2 = new Mazub(70, 69, mazubSprites2);
+		alien3 = new Mazub(70, 140, mazubSprites2);
+		alien4 = new Mazub(70, 140, mazubSprites2);
+		alien5 = new Mazub(70, 69, mazubSprites2);
+		alienInAir = new Mazub(70, 100, mazubSprites1);
+		slime1 = new Slime(75,250, newSprites, school);
+		slime2 = new Slime(75,440, newSprites, school);
+		slime3 = new Slime(75,85, newSprites, school2);
+		slime4 = new Slime(75,69, newSprites, school3);
+		slime5 = new Slime(75,440, newSprites, school2);
+		slime6 = new Slime(750,69, newSprites, school2);
+		shark = new Shark(3000,69, newSprites);
+		shark2 = new Shark(3000,79, newSprites);
+		worldStandard.addMazub(alien);
+		worldStandard.addAsObject(plant1);
+		worldStandard.addAsObject(plant2);
+		worldStandard2.addMazub(alienInAir);
+		worldSmall.addMazub(alien2);
+		worldSmall.addAsObject(slime1);
+		worldSmall.addAsObject(slime2);
+		worldSmall2.addMazub(alien3);
+		worldSmall2.addAsObject(slime3);
+		worldSmall2.addAsObject(slime4);
+		worldSmall2.addAsObject(slime5);
+		lavaWorld.addMazub(alien4);
+		waterWorld.addMazub(alien5);
+		waterWorld.addAsObject(slime6);
+		waterWorld.addAsObject(shark);
+		waterWorld.addAsObject(shark2);
+	}
+	
+	@BeforeClass
+	public static void setUpImmutableFixture(){
+		int m = 10;
+		sprites = spriteArrayForSize(10, 10);
+		newSprites = Arrays.copyOfRange(sprites, 0, 2);
+		mazubSprites1 = JumpingAlienSprites.ALIEN_SPRITESET;
+		mazubSprites2 = spriteArrayForSize(66, 92, 10 + 2 * m);
+	}
+	
+	@Test
+	public void testPlant() {
+		for (int i=0 ; i<2 ; i++){
+			plant1.advanceTime(0.1);
+		}
+		assert(plant1.getHorizontalVelocity() == 0.5);
+		assertEquals(505.0, plant1.getPositionAt(1), Util.DEFAULT_EPSILON);
+		assertEquals(500.0, plant1.getPositionAt(2), Util.DEFAULT_EPSILON);
+		for (int i=1 ; i<=9 ; i++){
+			plant1.advanceTime(0.1);
+		}
+		assertEquals(500.0, plant1.getPositionAt(1), Util.DEFAULT_EPSILON);
+		assertEquals(500.0, plant1.getPositionAt(2), Util.DEFAULT_EPSILON);
+//		plant2.advanceTime(0.1);
+//		assert(plant2.getPositionAt(1) == 1023);
+	}
+
+	@Test
+	public void testGetSize(){
+		assertArrayEquals(intArray(70,97), alienInAir.getSize());
+	}
+	
+	@Test
+	public void testJumping(){
+		alien.startJump();
+		alien.advanceTime(0.1);
+		// y = 0.69 + 8*.1 - 10*.5*.1*.1 = 1.44
+		assertEquals(144,alien.getIntPositionAt(2));
+		alien.endJump();
+		alien.advanceTime(0.1);
+		// y = 1.44 -10*.5*.1*.1 = 1.39
+		assertEquals(139,alien.getIntPositionAt(2));
+	}
+	
+	@Test
+	public void testJumpingForward(){
+		alien.startJump();
+		alien.startMove("right");
+		for (int i=0 ; i < 3 ; i++)
+			alien.advanceTime(0.1);
+		// y = 0.69m + 8m/s * 0.3s - 0.5 * 10m/s² * (0.3s)² = 2.64
+		// x = 0.7m + 0.3s * 1m/s + 0.5 * 0.9m/s² * (0.3s)² = 1.0405
+		assertEquals(104.05, alien.getPositionAt(1), Util.DEFAULT_EPSILON);
+//		assertArrayEquals(intArray(104, 264), alien.getIntPosition());
+	}
+	
+	@Test
+	public void testJumpingForwardAndDuck(){
+		alien.startJump();
+		alien.startMove("right");
+		alien.startDuck();
+		for (int i=0 ; i < 3 ; i++)
+			alien.advanceTime(0.1);
+		// y = 0.69m + 8m/s * 0.3s - 0.5 * 10m/s² * (0.3s)² = 2.64
+		// x = 0.7m + 1 * 0.3m/s = 1
+		assertEquals(100, alien.getIntPositionAt(1));
+		assertEquals(264, alien.getIntPositionAt(2));
+	}
+	
+	@Test
+	public void testStopAtLeftEdge(){
+		alien.startMove("left");
+		alien.advanceTime(0.1);
+		assertArrayEquals(intArray(70,69), alien.getIntPosition());
+		for (int i = 0 ; i < 40 ; i++)
+			alien.advanceTime(0.1);
+		// Mazub can run against the wall
+		assertArrayEquals(intArray(70,69), alien.getIntPosition());
+		assertEquals(-3.0, alien.getHorizontalVelocity(), Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void testDuckMaxSpeed(){
+		alien.startMove("right");
+		for (int i = 0; i < 10 ; i++) {
+			alien.advanceTime(0.1);
+		}
+		alien.startDuck();
+		alien.advanceTime(0.1);
+		assertEquals(1.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
+	}
+	
+	@Test 
+	public void testDuckSize(){
+		alienInAir.startDuck();
+		alienInAir.advanceTime(0.1);
+		assertArrayEquals(intArray(68, 70), alienInAir.getSize());
+	}
+	
+//	@Test(expected = IllegalArgumentException.class)
+//	public void testCreatMazub_IllegalCase(){
+//		Mazub badMazub = new Mazub(0, 0, mazubSprites);
+//	}
+	
+//	@Test(expected = ModelException.class)
+//	public void test2CreatMazub(){
+//		IFacade facade = new Facade();
+//		Sprite[] sprites = JumpingAlienSprites.ALIEN_SPRITESET;
+//		Characters alien = facade.createMazub(0, -1, sprites);
+//	}
+	
+	@Test
+	public void testEndMove(){
+		alien.startMove("right");
+		for (int i = 0; i < 10 ; i++) {
+			alien.advanceTime(0.1);
+		}
+		alien.endMove("right");
+		alien.advanceTime(0.1);
+		assertEquals(0.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
+	}
+	
+//	@Test
+//	public void testStopWhenBothDirections(){
+//		alien.startMove("right");
+//		for (int i = 0; i < 10 ; i++) {
+//			alien.advanceTime(0.1);
+//		}
+//		alien.startMove("left");
+//		alien.advanceTime(0.1);
+//		assertEquals(0.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
+//		}
+	
+	@Test
+	public void testLeftWhenBothDirections(){
+		alien.startMove("right");
+		alien.startMove("left");
+		for (int i = 0; i < 30 ; i++) {
+			alien.advanceTime(0.1);
+		}
+		assertEquals(-3.0, alien.getHorizontalVelocity(),Util.DEFAULT_EPSILON);
+		}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testTooBigDt() {
+		alien.advanceTime(0.22);
+	}	
+	
+	@Test
+	public void noJumpInAir(){
+		alienInAir.advanceTime(0.1);
+		alienInAir.startJump();
+		alienInAir.advanceTime(0.1);
+		assertEquals(80.0, alienInAir.getPositionAt(2), Util.DEFAULT_EPSILON);
+	}
+	
+	@Test
+	public void MazubEatsPlant(){
+		alien.startMove("right");
+		for (int i = 0 ; i < 20 ; i++)
+			worldStandard.advanceTime(0.15);
+		assertEquals(150, alien.getHitPoints());
+		assertFalse(worldStandard.hasAsObject(plant2));
+	}
+	
+	@Test
+	public void damageWithSlime(){
+		for (int i = 0 ; i < 5 ; i++)
+			worldSmall.advanceTime(0.1);
+		assertEquals(50, alien2.getHitPoints());
+		assertEquals(50, slime1.getHitPoints());
+		assertEquals(99, slime2.getHitPoints());
+	}
+	
+	@Test
+	public void JumpOnEnemy(){
+		for (int i = 0 ; i < 5 ; i++)
+			worldSmall2.advanceTime(0.1);
+		assertEquals(49, slime3.getHitPoints());
+		assertEquals(100, alien3.getHitPoints());
+	}
+	
+	@Test
+	public void slimesThroughEachOther(){
+		worldSmall2.advanceTime(0.1);
+		worldSmall2.advanceTime(0.1);
+		assert((74 == slime3.getIntPositionAt(1)) || (75 == slime3.getIntPositionAt(1)) 
+				|| (76 == slime3.getIntPositionAt(1)));
+		assert((74 == slime4.getIntPositionAt(1)) || (75 == slime4.getIntPositionAt(1)) 
+				|| (76 == slime4.getIntPositionAt(1)));
+		assertEquals(69, slime4.getIntPositionAt(2));
+		assertEquals(69, slime3.getIntPositionAt(2));
+		assertEquals(school2, slime4.getSchool());
+	}
+	
+	@Test
+	public void lavaHurts(){
+//		lavaWorld.advanceTime(0.1);
+		lavaWorld.advanceTime(0.1);
+		assertEquals(50, alien4.getHitPoints());
+	}
+	
+	@Test
+	public void waterHurts(){
+//		lavaWorld.advanceTime(0.1);
+		waterWorld.advanceTime(0.1);
+		assertEquals(100, alien5.getHitPoints());
+		assertEquals(100, slime6.getHitPoints());
+		assertEquals(100, shark.getHitPoints());
+		waterWorld.advanceTime(0.1);
+		assertEquals(98, alien5.getHitPoints());
+		assertEquals(98, slime6.getHitPoints());
+		assertEquals(100, shark.getHitPoints());
+	}
+	
+	@Test
+	public void sharksNotThroughEachOther(){
+		
+	}
+}

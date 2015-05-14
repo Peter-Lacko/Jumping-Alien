@@ -1,0 +1,719 @@
+package jumpingalien.model;
+
+import java.util.Set;
+
+import jumpingalien.util.Sprite;
+
+public class Buzam implements aliens, OtherCharacters {
+
+	@Override
+	public boolean isTerminated() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setTerminated(boolean isTerminated) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public World getWorld() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setWorld(World world) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int[] getSize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Sprite leftOrRightSprite(int number) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Sprite getCurrentSprite() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Sprite getSprite() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setSprite(Sprite sprite) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean canHaveAsIndex(int index) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setIndex(int number) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int getIndex() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getNbImages() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isValidNbImages(int nbImages) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Sprite getImageAt(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Sprite[] getImages() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasProperSprites(Sprite[] images) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void computeNewHorizontalVelocityAfter(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double computeNewHorizontalVelocityMoving(double duration) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double calculateNewHorizontalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void computeNewVerticalVelocityAfter(double duration)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double calculateNewVerticalPositionAfter(double duration) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean checkFalling() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void advanceTime(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void advanceTimeLong(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double shortDuration(double duration) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isValidHorizontalAcceleration(double acceleration) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double getAbsHorizontalAcceleration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public protected void setHorizontalAcceleration(double a) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double getHorizontalAcceleration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getMaxHorizontalVelocity() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean canHaveAsMaxHorizontalVelocity(double velocity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setMaxHorizontalVelocity(double velocity)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double getInitHorizontalVelocity() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean canHaveAsInitHorizontalVelocity(double velocity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setInitHorizontalVelocity(double velocity) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double getHorizontalVelocity() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public protected void setHorizontalVelocity(double velocity) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean canHaveAsHorizontalVelocity(double velocity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void startMove(String direction) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void endMove(String direction) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isAccelerating() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setAccelerating(boolean flag) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isMovingLeft() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setMovingLeft(boolean flag) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isMovingRight() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setMovingRight(boolean flag) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isFalling() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setFalling(boolean falling) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Double getVerticalVelocity() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean canHaveAsVerticalVelocity(double velocity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public protected void setVerticalVelocity(double velocity)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Double getInitVerticalVelocity() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean canHaveAsInitVerticalVelocity(double velocity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setinitVerticalVelocity(double velocity) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Double getVerticalAcceleration() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isValidVerticalAcceleration(double acceleration) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isJumping() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void endJump() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void startJump() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public MovementDirection getEnumedOrientation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getOrientation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MovementDirection getHasMovedIn() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void sethasMovedIn(MovementDirection direction) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int getNbPosition() throws NullPointerException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public jumpingalien.model.Position getPositionValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getPositionAt(int index)
+			throws ArrayIndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int[] getIntPosition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getIntPositionAt(int index)
+			throws ArrayIndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean canHaveAsNewPosition(double coordinate, int index) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Iterable<Characters> getNearbyCharacters() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isCharacterBlockingUp(double position) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isCharacterBlockingDown(double position) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean collide(Characters other) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double[] getPosition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public protected void setPositionAt(double coordinate, int index)
+			throws ArrayIndexOutOfBoundsException, IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public protected void computeHorizontalMovement(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public protected void computeVerticalMovement(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collision(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public protected void terminate() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public protected void damage(int damage) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean canHaveAsHitpoints(int hitpoints) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getHitPoints() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setHitPoints(int hitPoints) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public GeoFeature environment(int[] position) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getTimeSinceEnvironmentalDamage() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTimeSinceEnvironmentalDamage(
+			double timeSinceEnvironmentalDamage) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean canHaveAsWorld(World world) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isValidCloseCharacter(Characters character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean hasProperCloseCharacters() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Set<Characters> getAllCloseCharacters() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addAsCloseCharacter(Characters character)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void removeAsCloseCharacter(Characters character) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void removeAllCloseCharacters() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean passableTerrainRight(double position) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean passableTerrainLeft(double position) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean passableTerrainUp(double position) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean passableTerrainDown(double position) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void collisionDetectionRight(double position) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionDetectionLeft(double position) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionDetectionUp(double position) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void collisionDetectionDown(double position) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void environmentDamage(double duration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isBadEnvironment() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setBadEnvironment(boolean badEnvironment) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double[] getDurationRange() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void selectMovements() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean getRandomBoolean() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double getTimeSinceStartMovement() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double timeSinceStartMovement) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double getMovementDuration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setMovementDuration(double movementDuration) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public double randomValue(double[] range) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getTerminateTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTerminateTime(double terminateTime) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

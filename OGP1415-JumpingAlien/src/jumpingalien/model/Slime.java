@@ -5,34 +5,46 @@ import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
 
 
-public class Slime extends OtherCharacters {
+public class Slime extends Characters implements OtherCharacters {
 
 	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school)
 			throws IllegalArgumentException {
 		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0,100);
 		this.setSchool(school);
+		durationRange = new double[] {2.0, 6.0};
+	}
+	
+	@Override
+	public void advanceTimeLong(double duration){
+		super.advanceTimeLong(duration);
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+			}
+			else{
+				selectMovements();
+			}
+		}
+		else{
+			this.setTerminateTime(getTerminateTime()+duration);
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				this.getWorld().removeAsObject(this);
+		}
 	}
 	
 	/**
 	 * A getter method for the variable durationRange
 	 */
-	@Basic
-	public double[] getDurationrange() {
-		return durationrange;
+	@Basic @Override
+	public double[] getDurationRange() {
+		return durationRange.clone();
 	}
 
 	/**
-	 * A setter method for the variable durationRange
-	 */
-	public void setDurationrange(double[] durationrange) {
-		this.durationrange = durationrange;
-	}
-	
-	/**
 	 * A variable containing the range of the movement durations of the characters
 	 */
-	public double[] durationrange = {2.0 , 6.0};
-	
+	public final double[] durationRange;
+
 	/**
 	 * A getter method for the variable school
 	 */
@@ -52,155 +64,16 @@ public class Slime extends OtherCharacters {
 			this.school = school;
 		}
 	}
-	
+
 	/**
 	 * A variable containing the School of the slime
 	 */
 	public School school;
 
-//	@Override
-//	protected void computeNewHorizontalPositionAfter(double duration) {
-//		double newPosition;
-//		if (isMovingLeft() || isMovingRight())
-//			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity() + 100*0.5*getHorizontalAcceleration()*duration*duration;
-//		else
-//			newPosition = this.getPositionAt(1);
-//		if (canHaveAsNewPosition(newPosition,1))
-//			this.setPositionAt(newPosition, 1);
-//	}
-//
-//	@Override
-//	protected void computeNewHorizontalVelocityAfter(double duration) {
-//		double newVelocity;
-//		if (isMovingLeft() || isMovingRight()){
-//			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
-//			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
-//			if (isMovingLeft())
-//				newVelocity = -1.0*newVelocity;
-//			this.setHorizontalVelocity(newVelocity);
-//		}
-//	}
-
-	/**
-	 * @effect	...
-	 * 			| setMovementDuration(randomDuration(getDurationrange()))
-	 * 			| if getRandomBoolean()
-	 * 			|	then setMovingLeft(true)
-	 * 			| else
-	 * 			|	then setMovingRight(true)
-	 */
-	@Override
-	public void startMove() {
-		setMovementDuration(randomDuration(getDurationrange()));
-		if (getRandomBoolean())
-			setMovingLeft(true);
-		else
-			setMovingRight(true);
-	}
-
-	/**
-	 * @effect	...
-	 * 			| setTimeSinceStartMovement(0.0);
-	 *			| setMovingRight(false);
-	 *			| setMovingLeft(false);
-	 */
-	@Override
-	public void endMove() {
-		setTimeSinceStartMovement(0.0);
-		setMovingRight(false);
-		setMovingLeft(false);
-	}
-
-	
-	
-	/**
-	 * @return	...
-	 * 			| if not isTerminated()
-	 * 			|	if isInAir()
-	 * 			|		then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 100*0.5*getVerticalAcceleration()*duration*duration
-	 * 			|		return newYPosition
-	 * 			|	else
-	 * 			|		then return this.getPositionAt(2)
-	 * 			| else
-	 * 			|	return 0.0
-	 */
-	@Override
-	public double calculateNewVerticalPositionAfter(double duration){
-		if (! isTerminated()){
-			double newYPosition = 0.0;
-//			if (isInAir()){
-				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
-					100*0.5*getVerticalAcceleration()*duration*duration;
-				return newYPosition;
-//			}
-//			else
-//				return this.getPositionAt(2);
-		}
-		else
-			return 0.0;
-	}
-
-	/**
-	 * @effect	...
-	 * 			| if this.isinair()
-	 * 			|	then setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
-	 */
-	@Override
-	public void computeNewVerticalVelocityAfter(double duration){
-		if (isInAir())
-			setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);		
-	}
-
 	@Override
 	public void startJump() {
 	}
 
-	/**
-	 * if not this.isTerminated()
-	 *	 then for (i = getIntPositionAt(1) until i < getIntPositionAt(1)+getSprite().getWidth()-1 with i++
-	 *		pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2))
-	 *		geo = getWorld().getGeoFeatureAt(pos[0],pos[1])
-	 *		if geo == GeoFeature.GROUND
-	 *			then return false
-	 */
-	public void checkInAir(){
-		if (! isTerminated()){
-			for (int i = getIntPositionAt(1);i<getIntPositionAt(1)+getSprite().getWidth()-1;i++){
-				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
-				GeoFeature geo = getWorld().getGeoFeatureAt(pos[0],pos[1]);
-				if (geo == GeoFeature.GROUND)
-					setInAir(false);
-				else
-					setInAir(true);
-			}
-		}
-	}
-
-//	@Override
-//	public void collision(Characters other) {
-//		if (other instanceof Mazub){
-//			if (! ((Mazub)other).isImmune()){
-//				this.damage(50);
-//				other.damage(50);
-//				((Mazub)other).startImmune();
-//			}
-//			this.endMove();
-//			((Mazub) other).endMove("left");
-//			((Mazub) other).endMove("right");
-//		}
-//		else if (other instanceof Shark){
-//			this.damage(50);
-//			other.damage(50);
-//			this.endMove();
-//			((Shark) other).endMove();
-//		}
-//		else if (other instanceof Slime){
-//			this.changeSchool((Slime)other);
-//		}
-//		else
-//			other.collision(this);
-//	}
-	
 	/**
 	 * @param other
 	 * 			the other character in the collision
@@ -227,36 +100,62 @@ public class Slime extends OtherCharacters {
 	 *  		|	then other.collision(this, isBelow)
 	 */
 	@Override
-	public void collision(Characters other, boolean isBelow) {
+	public void collision(Characters other) {
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){
-				if (! isBelow){
-					other.damage(50);
-					((Mazub)other).startImmune();
-				}
-				this.damage(50);
-				for (Slime slime : this.getSchool().getSlimes()){
-					if (! (slime == this))
-						slime.damage(1);
-				}
+				other.damage(50);
+				((Mazub)other).startImmune();
+				slimeDamage(50);
 			}
-//			this.endMove();
-			((Mazub) other).endMove("left");
-			((Mazub) other).endMove("right");
 		}
 		else if (other instanceof Shark){
-			this.damage(50);
+			slimeDamage(50);
 			other.damage(50);
-			this.endMove();
-			((OtherCharacters) other).endMove();
 		}
 		else if (other instanceof Slime){
 			this.changeSchool((Slime)other);
 		}
+		else if (other instanceof Plant){}
 		else
-			other.collision(this,! isBelow);
+			other.collision(this);
 	}
-	
+
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if ((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime))
+			collision(other);
+		else if (other instanceof Plant){}
+		else
+			other.collisionNoDamageTo(this);
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune()){
+				this.damage(50);
+				getSchool().damageAllSlimesBut(this, 1);
+			}
+		}
+		else if ((other instanceof Shark) || (other instanceof Slime))
+			collision(other);
+		else if (other instanceof Plant){}
+		else
+			other.collisionNoDamageFrom(this);
+	}
+
+	@Override
+	public boolean collide(Characters other){
+		if (other instanceof Mazub)
+			return true;
+		else if (other instanceof Slime)
+			return false;
+		else if (other instanceof Shark)
+			return true;
+		else
+			return other.collide(this);
+	}
+
 	/**
 	 * 
 	 * @param other
@@ -280,24 +179,27 @@ public class Slime extends OtherCharacters {
 	 * 			|		other.setSchool(this.getSchool())
 	 */
 	private void changeSchool(Slime other){
-		if (this.getSchool().getNbSlimes() < other.getSchool().getNbSlimes()){
-			this.getSchool().removeAsSlime(this);
-			for (Characters slime : this.getSchool().getSlimes())
-				slime.damage(-1);
-			for (Characters slime2 : other.getSchool().getSlimes())
-				slime2.damage(1);
-			this.damage(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes());
-			this.setSchool(other.getSchool());
+		if (getSchool() != other.getSchool()){
+			if (this.getSchool().getNbSlimes() < other.getSchool().getNbSlimes()){
+				this.getSchool().removeAsSlime(this);
+				getSchool().damageAllSlimesBut(this, -1);
+				other.getSchool().damageAllSlimesBut(this, 1);
+				this.damage(this.getSchool().getNbSlimes() - other.getSchool().getNbSlimes());
+				this.setSchool(other.getSchool());
+			}
+			else if (this.getSchool().getNbSlimes() > other.getSchool().getNbSlimes()){
+				other.getSchool().removeAsSlime(other);
+				getSchool().damageAllSlimesBut(this, 1);
+				other.getSchool().damageAllSlimesBut(this, -1);
+				other.damage(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes());
+				other.setSchool(getSchool());
+			}
 		}
-		else if (this.getSchool().getNbSlimes() > other.getSchool().getNbSlimes()){
-			other.getSchool().removeAsSlime(other);
-			for (Characters slime : other.getSchool().getSlimes())
-				slime.damage(-1);
-			for (Characters slime2 : this.getSchool().getSlimes())
-				slime2.damage(1);
-			other.damage(other.getSchool().getNbSlimes() - this.getSchool().getNbSlimes());
-			other.setSchool(school);
-		}
+	}
+
+	public void slimeDamage(int damage){
+		damage(damage);
+		getSchool().damageAllSlimesBut(this, 1);
 	}
 	
 	/**
@@ -312,70 +214,43 @@ public class Slime extends OtherCharacters {
 	protected void terminate() {
 		if (! isTerminated()){
 			getWorld().removeAsObject(this);
-//			this.setWorld(null);
 			getSchool().removeAsSlime(this);
 			this.setSchool(null);
 			this.setTerminated(true);
 		}
 	}
-	
-//	@Override
-//	public boolean collisionDetectionHorizontal(double newPosition){
-////		List<Characters> characters = world.getAllObjects();
-//		World world = getWorld();
-//		Iterable<Characters> characters;
-//		if (world.hasAsLeftObject(this) && world.hasAsRightObject(this))
-//			characters = world.getAllObjects();
-//		else if (world.hasAsLeftObject(this))
-//			characters = world.getAllLeftObjects();
-//		else
-//			characters = world.getAllRightObjects();
-//		if (isMovingRight()){
-//			for (Characters character : characters){
-//				if ((character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()) 
-//						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-//						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-//						this.collision(character);
-//						if (character instanceof Slime)
-//							return true;
-//						else
-//							return false;
-//				}
-//			}
-//		}
-//		if (isMovingLeft()){
-//			for (Characters character : characters){
-//				if ((character.getIntPositionAt(1) + character.getSprite().getWidth() == (int)newPosition) 
-//						&& (character.getPositionAt(2) > (this.getPositionAt(2) - character.getSprite().getHeight())) 
-//						&& (character.getPositionAt(2) < this.getPositionAt(2) + this.getSprite().getHeight())){
-//						this.collision(character);
-//						if (character instanceof Slime)
-//							return true;
-//						else
-//							return false;
-//				}
-//			}
-//		}
-//		return true;
-//	}
-	
+
 	/**
-	 * @effect	...
-	 * 			| if (environment(leftBottom) == MAGMA) || (environment(rightBottom) == MAGMA) ||
-	 * 			|	(environment(leftTop) == MAGMA) || (environment(rightTop) == MAGMA)
-	 * 			|	then this.setBadEnvironment(true)
-	 * 			|		if Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0)
-	 *			|			then this.damage(50)
-	 *			| else
-	 *			|	then setBadEnvironment(false)
-	 *			| if this.isBadEnvironment
-	 *			|	then this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration)
-	 *			|		if Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2)
-	 *			|			then setTimeSinceEnvironmentalDamage(0.0)
-	 *			| else
-	 *			| 	then this.setTimeSinceEnvironmentalDamage(0.0)
+	 * A method to determine what damage mazub receives from the environment.
+	 * @effect	if mazub is in lava, it is in a bad environment and receives 50 damage. The timer is 
+	 * 			set correctly.
+	 * 			|for i in 0..getSprite().getWidth()
+	 * 			|	for j in 0..getSprite().getHeight()
+	 * 			|		if (getGeoFeatureAt(getPixelOfTileContaining(getIntPositionAt(1)+i,
+	 * 			|			getIntPositionAt(2)+j)[0], getPixelOfTileContaining(getIntPositionAt(1)+i,
+	 * 			|			getIntPositionAt(2)+j)[1]) == GeoFeature.MAGMA)
+	 * 			|			then {setBadEnvironment(true)
+	 * 			|					if getTimeSinceEnvironmentalDamage() == 0.0
+	 * 			|						then this.damage(50)
+	 * 			|					setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage()+duration)
+	 * 			|					if (getTimeSinceEnvironmentalDamage() >= 0.2))
+	 * 			|						then setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2)
+	 * 			else if mazub is in water, it is in a bad environment and receives 2 damage after the first
+	 * 			0.2 seconds.The timer is set correctly.
+	 * 			|		else if (getGeoFeatureAt(getPixelOfTileContaining(getIntPositionAt(1)+i,
+	 * 			|			getIntPositionAt(2)+j)[0], getPixelOfTileContaining(getIntPositionAt(1)+i,
+	 * 			|			getIntPositionAt(2)+j)[1]) == GeoFeature.WATER)
+	 * 			|		then {setBadEnvironment(true)
+	 * 			|				if getTimeSinceEnvironmentalDamage()+duration >= 0.0
+	 * 			|					then this.damage(2)
+	 * 			|				setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage()+duration)
+	 * 			|				if (getTimeSinceEnvironmentalDamage() >= 0.2))
+	 * 			|					then setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2)
+	 * 			else mazub is not in a badEnvironment. The timer is set correctly.
+	 * 			|		else {setBadEnvironment(false)
+	 * 			|			setTimeSinceEnvironmentalDamage(0.0)}
+	 * 			
 	 */
-	@Override
 	public void environmentDamage(double duration) {
 		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
 		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
@@ -383,33 +258,75 @@ public class Slime extends OtherCharacters {
 		if ((environment(getIntPosition()) == GeoFeature.MAGMA) || (environment(pos) == GeoFeature.MAGMA)
 				|| (environment(pos1) == GeoFeature.MAGMA) || (environment(pos2) == GeoFeature.MAGMA)){
 			this.setBadEnvironment(true);
-			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
-				this.damage(50);
-		} else{
+			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0)){
+				this.slimeDamage(50);
+			}
+		} else if ((environment(getIntPosition()) == GeoFeature.WATER) || (environment(pos) == GeoFeature.WATER)
+				|| (environment(pos1) == GeoFeature.WATER) || (environment(pos2) == GeoFeature.WATER)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage()+duration, 0.2)){
+				this.slimeDamage(2);
+			}
+		}else{
 			this.setBadEnvironment(false);
 		}
 		if (this.isBadEnvironment()){
 			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
 			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
+				//				setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2);
 				setTimeSinceEnvironmentalDamage(0.0);
 		}else{
 			this.setTimeSinceEnvironmentalDamage(0.0);
 		}
 	}
-	
+
+	@Override
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double time) {
+		timeSinceStartMovement = time;
+	}
+
 	/**
-	 * A getter method for the variable badEnvironment
+	 * A double containing the time since the start of a movement
 	 */
-	@Basic
-	public boolean isBadEnvironment() {
-		return badEnvironment;
+	private double timeSinceStartMovement = 0.0;
+	
+	@Override
+	public double getMovementDuration() {
+		return movementDuration;
+	}
+
+	@Override
+	public void setMovementDuration(double duration) {
+		movementDuration = duration;
 	}
 	
 	/**
-	 * A setter method for the variable badEnvironment
+	 * A double containing the movement duration
 	 */
-	@Basic
-	public void setBadEnvironment(boolean badEnvironment) {
-		this.badEnvironment = badEnvironment;
+	private double movementDuration;
+
+	@Override
+	public double getTerminateTime() {
+		return terminateTime;
+	}
+
+	@Override
+	public void setTerminateTime(double time) {
+		terminateTime = time;
+	}
+	
+	/**
+	 * A double containing the terminate time
+	 */
+	private double terminateTime = 0.0;
+
+	@Override
+	public double getDurationRangeValueAt(int index) {
+		return getDurationRange()[index-1];
 	}
 }

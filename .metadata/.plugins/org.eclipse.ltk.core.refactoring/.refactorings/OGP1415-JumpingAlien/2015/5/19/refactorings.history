@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;jumpingalien.model.OtherCharacters.randomDuration(...)&apos; to &apos;randomValue&apos;&#x0D;&#x0A;- Original project: &apos;OGP1415-JumpingAlien&apos;&#x0D;&#x0A;- Original element: &apos;jumpingalien.model.OtherCharacters.randomDuration(...)&apos;&#x0D;&#x0A;- Renamed element: &apos;jumpingalien.model.OtherCharacters.randomValue(...)&apos;&#x0D;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;randomDuration&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;jumpingalien.model{OtherCharacters.java[OtherCharacters~randomDuration~\[D" name="randomValue" references="true" stamp="1431027263030" version="1.0"/>
+</session>

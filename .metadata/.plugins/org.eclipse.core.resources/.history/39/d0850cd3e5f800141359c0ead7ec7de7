@@ -1,0 +1,412 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.Basic;
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+public class Shark extends Characters implements OtherCharacters {
+
+	public Shark(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0, 100);
+		durationRange = new double[] {1.0, 4.0};
+	}
+
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic @Override
+	public double[] getDurationRange() {
+		return durationRange;
+	}
+
+	/**
+	 * A variable containing the range of the movement durations of the characters
+	 */
+	public final double[] durationRange;
+
+	@Override
+	public void advanceTimeLong(double duration){
+		if (! this.isTerminated()){
+			if (checkSubmerged())
+				setSubmerged(true);
+			else
+				setSubmerged(false);
+			if (checkInWater())
+				setInWater(true);
+			else
+				setInWater(false);
+		}
+		super.advanceTimeLong(duration);
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+			}
+			else{
+				selectMovements();
+			}
+		}
+		else{
+			this.setTerminateTime(getTerminateTime()+duration);
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				this.getWorld().removeAsObject(this);
+		}
+	}
+	
+	@Override
+	public void selectMovements(){
+		if(isSubmerged())
+			setVerticalAccelerationWater(randomValue(new double[] {-0.2, 0.2}));
+		else
+			setVerticalAccelerationWater(0.0);
+		if (getMovementsSinceLastJump()==1)
+			endJump();
+		OtherCharacters.super.selectMovements();
+		if (getMovementsSinceLastJump() != 0)
+			setMovementsSinceLastJump((getMovementsSinceLastJump()+1)%5);
+		else
+			if (getRandomBoolean()){
+				startJump();
+				setMovementsSinceLastJump(1);
+			}
+	}
+
+	/**
+	 * @throws	illegalArgumentException.
+	 * 			| ((duration < 0.0) || (duration >= 0.2))
+	 * @effect	...
+	 * 			| if not isTerminated()
+	 * 			|	if isFalling()
+	 * 			|		if (! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity()))
+	 * 			|			then setVerticalVelocity(0.0)
+	 * 			|		else
+	 * 			|			then setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
+	 * 			|	else
+	 * 			|		if isJuming()
+	 * 			|			then setVerticalVelocity(getInitVerticalVelocity())
+	 * 			|		if isRising() || isDiving()
+	 * 			|			setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
+	 * 			|		else
+	 * 			|			setVerticalVelocity(0.0)
+	 */
+	@Override
+	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
+		try{
+			if (isInWater() && ! isJumping())
+				setVerticalVelocity(getVerticalVelocity() + duration*getVerticalAcceleration());
+			else	
+				super.computeNewVerticalVelocityAfter(duration);
+		}
+		catch (IllegalArgumentException exc){
+			throw exc;
+		}
+
+	}
+
+	/**
+	 * A getter method for the variable movementsSinceLastJump
+	 */
+	@Basic
+	public int getMovementsSinceLastJump() {
+		return movementsSinceLastJump;
+	}
+
+	@Override
+	public boolean checkFalling(){
+		if (getWorld() == null)
+			return false;
+		else{
+			int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+			boolean looping = true;
+			int i = getIntPositionAt(1)+1;
+			while (looping){
+				if (i == width)
+					looping = false;
+				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+				if ((getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+						|| (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER))
+					return false;
+				i = Math.min(width, i+getWorld().getTileLength());
+			}
+			if (isCharacterBlockingDown(this.getPositionAt(2)-1))
+				return false;
+		}
+		return true;
+	}
+
+	public boolean checkInWater(){
+		if (getWorld() == null)
+			return false;
+		if (isCharacterBlockingDown(this.getPositionAt(2)-1))
+			return false;
+		int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+		boolean looping = true;
+		int i = getIntPositionAt(1)+1;
+		while (looping){
+			if (i == width)
+				looping = false;
+			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER)
+				return true;
+			i = Math.min(width, i+getWorld().getTileLength());
+		}
+		return false;
+	}
+
+	/**
+	 * A getter method for the boolean isInWater
+	 */
+	@Basic
+	public boolean isInWater() {
+		return isInWater;
+	}
+
+	/**
+	 * A setter method for the boolean isInWater
+	 */
+	@Basic
+	public void setInWater(boolean isInWater) {
+		this.isInWater = isInWater;
+	}
+
+	/**
+	 * A boolean stating whether the shark is in water
+	 */
+	public boolean isInWater = false;
+
+	public boolean checkSubmerged(){
+		if (getWorld() == null)
+			return false;
+		if (isCharacterBlockingUp(this.getPositionAt(2)+getSprite().getHeight()-1))
+			return false;
+		int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+		boolean looping = true;
+		int i = getIntPositionAt(1)+1;
+		while (looping){
+			if (i == width)
+				looping = false;
+			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getSprite().getHeight()-1);
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER)
+				return true;
+			i = Math.min(width, i+getWorld().getTileLength());
+		}
+		return false;
+	}
+
+	/**
+	 * A getter method for the boolean isSubmerged
+	 */
+	@Basic
+	public boolean isSubmerged() {
+		return isSubmerged;
+	}
+
+	/**
+	 * A setter method for the boolean isSubmerged
+	 */
+	@Basic
+	public void setSubmerged(boolean isSubmerged) {
+		this.isSubmerged = isSubmerged;
+	}
+
+	/**
+	 * A boolean stating whether the shark is submerged
+	 */
+	public boolean isSubmerged = false;
+
+	/**
+	 * Return the current vertical acceleration.
+	 */
+	@Override @Basic
+	public Double getVerticalAcceleration() {
+		if (isSubmerged() && isInWater())
+			return getVerticalAccelerationWater();
+		else
+			return super.getVerticalAcceleration();
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @post	|new.VERTICAL_ACCELERATION_WATER = value
+	 */
+	protected void setVerticalAccelerationWater(double value){
+		VERTICAL_ACCELERATION_WATER = value;
+	}
+
+	public double getVerticalAccelerationWater(){
+		return VERTICAL_ACCELERATION_WATER;
+	}
+
+	private double VERTICAL_ACCELERATION_WATER = 0.0;
+
+	/**
+	 * A setter method for the variable movementsSinceLast
+	 */
+	@Basic
+	public void setMovementsSinceLastJump(int movementsSinceLastJump) {
+		this.movementsSinceLastJump = movementsSinceLastJump;
+	}
+
+	/**
+	 * A variable containing the number of movements since the last jump
+	 */
+	public int movementsSinceLastJump = 0;
+
+	/**
+	 * @param other
+	 * 			the other character in the collision
+	 * @param isBelow
+	 * 			a boolean stating whether this is below other
+	 * @effect	...
+	 * 			| if (other instanceof Mazub) 
+	 * 			|	if (not other.isimmune()) 
+	 * 			|		if (not this.isTerminated())
+	 * 			|			then other.damage(50)
+	 * 			|				other.startImmune()
+	 * 			|		then this.damage(50)
+	 * 			|	then this.endMove()
+	 * 			|		other.endMove("left")
+	 *  		|		other.endMove("right")
+	 *  		| else if (other instanceof Shark)
+	 *  		|	then this.endMove()
+	 *  		|		other.endMove
+	 *  		| else
+	 *  		|	then other.collision(this,not isBelow)
+	 */
+	@Override
+	public void collision(Characters other) {
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune()){
+				other.damage(50);
+				((Mazub)other).startImmune();
+				this.damage(50);
+			}
+		}
+		else if (other instanceof Shark){}
+		else
+			other.collision(this);
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if ((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime))
+			collision(other);
+		else if (other instanceof Plant){}
+		else
+			other.collisionNoDamageTo(this);
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune())
+				this.damage(50);
+		}
+		else if ((other instanceof Shark) || (other instanceof Slime))
+			collision(other);
+		else if (other instanceof Plant){}
+		else
+			other.collisionNoDamageFrom(this);
+	}
+
+	@Override
+	public boolean collide(Characters other){
+		if (other instanceof Mazub)
+			return true;
+		else if (other instanceof Shark)
+			return true;
+		else
+			return other.collide(this);
+	}
+
+	/**
+	 * @effect	...
+	 * 			| if (environment(leftBottom) == MAGMA) || (environment(rightBottom) == MAGMA) ||
+	 * 			|	(environment(leftTop) == MAGMA) || (environment(rightTop) == MAGMA)
+	 * 			|	then this.setBadEnvironment(true)
+	 * 			|		if Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0)
+	 *			|			then this.damage(50)
+	 *			| else if (environment(leftBottom) == AIR) || (environment(rightBottom) == AIR) ||
+	 * 			|	(environment(leftTop) == AIR) || (environment(rightTop) == AIR)
+	 * 			|	then this.setBadEnvironment(true)
+	 * 			|		if Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0)
+	 *			|			then this.damage(6)
+	 *			| else
+	 *			|	then setBadEnvironment(false)
+	 *			| if this.isBadEnvironment
+	 *			|	then this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration)
+	 *			|		if Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2)
+	 *			|			then setTimeSinceEnvironmentalDamage(0.0)
+	 *			| else
+	 *			| 	then this.setTimeSinceEnvironmentalDamage(0.0)
+	 */
+	@Override
+	public void environmentDamage(double duration) {
+		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
+		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
+		int[] pos2 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)+getSprite().getHeight()};
+		if ((environment(getIntPosition()) == GeoFeature.MAGMA) || (environment(pos) == GeoFeature.MAGMA)
+				|| (environment(pos1) == GeoFeature.MAGMA) || (environment(pos2) == GeoFeature.MAGMA)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
+				this.damage(50);
+		} else if ((environment(getIntPosition()) == GeoFeature.AIR) || (environment(pos) == GeoFeature.AIR)
+				|| (environment(pos1) == GeoFeature.AIR) || (environment(pos2) == GeoFeature.AIR)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage()+duration, 0.2))
+				this.damage(6);
+		}else{
+			this.setBadEnvironment(false);
+		}
+		if (this.isBadEnvironment()){
+			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
+				setTimeSinceEnvironmentalDamage(0.0);
+		}else{
+			this.setTimeSinceEnvironmentalDamage(0.0);
+		}
+	}
+
+	@Override
+	public double getTimeSinceStartMovement() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double timeSinceStartMovement) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	private double timeSinceStartMovement = 0.0;
+
+	@Override
+	public double getMovementDuration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setMovementDuration(double movementDuration) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getTerminateTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTerminateTime(double terminateTime) {
+		// TODO Auto-generated method stub
+		
+	}	
+
+}
