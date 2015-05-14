@@ -1,0 +1,294 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+import java.util.Random;
+
+import be.kuleuven.cs.som.annotate.Basic;
+
+/**
+ * @invar hasProperDurationRange()
+ * @invar canHaveAsTimeSinceStartMovement(getTimeSinceStartMovement())
+ * @invar canHaveAsMovementDuration(getMovementDuration())
+ * @invar isValidTerminateTime(getTerminateTime())
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+public interface OtherCharacters {
+
+	/**
+	 * 
+	 * @param number
+	 * @return	|result == (number == 2)
+	 */
+	public default boolean isValidNbDurationRange(int number){
+		return (number == 2);
+	}
+
+	/**
+	 * 
+	 * @return	|if (getDurationRange() != null)
+	 * 			|	then result == getDurationRange().length
+	 * 			|else result == 0
+	 */
+	public default int getNbDurationRange(){
+		if (getDurationRange() != null)
+			return getDurationRange().length;
+		return 0;
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @return	|result == (value >= 0.0)
+	 */
+	protected default boolean canHaveAsDurationRangeValue(double value){
+		return(Util.fuzzyGreaterThanOrEqualTo(value, 0.0));
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @param index
+	 * @return	|if (! canHaveAsDurationRangeValue(value))
+	 * 			|	then result == false
+	 * 			|else if index == 1
+	 * 			|		then result == (getDurationRangeValueAt(2)>= value)
+	 * 			|	else if index == 2
+	 * 			|		then result == (value>= getDurationRangeValueAt(1))
+	 * 			|	else result == false
+	 */
+	public default boolean canHaveAsDurationRangeValueAt(double value, int index){
+		if (! canHaveAsDurationRangeValue(value))
+			return false;
+		else{
+			if (index == 1){
+				if (Util.fuzzyGreaterThanOrEqualTo(getDurationRangeValueAt(2), value))
+					return true;
+				else 
+					return false;
+			}
+			else if (index == 2){
+				if (Util.fuzzyGreaterThanOrEqualTo(value, getDurationRangeValueAt(1)))
+					return true;
+				else 
+					return false;
+			}
+			else
+				return false;
+		}
+	}
+
+	/**
+	 * 
+	 * @return	|if ! isValidNbDurationRange(getNbDurationRange())
+	 * 			|	then result == false
+	 * 			|else for i in 1..getNbDurationRange()
+	 * 			|	if ! canHaveAsDurationRangeValueAt(getDurationRangeValueAt(i),i)
+	 * 			|		then result == false
+	 * 			|	result == true	
+	 */
+	public default boolean hasProperDurationRange(){
+		if (! isValidNbDurationRange(getNbDurationRange()))
+			return false;
+		else{
+			for(int i=1; i<=getNbDurationRange(); i++)
+				if(! canHaveAsDurationRangeValueAt(getDurationRangeValueAt(i),i))
+					return false;
+			return true;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param index
+	 * @return result == getDurationRange()[index-1]
+	 */
+	public abstract double getDurationRangeValueAt(int index);
+	
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic
+	public abstract double[] getDurationRange();
+
+	/**
+	 * @post	|isMovingRight() == true || false
+	 * 			|isMovingLeft() == true||false
+	 * @post	|new.getMovementDuration() == randomValue(getDurationRange())
+	 * @post	|new.getTimeSinceStartMovement() == getTimeSinceStartMovement() - getMovementDuration()
+	 */
+	public default void selectMovements(){
+		setTimeSinceStartMovement(getTimeSinceStartMovement() - getMovementDuration());
+		if (isMovingRight())
+			endMove("right");
+		else if (isMovingLeft())
+			endMove("left");
+		setMovementDuration(randomValue(getDurationRange()));
+		if (getRandomBoolean())
+			startMove("left");
+		else
+			startMove("right");
+	}
+
+	@Basic
+	public abstract boolean isMovingRight();
+
+	@Basic
+	public abstract boolean isMovingLeft();
+
+	/**
+	 * 
+	 * @param Direction
+	 * @post --
+	 */
+	public abstract void startMove(String Direction);
+
+	/**
+	 * 
+	 * @param Direction
+	 * @post --
+	 */
+	public abstract void endMove(String Direction);
+
+	/**
+	 * 
+	 * @return	...
+	 * 			| Random random = new Random()
+	 * 			| return random.nextBoolean()
+	 */
+	public default boolean getRandomBoolean() {
+		Random random = new Random();
+		return random.nextBoolean();
+	}
+
+	/**
+	 * 
+	 * @param time
+	 * @return	|result == (isPossibleTimeSinceStartMovement(time) && matchesMovementDurationTimeSinceStartMovement(
+	 *			|	getMovementDuration(), time))
+	 */
+	public default boolean canHaveAsTimeSinceStartMovement(double time){
+		return (isPossibleTimeSinceStartMovement(time) && matchesMovementDurationTimeSinceStartMovement(
+				getMovementDuration(), time));
+	}
+
+	/**
+	 * 
+	 * @param time
+	 * @return	|result == (time >= 0)
+	 */
+	public default boolean isPossibleTimeSinceStartMovement(double time){
+		return(Util.fuzzyGreaterThanOrEqualTo(time, 0.0));
+	}
+
+	/**
+	 * A getter method for the variable timeSinceStartMovement
+	 */
+	@Basic
+	public abstract double getTimeSinceStartMovement();
+
+	/**
+	 * A setter method for the variable timeSinceStartMovement
+	 * @post	|new.getTimeSinceStartMovement() == time
+	 */
+	public abstract void setTimeSinceStartMovement(double time);
+
+	/**
+	 * 
+	 * @param duration
+	 * @return	|result == (isPossibleMovementDuration(duration) && matchesMovementDurationDurationRange(
+	 *			|	duration, getDurationRange()) && matchesMovementDurationTimeSinceStartMovement(
+	 *			|		duration, getTimeSinceStartMovement()))
+	 */
+	public default boolean canHaveAsMovementDuration(double duration){
+		return (isPossibleMovementDuration(duration) && matchesMovementDurationDurationRange(
+				duration, getDurationRange()) && matchesMovementDurationTimeSinceStartMovement(
+						duration, getTimeSinceStartMovement()));
+	}
+
+	/**
+	 * 
+	 * @param duration
+	 * @return	|result == (duration>=0.0)
+	 */
+	public default boolean isPossibleMovementDuration(double duration){
+		return (Util.fuzzyGreaterThanOrEqualTo(duration, 0.0));
+	}
+
+	/**
+	 * 
+	 * @param movementDuration
+	 * @param durationRange
+	 * @return 	| result == ((durationRange[1] >= movementDuration)
+	 * 			|	&& (movementDuration >= durationRange[0]))
+	 */
+	public default boolean matchesMovementDurationDurationRange(double movementDuration, 
+			double[] durationRange){
+		return (Util.fuzzyGreaterThanOrEqualTo(durationRange[1], movementDuration)
+				&& Util.fuzzyGreaterThanOrEqualTo(movementDuration, durationRange[0]));
+	}
+
+	/**
+	 * 
+	 * @param movementDuration
+	 * @param timeSinceStartMovement
+	 * @return	|result == (movementDuration >= timeSinceStartMovement)
+	 */
+	public default boolean matchesMovementDurationTimeSinceStartMovement(double movementDuration,
+			double timeSinceStartMovement){
+		return (Util.fuzzyGreaterThanOrEqualTo(movementDuration, timeSinceStartMovement));
+	}
+
+	/**
+	 * A getter method for the variable movementDuration
+	 */
+	@Basic
+	public abstract double getMovementDuration();
+
+	/**
+	 * A setter method for the variable movementDuration
+	 * @post	|new.getMovementDuration() == duration
+	 * @throws IllegalArgumentException
+	 * 			|! canHaveAsMovementDuration(duration)
+	 */
+	public abstract void setMovementDuration(double duration) throws IllegalArgumentException;
+
+	/**
+	 * 
+	 * @param range
+	 * @return	...
+	 * 			| Random t = new Random()
+	 * 			| return range[0] + (range[1]-range[0])*r.nextDouble()
+	 */
+	public default double randomValue(double[] range){
+		Random r = new Random();
+		double value = range[0] + (range[1]-range[0])*r.nextDouble();
+		return value;
+	}
+
+	/**
+	 * 
+	 * @param time
+	 * @return	|result == (time >= 0.0)
+	 */
+	public default boolean isValidTerminateTime(double time){
+		return (Util.fuzzyGreaterThanOrEqualTo(time, 0.0));
+	}
+
+	/**
+	 * A getter method for the variable terminate time
+	 */
+	@Basic
+	public abstract double getTerminateTime();
+
+	/**
+	 * A setter method for the variable terminate time
+	 * @post	|new.getTerminateTime() == time
+	 */
+	public abstract void setTerminateTime(double time);
+
+}

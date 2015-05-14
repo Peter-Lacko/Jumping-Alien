@@ -1,0 +1,564 @@
+package jumpingalien.model;
+
+import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Immutable;
+import be.kuleuven.cs.som.annotate.Raw;
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+public class Shark extends Characters implements OtherCharacters {
+
+	/**
+	 * initialize a shark with a given x_pos, y_pos, and sprites.
+	 * @param x_pos
+	 * 			the initial x-coordinate for this character.
+	 * @param y_pos
+	 * 			the initial y-coordinate for this character.
+	 * @param sprites
+	 * 			the array of sprites used to display the character.
+	 * @post	This character starts at the given position.
+	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
+	 * @post	This character's sprite set is equal to the given one.
+	 * 			| new.getImages().equals(sprites)
+	 * @post	this character's image length is equal to the length of the given sprite array
+	 * 			|new.getNbImages() == sprites.length
+	 * @post	this character's horizontal acceleration is set to 1.5
+	 * 			| new.getAbsHorizontalAcceleration() == 1.5
+	 * @post	this character's max horizontal velocity is set to 4
+	 * 			| new.getMaxHorizontalVelocity == 4.0
+	 * @post	this character's initial horizontal velocity is set 0
+	 * 			| Math.abs(new.getInitHorizontalVelocity()) == 0
+	 * @post	this character's initial vertical velocity is set to 2
+	 *			| new.getInitVerticalVelocity() == 2.0
+	 * @post	this character's displayed sprite is the first sprite in the given array of sprites
+	 * 			| new.getSprite() == sprites[0]
+	 * @post	this character's hit points is set 100
+	 * 			|new.getHitPoints() == 100
+	 * @post	|new.getDurationRange() == {1.0, 4.0}
+	 * @throws IllegalArgumentException
+	 * 			the amount of images provided is invalid
+	 * 			|! isValidNbImages(sprites.length)
+	 */
+	@Raw
+	public Shark(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0, 100);
+		durationRange = new double[] {1.0, 4.0};
+	}
+
+	/**
+	 * A getter method for the variable durationRange
+	 */
+	@Basic @Override @Immutable
+	public double[] getDurationRange() {
+		return durationRange.clone();
+	}
+
+	/**
+	 * A variable containing the range of the movement durations of the characters
+	 */
+	public final double[] durationRange;
+
+	/**
+	 * A more specific (detailed) method to advance time.
+	 * @param duration
+	 * 			the amount of time to advance
+	 * @post	if the character's hit points are 0, then the new character is terminated.
+	 * 			|if(getHitPoints() == 0)
+	 * 			|	then isTerminated() == true;
+	 * @post	for the next postconditions, the following condition applies: the characters hitpoints is not 0
+	 * 			|if (getHitPoints() != 0){
+	 * @post	a new horizontal position and velocity is set
+	 * 			|new.getHorizontalPosition() ?= this.getHorizontalPosition()
+	 * 			|new.getHorizontalVelocity() ?= this.getHorizontalVelocity()
+	 * @post	a new vertical position and velocity is set
+	 * 			|new.getVerticalPosition() ?= this.getVerticalPosition()
+	 * 			|new.getVerticalVelocity() ?= this.getVerticalVelocity()
+	 * @post	a new sprite is set
+	 * @effect	the character suffers from possible enviromental damage (and loses hit points)
+	 * 			|this.environmentalDamage(duration)
+	 * 			|}
+	 * @effect	|if isTerminated()
+	 * 			|	then {setTerminateTime(getTerminateTime()+duration)
+	 * 			|		if ((this.getTerminateTime()+duration > 0.6) && (! (this.getWorld() == null)))
+	 * 			|			then getWorld().removeAsObject(this)
+	 * @effect	|if ! isTerminated(){
+	 * @post	|	new.isSubmerged() == checkSubmerged()
+	 * 			|	new.isInWater() == checkInWater()
+	 * @effect	|	if (getTimeSinceStartMovement() < getMovementDuration())
+	 * 			|		then setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
+	 * 			|	else selectMovements()
+	 * 			|}
+	 */
+	@Override
+	public void advanceTimeLong(double duration){
+		if (! this.isTerminated()){
+			if (checkSubmerged())
+				setSubmerged(true);
+			else
+				setSubmerged(false);
+			if (checkInWater())
+				setInWater(true);
+			else
+				setInWater(false);
+		}
+		super.advanceTimeLong(duration);
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+			}
+			else{
+				selectMovements();
+			}
+		}
+		else{
+			this.setTerminateTime(getTerminateTime()+duration);
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+				this.getWorld().removeAsObject(this);
+		}
+	}
+
+	/**
+	 * @post	|isMovingRight() == true || false
+	 * 			|isMovingLeft() == true||false
+	 * @post	|new.getMovementDuration() == randomValue(getDurationRange())
+	 * @post	|new.getTimeSinceStartMovement() == getTimeSinceStartMovement() - getMovementDuration()
+	 * @post	|new.isJumping() == true||false
+	 * @post	|new.getMovementsSinceLastJump() == (getMovementsSinceLastJump()+1)%5 || getMovementsSinceLastJump()
+	 */
+	@Override
+	public void selectMovements(){
+		if(isSubmerged())
+			setVerticalAccelerationWater(randomValue(new double[] {-0.2, 0.2}));
+		else
+			setVerticalAccelerationWater(0.0);
+		if (getMovementsSinceLastJump()==1)
+			endJump();
+		OtherCharacters.super.selectMovements();
+		if (getMovementsSinceLastJump() != 0)
+			setMovementsSinceLastJump((getMovementsSinceLastJump()+1)%5);
+		else
+			if (getRandomBoolean()){
+				startJump();
+				setMovementsSinceLastJump(1);
+			}
+	}
+
+	/**
+	 * Compute the new vertical speed after a given duration (and set it).
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical speed.
+	 * @post	|if (isInWater() && ! isJumping())
+	 * 			|	then new.getVerticalVelocity() == getVerticalVelocity()+getVerticalAcceleration()
+	 * 			|		*duration
+	 * 			if the character is falling, the new velocity is calculated according to the formula
+	 * 			v_y,new = v_y,old+a_y*duration
+	 * 			|if (isFalling())
+	 * 			|	then new.getVerticalVelocity() == getVerticalVelocity()+getVerticalAcceleration()
+	 * 			|		*duration
+	 * 			otherwise, if the character is jumping, the same formula is used, but v_y,old is replaced
+	 * 			with v_init
+	 * 			|else
+	 * 			|	if (isJumping())
+	 * 			|		then new.getVerticalVelocity() == getInitVerticalVelocity()
+	 * 			|			+getVerticalAcceleration()*duration
+	 */
+	@Override
+	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
+		if (isInWater() && ! isJumping())
+			setVerticalVelocity(getVerticalVelocity() + duration*getVerticalAcceleration());
+		else	
+			super.computeNewVerticalVelocityAfter(duration);
+	}
+
+	/**
+	 * A getter method for the variable movementsSinceLastJump
+	 */
+	@Basic
+	public int getMovementsSinceLastJump() {
+		return movementsSinceLastJump;
+	}
+
+	/**
+	 * Check if the character is falling
+	 * @result if the character is not in a world, he is not falling
+	 * 			|if getWorld() == null
+	 * 			|	then result == false
+	 * 			if the bottom row of pixels (excluding corners) is overlapping with ground or water tiles 
+	 * 			then the character is not falling.
+	 * 			|for i in getIntPositionAt(1)+1..getIntPositionAt(1)+getSprite().getWidth()-2;
+	 * 			|	let pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2))
+	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND || GeoFeature.WATER
+	 * 			|		then result == false
+	 * 			if the bottom row of pixel (excluding corners) is overlapping with an impassible character,
+	 * 			then the character is not falling.
+	 * 			|if isCharacterBlockingDown(getPositionAt(2))
+	 * 			|	then result == false
+	 */
+	@Override
+	public boolean checkFalling(){
+		if (getWorld() == null)
+			return false;
+		else{
+			int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+			boolean looping = true;
+			int i = getIntPositionAt(1)+1;
+			while (looping){
+				if (i == width)
+					looping = false;
+				int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+				if ((getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND)
+						|| (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER))
+					return false;
+				i = Math.min(width, i+getWorld().getTileLength());
+			}
+			if (isCharacterBlockingDown(this.getPositionAt(2)))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Check if the character is in water (bottom row)
+	 * @result 	|if getWorld() == null
+	 * 			|	then result == false
+	 * 			if any pixels from the bottom row (excluding corners) is overlapping with water tiles,
+	 * 			then the character is in water.
+	 * 			|for i in getIntPositionAt(1)+1..getIntPositionAt(1)+getSprite().getWidth()-2;
+	 * 			|	let pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2))
+	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER
+	 * 			|		then result == true
+	 * 			if the bottom row of pixel (excluding corners) is overlapping with an impassible character,
+	 * 			then the character is not falling.
+	 * 			|if isCharacterBlockingDown(getPositionAt(2))
+	 * 			|	then result == false
+	 */
+	public boolean checkInWater(){
+		if (getWorld() == null)
+			return false;
+		if (isCharacterBlockingDown(this.getPositionAt(2)))
+			return false;
+		int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+		boolean looping = true;
+		int i = getIntPositionAt(1)+1;
+		while (looping){
+			if (i == width)
+				looping = false;
+			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2));
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER)
+				return true;
+			i = Math.min(width, i+getWorld().getTileLength());
+		}
+		return false;
+	}
+
+	/**
+	 * A getter method for the boolean isInWater
+	 */
+	@Basic
+	public boolean isInWater() {
+		return isInWater;
+	}
+
+	/**
+	 * A setter method for the boolean isInWater
+	 * @param isInWater
+	 * @post	|new.isInWater() == isInWater
+	 */
+	public void setInWater(boolean isInWater) {
+		this.isInWater = isInWater;
+	}
+
+	/**
+	 * A boolean stating whether the shark is in water
+	 */
+	public boolean isInWater = false;
+
+	/**
+	 * Check if the character is in water (top row)
+	 * @result 	|if getWorld() == null
+	 * 			|	then result == false
+	 * 			if any pixels from the top row (excluding corners) is overlapping with water tiles,
+	 * 			then the character is in water.
+	 * 			|for i in getIntPositionAt(1)+1..getIntPositionAt(1)+getSprite().getWidth()-2;
+	 * 			|	let pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getSprite().getHeight()-1)
+	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER
+	 * 			|		then result == true
+	 * 			if the bottom row of pixel (excluding corners) is overlapping with an impassible character,
+	 * 			then the character is not falling.
+	 * 			|if isCharacterBlockingUp(getPositionAt(2)+getSprite().getHeight()-1)
+	 * 			|	then result == false
+	 */
+	public boolean checkSubmerged(){
+		if (getWorld() == null)
+			return false;
+		if (isCharacterBlockingUp(this.getPositionAt(2)+getSprite().getHeight()-1))
+			return false;
+		int width = getIntPositionAt(1)+getSprite().getWidth()-2;
+		boolean looping = true;
+		int i = getIntPositionAt(1)+1;
+		while (looping){
+			if (i == width)
+				looping = false;
+			int[] pos = getWorld().getPixelOfTileContaining(i, getIntPositionAt(2)+getSprite().getHeight()-1);
+			if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.WATER)
+				return true;
+			i = Math.min(width, i+getWorld().getTileLength());
+		}
+		return false;
+	}
+
+	/**
+	 * A getter method for the boolean isSubmerged
+	 */
+	@Basic
+	public boolean isSubmerged() {
+		return isSubmerged;
+	}
+
+	/**
+	 * A setter method for the boolean isSubmerged
+	 * @param isSubmerged
+	 * @post	|new.isSubmerged() == isSubmerged
+	 */
+	public void setSubmerged(boolean isSubmerged) {
+		this.isSubmerged = isSubmerged;
+	}
+
+	/**
+	 * A boolean stating whether the shark is submerged
+	 */
+	public boolean isSubmerged = false;
+
+	/**
+	 * Return the current vertical acceleration, or 0 if the character isn't moving vertically.
+	 * This can be acceleration in air or water, depending on the circumstances
+	 */
+	@Override @Basic
+	public double getVerticalAcceleration() {
+		if (isSubmerged() && isInWater())
+			return getVerticalAccelerationWater();
+		else
+			return super.getVerticalAcceleration();
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @post	|new.VERTICAL_ACCELERATION_WATER = value
+	 */
+	protected void setVerticalAccelerationWater(double value){
+		VERTICAL_ACCELERATION_WATER = value;
+	}
+
+	@Basic
+	public double getVerticalAccelerationWater(){
+		return VERTICAL_ACCELERATION_WATER;
+	}
+
+	private double VERTICAL_ACCELERATION_WATER = 0.0;
+
+	/**
+	 * A setter method for the variable movementsSinceLast
+	 * @param movementsSinceLastJump
+	 * @post	|new.getMovementsSinceLastJump() == movementsSinceLastJump()
+	 */
+	public void setMovementsSinceLastJump(int movementsSinceLastJump) {
+		this.movementsSinceLastJump = movementsSinceLastJump;
+	}
+
+	/**
+	 * A variable containing the number of movements since the last jump
+	 */
+	public int movementsSinceLastJump = 0;
+
+	/**
+	 * Determine what happens to this and another colliding character
+	 * @param other
+	 * 			the other character that is colliding with this character
+	 * @effect	|if other instanceof Mazub && ! other.isImmune()
+	 * 			|	then {this.damage(50)
+	 * 			|	other.damage(50)
+	 * 			|	other.startImmune()}
+	 * 			|else if other instanceof Shark{}
+	 * 			|else other.collision(this)
+	 */
+	@Override
+	public void collision(Characters other) {
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune()){
+				other.damage(50);
+				((Mazub)other).startImmune();
+				this.damage(50);
+			}
+		}
+		else if (other instanceof Shark){}
+		else
+			other.collision(this);
+	}
+
+	/**
+	 * @param other
+	 * 			the other character that is colliding with this character
+	 * @effect	|if other instanceof Mazub || Shark || Slime || Plant
+	 * 			|	then collision(other)
+	 * 			|else other.collisionNoDamageTo(this)
+	 */
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if ((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime))
+			collision(other);
+		else if (other instanceof Plant){}
+		else
+			other.collisionNoDamageTo(this);
+	}
+
+	/**
+	 * @param other
+	 * 			the other character that is colliding with this character
+	 * @effect	|if other instanceof Shark || Slime || Plant
+	 * 			|	then collision(other)
+	 * 			|else if other instanceof Mazub && ! other.isImmune()
+	 * 			|	this.damage(50)
+	 * 			|else other.collisionNoDamageFrom(this)
+	 */
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (other instanceof Mazub){
+			if (! ((Mazub)other).isImmune())
+				this.damage(50);
+		}
+		else if ((other instanceof Shark) || (other instanceof Slime))
+			collision(other);
+		else if (other instanceof Plant){}
+		else
+			other.collisionNoDamageFrom(this);
+	}
+
+	/**
+	 * @param other
+	 * @post	|if (other instanceof Mazub)
+	 *			|	then result == true;
+	 *			|else if (other instanceof Shark)
+	 *			|	then result == true;
+	 *			|else
+	 *			|	the result == other.collide(this);
+	 */
+	@Override
+	public boolean collide(Characters other){
+		if (other instanceof Mazub)
+			return true;
+		else if (other instanceof Shark)
+			return true;
+		else
+			return other.collide(this);
+	}
+
+	/**
+	 * A method to determine what damage this character receives from the environment.
+	 * @param duration
+	 * 			the amount of time that passes
+	 * @post	if this character is in MAGMA or AIR, it's new value for a bad environment may be set
+	 * 			to true. It's time since environmental damage may be increased with the given duration,
+	 * 			if that does not cause it to go over 0.2, otherwise it may set it back to 0
+	 * 			|for pos in getIntPosition()..getIntPosition()+getSize()
+	 * 			|	if environment(pos) == MAGMA
+	 * 			|		then new.isBadEnvironment() ?= true
+	 * 			|		then if getTimeSinceEnvironmentalDamage()+duration >= 0.2
+	 * 			|			then new.getTimeSinceEnvironmentalDamage() ?= 0.0
+	 * 			|		else new.getTimeSinceEnvironmentalDamage() ?= getTimeSinceEnvironmentalDamage()+duration
+	 * @post	if this character is in lava, and the time stored to receive environmental damage is
+	 * 			equal to 0, then it can receive some damage.
+	 *			|		if getTimeSinceEnvironmentalDamage() == 0
+	 * 			|			then new.getHitPoints() == this.getHitPoints()-50
+	 * @post	if this character is in air, and the time stored to receive environmental damage plus
+	 * 			the duration is greater than or equal to 0.2, then it can receive some damage.
+	 * 			|	else if environment(pos) == AIR
+	 * 			|		then new.isBadEnvironment() ?= true
+	 * 			|		then if getTimeSinceEnvironmentalDamage()+duration >= 0.2
+	 * 			|			then new.getTimeSinceEnvironmentalDamage() ?= 0.0
+	 * 			|		else new.getTimeSinceEnvironmentalDamage() ?= getTimeSinceEnvironmentalDamage()+duration
+	 *			|		if getTimeSinceEnvironmentalDamage()+duration == 0
+	 * 			|			then new.getHitPoints() == this.getHitPoints()-6
+	 * 			
+	 */
+	@Override
+	public void environmentDamage(double duration) {
+		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
+		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
+		int[] pos2 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)+getSprite().getHeight()};
+		if ((environment(getIntPosition()) == GeoFeature.MAGMA) || (environment(pos) == GeoFeature.MAGMA)
+				|| (environment(pos1) == GeoFeature.MAGMA) || (environment(pos2) == GeoFeature.MAGMA)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0))
+				this.damage(50);
+		} else if ((environment(getIntPosition()) == GeoFeature.AIR) || (environment(pos) == GeoFeature.AIR)
+				|| (environment(pos1) == GeoFeature.AIR) || (environment(pos2) == GeoFeature.AIR)){
+			this.setBadEnvironment(true);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage()+duration, 0.2))
+				this.damage(6);
+		}else{
+			this.setBadEnvironment(false);
+		}
+		if (this.isBadEnvironment()){
+			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
+			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
+				setTimeSinceEnvironmentalDamage(0.0);
+		}else{
+			this.setTimeSinceEnvironmentalDamage(0.0);
+		}
+	}
+
+	@Override @Basic
+	public double getTimeSinceStartMovement() {
+		return timeSinceStartMovement;
+	}
+
+	@Override
+	public void setTimeSinceStartMovement(double time) {
+		timeSinceStartMovement = time;
+	}
+
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	private double timeSinceStartMovement = 0.0;
+
+	@Override
+	public double getMovementDuration() {
+		return movementDuration;
+	}
+
+	@Override
+	public void setMovementDuration(double duration) throws IllegalArgumentException{
+		if (! canHaveAsMovementDuration(duration))
+			throw new IllegalArgumentException();
+		movementDuration = duration;
+	}
+
+	/**
+	 * A double containing the movement duration
+	 */
+	private double movementDuration;
+
+	@Override
+	public double getTerminateTime() {
+		return terminateTime;
+	}
+
+	@Override
+	public void setTerminateTime(double time) {
+		terminateTime = time;
+	}	
+
+	/**
+	 * A double containing the terminate time
+	 */
+	private double terminateTime = 0.0;
+
+	@Override
+	public double getDurationRangeValueAt(int index) {
+		return getDurationRange()[index-1];
+	}
+
+}

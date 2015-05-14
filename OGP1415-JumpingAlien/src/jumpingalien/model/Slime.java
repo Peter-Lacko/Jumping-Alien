@@ -1,21 +1,87 @@
 package jumpingalien.model;
 
 import be.kuleuven.cs.som.annotate.Basic;
+import be.kuleuven.cs.som.annotate.Immutable;
+import be.kuleuven.cs.som.annotate.Raw;
 import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
 
 
 public class Slime extends Characters implements OtherCharacters {
 
+	/**
+	 * initialize a slime with a given x_pos, y_pos, and sprites.
+	 * @param x_pos
+	 * 			the initial x-coordinate for this character.
+	 * @param y_pos
+	 * 			the initial y-coordinate for this character.
+	 * @param sprites
+	 * 			the array of sprites used to display the character.
+	 * @param school
+	 * 			the school to set
+	 * @post	This character starts at the given position.
+	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
+	 * @post	This character's sprite set is equal to the given one.
+	 * 			| new.getImages().equals(sprites)
+	 * @post	this character's image length is equal to the length of the given sprite array
+	 * 			|new.getNbImages() == sprites.length
+	 * @post	this character's horizontal acceleration is set to 0.7
+	 * 			| new.getAbsHorizontalAcceleration() == 0.7
+	 * @post	this character's max horizontal velocity is set to 2.5
+	 * 			| new.getMaxHorizontalVelocity == 2.5
+	 * @post	this character's initial horizontal velocity is set to 0
+	 * 			| Math.abs(new.getInitHorizontalVelocity()) == 0
+	 * @post	this character's initial vertical velocity is set to 0
+	 *			| new.getInitVerticalVelocity() == 0.0
+	 * @post	this character's displayed sprite is the first sprite in the given array of sprites
+	 * 			| new.getSprite() == sprites[0]
+	 * @post	this character's hit points is set to 100
+	 * 			|new.getHitPoints() == 100
+	 * @post	|new.getDurationRange() == {2.0, 6.0}
+	 * @post	|new.getSchool() == school
+	 * @throws IllegalArgumentException
+	 * 			the amount of images provided is invalid
+	 * 			|! isValidNbImages(sprites.length)
+	 */
+	@Raw
 	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school)
 			throws IllegalArgumentException {
 		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0,100);
 		this.setSchool(school);
 		durationRange = new double[] {2.0, 6.0};
 	}
-	
+
+	/**
+	 * A more specific (detailed) method to advance time.
+	 * @param duration
+	 * 			the amount of time to advance
+	 * @post	if the character's hit points are 0, then the new character is terminated.
+	 * 			|if(getHitPoints() == 0)
+	 * 			|	then isTerminated() == true;
+	 * @post	for the next postconditions, the following condition applies: the characters hitpoints is not 0
+	 * 			|if (getHitPoints() != 0){
+	 * @post	a new horizontal position and velocity is set
+	 * 			|new.getHorizontalPosition() ?= this.getHorizontalPosition()
+	 * 			|new.getHorizontalVelocity() ?= this.getHorizontalVelocity()
+	 * @post	a new vertical position and velocity is set
+	 * 			|new.getVerticalPosition() ?= this.getVerticalPosition()
+	 * 			|new.getVerticalVelocity() ?= this.getVerticalVelocity()
+	 * @post	a new sprite is set
+	 * @effect	the character suffers from possible environmental damage (and loses hit points)
+	 * 			|this.environmentalDamage(duration)
+	 * 			|}
+	 * @effect	|if isTerminated()
+	 * 			|	then {setTerminateTime(getTerminateTime()+duration)
+	 * 			|		if ((this.getTerminateTime()+duration > 0.6) && (! (this.getWorld() == null)))
+	 * 			|			then getWorld().removeAsObject(this)
+	 * @effect	|if ! isTerminated(){
+	 * @effect	|	if (getTimeSinceStartMovement() < getMovementDuration())
+	 * 			|		then setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
+	 * 			|	else selectMovements()
+	 * 			|}
+	 */
 	@Override
-	public void advanceTimeLong(double duration){
+	protected void advanceTimeLong(double duration){
 		super.advanceTimeLong(duration);
 		if (! this.isTerminated()){
 			if (getTimeSinceStartMovement() < getMovementDuration()){
@@ -27,15 +93,18 @@ public class Slime extends Characters implements OtherCharacters {
 		}
 		else{
 			this.setTerminateTime(getTerminateTime()+duration);
-			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null)))
+			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null))){
 				this.getWorld().removeAsObject(this);
+				getSchool().removeAsSlime(this);
+				this.setSchool(null);
+			}
 		}
 	}
-	
+
 	/**
 	 * A getter method for the variable durationRange
 	 */
-	@Basic @Override
+	@Basic @Override @Immutable
 	public double[] getDurationRange() {
 		return durationRange.clone();
 	}
@@ -55,8 +124,12 @@ public class Slime extends Characters implements OtherCharacters {
 
 	/**
 	 * A setter method for the variable school
+	 * @param school
+	 * @post	|new.getSchool() == school
+	 * @effect	|if school != null
+	 * 			|	then school.addAsSlime(this)
 	 */
-	public void setSchool(School school) {
+	protected void setSchool(School school) {
 		if (school == null)
 			this.school = school;
 		else{
@@ -68,36 +141,23 @@ public class Slime extends Characters implements OtherCharacters {
 	/**
 	 * A variable containing the School of the slime
 	 */
-	public School school;
-
-	@Override
-	public void startJump() {
-	}
+	private School school;
 
 	/**
+	 * Determine what happens to this and another colliding character
 	 * @param other
-	 * 			the other character in the collision
-	 * @param isBelow
-	 * 			a boolean stating whether this is below other
-	 * @effect	...
-	 * 			| if (other instanceof Mazub) 
-	 * 			|	if (not other.isimmune()) 
-	 * 			|		if (not this.isTerminated())
-	 * 			|			then other.damage(50)
-	 * 			|				other.startImmune()
-	 * 			|		then this.damage(50)
-	 * 			|	then this.endMove()
-	 * 			|		other.endMove("left")
-	 *  		|		other.endMove("right")
-	 *  		| else if (other instanceof Shark)
-	 *  		|	then this.damage(50) 
-	 *  		|		other.damage(50)
-	 *  		|		this.endMove()
-	 *  		|		other.endMove
-	 *  		| else if (other instanceof slime)
-	 *  		|	then this.changeschool(other)
-	 *  		| else
-	 *  		|	then other.collision(this, isBelow)
+	 * 			the other character that is colliding with this character
+	 * @effect	|if other instanceof Mazub && ! other.isImmune()
+	 * 			|	then {this.damageSlime(50)
+	 * 			|	other.damage(50)
+	 * 			|	other.startImmune()}
+	 * 			|else if other instanceof Shark{
+	 * 			|	this.damageSlime(50)
+	 * 			|	other.damage(50)}
+	 * 			|else if other instanceof Slime
+	 * 			|	then this.changeSchool(other)
+	 * 			|else if other instanceof Plant{}
+	 * 			|else other.collision(this)
 	 */
 	@Override
 	public void collision(Characters other) {
@@ -105,11 +165,11 @@ public class Slime extends Characters implements OtherCharacters {
 			if (! ((Mazub)other).isImmune()){
 				other.damage(50);
 				((Mazub)other).startImmune();
-				slimeDamage(50);
+				damageSlime(50);
 			}
 		}
 		else if (other instanceof Shark){
-			slimeDamage(50);
+			damageSlime(50);
 			other.damage(50);
 		}
 		else if (other instanceof Slime){
@@ -120,6 +180,14 @@ public class Slime extends Characters implements OtherCharacters {
 			other.collision(this);
 	}
 
+	/**
+	 * Determine what happens to this and another colliding character
+	 * @param other
+	 * 			the other character that is colliding with this character
+	 * @effect	|if other instanceof Mazub || Shark || Slime || Plant
+	 * 			|	then collision(other)
+	 * 			|else other.collisionNoDamageTo(this)
+	 */
 	@Override
 	public void collisionNoDamageFrom(Characters other){
 		if ((other instanceof Mazub) || (other instanceof Shark) || (other instanceof Slime))
@@ -129,12 +197,21 @@ public class Slime extends Characters implements OtherCharacters {
 			other.collisionNoDamageTo(this);
 	}
 
+	/**
+	 * Determine what happens to this and another colliding character
+	 * @param other
+	 * 			the other character that is colliding with this character
+	 * @effect	|if other instanceof Mazub && ! other.isImmune()
+	 * 			|	then this.damageSlime(50)
+	 * 			|else if other instanceof Shark || Slime || Plant
+	 * 			|	then collision(other)
+	 * 			|else other.collision(this)
+	 */
 	@Override
 	public void collisionNoDamageTo(Characters other){
 		if (other instanceof Mazub){
 			if (! ((Mazub)other).isImmune()){
-				this.damage(50);
-				getSchool().damageAllSlimesBut(this, 1);
+				this.damageSlime(50);
 			}
 		}
 		else if ((other instanceof Shark) || (other instanceof Slime))
@@ -144,7 +221,18 @@ public class Slime extends Characters implements OtherCharacters {
 			other.collisionNoDamageFrom(this);
 	}
 
-	@Override
+	/**
+	 * @param other
+	 * @post	|if (other instanceof Mazub)
+	 *			|	then result == true;
+	 *			|else if (other instanceof Shark)
+	 *			|	then result == true;
+	 *			|else if (other instanceof Slime)
+	 *			|	then reult == false;
+	 *			|else
+	 *			|	the result == other.collide(this);
+	 */
+	@Override @Raw
 	public boolean collide(Characters other){
 		if (other instanceof Mazub)
 			return true;
@@ -159,7 +247,7 @@ public class Slime extends Characters implements OtherCharacters {
 	/**
 	 * 
 	 * @param other
-	 * 			the other slime with which the changeschool happens
+	 * 			the other slime with which the change school happens
 	 * @effect	...
 	 * 			| if this.getSchool().getNbSlimes < other.getSchool().getNbSlimes()
 	 * 			|	then this.getSchool().removeAsSlime(this)
@@ -197,26 +285,17 @@ public class Slime extends Characters implements OtherCharacters {
 		}
 	}
 
-	public void slimeDamage(int damage){
-		damage(damage);
-		getSchool().damageAllSlimesBut(this, 1);
-	}
-	
 	/**
-	 * @effect	...
-	 * 			| if not this.isTerminated
-	 * 			|	then this.getWorld().removeAsObject(this)
-	 * 			|		this.getSchool().removeAsSlime(this)
-	 * 			|		this.setSchool(null)
-	 * 			|		this.setTerminated(true)
+	 * 
+	 * @param damage
+	 * @effect	|if (! isTerminated())
+	 * 			|	then{damage(damage)
+	 * @effect	|		getSchool().damageAllSlimesBut(this, 1)}
 	 */
-	@Override
-	protected void terminate() {
+	protected void damageSlime(int damage){
 		if (! isTerminated()){
-			getWorld().removeAsObject(this);
-			getSchool().removeAsSlime(this);
-			this.setSchool(null);
-			this.setTerminated(true);
+			damage(damage);
+			getSchool().damageAllSlimesBut(this, 1);
 		}
 	}
 
@@ -231,7 +310,7 @@ public class Slime extends Characters implements OtherCharacters {
 	 * 			|			getIntPositionAt(2)+j)[1]) == GeoFeature.MAGMA)
 	 * 			|			then {setBadEnvironment(true)
 	 * 			|					if getTimeSinceEnvironmentalDamage() == 0.0
-	 * 			|						then this.damage(50)
+	 * 			|						then this.damageSlime(50)
 	 * 			|					setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage()+duration)
 	 * 			|					if (getTimeSinceEnvironmentalDamage() >= 0.2))
 	 * 			|						then setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2)
@@ -242,7 +321,7 @@ public class Slime extends Characters implements OtherCharacters {
 	 * 			|			getIntPositionAt(2)+j)[1]) == GeoFeature.WATER)
 	 * 			|		then {setBadEnvironment(true)
 	 * 			|				if getTimeSinceEnvironmentalDamage()+duration >= 0.0
-	 * 			|					then this.damage(2)
+	 * 			|					then this.damageSlime(2)
 	 * 			|				setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage()+duration)
 	 * 			|				if (getTimeSinceEnvironmentalDamage() >= 0.2))
 	 * 			|					then setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2)
@@ -251,7 +330,8 @@ public class Slime extends Characters implements OtherCharacters {
 	 * 			|			setTimeSinceEnvironmentalDamage(0.0)}
 	 * 			
 	 */
-	public void environmentDamage(double duration) {
+	@Override
+	protected void environmentDamage(double duration) {
 		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
 		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
 		int[] pos2 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)+getSprite().getHeight()};
@@ -259,13 +339,13 @@ public class Slime extends Characters implements OtherCharacters {
 				|| (environment(pos1) == GeoFeature.MAGMA) || (environment(pos2) == GeoFeature.MAGMA)){
 			this.setBadEnvironment(true);
 			if (Util.fuzzyEquals(getTimeSinceEnvironmentalDamage(), 0.0)){
-				this.slimeDamage(50);
+				this.damageSlime(50);
 			}
 		} else if ((environment(getIntPosition()) == GeoFeature.WATER) || (environment(pos) == GeoFeature.WATER)
 				|| (environment(pos1) == GeoFeature.WATER) || (environment(pos2) == GeoFeature.WATER)){
 			this.setBadEnvironment(true);
 			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage()+duration, 0.2)){
-				this.slimeDamage(2);
+				this.damageSlime(2);
 			}
 		}else{
 			this.setBadEnvironment(false);
@@ -273,7 +353,6 @@ public class Slime extends Characters implements OtherCharacters {
 		if (this.isBadEnvironment()){
 			this.setTimeSinceEnvironmentalDamage(this.getTimeSinceEnvironmentalDamage()+duration);
 			if (Util.fuzzyGreaterThanOrEqualTo(getTimeSinceEnvironmentalDamage(), 0.2))
-				//				setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2);
 				setTimeSinceEnvironmentalDamage(0.0);
 		}else{
 			this.setTimeSinceEnvironmentalDamage(0.0);
@@ -294,17 +373,19 @@ public class Slime extends Characters implements OtherCharacters {
 	 * A double containing the time since the start of a movement
 	 */
 	private double timeSinceStartMovement = 0.0;
-	
+
 	@Override
 	public double getMovementDuration() {
 		return movementDuration;
 	}
 
 	@Override
-	public void setMovementDuration(double duration) {
+	public void setMovementDuration(double duration) throws IllegalArgumentException{
+		if (! canHaveAsMovementDuration(duration))
+			throw new IllegalArgumentException();
 		movementDuration = duration;
 	}
-	
+
 	/**
 	 * A double containing the movement duration
 	 */
@@ -319,7 +400,7 @@ public class Slime extends Characters implements OtherCharacters {
 	public void setTerminateTime(double time) {
 		terminateTime = time;
 	}
-	
+
 	/**
 	 * A double containing the terminate time
 	 */

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <typeInfoHistroy>
+<<<<<<< HEAD
 <typeInfo handle="=OGP1415-JumpingAlien/src-provided&lt;jumpingalien.common.game{AlienInfoProvider.java[AlienInfoProvider" modifiers="513" timestamp="1430833464000"/>
 <typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model{Characters.java[Characters" modifiers="1025" timestamp="1431597667988"/>
 <typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model{Aliens.java[Aliens" modifiers="1025" timestamp="1431597667986"/>
 <typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model{OtherCharacters.java[OtherCharacters" modifiers="513" timestamp="1431597667989"/>
+=======
+<typeInfo handle="=OGP1415-JumpingAlien/src-provided&lt;jumpingalien.common.game{AlienInfoProvider.java[AlienInfoProvider" modifiers="513" timestamp="1426426703667"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model{Characters.java[Characters" modifiers="1025" timestamp="1431635106633"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model{Aliens.java[Aliens" modifiers="1025" timestamp="1431635802882"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model{OtherCharacters.java[OtherCharacters" modifiers="513" timestamp="1431636473169"/>
+>>>>>>> 17a5181a0d177616b7044f6d93f157a80201ca9e
 </typeInfoHistroy>

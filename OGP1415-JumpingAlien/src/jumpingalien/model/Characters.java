@@ -55,23 +55,37 @@ public abstract class Characters {
 	 * 			the initial vertical velocity of the character
 	 * @param hitPoints
 	 * 			the starting amount of hit points for the character
-	 * @post	The character starts at the given position.
+	 * @post	This character starts at the given position.
 	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
-	 * @post	The character's image set is equal to the given one.
-	 * 			| new.getImages().equals(images)
-	 * @post	the character's horizontal acceleration is set to the given horizontal acceleration
+	 * @post	This character's sprite set is equal to the given one.
+	 * 			| new.getImages().equals(sprites)
+	 * @post	this character's image length is equal to the length of the given sprite array
+	 * 			|new.getNbImages() == sprites.length
+	 * @post	this character's horizontal acceleration is set to the given horizontal acceleration
 	 * 			| new.getAbsHorizontalAcceleration() == hor_acc
-	 * @post	the character's max horizontal velocity is set to the given max horizontal velocity
-	 * 			| new.getMaxHorizontalVelocity == max_hor_acc
-	 * @post	the character's initial horizontal velocity is set to the given initial horizontal velocity
+	 * @post	this character's max horizontal velocity is set to the given max horizontal velocity
+	 * 			| new.getMaxHorizontalVelocity == max_hor_vel
+	 * @post	this character's initial horizontal velocity is set to the given initial horizontal velocity
 	 * 			| Math.abs(new.getInitHorizontalVelocity()) == init_hor_vel
-	 * @post	the character's initial vertical velocity is set to the given initial vertical velocity
+	 * @post	this character's initial vertical velocity is set to the given initial vertical velocity
 	 *			| new.getInitVerticalVelocity() == init_ver_vel
-	 * @post	the character's displayed sprite is the first sprite in the given array of sprites
+	 * @post	this character's displayed sprite is the first sprite in the given array of sprites
 	 * 			| new.getSprite() == sprites[0]
-	 * @post	the character's hit points is set to the given amount
+	 * @post	this character's hit points is set to the given amount
 	 * 			|new.getHitPoints() == hitPoints
 	 * @throws IllegalArgumentException
+	 * 			the amount of images provided is invalid
+	 * 			|! isValidNbImages(sprites.length)
+	 * @throws IllegalArgumentException
+	 * 			the given horizontal details are invalid
+	 * 			|((! isValidHorizontalAcceleration(hor_acc)) || (! canHaveAsMaxHorizontalVelocity(max_hor_vel)) 
+	 *			|	|| (! matchesMaxHorizontalVelocityInitHorizontalVelocity(max_hor_vel, init_hor_vel)))
+	 * @throws IllegalArgumentException
+	 * 			the given initial vertical velocity is invalid
+	 * 			|(! canHaveAsInitVerticalVelocity(init_ver_vel))
+	 * @throws IllegalArgumentException
+	 * 			the given amount of hitpoints is invalid
+	 * 			|(! isValidHitPoints(hitPoints))
 	 */
 	@Raw
 	public Characters(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, 
@@ -79,8 +93,6 @@ public abstract class Characters {
 					throws IllegalArgumentException{
 		if (! isValidNbImages(sprites.length))
 			throw new IllegalArgumentException("Illegal sprite array length!");
-		//		if (! hasProperSprites(sprites))
-		//			throw new IllegalArgumentException("Illegal sprite array!");
 		if ((! isValidHorizontalAcceleration(hor_acc)) || (! canHaveAsMaxHorizontalVelocity(max_hor_vel)) 
 				|| (! matchesMaxHorizontalVelocityInitHorizontalVelocity(max_hor_vel, init_hor_vel)))
 			throw new IllegalArgumentException("illegal horizontal details");
@@ -113,7 +125,7 @@ public abstract class Characters {
 	 * @post	the new terminated status is equal to the given status
 	 * 			|new.isTerminated() == isTerminated
 	 */
-	public void setTerminated(boolean isTerminated) {
+	private void setTerminated(boolean isTerminated) {
 		this.isTerminated = isTerminated;
 	}
 
@@ -141,7 +153,7 @@ public abstract class Characters {
 	 * 			| ((world != null) && (! canHaveAsWorld(world)))
 	 */
 	@Raw
-	public void setWorld(@Raw World world) throws IllegalArgumentException {
+	protected void setWorld(@Raw World world) throws IllegalArgumentException {
 		if (world == null)
 			this.world = world;
 		else{
@@ -172,7 +184,7 @@ public abstract class Characters {
 	 * A method to determine which sprite must be displayed
 	 * @return	The sprite that must be displayed based on the character's values.
 	 */
-	public Sprite getCurrentSprite() {
+	protected Sprite getCurrentSprite() {
 		return leftOrRightSprite(0);
 	}
 
@@ -184,7 +196,7 @@ public abstract class Characters {
 	 * @return	the correct sided sprite based on what direction the character is moving and 
 	 * 			which index it was given
 	 */
-	public Sprite leftOrRightSprite(int number){
+	protected Sprite leftOrRightSprite(int number){
 		assert (number >= 0);
 		assert (number + 1 < getNbImages());
 		if ((this.getHorizontalVelocity() < 0) || (getHasMovedIn() == MovementDirection.LEFT)){
@@ -194,22 +206,17 @@ public abstract class Characters {
 		}
 	}
 
-	//	/**
-	//	 * ...
-	//	 * @return	...
-	//	 * 			| result == (number >= 0 && number <2)
-	//	 */
-	//	public boolean canHaveAsIndex(int number) {
-	//		return ((number >= 0) && (number < 2));
-	//	}
-
 	/**
 	 * Check whether the given number of images is valid
-	 * @return	the number is valid if it is more than 2 (left and right)
-	 * 			| result == (number >= 2)
+	 * @param nbImages
+	 * 			the amount to check.
+	 * @return	the number is invalid if it is smaller than 2 or not even
+	 * 			| if (nbImages < 2) || (nbImages % 2 != 0)
+	 * 			|	result == false
 	 */
+	@Raw
 	public boolean isValidNbImages(int nbImages) {
-		if (nbImages >= 2)
+		if ((nbImages >= 2) && (nbImages % 2 == 0))
 			return true;
 		else
 			return false;
@@ -232,7 +239,8 @@ public abstract class Characters {
 	 * @post	The character's new sprite is equal to the given sprite.
 	 * 			| new.getSprite().equals(sprite)
 	 */
-	public void setSprite(Sprite sprite) {
+	@Raw
+	private void setSprite(Sprite sprite) {
 		assert (sprite != null);
 		this.sprite = sprite;
 	}
@@ -240,34 +248,7 @@ public abstract class Characters {
 	/**
 	 * A variable that stores the current sprite of the character.
 	 */
-	protected Sprite sprite;
-
-	//	/**
-	//	 * Set the character's running cycle index to the given number
-	//	 * @pre The given number must be a valid index.
-	//	 * 		| canHaveAsIndex(number)
-	//	 * @param number
-	//	 * 			the number to set the index at.
-	//	 * @post	The new index is equal to the given number.
-	//	 * 			new.getIndex() == number
-	//	 */
-	//	public void setIndex(int number) {
-	//		assert canHaveAsIndex(number);
-	//		this.index = number;
-	//	}
-	//
-	//	/**
-	//	 * A method to return at which sprite in the run cycle the character is.
-	//	 */
-	//	@Basic
-	//	public int getIndex() {
-	//		return this.index;
-	//	}
-	//
-	//	/**
-	//	 * A variable to determine at which sprite in the run cycle the character is.
-	//	 */
-	//	protected int index = 0;
+	private Sprite sprite;
 
 	/**
 	 * Return the amount of sprites stored for this character.
@@ -305,28 +286,10 @@ public abstract class Characters {
 		return this.images.clone();
 	}
 
-	//	/**
-	//	 * Check whether the given array of sprites is valid.
-	//	 * @param images
-	//	 * 			the array of sprites to be checked.
-	//	 * @return true if and only if there are no null entities in the array
-	//	 * 			| for sprite in images:
-	//	 * 			|	if (sprite == null)
-	//	 * 			|		return false
-	//	 * 			| return true
-	//	 */
-	//	public boolean hasProperSprites(Sprite[] images){
-	//		for (Sprite sprite: images){
-	//			if (sprite == null)
-	//				return false;
-	//		}
-	//		return true;
-	//	}
-
 	/**
 	 * An array of Sprites to display the character.
 	 */
-	protected Sprite[] images;
+	private Sprite[] images;
 
 	/**
 	 * Compute the new horizontal velocity after a given duration (and then set it)
@@ -346,7 +309,7 @@ public abstract class Characters {
 	 *			otherwise, they are not accelerating
 	 *			|else new.isAccelerating() == false
 	 */
-	public void computeNewHorizontalVelocityAfter(double duration) {
+	protected void computeNewHorizontalVelocityAfter(double duration) {
 		double newVelocity = 0.0;
 		if (this.isMovingLeft() || this.isMovingRight()){
 			newVelocity = computeNewHorizontalVelocityMoving(duration);
@@ -397,7 +360,7 @@ public abstract class Characters {
 	 * 			|result == this.getPositionAt(1) + 100*duration*getHorizontalVelocity()
 	 * 			|	+ isAccelerating()? 100*0.5*duration²*getHorizontalAcceleration() : 0
 	 */
-	public double calculateNewHorizontalPositionAfter(double duration) {
+	protected double calculateNewHorizontalPositionAfter(double duration) {
 		double newPosition = getPositionAt(1);
 		newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
 		if (this.isAccelerating())
@@ -420,10 +383,8 @@ public abstract class Characters {
 	 * 			|	if (isJumping())
 	 * 			|		then new.getVerticalVelocity() == getInitVerticalVelocity()
 	 * 			|			+getVerticalAcceleration()*duration
-	 * 			otherwise, the new velocity is set to 0
-	 * 			|	else new.getVerticalVelocity() == 0.0
 	 */
-	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
+	protected void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
 		if (isFalling()){
 			double newVelocity = getVerticalVelocity()+getVerticalAcceleration()*duration;
 			setVerticalVelocity(newVelocity);
@@ -445,7 +406,7 @@ public abstract class Characters {
 	 * 			|result == getPositionAt(2) + 100*duration*getVerticalVelocity()
 	 * 			|	+100*0.5*getVerticalAcceleration()*duration²
 	 */
-	public double calculateNewVerticalPositionAfter(double duration){
+	protected double calculateNewVerticalPositionAfter(double duration){
 		double newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()
 				+100*0.5*getVerticalAcceleration()*duration*duration;
 		return newYPosition;
@@ -467,7 +428,7 @@ public abstract class Characters {
 	 * 			|if isCharacterBlockingDown(getPositionAt(2))
 	 * 			|	then result == false
 	 */
-	public boolean checkFalling(){
+	protected boolean checkFalling(){
 		if (getWorld() == null){
 			return false;
 		}
@@ -577,10 +538,13 @@ public abstract class Characters {
 	 * @post	a new sprite is set
 	 * @post	the character suffers from possible enviromental damage (and loses hit points)
 	 * 			|new.getHitPoints() <= this.getHitPoints()
+	 * 			|new.getTimeSinceEnvironmentalDamage() ?= this.getTimeSinceEnvironmentalDamage()
+	 * 			|new.isBadEnvironment == true || false
 	 */
 	protected void advanceTimeLong (double duration){
-		if (this.getHitPoints() == 0)
+		if (this.getHitPoints() == 0){
 			this.terminate();
+		}
 		if (! isTerminated()){
 			this.computeHorizontalMovement(duration);
 			this.computeVerticalMovement(duration);
@@ -597,7 +561,7 @@ public abstract class Characters {
 	 * 			| acceleration = Math.sqrt((getVerticalAcceleration()*getVerticalAcceleration() + getHorizontalAcceleration()*getHorizontalAcceleration()))
 	 * 			| return Math.min((0.01 / (speed + acceleration * duration)),duration)
 	 */
-	public double shortDuration(double duration){
+	protected double shortDuration(double duration){
 		double speed = Math.sqrt((getVerticalVelocity()*getVerticalVelocity()+
 				getHorizontalVelocity()*getHorizontalVelocity()));
 		double acceleration = Math.sqrt((getVerticalAcceleration()*getVerticalAcceleration()+
@@ -613,6 +577,7 @@ public abstract class Characters {
 	 * @return True if and only if the acceleration is greater than or equal to zero.
 	 * 			| result == (acceleration >= 0)
 	 */
+	@Raw
 	public boolean isValidHorizontalAcceleration(double acceleration) {
 		return (Util.fuzzyGreaterThanOrEqualTo(acceleration, 0.0));
 	}
@@ -632,6 +597,7 @@ public abstract class Characters {
 	 * @post	the new horizontal acceleration is equal to the given value
 	 * 			| new.getAbsHorizontalAcceleration() == acceleration
 	 */
+	@Raw
 	protected void setHorizontalAcceleration(double acceleration){
 		this.horizontalAcceleration = Math.abs(acceleration);
 	}
@@ -639,7 +605,7 @@ public abstract class Characters {
 	/**
 	 * a variable containing the horizontal acceleration of the character
 	 */
-	protected double horizontalAcceleration;
+	private double horizontalAcceleration;
 
 	/**
 	 * A method to return the current horizontal acceleration.
@@ -679,9 +645,8 @@ public abstract class Characters {
 	 *			|	&& matchesHorizontalVelocityMaxHorizontalVelocity(getHorizontalVelocity(), velocity)
 	 *			|	&& matchesMaxHorizontalVelocityInitHorizontalVelocity(velocity, getInitHorizontalVelocity()))
 	 */
+	@Raw
 	public boolean canHaveAsMaxHorizontalVelocity(double velocity) {
-		//		return (Util.fuzzyGreaterThanOrEqualTo(this.getMaxHorizontalVelocity(), 
-		//				Math.abs(this.getInitHorizontalVelocity())) && (! Double.isNaN(velocity)));
 		return (isPossibleMaxHorizontalVelocity(velocity) 
 				&& matchesHorizontalVelocityMaxHorizontalVelocity(getHorizontalVelocity(), velocity)
 				&& matchesMaxHorizontalVelocityInitHorizontalVelocity(velocity, getInitHorizontalVelocity()));
@@ -694,6 +659,7 @@ public abstract class Characters {
 	 * @return	true if the velocity is greater than or equal to 0
 	 * 			|result == (velocity >= 0.0)
 	 */
+	@Raw
 	public boolean isPossibleMaxHorizontalVelocity(double velocity){
 		return (Util.fuzzyGreaterThanOrEqualTo(velocity, 0.0));
 	}
@@ -707,6 +673,7 @@ public abstract class Characters {
 	 * @return	true if the max velocity is greater than or equal to the absolute value of the init velocity
 	 * 			|result == (maxVelocity >= Math.abs(initVelocity))
 	 */
+	@Raw
 	public boolean matchesMaxHorizontalVelocityInitHorizontalVelocity(double maxVelocity,
 			double initVelocity){
 		return(Util.fuzzyGreaterThanOrEqualTo(maxVelocity,Math.abs(initVelocity)));
@@ -721,7 +688,8 @@ public abstract class Characters {
 	 * @throws	the new maximum velocity is invalid for this character.
 	 * 		| (! canHaveAsMaxHorizontalVelocity(velocity))
 	 */
-	public void setMaxHorizontalVelocity(double velocity) throws IllegalArgumentException{
+	@Raw
+	protected void setMaxHorizontalVelocity(double velocity) throws IllegalArgumentException{
 		if (! canHaveAsMaxHorizontalVelocity(velocity))
 			throw new IllegalArgumentException();
 		this.maxHorizontalVelocity = velocity;
@@ -751,14 +719,15 @@ public abstract class Characters {
 	 * @post The new initial horizontal velocity is equal to the given velocity.
 	 * 		| Math.abs(new.getInitHorizontalVelocity()) == velocity
 	 */
-	public void setInitHorizontalVelocity(double velocity){
+	@Raw
+	protected void setInitHorizontalVelocity(double velocity){
 		this.initHorizontalVelocity = velocity;
 	}
 
 	/**
 	 * Constant reflecting the initial velocity of a character.
 	 */
-	protected double initHorizontalVelocity;
+	private double initHorizontalVelocity;
 
 	/**
 	 * Return the current horizontal velocity.
@@ -782,25 +751,13 @@ public abstract class Characters {
 		this.currHorizontalVelocity = velocity;
 	}
 
-	//	/**
-	//	 * Check whether the character can have the given horizontal velocity
-	//	 * @param velocity
-	//	 * 			the horizontal velocity to check
-	//	 * @return true if it is smaller in absolute value than the maximum velocity and if it is a number.
-	//	 * 			| return ((Math.abs(velocity) <= getMaxHorizontalVelocity()) && (! Double.isNaN(velocity)))
-	//	 */
-	//	public boolean canHaveAsHorizontalVelocity(double velocity) {
-	//		return (Util.fuzzyLessThanOrEqualTo(Math.abs(velocity),getMaxHorizontalVelocity()) &&
-	//				(!Double.isNaN(velocity)));
-	//	}
-
 	/**
 	 * Check whether the given horizontal velocity and maximum horizontal velocity match.
 	 * @param velocity
 	 * 			the velocity to check
 	 * @param maxVelocity
 	 * 			the maximum velocity to check
-	 * @return	true if the given max velocity is greater than or equal to the absolue value of the given velocity
+	 * @return	true if the given max velocity is greater than or equal to the absolute value of the given velocity
 	 *			|result == (maxVelocity >= Math.abs(velocity))
 	 */
 	public boolean matchesHorizontalVelocityMaxHorizontalVelocity(double velocity, double maxVelocity){
@@ -810,7 +767,7 @@ public abstract class Characters {
 	/**
 	 * A variable reflecting the current horizontal velocity.
 	 */
-	protected double currHorizontalVelocity = 0.0;
+	private double currHorizontalVelocity = 0.0;
 
 	/**
 	 * Start moving the character in the given direction
@@ -880,15 +837,14 @@ public abstract class Characters {
 	 * @post the new variable isAccelerating is equal to the given flag.
 	 * 			| new.isAccelerating() == flag
 	 */
-	public void setAccelerating(boolean flag) {
+	protected void setAccelerating(boolean flag) {
 		this.isAccelerating = flag;
 	}
 
 	/**
 	 * value stating whether the character is accelerating
 	 */
-	protected boolean isAccelerating = false;
-
+	private boolean isAccelerating = false;
 
 	/**
 	 * A getter method for the variable isMovingLeft
@@ -905,14 +861,14 @@ public abstract class Characters {
 	 * @post	isMovingLeft is set to flag
 	 * 			| new.isMovingLeft == flag
 	 */
-	public void setMovingLeft(boolean flag) {
+	protected void setMovingLeft(boolean flag) {
 		this.isMovingLeft = flag;
 	}
 
 	/**
 	 * A value stating if the character is moving left.
 	 */
-	protected boolean isMovingLeft = false;
+	private boolean isMovingLeft = false;
 
 	/**
 	 * A getter method for the variable isMovingRight
@@ -929,14 +885,14 @@ public abstract class Characters {
 	 * @post	isMovingRight is set to flag
 	 * 			| new.isMovingRight() == flag
 	 */
-	public void setMovingRight(boolean flag) {
+	protected void setMovingRight(boolean flag) {
 		this.isMovingRight = flag;
 	}
 
 	/**
 	 * A value stating if the character is moving right.
 	 */
-	protected boolean isMovingRight = false;
+	private boolean isMovingRight = false;
 
 	/**
 	 * A getter method for the variable isFalling
@@ -953,7 +909,7 @@ public abstract class Characters {
 	 * @post	isFalling is set to the given value
 	 * 			|new.isFalling() == falling
 	 */
-	public void setFalling(boolean falling) {
+	protected void setFalling(boolean falling) {
 		this.isFalling = falling;
 	}
 
@@ -966,20 +922,9 @@ public abstract class Characters {
 	 * Return the current vertical velocity.
 	 */
 	@Basic
-	public Double getVerticalVelocity() {
+	public double getVerticalVelocity() {
 		return this.currVerticalVelocity;
 	}
-
-	//	/**
-	//	 * a checker method for whether the double velocity is valid as verticalVelocity
-	//	 * @param velocity
-	//	 * 			the double which has to be checked whether its valid
-	//	 * @return	true if velocity is greater than zero and a number
-	//	 * 			| result == (! Double.isNaN(velocity))
-	//	 */
-	//	public boolean canHaveAsVerticalVelocity(double velocity) {
-	//		return (! Double.isNaN(velocity));
-	//	}
 
 	/**
 	 * Set the vertical velocity to the given velocity.
@@ -993,13 +938,13 @@ public abstract class Characters {
 	/**
 	 * A variable reflecting the current vertical velocity.
 	 */
-	protected Double currVerticalVelocity = 0.0;
+	private double currVerticalVelocity = 0.0;
 
 	/**
 	 * Return the speed with which the character starts jumping
 	 */
 	@Basic
-	public Double getInitVerticalVelocity() {
+	public double getInitVerticalVelocity() {
 		return this.initVerticalVelocity;
 	}
 
@@ -1010,6 +955,7 @@ public abstract class Characters {
 	 * @return	true if velocity is greater than or equal to zero and is a number
 	 * 			| result == (velocity >= 0)
 	 */
+	@Raw
 	public boolean canHaveAsInitVerticalVelocity(double velocity) {
 		return (Util.fuzzyGreaterThanOrEqualTo(velocity, 0.0));
 	}
@@ -1023,7 +969,8 @@ public abstract class Characters {
 	 * @post The new initial vertical velocity is equal to the given velocity.
 	 * 		| new.getInitverticalVelocity() == velocity
 	 */
-	public void setinitVerticalVelocity(double velocity){
+	@Raw
+	protected void setinitVerticalVelocity(double velocity){
 		assert canHaveAsInitVerticalVelocity(velocity);
 		this.initVerticalVelocity = velocity;
 	}
@@ -1034,10 +981,10 @@ public abstract class Characters {
 	protected Double initVerticalVelocity;
 
 	/**
-	 * Return the current vertical acceleration.
+	 * Return the current vertical acceleration, or 0 if the character isn't moving vertically
 	 */
 	@Basic
-	public Double getVerticalAcceleration() {
+	public double getVerticalAcceleration() {
 		if (this.isFalling() || this.isJumping())
 			return VERTICAL_ACCELERATION;
 		else
@@ -1060,7 +1007,7 @@ public abstract class Characters {
 	 * @return The vertical acceleration for all characters is 0.9m/s²
 	 * 			| result == -10
 	 */
-	protected static final Double VERTICAL_ACCELERATION = -10.0;
+	private static final Double VERTICAL_ACCELERATION = -10.0;
 
 	/**
 	 * A boolean stating whether the character is jumping
@@ -1100,8 +1047,7 @@ public abstract class Characters {
 	/**
 	 * value stating whether the character is jumping.
 	 */
-	protected boolean isJumping = false;
-
+	private boolean isJumping = false;
 
 	/**
 	 * Return the orientation of the Mazub character as an (enumerated) MovementDirection.
@@ -1116,7 +1062,7 @@ public abstract class Characters {
 	 * 			| else
 	 * 			| result == getHasMovedIn()
 	 */
-	public MovementDirection getEnumedOrientation() {
+	private MovementDirection getEnumedOrientation() {
 		if (this.isMovingLeft() ^ this.isMovingRight()){
 			if (this.isMovingLeft())
 				return MovementDirection.LEFT;
@@ -1162,14 +1108,14 @@ public abstract class Characters {
 	 * @post	hasMovedIn is set to direction
 	 * 			| new.gethasMovedIn() == direction
 	 */
-	public void sethasMovedIn(MovementDirection direction) {
+	protected void sethasMovedIn(MovementDirection direction) {
 		this.hasMovedIn = direction;
 	}
 
 	/**
 	 * A variable that states in which direction the character has recently moved.
 	 */
-	protected MovementDirection hasMovedIn = MovementDirection.NONE;
+	private MovementDirection hasMovedIn = MovementDirection.NONE;
 
 	/**
 	 * Check whether the given MovementDirection is a valid one.
@@ -1180,6 +1126,7 @@ public abstract class Characters {
 	 *			|	(direction == MovementDirection.RIGHT)
 	 * 
 	 */
+	@Raw
 	public static boolean isValidDirection(MovementDirection direction) {
 		return (direction == MovementDirection.NONE) || (direction == MovementDirection.LEFT) ||
 				(direction == MovementDirection.RIGHT);
@@ -1210,7 +1157,7 @@ public abstract class Characters {
 	 * @return	the returned value is a position value with the same coordinates as the saved position
 	 * 			|result.equals(new Position(getPositionAt(1),getPositionAt(2))
 	 */
-	public Position getPositionValue(){
+	protected Position getPositionValue(){
 		return Position;
 	}
 
@@ -1225,6 +1172,7 @@ public abstract class Characters {
 	 * 			The given index must be positive and may not be bigger than 2.
 	 * 			| (index <= 0) || (index > 2)
 	 */
+	@Raw
 	public double getPositionAt(int index) throws ArrayIndexOutOfBoundsException{
 		return getPositionValue().getPosition()[index-1];
 	}
@@ -1234,6 +1182,7 @@ public abstract class Characters {
 	 * @effect	return the position array in integer form
 	 * 			|result == getPositionValue().getIntPosition()
 	 */
+	@Raw
 	public int[] getIntPosition(){
 		return getPositionValue().getIntPosition();
 	}
@@ -1311,7 +1260,7 @@ public abstract class Characters {
 	 *			|		then result == collide(character)
 	 *			|else result == false
 	 */
-	public boolean isCharacterBlockingUp(double position){
+	protected boolean isCharacterBlockingUp(double position){
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
 			if ((character.getIntPositionAt(2) == (int)position + this.getSprite().getHeight()-1) 
@@ -1333,7 +1282,7 @@ public abstract class Characters {
 	 *			|		then result == collide(character)
 	 *			|else result == false
 	 */
-	public boolean isCharacterBlockingDown(double position){
+	protected boolean isCharacterBlockingDown(double position){
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
 			if ((character.getIntPositionAt(2) + character.getSprite().getHeight()-1 == (int)position) 
@@ -1351,13 +1300,14 @@ public abstract class Characters {
 	 * @return	true or false depending on which this character is and which the other character is.
 	 * 			result == (true || false)
 	 */
+	@Raw
 	public abstract boolean collide(Characters other);
 
 	/**
 	 * Return the position for this Mazub character.
 	 * 	The position gives a combination of the X and Y position of the bottom left corner of the character.
 	 */
-	@Basic
+	@Basic @Raw
 	public double[] getPosition() {
 		return getPositionValue().getPosition();
 	}
@@ -1387,7 +1337,7 @@ public abstract class Characters {
 	/**
 	 * Variable registering the position of the bottom left corner of this character.
 	 */
-	protected Position Position = new Position(0.0, 0.0);	
+	private Position Position = new Position(0.0, 0.0);	
 
 	/**
 	 * Calculate the new horizontal position and velocity of this character and set them, as well as damage 
@@ -1590,12 +1540,15 @@ public abstract class Characters {
 
 	/**
 	 * A method to terminate a character
-	 * @effect	if the character is not already terminated, terminate is and set all velocities to 0.
+	 * @post	if the character is not already terminated, terminate it and set all velocities to 0.
+	 * 			this caracter may be removed from the world immediately.
 	 * 			| if not isTerminated()
-	 * 			|	then this.setTerminated(true)
-	 * 			|		this.setHorizontalVelocity(0.0)
-	 * 			|		this.setVerticalVelocity(0.0)
+	 * 			|	then{ new.isTerminated() == true
+	 * 			|		new.getHorizontalVelocity() == 0.0
+	 * 			|		new.getVerticalVelocity() == 0.0
+	 * 			|		(new World).hasAsObject(this) == false || true}
 	 */
+	@Raw
 	protected void terminate() {
 		if (! isTerminated()){
 			this.setTerminated(true);
@@ -1610,25 +1563,29 @@ public abstract class Characters {
 	 * @param damage
 	 * 			the amount of damage to give. A positive amount reduces the amount of hit points, a negative
 	 * 			amount increases the amount of hit points
-	 * @effect	A characters hitpoints will be minimally set to 0
-	 * 			| if (this.getHitPoints() -damage <= 0)
-	 * 			|	then this.setHitPoints(0)
+	 * @effect	If it is not terminated,  character's hit points will be minimally set to 0
+	 * 			|if ! isTerminated(){
+	 * 			| 	if (this.getHitPoints() -damage <= 0)
+	 * 			|		then this.setHitPoints(0)
 	 * 			and maximally to 500
-	 * 			| else if (this.getHitPoints() -damage>= 500)
-	 * 			|	then this.setHitPoints(500)
+	 * 			| 	else if (this.getHitPoints() -damage>= 500)
+	 * 			|		then this.setHitPoints(500)
 	 * 			otherwise reduce this hcaracter's hitpoints with the given amount.
-	 * 			| else
-	 * 			|	then this.setHitPoints(this.getHitPoints() - damage)
+	 * 			| 	else
+	 * 			|		then this.setHitPoints(this.getHitPoints() - damage)}
 	 */
 	protected void damage(int damage){
-		if (this.getHitPoints() -damage <= 0){
-			this.setHitPoints(0);
+		if (! isTerminated()){
+			if (this.getHitPoints() -damage <= 0){
+				this.setHitPoints(0);
+			}
+			else if (this.getHitPoints() -damage>= 500){
+				this.setHitPoints(500);
+			}
+			else{
+				this.setHitPoints(this.getHitPoints() - damage);
+			}
 		}
-		if (this.getHitPoints() -damage>= 500){
-			this.setHitPoints(500);
-		}
-		else
-			this.setHitPoints(this.getHitPoints() - damage);
 	}
 
 	/**
@@ -1640,6 +1597,7 @@ public abstract class Characters {
 	 * 			|	then result == false
 	 * 			| else result == true
 	 */
+	@Raw
 	public boolean isValidHitPoints(int hitpoints){
 		if ((hitpoints < 0) || (hitpoints > 500))
 			return false;
@@ -1661,14 +1619,15 @@ public abstract class Characters {
 	 * @post	this new character's hitpoints is equal to the given amount
 	 * 			|new.getHitPoints() == hitPoints
 	 */
-	public void setHitPoints(int hitPoints) {
+	@Raw
+	protected void setHitPoints(int hitPoints) {
 		this.hitPoints = hitPoints;
 	}
 
 	/**
 	 * A variable conatining the hitPoints of a character
 	 */
-	public int hitPoints;
+	private int hitPoints;
 
 	/**
 	 * A method to determine which GeoFeature is in this character's world at the given position.
@@ -1697,22 +1656,27 @@ public abstract class Characters {
 	 * @post this character's new time since environmental damage is equal to the given value
 	 * 		|new.getTimeSinceEnvironmentalDamage() == time
 	 */
-	public void setTimeSinceEnvironmentalDamage(double time) {
+	protected void setTimeSinceEnvironmentalDamage(double time) {
 		this.timeSinceEnvironmentalDamage = time;
 	}
 
 	/**
-	 * 
+	 * Check whether this character can have the given world as a world.
 	 * @param world
-	 * @return	...
+	 * 			the world to check
+	 * @return	if the character is terminated, it can have the null reference as a world
 	 * 			| if this.isTerminated()
 	 * 			|	if world == null
-	 * 			|		return true
+	 * 			|		result == true
+	 * 			if the world doesn't have this character as an object, then this character canno have the
+	 * 			given world as a world.
 	 * 			| if not world.hasAsObject(this)
-	 * 			|	then return false
+	 * 			|	then result == false
+	 * 			this character cannot have a terminated world
 	 * 			| if world.isTerminated()
-	 * 			|	then return false
-	 * 			| return true
+	 * 			|	then result == false
+	 * 			all other worlds are valid
+	 * 			| result == true
 	 */
 	@Raw
 	public boolean canHaveAsWorld(World world) {
@@ -1733,18 +1697,19 @@ public abstract class Characters {
 	private double timeSinceEnvironmentalDamage = 0.0;
 
 	/**
-	 * 
+	 * Check whether a given close character is valid
 	 * @param character
-	 * @return	...
+	 * @return	true if the character is not a null reference.
 	 * 			| return (character != null)
 	 */
+	@Raw
 	public boolean isValidCloseCharacter(Characters character){
 		return (character != null);
 	}
 
 	/**
-	 * 
-	 * @return	...
+	 * Check whether this character has proper close characters
+	 * @return	true if each close character is a valid close character
 	 * 			| for character in getAllCloseCharacters()
 	 * 			|	if not isValidCloseCharacter(character)
 	 * 			|		then return false
@@ -1758,61 +1723,62 @@ public abstract class Characters {
 	}
 
 	/**
-	 * @return	...
-	 * 			| return new HashSet<Characters>(closeCharacters)
+	 * A method to return all close characters
 	 */
+	@Basic
 	public Set<Characters> getAllCloseCharacters(){
 		return new HashSet<Characters>(closeCharacters);
 	}
 
 	/**
-	 * 
+	 * A method to add a character as a close characters
 	 * @param character
-	 * @effect	...
-	 * 			closeCharacters.add(character)
+	 * 			the character to add
+	 * @post	the given character is saved as a close character
+	 * 			|new.getAllCloseCharacters().contains(character) == true
 	 * @throws IllegalArgumentException
-	 * 			| if not isValidCloseCharacter(character)
+	 * 			| ! isValidCloseCharacter(character)
 	 */
-	public void addAsCloseCharacter(Characters character) throws IllegalArgumentException{
+	protected void addAsCloseCharacter(Characters character) throws IllegalArgumentException{
 		if (! isValidCloseCharacter(character))
 			throw new IllegalArgumentException();
 		closeCharacters.add(character);
 	}
 
 	/**
-	 * 
+	 * Remove a given character from all saved close characters
 	 * @param character
-	 * @effect	...
-	 * 			| closeCharacters.remove(character)
+	 * 			the character to remove
+	 * @post	the given character is no longer saved as a close character
+	 * 			|new.getAllCloseCharacters().contains(character) == false
 	 */
-	public void removeAsCloseCharacter(Characters character){
+	protected void removeAsCloseCharacter(Characters character){
 		closeCharacters.remove(character);
 	}
 
 	/**
-	 * @effect	...
+	 * Empty the set of all saved close characters
+	 * @effect	remove each close character in the set of close characters
 	 * 			| for character in getAllCloseCharacters()
 	 * 			|	removeAsCloseCharacter(character)
 	 */
-	public void removeAllCloseCharacters(){
+	protected void removeAllCloseCharacters(){
 		for (Characters character: getAllCloseCharacters())
 			removeAsCloseCharacter(character);
 	}
 
 	/**
-	 * 
+	 * Check whether this character's world has passible terrain to the right.
 	 * @param position
-	 * @return	...
-	 * 			|  pos = getWorld().getPixelOfTileContaining((int)newPosition, getIntPositionAt(2))
-	 * 			| if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND && ((getIntPositionAt(2) +1) % getWorld().getTileLength() != 0)
-	 * 			|	then return false
-	 * 			| for int i = getIntPositionAt(2)+1 while i<=getIntPositionAt(2)+getSprite().getHeight()-1 with i++
-	 * 			|	pos = getWorld().getPixelOfTileContaining((int)newPosition+getSprite().getWidth()-1,i)
-	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND
-	 * 			|		then return false
-	 * 			| return true
+	 * 			the position that would be stored to save this character's x coordinate
+	 * @return	true if this character's 'theoretical' right side (excluding corners) is not overlapping 
+	 * 			with ground tiles, otherwise false
+	 * 			|for i in getIntPositionAt(2)+1..getIntPositionAt(2)+getSprite().getHeight()-2
+	 * 			|	if (environment((int)position+getSprite().getWidth()-1,i) == GROUND)
+	 * 			|		then result == false
+	 * 			|else result == true
 	 */
-	public boolean passableTerrainRight(double position) {
+	protected boolean passableTerrainRight(double position) {
 		int height = getIntPositionAt(2)+getSprite().getHeight()-2;
 		int i = getIntPositionAt(2)+1;
 		int[] pos = getWorld().getPixelOfTileContaining((int)position+getSprite().getWidth()-1,i);
@@ -1829,19 +1795,17 @@ public abstract class Characters {
 	}
 
 	/**
-	 * 
+	 * Check whether this character's world has passible terrain to the left.
 	 * @param position
-	 * @return	...
-	 * 			|  pos = getWorld().getPixelOfTileContaining((int)newPosition, getIntPositionAt(2))
-	 * 			| if (getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND && ((getIntPositionAt(2) +1) % getWorld().getTileLength() != 0)
-	 * 			|	then return false
-	 * 			| for int i = getIntPositionAt(2)+1 while i<=getIntPositionAt(2)+getSprite().getHeight()-1 with i++
-	 * 			|	pos = getWorld().getPixelOfTileContaining((int)newPosition,i)
-	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND
-	 * 			|		then return false
-	 * 			| return true
+	 * 			the position that would be stored to save this character's x coordinate
+	 * @return	true if this character's 'theoretical' left side (excluding corners) is not overlapping 
+	 * 			with ground tiles, otherwise false
+	 * 			|for i in getIntPositionAt(2)+1..getIntPositionAt(2)+getSprite().getHeight()-2
+	 * 			|	if (environment((int)position,i) == GROUND)
+	 * 			|		then result == false
+	 * 			|else result == true
 	 */
-	public boolean passableTerrainLeft(double position) {
+	protected boolean passableTerrainLeft(double position) {
 		int height = getIntPositionAt(2)+getSprite().getHeight()-2;
 		int i = getIntPositionAt(2)+1;
 		int[] pos = getWorld().getPixelOfTileContaining((int)position,i);
@@ -1858,16 +1822,17 @@ public abstract class Characters {
 	}
 
 	/**
-	 * 
+	 * Check whether this character's world has passible terrain upwards.
 	 * @param position
-	 * @return	...
-	 * 			| for i = getIntPositionAt(1) while i<=getIntPositionAt(1)+getSprite().getWidth()-1 with i++
-	 * 			|	pos = getWorld().getPixelOfTileContaining(i, (int)newPosition+getSprite().getHeight()-1)
-	 * 			|	if getWorld().getGeoFeatureAt(pos[0],pos[1]) == GeoFeature.GROUND
-	 * 			|		return false
-	 * 			| return true
+	 * 			the position that would be stored to save this character's y coordinate
+	 * @return	true if this character's 'theoretical' top side (excluding corners) is not overlapping 
+	 * 			with ground tiles, otherwise false
+	 * 			|for i in getIntPositionAt(1)+1..getIntPositionAt(1)+getSprite().getWidth()-2
+	 * 			|	if (environment(i, (int)position+getSprite().getHeight()-1) == GROUND)
+	 * 			|		then result == false
+	 * 			|else result == true
 	 */
-	public boolean passableTerrainUp(double position) {
+	protected boolean passableTerrainUp(double position) {
 		int width = getIntPositionAt(1)+getSprite().getWidth()-2;
 		int i = getIntPositionAt(1)+1;
 		boolean looping = true;
@@ -1883,19 +1848,17 @@ public abstract class Characters {
 	}
 
 	/**
-	 * 
+	 * Check whether this character's world has passible terrain downwards.
 	 * @param position
-	 * @return	...
-	 * 			| if ((int)newPosition +1) % getWorld().getTileLength() == 0
-	 * 			|	then return true
-	 * 			| else
-	 * 			|	for i  = getIntPositionAt(1) while i<=getIntPositionAt(1)+getSprite().getWidth()-1 with i++
-	 * 			|		pos = getWorld().getPixelOfTileContaining(i, (int)newPosition)
-	 * 			|		if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND)
-	 * 			|			then return false
-	 * 			|	return true
+	 * 			the position that would be stored to save this character's y coordinate
+	 * @return	true if this character's 'theoretical' bottom side (excluding corners) is not overlapping 
+	 * 			with ground tiles, otherwise false
+	 * 			|for i in getIntPositionAt(1)+1..getIntPositionAt(1)+getSprite().getWidth()-2
+	 * 			|	if (environment(i, (int)position) == GROUND)
+	 * 			|		then result == false
+	 * 			|else result == true
 	 */
-	public boolean passableTerrainDown(double position) {
+	protected boolean passableTerrainDown(double position) {
 		int width = getIntPositionAt(1)+getSprite().getWidth()-2;
 		int i = getIntPositionAt(1)+1;
 		int [] pos = getWorld().getPixelOfTileContaining(i, (int)position);
@@ -1912,16 +1875,20 @@ public abstract class Characters {
 	}
 
 	/**
-	 * 
+	 * Check whether this character's is overlapping with another character to the right. If so, add the
+	 * other character to all close characters
 	 * @param position
-	 * @effect	...
-	 * 			| for character in getNearbyCharacters()
-	 * 			|	if (character.getIntPositionAt(1) == (int)newPosition + this.getSprite().getWidth()-1) 
-	 *					&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
-	 *					&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)
-	 *			|			addAsCloseCharacter(character)
+	 * 			the position that would be stored to save this character's x coordinate
+	 * @effect	if a character is overlapping with this character's 'theoretical' right side add it 
+	 * 			to all close characters
+	 * 			|for character in getNearbyCharacters()
+	 * 			|	for i in getIntPositionAt(2)..getIntPositionAt(2) + getSprite().getHeight() -1
+	 * 			|		for otherPos in character.getIntPosition()..
+	 * 			|			character.getIntPosition()+character.getSize()
+	 * 			|			if otherPos == {(int)position + this.getSprite().getWidth()-1,i}
+	 * 			|				then addAsCloseCharacter(character)
 	 */
-	public void collisionDetectionRight(double position) {
+	protected void collisionDetectionRight(double position) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
 			if ((character.getIntPositionAt(1) == (int)position + this.getSprite().getWidth()-1) 
@@ -1935,16 +1902,20 @@ public abstract class Characters {
 	}
 
 	/**
-	 * 
+	 * Check whether this character's is overlapping with another character to the left. If so, add the
+	 * other character to all close characters
 	 * @param position
-	 * @effect	...
-	 * 			| for character in getNearbyCharacters()
-	 * 			|	if (character.getIntPositionAt(1) + character.getSprite().getWidth()-1 == (int)newPosition) 
-	 *					&& (character.getIntPositionAt(2) +character.getSprite().getHeight() -1 >= (this.getIntPositionAt(2))) 
-	 *					&& (character.getIntPositionAt(2) <= this.getIntPositionAt(2) + this.getSprite().getHeight() -1)
-	 *			|			addAsCloseCharacter(character)
+	 * 			the position that would be stored to save this character's x coordinate
+	 * @effect	if a character is overlapping with this character's 'theoretical' left side, add it 
+	 * 			to all close characters
+	 * 			|for character in getNearbyCharacters()
+	 * 			|	for i in getIntPositionAt(2)..getIntPositionAt(2) + getSprite().getHeight() -1
+	 * 			|		for otherPos in character.getIntPosition()..
+	 * 			|			character.getIntPosition()+character.getSize()
+	 * 			|			if otherPos == {(int)position,i}
+	 * 			|				then addAsCloseCharacter(character)
 	 */
-	public void collisionDetectionLeft(double position) {
+	protected void collisionDetectionLeft(double position) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
 			if ((character.getIntPositionAt(1) + character.getSprite().getWidth()-1 == (int)position) 
@@ -1958,16 +1929,20 @@ public abstract class Characters {
 	}
 
 	/**
-	 * 
+	 * Check whether this character's is overlapping with another character upwards. If so, add the
+	 * other character to all close characters
 	 * @param position
-	 * @effect	...
-	 * 			| for character in getNearbyCharacters()
-	 * 			|	if (character.getIntPositionAt(2) == (int)newPosition + this.getSprite().getHeight()) 
-	 *					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
-	 *					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)
-	 *			|			addAsCloseCharacter(character)
+	 * 			the position that would be stored to save this character's y coordinate
+	 * @effect	if a character is overlapping with this character's 'theoretical' top side, add it 
+	 * 			to all close characters
+	 * 			|for character in getNearbyCharacters()
+	 * 			|	for i in getIntPositionAt(1)..getIntPositionAt(1) + getSprite().getWidth() -1
+	 * 			|		for otherPos in character.getIntPosition()..
+	 * 			|			character.getIntPosition()+character.getSize()
+	 * 			|			if otherPos == {i,(int)position+getSprite().getHeight()-1}
+	 * 			|				then addAsCloseCharacter(character)
 	 */
-	public void collisionDetectionUp(double position) {
+	protected void collisionDetectionUp(double position) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
 			if ((character.getIntPositionAt(2) == (int)position + this.getSprite().getHeight()-1) 
@@ -1981,16 +1956,20 @@ public abstract class Characters {
 	}
 
 	/**
-	 * 
+	 * Check whether this character's is overlapping with another character downwards. If so, add the
+	 * other character to all close characters
 	 * @param position
-	 * @effect	...
-	 * 			| for character in getNearbyCharacters()
-	 * 			|	if (character.getIntPositionAt(2) + character.getSprite().getHeight() == (int)newPosition) 
-	 *					&& (character.getIntPositionAt(1) +character.getSprite().getWidth() -1 >= (this.getIntPositionAt(1))) 
-	 *					&& (character.getIntPositionAt(1) <= this.getIntPositionAt(1) + this.getSprite().getWidth() -1)
-	 *			|			addAsCloseCharacter(character)
+	 * 			the position that would be stored to save this character's y coordinate
+	 * @effect	if a character is overlapping with this character's 'theoretical' bottom side, add it 
+	 * 			to all close characters
+	 * 			|for character in getNearbyCharacters()
+	 * 			|	for i in getIntPositionAt(1)..getIntPositionAt(1) + getSprite().getWidth() -1
+	 * 			|		for otherPos in character.getIntPosition()..
+	 * 			|			character.getIntPosition()+character.getSize()
+	 * 			|			if otherPos == {i,(int)position}
+	 * 			|				then addAsCloseCharacter(character)
 	 */
-	public void collisionDetectionDown(double position) {
+	protected void collisionDetectionDown(double position) {
 		Iterable<Characters> characters = getNearbyCharacters();
 		for (Characters character : characters){
 			if ((character.getIntPositionAt(2) + character.getSprite().getHeight()-1 == (int)position) 
@@ -2004,37 +1983,34 @@ public abstract class Characters {
 	}
 
 	/**
-	 * A method to determine what damage mazub receives from the environment.
-	 * @effect	if mazub is in lava, it is in a bad environment and receives 50 damage. The timer is 
-	 * 			set correctly.
-	 * 			|for i in 0..getSprite().getWidth()
-	 * 			|	for j in 0..getSprite().getHeight()
-	 * 			|		if (getGeoFeatureAt(getPixelOfTileContaining(getIntPositionAt(1)+i,
-	 * 			|			getIntPositionAt(2)+j)[0], getPixelOfTileContaining(getIntPositionAt(1)+i,
-	 * 			|			getIntPositionAt(2)+j)[1]) == GeoFeature.MAGMA)
-	 * 			|			then {setBadEnvironment(true)
-	 * 			|					if getTimeSinceEnvironmentalDamage() == 0.0
-	 * 			|						then this.damage(50)
-	 * 			|					setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage()+duration)
-	 * 			|					if (getTimeSinceEnvironmentalDamage() >= 0.2))
-	 * 			|						then setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2)
-	 * 			else if mazub is in water, it is in a bad environment and receives 2 damage after the first
-	 * 			0.2 seconds.The timer is set correctly.
-	 * 			|		else if (getGeoFeatureAt(getPixelOfTileContaining(getIntPositionAt(1)+i,
-	 * 			|			getIntPositionAt(2)+j)[0], getPixelOfTileContaining(getIntPositionAt(1)+i,
-	 * 			|			getIntPositionAt(2)+j)[1]) == GeoFeature.WATER)
-	 * 			|		then {setBadEnvironment(true)
-	 * 			|				if getTimeSinceEnvironmentalDamage()+duration >= 0.0
-	 * 			|					then this.damage(2)
-	 * 			|				setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage()+duration)
-	 * 			|				if (getTimeSinceEnvironmentalDamage() >= 0.2))
-	 * 			|					then setTimeSinceEnvironmentalDamage(getTimeSinceEnvironmentalDamage() - 0.2)
-	 * 			else mazub is not in a badEnvironment. The timer is set correctly.
-	 * 			|		else {setBadEnvironment(false)
-	 * 			|			setTimeSinceEnvironmentalDamage(0.0)}
+	 * A method to determine what damage this character receives from the environment.
+	 * @param duration
+	 * 			the amount of time that passes
+	 * @post	if this character is in MAGMA or WATER, it's new value for a bad environtment may be set
+	 * 			to true. It's time since environmental damage may be increased with the given duration,
+	 * 			if that does not cause it to go over 0.2, otherwise it may set it back to 0
+	 * 			|for pos in getIntPosition()..getIntPosition()+getSize()
+	 * 			|	if environment(pos) == MAGMA
+	 * 			|		then new.isBadEnvironment() ?= true
+	 * 			|		then if getTimeSinceEnvironmentalDamage()+duration >= 0.2
+	 * 			|			then new.getTimeSinceEnvironmentalDamage() ?= 0.0
+	 * 			|		else new.getTimeSinceEnvironmentalDamage() ?= getTimeSinceEnvironmentalDamage()+duration
+	 * @post	if this character is in lava, and the time stored to receive environmental damage is
+	 * 			equal to 0, then it can receive some damage.
+	 *			|		if getTimeSinceEnvironmentalDamage() == 0
+	 * 			|			then new.getHitPoints() <= this.getHitPoints()
+	 * @post	if this character is in water, and the time stored to receive environmental damage plus
+	 * 			the duration is greater than or equal to 0.2, then it can receive some damage.
+	 * 			|	else if environment(pos) == WATER
+	 * 			|		then new.isBadEnvironment() ?= true
+	 * 			|		then if getTimeSinceEnvironmentalDamage()+duration >= 0.2
+	 * 			|			then new.getTimeSinceEnvironmentalDamage() ?= 0.0
+	 * 			|		else new.getTimeSinceEnvironmentalDamage() ?= getTimeSinceEnvironmentalDamage()+duration
+	 *			|		if getTimeSinceEnvironmentalDamage()+duration == 0
+	 * 			|			then new.getHitPoints() <= this.getHitPoints()
 	 * 			
 	 */
-	public void environmentDamage(double duration) {
+	protected void environmentDamage(double duration) {
 		int[] pos = {getIntPositionAt(1),getIntPositionAt(2) + getSprite().getHeight()};
 		int[] pos1 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)};
 		int[] pos2 = {getIntPositionAt(1) + getSprite().getWidth(),getIntPositionAt(2)+getSprite().getHeight()};
@@ -2070,16 +2046,23 @@ public abstract class Characters {
 
 	/**
 	 * A setter method for the variable badEnvironment
+	 * @param badEnvironment
+	 * 			the status to set
+	 * @post	the new value for isBadEnvironment is equal to the given value
+	 * 			|new.getBadEnvironment() == badEnvironment
 	 */
-	@Basic
-	public void setBadEnvironment(boolean badEnvironment) {
+	protected void setBadEnvironment(boolean badEnvironment) {
 		this.badEnvironment = badEnvironment;
 	}
 
-	protected Set<Characters> closeCharacters = new HashSet<>();
+	/**
+	 * A set to store all close characters
+	 */
+	private Set<Characters> closeCharacters = new HashSet<>();
+
 	/**
 	 * A boolean stating whether the character is in a bad environment
 	 */
-	public boolean badEnvironment = false;
+	private boolean badEnvironment = false;
 
 }

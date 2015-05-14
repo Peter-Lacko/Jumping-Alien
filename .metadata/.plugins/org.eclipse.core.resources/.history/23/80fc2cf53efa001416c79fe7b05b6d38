@@ -1,0 +1,164 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+import be.kuleuven.cs.som.annotate.*;
+
+
+public class Mazub extends Aliens {
+
+	/**
+	 * initialize a character with a given x_pos, y_pos, sprites, horizontal acceleration,
+	 * 	maximum horizontal velocity, initial horizontal velocity, initial vertical velocity and hit points.
+	 * @param x_pos
+	 * 			the initial x-coordinate for mazub.
+	 * @param y_pos
+	 * 			the initial y-coordinate for mazub.
+	 * @param sprites
+	 * 			the array of sprites used to display mazub.
+	 * @param hor_acc
+	 * 			the horizontal acceleration of the character
+	 * @param max_hor_vel
+	 * 			the maximum horizontal velocity of the character
+	 * @param init_hor_vel
+	 * 			the initial horizontal velocity of the character
+	 * @param init_ver_vel
+	 * 			the initial vertical velocity of the character
+	 * @param hitPoints
+	 * 			the starting amount of hit points for the character
+	 * @post	mazub starts at the given position.
+	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
+	 * @post	mazub's sprite set is equal to the given one.
+	 * 			| new.getImages().equals(sprites)
+	 * @post	mazub's image length is equal to the length of the given sprite array
+	 * 			|new.getNbImages() == sprites.length
+	 * @post	mazub's horizontal acceleration is set to 0.9
+	 * 			| new.getAbsHorizontalAcceleration() == 0.9
+	 * @post	mazub's max horizontal velocity is set to 3
+	 * 			| new.getMaxHorizontalVelocity == 3.0
+	 * @post	mazub's initial horizontal velocity is set to 1
+	 * 			| Math.abs(new.getInitHorizontalVelocity()) == 1.0
+	 * @post	mazub's initial vertical velocity is set to 8
+	 *			| new.getInitVerticalVelocity() == 8.0
+	 * @post	mazub's displayed sprite is the first sprite in the given array of sprites
+	 * 			| new.getSprite() == sprites[0]
+	 * @post	mazub's hit points is set to 100
+	 * 			|new.getHitPoints() == 100
+	 * @post	the amount of mazub's running sprites is equal to the sprite array length, divided
+	 * 			by 2, then diminished by 4
+	 * 			|new.getNbRunningCycle() == sprites.length/2-4
+	 * @throws IllegalArgumentException
+	 * 			the amount of images provided is invalid
+	 * 			|! isValidNbImages(sprites.length)
+	 */
+	public Mazub(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, 0.9, 3.0, 1.0, 8.0,100);
+	}
+
+	/**
+	 * A more specific (detailed) method to advance time.
+	 * @param duration
+	 * 			the amount of time to advance
+	 * @post	if the character's hit points are 0, then the new character is terminated.
+	 * 			|if(getHitPoints() == 0)
+	 * 			|	then isTerminated() == true;
+	 * @post	for the next postconditions, the following condition applies: the characters hitpoints is not 0
+	 * 			|if (getHitPoints() != 0)
+	 * @post	a new horizontal position and velocity is set
+	 * 			|new.getHorizontalPosition() ?= this.getHorizontalPosition()
+	 * 			|new.getHorizontalVelocity() ?= this.getHorizontalVelocity()
+	 * @post	a new vertical position and velocity is set
+	 * 			|new.getVerticalPosition() ?= this.getVerticalPosition()
+	 * 			|new.getVerticalVelocity() ?= this.getVerticalVelocity()
+	 * @post	a new sprite is set
+	 * @effect	the character suffers from possible enviromental damage (and loses hit points)
+	 * 			|this.environmentalDamage(duration)
+	 * @effect	If mazub is terminated, remove it from its world
+	 * 			|if isTerminated()
+	 * 			|	then getWorld().removeAsObject(this)
+	 * @effect	For the next @effect clauses, it is assumed mazub is not terminated
+	 * 			|if ! isTerminated()
+	 * @effect	the correct directions are set
+	 * 			|this.determineDirection()
+	 * @effect	if mazub is trying to stand up, and can stand up, he will finish his duck
+	 * 			|	if (isEndDuck())
+	 *			|		then if (canEndDuck() && canEndDuckWithoutMove())
+	 *			|			then finishDuck();
+	 * @effect	if Mazub is moving left or right, it's new time since a step is set
+	 * 			|	if (isMovingLeft() || isMovingRight())
+	 *			|		then setTimeSinceStep(getTimeSinceStep() + duration);
+	 *			otherwise, its time since an end move is set
+	 *			|	else setTimeSinceEndMove(getTimeSinceEndMove() + duration)
+	 * @effect	it is checked whether this Mazub has won in its world
+	 * 			|	getWorld().checkIfWin(this)
+	 * @effect	Mazub's immunity is set to the correct status
+	 * 			|	immune(duration)
+	 */
+	@Override
+	public void advanceTimeLong (double duration) throws IllegalArgumentException {
+		super.advanceTimeLong(duration);
+		if (! isTerminated()){
+			this.determineDirection();
+			if (isEndDuck())
+				if (canEndDuck() && canEndDuckWithoutMove())
+					finishDuck();
+			if (isMovingLeft() || isMovingRight())
+				setTimeSinceStep(getTimeSinceStep() + duration);
+			else
+				setTimeSinceEndMove(getTimeSinceEndMove() + duration);
+			if (this.getTimeSinceEndMove() > 1.0)
+				this.sethasMovedIn(MovementDirection.NONE);
+			this.getWorld().checkIfWin(this);
+			this.immune(duration);
+		}
+		else
+			getWorld().removeAsObject(this);
+	}
+	
+	/**
+	 * Determine whether the given character blocks mazub's movement.
+	 * @param other
+	 * 			the other character in question
+	 * @return	true if the other character is also of type mazub
+	 * 			|if other instanceof Mazub
+	 * 			|	then result == true
+	 * 			otherwise, the result is the same as the other's collision status with mazub
+	 * 			|else result == other.collide(this)
+	 */
+	@Override
+	public boolean collide(Characters other){
+		if (other instanceof Mazub)
+			return true;
+		else
+			return other.collide(this);
+	}
+
+	/**
+	 * Determine what happens to this and another colliding character
+	 * @param other
+	 * 			the other character that is colliding with this character
+	 * @post	This character and the other character's hit points may be changed.
+	 * 			|new.getHitPoints() ?= this.getHitPoints()
+	 * 			|(new other).getHitPoints() ?= other.getHitPoints()
+	 */
+	@Override
+	public void collision(Characters other){
+		if (!(other instanceof Mazub))
+			other.collision(this);
+	}
+
+	@Override
+	public void collisionNoDamageFrom(Characters other){
+		if (other instanceof Mazub)
+			throw new IllegalArgumentException();
+		if (!(other instanceof Mazub))
+			other.collisionNoDamageTo(this);
+	}
+
+	@Override
+	public void collisionNoDamageTo(Characters other){
+		if (!(other instanceof Mazub))
+			other.collisionNoDamageFrom(this);
+	}
+}

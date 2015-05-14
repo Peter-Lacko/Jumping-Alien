@@ -2,12 +2,17 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
 		<item value="-1" key="selection"/>
+=======
+		<item value="terminate()" key="selection"/>
+>>>>>>> 17a5181a0d177616b7044f6d93f157a80201ca9e
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
 			<item value="false"/>
 			<item value="damage"/>
 			<item value="size"/>
@@ -19,6 +24,21 @@
 		</list>
 		<list key="replacehistory">
 			<item value="-1"/>
+=======
+			<item value="terminate()"/>
+			<item value="durationRange"/>
+			<item value="collision"/>
+			<item value="collide"/>
+			<item value="advanceTimeLong"/>
+			<item value="environmentda"/>
+			<item value="damage(int"/>
+			<item value="damage("/>
+		</list>
+		<list key="replacehistory">
+			<item value="buzam"/>
+			<item value="mazub"/>
+			<item value="this alien"/>
+>>>>>>> 17a5181a0d177616b7044f6d93f157a80201ca9e
 			<item value="randomValue"/>
 			<item value="DurationRange"/>
 			<item value="Falling"/>

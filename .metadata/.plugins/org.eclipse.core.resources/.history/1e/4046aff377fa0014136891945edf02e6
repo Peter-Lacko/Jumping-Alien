@@ -1,0 +1,663 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+import be.kuleuven.cs.som.annotate.*;
+
+/**
+ * @invar canHaveAsIndex(getIndex())
+ * @invar canHaveAsNbRunningCycle(getNbRunningCycle())
+ * @invar isValidTimeSinceEndMove(getTimeSinceEndMove())
+ * @invar isValidTimeSinceStep(getTimeSinceStep())
+ * @invar isValidImmuneTime(getImmuneTime())
+ * @author Peter Lacko (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor)),
+ * 			Sander Switsers (2nd Bachelor - Computer Sciences (Major) and Electrical Engineering (Minor))
+ * @version 1.0
+ * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
+ */
+public abstract class Aliens extends Characters {
+
+	/**
+	 * initialize a character with a given x_pos, y_pos, sprites, horizontal acceleration,
+	 * 	maximum horizontal velocity, initial horizontal velocity, initial vertical velocity and hit points.
+	 * @param x_pos
+	 * 			the initial x-coordinate for this alien.
+	 * @param y_pos
+	 * 			the initial y-coordinate for this alien.
+	 * @param sprites
+	 * 			the array of sprites used to display this alien.
+	 * @param hor_acc
+	 * 			the horizontal acceleration of the character
+	 * @param max_hor_vel
+	 * 			the maximum horizontal velocity of the character
+	 * @param init_hor_vel
+	 * 			the initial horizontal velocity of the character
+	 * @param init_ver_vel
+	 * 			the initial vertical velocity of the character
+	 * @param hitPoints
+	 * 			the starting amount of hit points for the character
+	 * @post	this alien starts at the given position.
+	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
+	 * @post	this alien's sprite set is equal to the given one.
+	 * 			| new.getImages().equals(sprites)
+	 * @post	this alien's image length is equal to the length of the given sprite array
+	 * 			|new.getNbImages() == sprites.length
+	 * @post	this alien's horizontal acceleration is set to the given horizontal acceleration
+	 * 			| new.getAbsHorizontalAcceleration() == hor_acc
+	 * @post	this alien's max horizontal velocity is set to the given max horizontal velocity
+	 * 			| new.getMaxHorizontalVelocity == max_hor_acc
+	 * @post	this alien's initial horizontal velocity is set to the given initial horizontal velocity
+	 * 			| Math.abs(new.getInitHorizontalVelocity()) == init_hor_vel
+	 * @post	this alien's initial vertical velocity is set to the given initial vertical velocity
+	 *			| new.getInitVerticalVelocity() == init_ver_vel
+	 * @post	this alien's displayed sprite is the first sprite in the given array of sprites
+	 * 			| new.getSprite() == sprites[0]
+	 * @post	this alien's hit points is set to the given amount
+	 * 			|new.getHitPoints() == hitPoints
+	 * @post	the amount of this alien's running sprites is equal to the sprite array length, divided
+	 * 			by 2, then diminished by 4
+	 * 			|new.getNbRunningCycle() == sprites.length/2-4
+	 * @throws IllegalArgumentException
+	 * 			the amount of images provided is invalid
+	 * 			|! isValidNbImages(sprites.length)
+	 * @throws IllegalArgumentException
+	 * 			the given horizontal details are invalid
+	 * 			|((! isValidHorizontalAcceleration(hor_acc)) || (! canHaveAsMaxHorizontalVelocity(max_hor_vel)) 
+	 *			|	|| (! matchesMaxHorizontalVelocityInitHorizontalVelocity(max_hor_vel, init_hor_vel)))
+	 * @throws IllegalArgumentException
+	 * 			the given initial vertical velocity is invalid
+	 * 			|(! canHaveAsInitVerticalVelocity(init_ver_vel))
+	 * @throws IllegalArgumentException
+	 * 			the given amount of hitpoints is invalid
+	 * 			|(! isValidHitPoints(hitPoints))
+	 */
+	public Aliens(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, 
+			double init_hor_vel, double init_ver_vel, int hitpoints)
+					throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitpoints);
+		this.nbRunningCycle = getNbImages()/2-4;
+	}
+
+	/**
+	 * A method to determine which sided sprite must be displayed
+	 * @pre	the given index must be in the correct range (0 to the number of images minus 1)
+	 * @param number
+	 * 			the index in the list of images indicating witch action must be displayed
+	 * @return	the correct sided sprite based on what direction the character is moving and 
+	 * 			which index it was given
+	 */
+	@Override
+	public Sprite leftOrRightSprite(int number){
+		assert (number >= 0);
+		assert (number + 1 < getNbImages());
+		if ((this.getHorizontalVelocity() < 0) || (getHasMovedIn() == MovementDirection.LEFT)){
+			return getImageAt(number + 2);
+		} else{
+			return getImageAt(number + 1);
+		}
+	}
+
+	/**
+	 * A method to determine which sprite must be displayed
+	 * @return	The sprite that must be displayed based on the character's values.
+	 */
+	@Override
+	public Sprite getCurrentSprite(){
+		if ((isFalling()) && (this.getHasMovedIn() != MovementDirection.NONE) && (! isDucked())){
+			return leftOrRightSprite(4);
+		} else if ((isDucked()) && (this.getHasMovedIn() != MovementDirection.NONE)){
+			return leftOrRightSprite(6);
+		} else if (this.getHasMovedIn() != MovementDirection.NONE){
+			return getCurrentWalkCycleSprite();
+		} else if ((isDucked()) && (this.getHasMovedIn() == MovementDirection.NONE)){
+			return getImageAt(2);
+		} else{
+			return getImageAt(1);
+		}
+	}
+
+	/**
+	 * A method that returns the walking/running cycle sprite for the character. It possibly returns a
+	 * non-cycle sprite if the character is moving in both directions
+	 * @return The new walking/ running cycle Sprite is determined depending on the state of the character.
+	 * 			if there has been sufficient time since the last frame of animation, set the index to the
+	 * 			next frame and reset the timer. if the character is moving in both directions (ie not 
+	 * 			moving) return the correct sided sprite for this case. Otherwise, if the character is 
+	 * 			moving right, return the correct sided sprite for this case. Otherwise, if the character
+	 * 			is moving left, return the correct sided sprite for this case. Otherwise, return the
+	 * 			correct sided sprite for all other cases.
+	 */
+	protected Sprite getCurrentWalkCycleSprite() {
+		if (getTimeSinceStep() > 0.075){
+			if (getIndex() < getNbRunningCycle()-1)
+				setIndex(getIndex() + 1);
+			else 
+				setIndex(0);
+			setTimeSinceStep(getTimeSinceStep() - 0.075);
+		}
+		if (this.getHorizontalVelocity() > 0)
+			return getImageAt(9+getIndex());
+		else if (this.getHorizontalVelocity() < 0) 
+			return getImageAt(9+getNbRunningCycle()+getIndex());
+		else {
+			return leftOrRightSprite(2);
+		}
+	}
+
+	/**
+	 * Check whether the character can have the given index for its run cycle.
+	 * @param number
+	 * 			the number to be checked.
+	 * @return True if the index is possible and matches the number of running cycle sprites, otherwise false
+	 * 			|result == ((isPossibleIndex(number)) && (matchesIndexNbRunningCycle(number, getNbRunningCycle())))
+	 */
+	public boolean canHaveAsIndex(int number) {
+		return ((isPossibleIndex(number)) && (matchesIndexNbRunningCycle(number, getNbRunningCycle())));
+	}
+
+	/**
+	 * Check whether the given index and number of running cycle sprites matches
+	 * @param index
+	 * 			the index to check
+	 * @param nbRunningCycle
+	 * 			the number of running cycle sprites to check
+	 * @return	true if the index is smaller than the number, otherwise false
+	 * 			|result == (index < nbRunningCycle)
+	 */
+	public boolean matchesIndexNbRunningCycle(int index, int nbRunningCycle){
+		return(index < nbRunningCycle);
+	}
+
+	/**
+	 * Check whether the given index is possible
+	 * @param index
+	 * 			the index to check
+	 * @return	true if the index is greater than or equal to 0
+	 * 			|result == (index>=0)
+	 */
+	public boolean isPossibleIndex(int index){
+		return (index >= 0);
+	}
+
+	/**
+	 * Set the character's running cycle index to the given number
+	 * @pre The given number must be a valid index.
+	 * 		| canHaveAsIndex(number)
+	 * @param number
+	 * 			the number to set the index at.
+	 * @post	The new index is equal to the given number.
+	 * 			new.getIndex() == number
+	 */
+	public void setIndex(int number) {
+		assert canHaveAsIndex(number);
+		this.index = number;
+	}
+
+	/**
+	 * A method to return at which sprite in the run cycle the character is.
+	 */
+	@Basic
+	public int getIndex() {
+		return this.index;
+	}
+
+	/**
+	 * A variable to determine at which sprite in the run cycle the character is.
+	 */
+	private int index = 0;
+
+	/**
+	 * A method to return how many sprites there are for a running animation.
+	 */
+	@Basic @Immutable
+	public int getNbRunningCycle() {
+		return this.nbRunningCycle;
+	}
+
+	/**
+	 * A variable that stores how many sprites there are for a running animation (running to the left and
+	 * right have the same amount of sprites for the animation).
+	 */
+	private final int nbRunningCycle ;
+
+	/**
+	 * check whether this alien can have the given number as a number for the amount of running cycle sprites
+	 * @param number
+	 * 			the number to check
+	 * @return	true if the number is possible and matches the index, otherwise false
+	 * 			|result == ((isPossibleNbRunningCycle(number)) && (matchesIndexNbRunningCycle(getIndex(),number)))
+	 */
+	public boolean canHaveAsNbRunningCycle(int number){
+		return((isPossibleNbRunningCycle(number)) && (matchesIndexNbRunningCycle(getIndex(),number)));
+	}
+
+	/**
+	 * Check whether the given number is a possible number for the running cycle.
+	 * @param number
+	 * 			the number to check.
+	 * @return	true if the number is bigger than 0, otherwise false
+	 * 			|result == (number > 0)
+	 */
+	public boolean isPossibleNbRunningCycle(int number){
+		return (number > 0);
+	}
+
+	/**
+	 * Check whether the given number of images is valid
+	 * @param nbImages
+	 * 			the amount to check.
+	 * @return	the number is valid if it is bigger than or equal to 10 and even, otherwise it is invalid
+	 * 			| if (nbImages >= 10) && (nbImages % 2 == 0)
+	 * 			|	result == true
+	 * 			| else result == false
+	 */
+	@Override
+	public boolean isValidNbImages(int nbImages){
+		return ((nbImages >= 10) && (nbImages % 2 == 0));
+	}
+
+	/**
+	 * Determine whether the given character blocks this alien's movement.
+	 * @param other
+	 * 			the other character in question
+	 * @return	true or false depending on which this alien is and which the other character is.
+	 * 			result == (true || false)
+	 */
+	@Override
+	public abstract boolean collide(Characters other);
+
+	/**
+	 * A method to set the correct directions the alien has moved in.
+	 * @post 	if the character is moving right, it has moved right
+	 * 			|if isMovingRight()
+	 * 			|	then new.getHasMovedIn() == MovementDirection.RIGHT
+	 * 			if the character is moving left, it has moved left
+	 * 			|if isMovingLeft()
+	 * 			|	then new.getHasMovedIn() == MovementDirection.RIGHT
+	 * @post	if the character has moved left or right, no time has passed since it ended its move.
+	 * 			|if isMovingLeft() || isMovingRight()
+	 * 			|	then new.getTimeSinceEndMove() == 0.0
+	 */
+	@Model
+	protected void determineDirection() {
+		if (this.isMovingRight()){
+			this.sethasMovedIn(MovementDirection.RIGHT);
+			setTimeSinceEndMove(0.0);
+		}
+		else if (this.isMovingLeft()){
+			this.sethasMovedIn(MovementDirection.LEFT);
+			setTimeSinceEndMove(0.0);
+		}
+	}
+
+	/**
+	 * Stop moving the character in the given direction
+	 * @param direction
+	 * 			The direction to stop moving in.
+	 * @pre The direction must be left or right
+	 * 		| (direction == "left") || (direction == "right")
+	 * @post if the direction was left, the new character is not moving left.
+	 * 		| if (direction == "left")
+	 * 		|	then new.isMovingLeft() == false
+	 * @post if the direction was right, the new character is not moving right.
+	 * 		| if (direction == "right")
+	 * 		|	then new.isMovingRight() == false
+	 * @post the new index is set to 0
+	 * 		|new.getIndex() == 0
+	 */
+	@Override
+	public void endMove (String direction) {
+		super.endMove(direction);
+		setIndex(0);
+	}
+
+	/**
+	 * A method that starts this alien's duck
+	 * @post	the new character is ducking
+	 * 			| new.isDucked() = true
+	 * @post	the new alien is not trying to end its duck
+	 * 			|new.isEndDuck() == false
+	 * @post the new Maximum Horizontal velocity is set to 1
+	 * 			|new.getMaxHorizontalVelocity() == 1.0
+	 * @effect	this alien's horizontal velocity is set back to its initial horizontal velocity
+	 * 			|setHorizontalVelocity(getInitHorizontalVelocity())
+	 */
+	public void startDuck(){
+		this.setHorizontalVelocity(getInitHorizontalVelocity());
+		this.setMaxHorizontalVelocity(1.0);
+		this.setIsDucked(true);
+		this.setEndDuck(false);
+	}
+
+	/**
+	 * A method that says when this alien should try to stand up.
+	 * @effect this alien is trying to end its duck
+	 * 			|setEndDuck(true);
+	 */
+	public void endDuck() throws IllegalArgumentException{
+		setEndDuck(true);
+	}
+
+	/**
+	 * Check whether this alien can stand up without moving. This is due to the fact that the sprite width 
+	 * of a ducked alien is smaller than the sprite width of a standing alien.
+	 * @return false if the added width when standing up is in any ground tile.
+	 * 			| let standingSprite = [sprite with mazub's current attributes, but standing]
+	 * 			|for j in 1..standingSprite.getHeight()
+	 * 			|	for i in 1..standingSprite.getWidth() - getSprite().getWidth()
+	 * 			|		let pos = {getIntPositionAt(1) + getSprite().getWidth() +i,getIntPositionAt(2) +j}
+	 * 			|		if (getWorld().getGeoFeatureAt(getWorld().getPixelOfTileContaining(pos[0], pos[1])[0]
+	 * 			|			, getWorld().getPixelOfTileContaining(pos[0], pos[1])[1]) == GeoFeature.GROUND)
+	 * 			|			then result == false
+	 * 			|else result == true
+	 */
+	public boolean canEndDuckWithoutMove(){
+		boolean oldDuck = isDucked();
+		this.setIsDucked(false);
+		Sprite standingSprite = getCurrentSprite();
+		this.setIsDucked(oldDuck);
+		int nbPixelsWidth = standingSprite.getWidth() - getSprite().getWidth();
+		if (nbPixelsWidth > 0){
+			int nbPixelsHeight = standingSprite.getHeight();
+			int tileLength = getWorld().getTileLength();
+			for (int j=1;j <=nbPixelsHeight; j = j + tileLength){
+				for (int i = 1; i <=nbPixelsWidth; i = i +tileLength){
+					int[] pos = new int[] {getIntPositionAt(1) + getSprite().getWidth() +i,
+							getIntPositionAt(2) +j};
+					pos = getWorld().getPixelOfTileContaining(pos[0], pos[1]);
+					if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Check whether the alien can stand up. This is calculated in the space above the ducking alien, not
+	 * including the extra space that it takes up on the side when it stands up.
+	 * @return false if the added width when standing up is in any ground tile.
+	 * 			| let standingSprite = [sprite with mazub's current attributes, but standing]
+	 * 			|for j in 1..standingSprite.getHeight() - getSprite().getHeight()
+	 * 			|	for i in 1..getSprite().getWidth()
+	 * 			|		let pos = {getIntPositionAt(1) +i,getIntPositionAt(2) + getSprite().getHeight() +j}
+	 * 			|		if (getWorld().getGeoFeatureAt(getWorld().getPixelOfTileContaining(pos[0], pos[1])[0]
+	 * 			|			, getWorld().getPixelOfTileContaining(pos[0], pos[1])[1]) == GeoFeature.GROUND)
+	 * 			|			then result == false
+	 * 			|else result == true
+	 */
+	public boolean canEndDuck(){
+		boolean oldDuck = isDucked();
+		this.setIsDucked(false);
+		Sprite standingSprite = getCurrentSprite();
+		this.setIsDucked(oldDuck);
+		int nbPixelsHeight = standingSprite.getHeight() - getSprite().getHeight();
+		int tileLength = getWorld().getTileLength();
+		for (int j=1;j <=nbPixelsHeight; j = j + tileLength){
+			for (int i = 1; i <=getSprite().getWidth(); i = i +tileLength){
+				int[] pos = new int[] {getIntPositionAt(1) +i, getIntPositionAt(2) + getSprite().getHeight() +j};
+				pos = getWorld().getPixelOfTileContaining(pos[0], pos[1]);
+				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Effectively end Mazub's duck.
+	 * @effect Mazub is not trying to stand up any more
+	 * 			|setEndDuck(false)
+	 * @effect	Mazub is not ducking anymore
+	 * 			|setIsDucked(false);
+	 * @effect	Mazub's max horizontal speed is set to its higher value again
+	 * 			|setMaxHorizontalVelocity(3.0)
+	 */
+	protected void finishDuck(){
+		setEndDuck(false);
+		setIsDucked(false);
+		setMaxHorizontalVelocity(3.0);
+	}
+
+	/**
+	 * A getter method for the boolean isDucked.
+	 */
+	@Basic
+	public boolean isDucked() {
+		return this.isDucked;
+	}
+
+	/**
+	 * A setter method to change the boolean isDucked
+	 * @param flag
+	 * 			the new value to set the boolean to
+	 * @post	the new value of isDucked is equal to the given one
+	 * 			|new.isDucked() == flag
+	 */
+	public void setIsDucked(boolean flag){
+		this.isDucked = flag;
+	}
+
+	/**
+	 * a boolean stating whether the character is ducked.
+	 */
+	private boolean isDucked = false;
+
+	/**
+	 * A getter method for the boolean endDucked.
+	 */
+	public boolean isEndDuck() {
+		return endDuck;
+	}
+
+	/**
+	 * A setter method to change the boolean endDucked
+	 * @param flag
+	 * 			the new value to set the boolean to
+	 * @post	the new value of endDucked is equal to the given one
+	 * 			|new.endDucked() == flag
+	 */
+	public void setEndDuck(boolean endduck) {
+		this.endDuck = endduck;
+	}
+
+	/**
+	 * For when the character is ducking, but has a signal to end the duck, this is true.
+	 */
+	private boolean endDuck = false;
+
+	/**
+	 * A getter method for the variable timeSinceEndMove
+	 */
+	@Basic
+	public double getTimeSinceEndMove() {
+		return this.timeSinceEndMove;
+	}
+
+	/**
+	 * a checker method for whether the double time is valid as timeSinceEndMove
+	 * @param time
+	 * 			the double which has to be checked whether its valid
+	 * @return	true if time is greater or equal to zero
+	 * 			| result == (time >= 0)
+	 */
+	public boolean isValidTimeSinceEndMove(double time) {
+		return (Util.fuzzyGreaterThanOrEqualTo(time, 0.0));
+	}
+
+	/**
+	 * A setter method for the variable timeSinceEndMove
+	 * @param time
+	 * 			the time to which timeSinceEndMove has to be set
+	 * @post	timeSinceEndMove is set to time
+	 * 			| new.getTimeSinceEndMove() == time
+	 * @throws	IllegalArgumentException
+	 * 			the given time is not valid
+	 * 			|! isValidTimeSinceEndMove(time)
+	 */
+	public void setTimeSinceEndMove(double time) throws IllegalArgumentException{
+		if (! isValidTimeSinceEndMove(time))
+			throw new IllegalArgumentException();
+		this.timeSinceEndMove = time;
+	}
+
+	/**
+	 * A variable that states the time that has passed since the character has stopped moving.
+	 */
+	private double timeSinceEndMove = 0.0;
+
+	/**
+	 * A getter method for the variable timeSinceStep
+	 */
+	@Basic
+	public double getTimeSinceStep() {
+		return this.timeSinceStep;
+	}
+
+	/**
+	 * a checker method for whether the double time is valid as timeSinceStep
+	 * @param time
+	 * 			the double which has to be checked whether its valid
+	 * @return	true if time is greater or equal to zero
+	 * 			| result == (time >= 0)
+	 */
+	public boolean isValidTimeSinceStep(double time) {
+		return (Util.fuzzyGreaterThanOrEqualTo(time, 0.0));
+	}
+
+	/**
+	 * a setter method for the variable timeSinceStep
+	 * @param time
+	 * 			the time to which timeSinceStep has to be set
+	 * @post	timeSinceStep is set to time
+	 * 			| new.getTimeSinceStep() == time
+	 */
+	public void setTimeSinceStep(double time) throws IllegalArgumentException{
+		if (! isValidTimeSinceStep(time))
+			throw new IllegalArgumentException();
+		this.timeSinceStep = time;
+	}
+
+	/**
+	 * a variable containing the time since the character has stepped (in the run cycle).
+	 */
+	private double timeSinceStep = 0.0;
+
+	/**
+	 * Decide what to do when 'eating' a plant
+	 * @param plant
+	 * 			the plant to eat
+	 * @effect	if Mazub's hitpoints aren't full, add 50 or set to the maximum, and terminate the plant.
+	 * 			|if (getHitPoints() < 500)
+	 * 			|	then setHitPoints(Math.min(500, getHitPoints()+50)), plant.damage(1)
+	 */
+	public void eat(Plant plant){
+		if (getHitPoints() < 500){
+			setHitPoints(Math.min(500, getHitPoints()+50));
+			plant.damage(1);
+		}
+	}
+
+	/**
+	 * determine what to do with this alien's immunity.
+	 * @param duration
+	 * 			the duration of time that passes.
+	 * @effect if this alien still has time left to be immune, then his immunity is set to true
+	 * 			|if (this.getImmuneTime()>0)
+	 * 			|	then setImmune(true)
+	 * 			else set his immunity to false
+	 * 			|else setImmune(false)
+	 * @effect	if this alien still has time left to be immune, the timer is decreased with the given duration.
+	 * 			|if (this.getImmuneTime()>0)
+	 * 			|	then setImmuneTime(getImmuneTime()-duration)
+	 */
+	protected void immune(double duration){
+		if (Util.fuzzyLessThanOrEqualTo(0.0, getImmuneTime()-duration)){
+			setImmune(true);
+			setImmuneTime(getImmuneTime()-duration);
+		}
+		else
+			setImmune(false);
+	}
+
+	/**
+	 * This alien starts to be immune
+	 * @effect this alien's time to be immune is set to 0.6s
+	 * 			|setImmuneTime(0.6)
+	 * @effect	this alien's immune status is set to true
+	 * 			|setImmune(true);
+	 */
+	protected void startImmune(){
+		setImmuneTime(0.6);
+		setImmune(true);
+	}
+
+	/**
+	 * A getter to return Mazub's time left to be immune
+	 * @return the amount of time mazub has left to be immune
+	 */
+	@Basic
+	public double getImmuneTime() {
+		return immuneTime;
+	}
+
+	/**
+	 * A setter to set the amount of time Mazub has left to be immune
+	 * @param immuneTime
+	 * 			the amount of time mazub has to be immune
+	 * @post	mazub's new immune time is equal to the given time.
+	 * 			|new.getImmuneTime() == immuneTime
+	 * @throws	IllegalArgumentException
+	 * 			the given immune time is invalid
+	 * 			|! isValidImmuneTime(immuneTime)
+	 */
+	public void setImmuneTime(double immuneTime) throws IllegalArgumentException{
+		if (! isValidImmuneTime(immuneTime))
+			throw new IllegalArgumentException();
+		this.immuneTime = immuneTime;
+	}
+
+	/**
+	 * Check whether he given time is valid as an immune time
+	 * @param time
+	 * 			the time to check
+	 * @return	true if the time is between 0 and 0.6
+	 * 			result == (0 <= time <= 0.6)
+	 */
+	public boolean isValidImmuneTime(double time){
+		return(Util.fuzzyGreaterThanOrEqualTo(time, 0.0) && Util.fuzzyGreaterThanOrEqualTo(0.6, time));
+	}
+
+	/**
+	 * a variable to store how much time mazub has left to be immune
+	 */
+	public double immuneTime;
+
+	/**
+	 * a getter to tell if mazub is immune
+	 * @return the boolean stating if mazub is immune
+	 */
+	@Basic
+	public boolean isImmune() {
+		return isImmune;
+	}
+
+	/**
+	 * A setter to set whether mazub is immune or not
+	 * @param isImmune
+	 * 			the value to set
+	 * @post mazub's new immune status is equal to the given value
+	 * 			|new.isImmune() == isImmune
+	 */
+	public void setImmune(boolean isImmune) {
+		this.isImmune = isImmune;
+	}
+
+	/**
+	 * a variable stating whether mazub is immune or not
+	 */
+	public boolean isImmune;
+
+}
