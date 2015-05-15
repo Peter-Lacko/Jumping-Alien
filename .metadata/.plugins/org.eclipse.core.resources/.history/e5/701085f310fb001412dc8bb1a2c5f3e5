@@ -1,6 +1,5 @@
 package jumpingalien.model;
 
-import jumpingalien.model.program.Program;
 import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
 import be.kuleuven.cs.som.annotate.*;
@@ -64,30 +63,10 @@ public abstract class Aliens extends Characters {
 	 */
 	@Raw
 	public Aliens(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, 
-			double init_hor_vel, double init_ver_vel, int hitpoints, Program behavior)
-					throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitpoints, behavior);
-		this.nbRunningCycle = getNbImages()/2-4;
-	}
-	
-	/**
-	 * 
-	 * @param x_pos
-	 * @param y_pos
-	 * @param sprites
-	 * @param hor_acc
-	 * @param max_hor_vel
-	 * @param init_hor_vel
-	 * @param init_ver_vel
-	 * @param hitpoints
-	 * @throws IllegalArgumentException
-	 * @effect	|this(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitpoints, null)
-	 */
-	@Raw
-	public Aliens(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, 
 			double init_hor_vel, double init_ver_vel, int hitpoints)
 					throws IllegalArgumentException {
-		this(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitpoints, null);
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitpoints);
+		this.nbRunningCycle = getNbImages()/2-4;
 	}
 
 	/**

@@ -56,8 +56,6 @@ public abstract class Characters {
 	 * 			the initial vertical velocity of the character
 	 * @param hitPoints
 	 * 			the starting amount of hit points for the character
-	 * @param	behavior
-	 * 			the program containing the behavior for the character
 	 * @post	This character starts at the given position.
 	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
 	 * @post	This character's sprite set is equal to the given one.
@@ -111,7 +109,7 @@ public abstract class Characters {
 		this.setInitHorizontalVelocity(init_hor_vel);
 		this.setinitVerticalVelocity(init_ver_vel);
 		this.setHitPoints(hitPoints);
-		this.program = behavior;
+		this.program = behaviour;
 	}
 	
 	/**

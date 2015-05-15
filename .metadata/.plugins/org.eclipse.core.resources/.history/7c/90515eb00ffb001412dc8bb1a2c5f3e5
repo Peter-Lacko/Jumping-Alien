@@ -3,7 +3,6 @@ package jumpingalien.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import jumpingalien.model.program.Program;
 import jumpingalien.util.*;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -56,8 +55,6 @@ public abstract class Characters {
 	 * 			the initial vertical velocity of the character
 	 * @param hitPoints
 	 * 			the starting amount of hit points for the character
-	 * @param	behavior
-	 * 			the program containing the behavior for the character
 	 * @post	This character starts at the given position.
 	 * 			| new.getPosition().equals({(double) x_pos, (double) y_pos})
 	 * @post	This character's sprite set is equal to the given one.
@@ -92,7 +89,7 @@ public abstract class Characters {
 	 */
 	@Raw
 	public Characters(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, 
-			double init_hor_vel, double init_ver_vel, int hitPoints, Program behavior)
+			double init_hor_vel, double init_ver_vel, int hitPoints)
 					throws IllegalArgumentException{
 		if (! isValidNbImages(sprites.length))
 			throw new IllegalArgumentException("Illegal sprite array length!");
@@ -111,33 +108,8 @@ public abstract class Characters {
 		this.setInitHorizontalVelocity(init_hor_vel);
 		this.setinitVerticalVelocity(init_ver_vel);
 		this.setHitPoints(hitPoints);
-		this.program = behavior;
-	}
-	
-	/**
-	 * 
-	 * @param x_pos
-	 * @param y_pos
-	 * @param sprites
-	 * @param hor_acc
-	 * @param max_hor_vel
-	 * @param init_hor_vel
-	 * @param init_ver_vel
-	 * @param hitPoints
-	 * @effect	|this(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitPoints, null)
-	 */
-	@Raw
-	public Characters(int x_pos, int y_pos, Sprite[] sprites, double hor_acc, double max_hor_vel, 
-			double init_hor_vel, double init_ver_vel, int hitPoints){
-		this(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitPoints, null);
 	}
 
-	public Program getProgram(){
-		return program;
-	}
-	
-	private final Program program;
-	
 	/**
 	 * A getter method for the variable isTerminated
 	 */

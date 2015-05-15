@@ -4,5 +4,8 @@
 <fullyQualifiedTypeName name="java.util.stream.Stream"/>
 <fullyQualifiedTypeName name="java.lang.reflect.Type"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
+<<<<<<< HEAD
+=======
 <fullyQualifiedTypeName name="jumpingalien.model.Tile"/>
+>>>>>>> 07105a90245bcf283d5c5675ec3a20cd4d2328ce
 </qualifiedTypeNameHistroy>

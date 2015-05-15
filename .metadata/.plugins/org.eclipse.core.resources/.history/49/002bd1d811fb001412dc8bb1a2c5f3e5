@@ -52,19 +52,10 @@ public class Slime extends Characters implements OtherCharacters {
 		durationRange = new double[] {2.0, 6.0};
 	}
 	
-	/**
-	 * 
-	 * @param x_pos
-	 * @param y_pos
-	 * @param sprites
-	 * @param school
-	 * @throws IllegalArgumentException
-	 * @effect	|this(x_pos, y_pos, sprites, school, null)
-	 */
 	@Raw
 	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school)
 			throws IllegalArgumentException {
-		this(x_pos, y_pos, sprites, school, null);
+		this(x_pos, y_pos, sprites, null);
 	}
 
 	/**

@@ -49,18 +49,10 @@ public class Buzam extends Aliens implements OtherCharacters {
 		durationRange = new double[] {0.0,0.0};
 	}
 	
-	/**
-	 * 
-	 * @param x_pos
-	 * @param y_pos
-	 * @param sprites
-	 * @throws IllegalArgumentException
-	 * @effect	|this(x_pos, y_pos, sprites, null)
-	 */
 	@Raw
 	public Buzam(int x_pos, int y_pos, Sprite[] sprites)
 			throws IllegalArgumentException {
-		this(x_pos, y_pos, sprites, null);
+		this(x_pos, y_pos, sprites, null)
 	}
 
 	/**
