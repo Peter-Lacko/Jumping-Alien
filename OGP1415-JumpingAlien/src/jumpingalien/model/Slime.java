@@ -3,6 +3,7 @@ package jumpingalien.model;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
+import jumpingalien.model.program.Program;
 import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
 
@@ -44,11 +45,26 @@ public class Slime extends Characters implements OtherCharacters {
 	 * 			|! isValidNbImages(sprites.length)
 	 */
 	@Raw
-	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school)
+	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school, Program behavior)
 			throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0,100);
+		super(x_pos, y_pos, sprites, 0.7, 2.5, 0.0, 0.0,100, behavior);
 		this.setSchool(school);
 		durationRange = new double[] {2.0, 6.0};
+	}
+	
+	/**
+	 * 
+	 * @param x_pos
+	 * @param y_pos
+	 * @param sprites
+	 * @param school
+	 * @throws IllegalArgumentException
+	 * @effect	|this(x_pos, y_pos, sprites, school, null)
+	 */
+	@Raw
+	public Slime(int x_pos, int y_pos, Sprite[] sprites, School school)
+			throws IllegalArgumentException {
+		this(x_pos, y_pos, sprites, school, null);
 	}
 
 	/**

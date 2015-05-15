@@ -3,4 +3,5 @@
 <fullyQualifiedTypeName name="java.util.function.Predicate"/>
 <fullyQualifiedTypeName name="java.util.stream.Stream"/>
 <fullyQualifiedTypeName name="java.lang.reflect.Type"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
 </qualifiedTypeNameHistroy>

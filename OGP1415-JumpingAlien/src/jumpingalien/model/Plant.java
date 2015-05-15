@@ -3,6 +3,7 @@ package jumpingalien.model;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
+import jumpingalien.model.program.Program;
 import jumpingalien.util.Sprite;
 
 public class Plant extends Characters implements OtherCharacters {
@@ -39,11 +40,25 @@ public class Plant extends Characters implements OtherCharacters {
 	 * 			|! isValidNbImages(sprites.length)
 	 */
 	@Raw
-	public Plant(int x_pos, int y_pos, Sprite[] sprites)
+	public Plant(int x_pos, int y_pos, Sprite[] sprites, Program behavior)
 			throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0,1);
+		super(x_pos, y_pos, sprites, 0.0, 0.5, 0.5, 0.0,1, behavior);
 		setMovingRight(true);
 		durationRange = new double[] {0.5,0.5};
+	}
+	
+	/**
+	 * 
+	 * @param x_pos
+	 * @param y_pos
+	 * @param sprites
+	 * @throws IllegalArgumentException
+	 * @effect	|this(x_pos, y_pos, sprites, null)
+	 */
+	@Raw
+	public Plant(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		this(x_pos, y_pos, sprites, null);
 	}
 	
 	/**

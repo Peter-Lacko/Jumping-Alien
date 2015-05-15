@@ -3,6 +3,7 @@ package jumpingalien.model;
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
+import jumpingalien.model.program.Program;
 import jumpingalien.util.Sprite;
 import jumpingalien.util.Util;
 
@@ -40,12 +41,26 @@ public class Shark extends Characters implements OtherCharacters {
 	 * 			|! isValidNbImages(sprites.length)
 	 */
 	@Raw
-	public Shark(int x_pos, int y_pos, Sprite[] sprites)
+	public Shark(int x_pos, int y_pos, Sprite[] sprites, Program behavior)
 			throws IllegalArgumentException {
-		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0, 100);
+		super(x_pos, y_pos, sprites, 1.5, 4.0, 0.0, 2.0, 100, behavior);
 		durationRange = new double[] {1.0, 4.0};
 	}
 
+	/**
+	 * 
+	 * @param x_pos
+	 * @param y_pos
+	 * @param sprites
+	 * @throws IllegalArgumentException
+	 * @effect this(x_pos, y_pos, sprites, null)
+	 */
+	@Raw
+	public Shark(int x_pos, int y_pos, Sprite[] sprites)
+			throws IllegalArgumentException {
+		this(x_pos, y_pos, sprites, null);
+	}
+	
 	/**
 	 * A getter method for the variable durationRange
 	 */
