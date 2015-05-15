@@ -1,0 +1,11 @@
+package jumpingalien.model.program.expression.unary;
+
+public class isTerrain extends Unary {
+
+	@Override
+	public Object compute() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

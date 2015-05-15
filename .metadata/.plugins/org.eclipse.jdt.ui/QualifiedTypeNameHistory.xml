@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<<<<<<< HEAD
 <qualifiedTypeNameHistroy/>
+=======
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="jumpingalien.model.Tyle"/>
+<fullyQualifiedTypeName name="jumpingalien.model.GeoFeature"/>
+<fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.Direction"/>
+<fullyQualifiedTypeName name="jumpingalien.model.Characters"/>
+<fullyQualifiedTypeName name="jumpingalien.model.Aliens"/>
+</qualifiedTypeNameHistroy>
+>>>>>>> e1b8f938f2bf1f4fb2d98dc416fe5afa78d20414
