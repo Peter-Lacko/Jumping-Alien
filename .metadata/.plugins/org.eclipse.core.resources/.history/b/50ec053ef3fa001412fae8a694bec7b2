@@ -1,0 +1,11 @@
+package jumpingalien.model.program.expression.unary;
+
+public class IsDucking extends Unary {
+
+	@Override
+	public Object compute() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
