@@ -1,0 +1,5 @@
+package jumpingalien.model.program.expression.binary;
+
+public class GetTile {
+
+}

@@ -1,7 +1,7 @@
 package jumpingalien.model.program.expression.unary;
 
 import jumpingalien.model.GeoFeature;
-import jumpingalien.model.Tile;
+import jumpingalien.model.Tyle;
 import jumpingalien.model.program.expression.Expression;
 
 public class IsAir extends Unary<Object> {
@@ -12,9 +12,9 @@ public class IsAir extends Unary<Object> {
 
 	@Override
 	public Object compute() {
-		if (! (this.getExpr().compute() instanceof Tile))
+		if (! (this.getExpr().compute() instanceof Tyle))
 			return false;
-		return ((Tile)this.getExpr().compute()).getGeo() == GeoFeature.AIR;
+		return ((Tyle)this.getExpr().compute()).getGeo() == GeoFeature.AIR;
 	}
 
 }

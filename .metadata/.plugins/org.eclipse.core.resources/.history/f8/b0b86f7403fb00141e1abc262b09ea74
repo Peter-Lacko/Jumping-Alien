@@ -973,11 +973,11 @@ public class World {
 	 */
 	private List<Characters> objects = new LinkedList<Characters>();
 
-	public List<Tile> getTiles(){
-		List<Tile> list = new LinkedList<Tile>();
+	public List<Tyle> getTiles(){
+		List<Tyle> list = new LinkedList<Tyle>();
 		for (int i = 0; i < this.getWindowWidth() ; i = i+getTileLength()){
 			for (int j = 0 ; j < this.getWindowHeight() ; j = j+getTileLength()){
-				Tile tyle = new Tile();
+				Tyle tyle = new Tyle();
 				int[] pos = getTilePosition(i, j);
 				tyle.setPosition(pos);
 				tyle.setWorld(this);
