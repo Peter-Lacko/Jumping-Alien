@@ -5,7 +5,6 @@ package jumpingalien.model;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import jumpingalien.util.Util;
 import be.kuleuven.cs.som.annotate.Basic;
@@ -1315,14 +1314,11 @@ public class World {
 		}
 		return plants;
 	}
-	
-	public Collection<Buzam> getAllBuzams(){
-		Collection<Buzam> buzams = new LinkedList<Buzam>();
-		for (Characters object : getAllObjects()){
-			if (object instanceof Buzam)
-				buzams.add((Buzam)object);
-		}
-		return buzams;
+
+	public Collection<Characters> getAllObjectsOfType(Class type){
+		Stream<Characters> result = getAllObjects().stream().filter(new Predicate<Characters>() { 
+			public boolean test(Object o) {
+				return (Integer)o % factor == 0;}});
 	}
 
 }

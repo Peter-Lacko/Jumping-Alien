@@ -193,7 +193,12 @@ public class Facade implements IFacadePart2 {
 	}
 	
 	public Collection<Plant> getPlants(World world){
-		return world.getAllPlants();
+		Collection<Plant> plants = new LinkedList<Plant>();
+		for (Characters object : world.getAllObjects()){
+			if (object instanceof Plant)
+				plants.add((Plant)object);
+		}
+		return plants;
 	}
 	
 	public int[] getLocation(Plant plant){
@@ -217,7 +222,12 @@ public class Facade implements IFacadePart2 {
 	}
 
 	public Collection<Shark> getSharks(World world){
-		return world.getAllSharks()
+		Collection<Shark> sharks = new LinkedList<Shark>();
+		for (Characters object : world.getAllObjects()){
+			if (object instanceof Shark)
+				sharks.add((Shark)object);
+		}
+		return sharks;
 	}
 
 	public int[] getLocation(Characters shark){
