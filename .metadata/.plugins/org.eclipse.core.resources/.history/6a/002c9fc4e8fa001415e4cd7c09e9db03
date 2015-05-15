@@ -110,6 +110,11 @@ public class Plant extends Characters implements OtherCharacters {
 	 * 			|	then {setTerminateTime(getTerminateTime()+duration)
 	 * 			|		if ((this.getTerminateTime()+duration > 0.6) && (! (this.getWorld() == null)))
 	 * 			|			then getWorld().removeAsObject(this)
+	 * @effect	|if ! isTerminated(){
+	 * @effect	|	if (getTimeSinceStartMovement() < getMovementDuration())
+	 * 			|		then setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
+	 * 			|	else selectMovements()
+	 * 			|}
 	 */
 	@Override
 	protected void advanceTimeLong(double duration){

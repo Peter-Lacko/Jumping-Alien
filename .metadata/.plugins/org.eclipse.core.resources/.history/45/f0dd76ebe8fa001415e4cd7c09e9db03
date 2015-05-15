@@ -184,7 +184,7 @@ public abstract class Characters {
 	 * A method to determine which sprite must be displayed
 	 * @return	The sprite that must be displayed based on the character's values.
 	 */
-	public Sprite getCurrentSprite() {
+	protected Sprite getCurrentSprite() {
 		return leftOrRightSprite(0);
 	}
 

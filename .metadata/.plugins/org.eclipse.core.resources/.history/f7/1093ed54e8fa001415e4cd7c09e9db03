@@ -52,47 +52,6 @@ public class Slime extends Characters implements OtherCharacters {
 	}
 
 	/**
-	 * A method to advance time for a give duration
-	 * @param duration
-	 * 			the amount of time to advance
-	 * @post	The new falling status is set to the appropriate value.
-	 * 			|if checkFalling()
-	 * 			|	then new.isFalling() == true
-	 * 			|else
-	 * 			|	new.isFalling() == false
-	 * @effect	a more precise version of advanceTimeLong is invoked for each shorter duration the original
-	 * 			duration is split into
-	 * 			|for (double shorter = shortDuration(duration); shorter <= duration; shorter += sortDuration(duration))
-	 * 			|	advanceTimeLong(shorter)
-	 * @post	the character is set to the right side of its world, if it is still in its world
-	 * 			|if (getWorld().hasAsObject(this))
-	 *			|	then if (this.getIntPositionAt(1) <= getWorld().getWorldSize()[0]/2)
-	 *			|		then (new getWorld()).hasAsLeftObject(this);
-	 *			|	if ((this.getIntPositionAt(1) + this.getSize()[0] - 1) >= getWorld().getWorldSize()[0]/2)
-	 *			|		then getWorld().hasAsRightObject(this);
-	 * @effect	|if ! isTerminated(){
-	 * @effect	|	if (getTimeSinceStartMovement() < getMovementDuration())
-	 * 			|		then setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
-	 * 			|	else selectMovements()
-	 * 			|}
-	 * @throws IllegalArgumentException
-	 * 			the given duration is invalid (below 0 or above 0.2)
-	 * 			|(duration < 0.0) || (duration >= 0.2)
-	 */
-	@Override
-	public void advanceTime(double duration)throws IllegalArgumentException{
-		if (! this.isTerminated()){
-			if (getTimeSinceStartMovement() < getMovementDuration()){
-				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
-			}
-			else{
-				selectMovements();
-			}
-		}
-		super.advanceTime(duration);
-	}
-	
-	/**
 	 * A more specific (detailed) method to advance time.
 	 * @param duration
 	 * 			the amount of time to advance
@@ -115,6 +74,11 @@ public class Slime extends Characters implements OtherCharacters {
 	 * 			|	then {setTerminateTime(getTerminateTime()+duration)
 	 * 			|		if ((this.getTerminateTime()+duration > 0.6) && (! (this.getWorld() == null)))
 	 * 			|			then getWorld().removeAsObject(this)
+	 * @effect	|if ! isTerminated(){
+	 * @effect	|	if (getTimeSinceStartMovement() < getMovementDuration())
+	 * 			|		then setTimeSinceStartMovement(getTimeSinceStartMovement() + duration)
+	 * 			|	else selectMovements()
+	 * 			|}
 	 */
 	@Override
 	protected void advanceTimeLong(double duration){
@@ -136,6 +100,19 @@ public class Slime extends Characters implements OtherCharacters {
 				this.setSchool(null);
 			}
 		}
+	}
+
+	@Override
+	public void advanceTime(double duration)throws IllegalArgumentException{
+		if (! this.isTerminated()){
+			if (getTimeSinceStartMovement() < getMovementDuration()){
+				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+			}
+			else{
+				selectMovements();
+			}
+		}
+		super.advanceTime(duration);
 	}
 	
 	/**

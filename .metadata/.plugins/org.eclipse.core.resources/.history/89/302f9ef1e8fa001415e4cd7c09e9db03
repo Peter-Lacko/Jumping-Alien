@@ -93,7 +93,7 @@ public abstract class Aliens extends Characters {
 	 * @return	The sprite that must be displayed based on the character's values.
 	 */
 	@Override
-	public Sprite getCurrentSprite(){
+	protected Sprite getCurrentSprite(){
 		if ((isFalling()) && (this.getHasMovedIn() != MovementDirection.NONE) && (! isDucked())){
 			return leftOrRightSprite(4);
 		} else if ((isDucked()) && (this.getHasMovedIn() != MovementDirection.NONE)){

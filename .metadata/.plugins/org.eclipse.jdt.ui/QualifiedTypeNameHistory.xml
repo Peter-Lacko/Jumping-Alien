@@ -1,11 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy>
-<<<<<<< HEAD
-<fullyQualifiedTypeName name="java.util.Map"/>
-<fullyQualifiedTypeName name="jumpingalien.model.Mazub"/>
-<fullyQualifiedTypeName name="jumpingalien.model.Characters"/>
-=======
-<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Immutable"/>
-<fullyQualifiedTypeName name="be.kuleuven.cs.som.annotate.Raw"/>
->>>>>>> 17a5181a0d177616b7044f6d93f157a80201ca9e
-</qualifiedTypeNameHistroy>
+<qualifiedTypeNameHistroy/>

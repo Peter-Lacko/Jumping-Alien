@@ -2,55 +2,23 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-<<<<<<< HEAD
-		<item value="-1" key="selection"/>
-=======
-		<item value="terminate()" key="selection"/>
->>>>>>> 17a5181a0d177616b7044f6d93f157a80201ca9e
+		<item value="getCurrentSprite" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-<<<<<<< HEAD
-			<item value="false"/>
-			<item value="damage"/>
-			<item value="size"/>
-			<item value="canHaveAsNewPosition"/>
-			<item value="canHaveAsNewPosiion"/>
-			<item value="getabs"/>
-			<item value="canHaveAsWorld("/>
-			<item value="getInit"/>
-		</list>
-		<list key="replacehistory">
-			<item value="-1"/>
-=======
-			<item value="terminate()"/>
-			<item value="durationRange"/>
-			<item value="collision"/>
-			<item value="collide"/>
+			<item value="getCurrentSprite"/>
 			<item value="advanceTimeLong"/>
-			<item value="environmentda"/>
-			<item value="damage(int"/>
-			<item value="damage("/>
 		</list>
 		<list key="replacehistory">
-			<item value="buzam"/>
-			<item value="mazub"/>
-			<item value="this alien"/>
->>>>>>> 17a5181a0d177616b7044f6d93f157a80201ca9e
-			<item value="randomValue"/>
-			<item value="DurationRange"/>
-			<item value="Falling"/>
-			<item value="plant2"/>
-			<item value="plant1"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="353" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="513" key="DIALOG_HEIGHT"/>
-		<item value="1578" key="DIALOG_X_ORIGIN"/>
-		<item value="262" key="DIALOG_Y_ORIGIN"/>
+		<item value="305" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="444" key="DIALOG_HEIGHT"/>
+		<item value="1276" key="DIALOG_X_ORIGIN"/>
+		<item value="208" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
