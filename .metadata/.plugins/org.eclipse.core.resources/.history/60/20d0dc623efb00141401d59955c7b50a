@@ -2,7 +2,7 @@ package jumpingalien.model.program.statement;
 
 import jumpingalien.model.program.Program;
 
-public abstract class Statement implements Iterable {
+public abstract class Statement {
 	
 	public Statement(){
 	}

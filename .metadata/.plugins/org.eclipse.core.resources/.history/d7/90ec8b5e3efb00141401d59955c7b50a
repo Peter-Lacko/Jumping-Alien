@@ -9,7 +9,7 @@ import jumpingalien.model.program.statement.Statement;
 import jumpingalien.model.program.type.Type;
 import be.kuleuven.cs.som.annotate.*;
 
-public class Program implements Iterable{
+public class Program {
 	
 	public Program(Map<String , Type> map,Statement statement){
 		this.statement = statement;
@@ -75,10 +75,4 @@ public class Program implements Iterable{
 	}
 	
 	private World world;
-
-	@Override
-	public Iterator iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

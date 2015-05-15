@@ -1,0 +1,11 @@
+package jumpingalien.model.program.statement;
+
+public class WhileLoop extends Statement {
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}
