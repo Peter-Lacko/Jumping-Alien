@@ -42,7 +42,7 @@ public class Program {
 	}
 	
 	public void addValue(String name, Expression<?> value){
-		this.globalValue.put(name, value.compute());
+		this.globalValue.put(name, value);
 	}
 	
 	/**

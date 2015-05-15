@@ -7,8 +7,6 @@ public abstract class Statement {
 	public Statement(){
 	}
 	
-	public abstract void execute();
-	
 	public Program getProgram(){
 		return this.program;
 	}

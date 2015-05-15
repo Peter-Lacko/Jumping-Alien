@@ -4,7 +4,6 @@ import java.util.*;
 
 import jumpingalien.model.Characters;
 import jumpingalien.model.World;
-import jumpingalien.model.program.expression.Expression;
 import jumpingalien.model.program.statement.Statement;
 import jumpingalien.model.program.type.Type;
 import be.kuleuven.cs.som.annotate.*;
@@ -36,13 +35,7 @@ public class Program {
 	 */
 	@Basic
 	public Map<String, Object> getGlobalValue(){
-		Map<String , Object> copy;
-		copy = new HashMap<String, Object>(globalValue);
-		return copy;
-	}
-	
-	public void addValue(String name, Expression<?> value){
-		this.globalValue.put(name, value.compute());
+		return this.globalValue;
 	}
 	
 	/**
