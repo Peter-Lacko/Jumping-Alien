@@ -13,8 +13,8 @@ public class IsPassable extends Unary<Object> {
 	public Object compute() {
 		if (this.getExpr().compute() instanceof Characters)
 			return false;
-		else if (this.getExpr().compute() instanceof Tyle)
-			return ! (((Tyle)this.getExpr().compute()).getGeo() == GeoFeature.GROUND);
+		else if (this.getExpr().compute() instanceof Tile)
+			return ! (((Tile)this.getExpr().compute()).getGeo() == GeoFeature.GROUND);
 		return true;
 	}
 

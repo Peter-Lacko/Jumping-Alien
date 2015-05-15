@@ -11,7 +11,8 @@ public class Assignment extends Statement {
 	}
 	
 	public void execute(){
-		this.getProgram().getGlobalType();
+		this.getProgram().getGlobalValue().put(this.getVariable(), this.getExpression().compute());
+		this.setDone(true);
 	}
 	
 	@Basic @Immutable

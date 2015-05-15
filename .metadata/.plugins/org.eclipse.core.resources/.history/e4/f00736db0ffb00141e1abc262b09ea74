@@ -1,0 +1,31 @@
+package jumpingalien.model.program.statement;
+
+import jumpingalien.model.program.expression.Expression;
+import be.kuleuven.cs.som.annotate.*;
+
+public class Assignment extends Statement {
+
+	public Assignment(String name, Expression<?> value){
+		this.expression = value;
+		this.variable = name;
+	}
+	
+	public void execute(){
+		this.getProgram().getGlobalType();
+	}
+	
+	@Basic @Immutable
+	private String getVariable() {
+		return this.variable;
+	}
+	
+	private final String variable;
+	
+	@Basic @Immutable
+	private Expression getExpression() {
+		return this.expression;
+	}
+	
+	private final Expression expression;
+
+}
