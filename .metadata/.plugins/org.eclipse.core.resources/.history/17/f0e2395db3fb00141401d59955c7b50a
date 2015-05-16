@@ -1,7 +1,5 @@
 package jumpingalien.model.program.statement;
 
-import java.util.Iterator;
-
 import jumpingalien.model.program.expression.*;
 
 public class WhileLoop extends Statement {
@@ -14,7 +12,8 @@ public class WhileLoop extends Statement {
 
 	@Override
 	public void execute() {
-		this.iterator();
+		// TODO Auto-generated method stub
+
 	}
 	
 	public Expression<?> getCondition(){
@@ -32,11 +31,4 @@ public class WhileLoop extends Statement {
 	}
 	
 	private Statement loopBody;
-
-	@Override
-	public Iterator iterator() {
-		if ((boolean)this.getCondition().compute())
-			return loopBody.iterator();
-		return null;
-	}
 }
