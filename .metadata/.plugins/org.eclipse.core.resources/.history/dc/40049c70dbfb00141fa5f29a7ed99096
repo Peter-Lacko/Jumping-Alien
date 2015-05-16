@@ -1,0 +1,25 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+
+public class Wait extends ActionStatement {
+
+	public Wait(Expression expression){
+		
+	}
+	
+	@Override
+	public Iterator iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

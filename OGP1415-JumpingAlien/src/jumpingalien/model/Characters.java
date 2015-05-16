@@ -1078,6 +1078,23 @@ public abstract class Characters {
 	private boolean isJumping = false;
 
 	/**
+	 * An empty method for all characters. Only aliens can duck, but this method must be defined at this
+	 * level for the programs. this is overwriten at the level of aliens.
+	 * @post	|new.getMaximumHorizontalVelocity() ?= this.getMaximumHorizontalVelocity()
+	 */
+	public void startDuck(){
+		
+	}
+	
+	/**
+	 * An empty method for all characters. Only aliens can duck, but this method must be defined at this
+	 * level for the programs. this is overwriten at the level of aliens.
+	 */
+	public void endDuck(){
+		
+	}
+	
+	/**
 	 * Return the orientation of the Mazub character as an (enumerated) MovementDirection.
 	 * 	The orientation is the direction Mazub is facing or moving.
 	 * @return if the character is only moving left, return left

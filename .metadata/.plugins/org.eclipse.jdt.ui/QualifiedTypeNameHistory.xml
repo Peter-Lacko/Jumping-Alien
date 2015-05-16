@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.util.function.Predicate"/>
-<fullyQualifiedTypeName name="java.util.stream.Stream"/>
-<fullyQualifiedTypeName name="java.lang.reflect.Type"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
-<<<<<<< HEAD
-=======
-<fullyQualifiedTypeName name="jumpingalien.model.Tile"/>
->>>>>>> 07105a90245bcf283d5c5675ec3a20cd4d2328ce
+<fullyQualifiedTypeName name="java.util.Iterator"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.expression.Expression"/>
+<fullyQualifiedTypeName name="java.util.NoSuchElementException"/>
 </qualifiedTypeNameHistroy>

@@ -1,0 +1,12 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+public abstract class ActionStatement extends Statement {
+
+	@Override
+	public abstract Iterator iterator();
+	
+	@Override
+	public abstract void execute();
+}

@@ -1,0 +1,27 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+
+public class Wait extends ActionStatement {
+
+	//moet did een double of een expression zijn?
+	public Wait(Expression expression){
+		
+	}
+	
+	@Override
+	public Iterator iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// er gebeurt niets voor deze statement.
+		//VRAAG: als bvb een startJump() voor een Wait is, moet er dan niets gebeuren in die Wait? 
+		//of startJump?
+	}
+
+}

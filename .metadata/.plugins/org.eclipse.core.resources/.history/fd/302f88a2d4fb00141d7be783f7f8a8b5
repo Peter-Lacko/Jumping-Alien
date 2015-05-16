@@ -1,0 +1,36 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+public class StartJump extends ActionStatement {
+
+	public StartJump(){
+		
+	}
+	
+	@Override
+	public Iterator iterator() {
+		return new Iterator(){
+
+			@Override
+			public boolean hasNext() {
+				return executed;
+			}
+
+			@Override
+			public Statement next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			private boolean executed = false;
+			
+		};
+	}
+
+	@Override
+	public void execute() {
+		getProgram().getCharacter().startJump();
+	}
+
+}

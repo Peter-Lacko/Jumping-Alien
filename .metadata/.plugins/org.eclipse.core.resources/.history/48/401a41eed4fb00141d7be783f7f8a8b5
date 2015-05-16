@@ -1,0 +1,38 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class StartJump extends ActionStatement {
+
+	public StartJump(){
+		
+	}
+	
+	@Override
+	public Iterator iterator() {
+		return new Iterator(){
+
+			@Override
+			public boolean hasNext() {
+				return executed;
+			}
+
+			@Override
+			public Statement next() throws NoSuchElementException{
+				if (! hasNext())
+					throw new NoSuchElementException();
+				return this;
+			}
+			
+			private boolean executed = false;
+			
+		};
+	}
+
+	@Override
+	public void execute() {
+		getProgram().getCharacter().startJump();
+	}
+
+}

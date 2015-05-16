@@ -1,0 +1,9 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+public abstract class ActionStatement extends Statement {
+
+	//moet hier iets?
+	
+}

@@ -1,0 +1,43 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+//while loop argument: must become a StatementSequence?
+public class StatementSequence extends Statement {
+
+	public StatementSequence(Statement... statements){
+		this.statements = statements;
+	}
+	
+	private final Statement[] statements;
+	
+	public Statement[] getStatements() {
+		return statements;
+	}
+
+	@Override
+	public Iterator iterator() {
+		return new Iterator(){
+
+			@Override
+			public boolean hasNext() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public Object next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		}
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		//hier gebeurd niets? is dat ok?
+	}
+
+}

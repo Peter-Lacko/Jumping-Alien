@@ -323,6 +323,7 @@ public abstract class Aliens extends Characters {
 	 * @effect	this alien's horizontal velocity is set back to its initial horizontal velocity
 	 * 			|setHorizontalVelocity(getInitHorizontalVelocity())
 	 */
+	@Override
 	public void startDuck(){
 		this.setHorizontalVelocity(getInitHorizontalVelocity());
 		this.setMaxHorizontalVelocity(1.0);
@@ -335,6 +336,7 @@ public abstract class Aliens extends Characters {
 	 * @effect this alien is trying to end its duck
 	 * 			|setEndDuck(true);
 	 */
+	@Override
 	public void endDuck(){
 		setEndDuck(true);
 	}

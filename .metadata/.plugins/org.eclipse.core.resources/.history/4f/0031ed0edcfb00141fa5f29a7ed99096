@@ -1,0 +1,23 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+public class Skip extends ActionStatement {
+
+	public Skip(){
+		super();
+	}
+	
+	@Override
+	public Iterator iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}
