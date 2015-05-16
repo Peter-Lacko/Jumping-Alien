@@ -1,0 +1,5 @@
+package jumpingalien.model.program.type;
+
+public class DirectionType extends Type<DirectionType> {
+
+}

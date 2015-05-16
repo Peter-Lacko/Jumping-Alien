@@ -1,7 +1,19 @@
 package jumpingalien.model.program.type;
 
-public enum Type{
+public abstract class Type<T>{
 	
-	BOOLEAN , DOUBLE , OBJECT , DIRECTION
+	enum TypeEnum{
+		
+	}
+	
+	protected Type(T value){
+		this.value = value;
+	}
+	
+	public T getValue(){
+		return this.value;
+	}
+	
+	private T value;
 	
 }

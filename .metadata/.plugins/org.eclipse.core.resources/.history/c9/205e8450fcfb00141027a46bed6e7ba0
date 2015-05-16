@@ -1,0 +1,7 @@
+package jumpingalien.model.program.type;
+
+import jumpingalien.model.*;
+
+public class GameObject extends Type<GameObject> {
+
+}

@@ -3,4 +3,7 @@
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.expression.Expression"/>
 <fullyQualifiedTypeName name="java.util.NoSuchElementException"/>
+<fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.Direction"/>
+<fullyQualifiedTypeName name="jumpingalien.model.Characters"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.type.Type"/>
 </qualifiedTypeNameHistroy>

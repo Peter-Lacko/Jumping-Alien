@@ -1,6 +1,8 @@
 package jumpingalien.model.program.expression;
 
-public abstract class ExpressionBasic<T> extends Expression<T> {
+import jumpingalien.model.program.type.Type;
+
+public abstract class ExpressionBasic<T extends Type> extends Expression<T> {
 
 	@Override
 	public Object compute(){

@@ -1,6 +1,6 @@
 package jumpingalien.model;
 
-public class Tile {
+public class Tile extends GameObject{
 	
 	public Tile(){
 		

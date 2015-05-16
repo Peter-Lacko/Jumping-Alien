@@ -35,7 +35,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @version 1.2
  * Code repository: https://github.com/Peter-Lacko/Jumping-Alien
  */
-public abstract class Characters {
+public abstract class Characters extends GameObject{
 
 	/**
 	 * initialize a character with a given x_pos, y_pos, sprites, horizontal acceleration,
