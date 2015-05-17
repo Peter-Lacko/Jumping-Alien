@@ -1,0 +1,23 @@
+package jumpingalien.model.program.expression;
+
+import jumpingalien.model.program.type.Type;
+
+public class ExpressionBasic<T extends Type<?>> extends Expression<T> {
+
+	@Override
+	public T compute(){
+		return value;
+	}
+	
+	public T getValue() {
+		return value;
+	}
+
+	public void setValue(T value) {
+		this.value = value;
+	}
+	
+	private T value;
+
+
+}

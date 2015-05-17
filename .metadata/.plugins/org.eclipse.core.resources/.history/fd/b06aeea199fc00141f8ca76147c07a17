@@ -1,0 +1,36 @@
+package jumpingalien.model.program.expression;
+
+import jumpingalien.model.program.type.Type;
+
+public abstract class Expression<T extends Type<?>> {
+
+	public Expression() {
+//		this.column = column;
+//		this.line = line;
+	}
+	
+//	public T getType(){
+//		return this.type;
+//	}
+//	 
+//	public void setType(T type){
+//		this.type = type;
+//	}
+//	 
+//	private T type ;
+	 
+	public abstract T compute();
+
+//		public int getLine(){
+//			return this.line;
+//		}
+	//	
+//		private final int line;
+	//	
+//		public int getColumn(){
+//			return this.column;
+//		}
+	//	
+//		private final int column;
+
+}

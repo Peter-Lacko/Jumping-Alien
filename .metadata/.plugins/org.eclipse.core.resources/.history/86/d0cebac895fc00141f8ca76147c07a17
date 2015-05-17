@@ -1,0 +1,18 @@
+package jumpingalien.model.program.expression.unary;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.*;
+
+public class Negation extends Unary<Bool, Bool> {
+	
+	public Negation(Expression<Bool> operand){
+		super(operand);
+	}
+
+	@Override
+	public Bool compute() {
+//		return !((boolean) this.getExpr().compute());
+		boolean booleanResult = (! this.getExpr().compute().getValue());
+		Bool result = new Bool()
+	}
+}

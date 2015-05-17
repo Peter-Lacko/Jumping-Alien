@@ -1,23 +1,29 @@
 package jumpingalien.model.program.expression;
 
 import jumpingalien.model.program.type.Type;
+import jumpingalien.part3.programs.SourceLocation;
 
-public abstract class ExpressionBasic<T extends Type> extends Expression<T> {
+public class ExpressionBasic<T extends Type<?>> extends Expression<T> {
 
+	public ExpressionBasic(T value, SourceLocation sourceLocation){
+		super(sourceLocation);
+		this.setValue(value);
+	}
+	
 	@Override
-	public Object compute(){
+	public T compute(){
 		return value;
 	}
 	
-	public Object getValue() {
+	public T getValue() {
 		return value;
 	}
 
-	public void setValue(Object value) {
+	public void setValue(T value) {
 		this.value = value;
 	}
 	
-	private Object value;
+	private T value;
 
 
 }

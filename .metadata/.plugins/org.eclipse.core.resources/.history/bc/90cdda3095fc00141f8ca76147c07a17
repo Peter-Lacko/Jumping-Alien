@@ -1,0 +1,19 @@
+package jumpingalien.model.program.expression.unary;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.Type;
+
+public abstract class Unary<T extends Type<?>> extends Expression<T>{
+
+	public Unary(Expression<? extends Type<?>> operand){
+		this.expr = operand;
+	}
+	
+	public Expression<? extends Type<?>> getExpr() {
+		return expr;
+	}
+
+	private Expression<? extends Type<?>> expr;
+	
+	
+}

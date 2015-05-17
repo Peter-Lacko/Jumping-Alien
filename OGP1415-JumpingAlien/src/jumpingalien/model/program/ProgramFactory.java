@@ -2,317 +2,349 @@ package jumpingalien.model.program;
 import java.util.List;
 import java.util.Map;
 
-import jumpingalien.model.program.expression.Expression;
-import jumpingalien.model.program.statement.Statement;
-import jumpingalien.model.program.type.Type;
+import jumpingalien.model.program.expression.*;
+import jumpingalien.model.program.expression.unary.*;
+import jumpingalien.model.program.expression.binary.*;
+import jumpingalien.model.program.statement.*;
+import jumpingalien.model.program.type.*;
 import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.SourceLocation;
 
 
-public class ProgramFactory implements IProgramFactory<Expression, Statement, Type, Program>{
+public class ProgramFactory implements IProgramFactory<Expression<? extends Type<?>>, Statement, Type<?>, Program>{
 
 	@Override
-	public Expression createReadVariable(String variableName,
-			Type variableType, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<? extends Type<?>> createReadVariable(
+			String variableName, Type<?> variableType,
+			SourceLocation sourceLocation) {
+		// waar moet ik juist variableType gebruiken?
+		// --> if else if else if enz
+		Expression<? extends Type<?>> result = new ExpressionVariable<Type<?>>(sourceLocation, variableName);
+		return result;
 	}
 
-	//OK
 	@Override
-	public Expression createDoubleConstant(double value,
+	public Expression<DoubleType> createDoubleConstant(double value,
+			SourceLocation sourceLocation) {
+		ExpressionBasic<DoubleType> result = new ExpressionBasic<DoubleType>(new DoubleType(value), sourceLocation);
+		return result;
+	}
+
+	@Override
+	public Expression<Bool> createTrue(
+			SourceLocation sourceLocation) {
+		ExpressionBasic<Bool> result = new ExpressionBasic<Bool>(new Bool(true), sourceLocation);
+		return result;
+	}
+
+	@Override
+	public Expression<Bool> createFalse(
+			SourceLocation sourceLocation) {
+		ExpressionBasic<Bool> result = new ExpressionBasic<Bool>(new Bool(false), sourceLocation);
+		return result;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createNull(
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	//OK
 	@Override
-	public Expression createTrue(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//OK
-	@Override
-	public Expression createFalse(SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createSelf(
+			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createNull(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createSelf(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//OK
-	@Override
-	public Expression createDirectionConstant(
+	public Expression<? extends Type<?>> createDirectionConstant(
 			jumpingalien.part3.programs.IProgramFactory.Direction value,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
 	@Override
-	public Expression createAddition(Expression left, Expression right,
+	public Expression<DoubleType> createAddition(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+//		Expression<DoubleType> result = new Addition(left, right, sourceLoction);
+//		return result;
+		Expression<DoubleType> result = new Addition((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createSubtraction(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createMultiplication(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createDivision(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createSqrt(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createRandom(
+			Expression<? extends Type<?>> maxValue,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createSubtraction(Expression left, Expression right,
+	public Expression<? extends Type<?>> createAnd(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createOr(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<Bool> createNot(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		Expression<Bool> result = new Negation((Expression<Bool>) expr, sourceLocation);
+		return result;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createLessThan(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createLessThanOrEqualTo(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createGreaterThan(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createGreaterThanOrEqualTo(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createEquals(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createNotEquals(
+			Expression<? extends Type<?>> left,
+			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createGetX(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createGetY(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createGetWidth(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createGetHeight(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createGetHitPoints(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createGetTile(
+			Expression<? extends Type<?>> x, Expression<? extends Type<?>> y,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createMultiplication(Expression left, Expression right,
+	public Expression<? extends Type<?>> createSearchObject(
+			Expression<? extends Type<?>> direction,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createDivision(Expression left, Expression right,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	//OK
-	@Override
-	public Expression createSqrt(Expression expr, SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsMazub(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createRandom(Expression maxValue,
-			SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsShark(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createAnd(Expression left, Expression right,
-			SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsSlime(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createOr(Expression left, Expression right,
-			SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsPlant(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createNot(Expression expr, SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsDead(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createLessThan(Expression left, Expression right,
-			SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsTerrain(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createLessThanOrEqualTo(Expression left,
-			Expression right, SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsPassable(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createGreaterThan(Expression left, Expression right,
-			SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsWater(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createGreaterThanOrEqualTo(Expression left,
-			Expression right, SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsMagma(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createEquals(Expression left, Expression right,
-			SourceLocation sourceLocation) {
+	public Expression<? extends Type<?>> createIsAir(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createNotEquals(Expression left, Expression right,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createGetX(Expression expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createGetY(Expression expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createGetWidth(Expression expr,
+	public Expression<? extends Type<?>> createIsMoving(
+			Expression<? extends Type<?>> expr,
+			Expression<? extends Type<?>> direction,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Expression createGetHeight(Expression expr,
+	public Expression<? extends Type<?>> createIsDucking(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Expression<? extends Type<?>> createIsJumping(
+			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Statement createAssignment(String variableName,
+			Type<?> variableType, Expression<? extends Type<?>> value,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		//waar moet ik HIER variableType gebruiken??!!
+		//nu kan je (denk ik) door assignment variablen van type veranderen -> MAG NIET!
+		// hoe zou je hier detecteren of je een type-fout maakt in een assignment?
+		// zoals expressionVariable: 4 verschillende assignments?
+		Statement result = new Assignment(variableName, value, sourceLocation, variableType);
+		return result;
 	}
 
 	@Override
-	public Expression createGetHitPoints(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createGetTile(Expression x, Expression y,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createSearchObject(Expression direction,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsMazub(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsShark(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsSlime(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsPlant(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsDead(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsTerrain(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsPassable(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsWater(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsMagma(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsAir(Expression expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsMoving(Expression expr, Expression direction,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsDucking(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Expression createIsJumping(Expression expr,
-			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Statement createAssignment(String variableName, Type variableType,
-			Expression value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Statement createWhile(Expression condition, Statement body,
-			SourceLocation sourceLocation) {
+	public Statement createWhile(Expression<? extends Type<?>> condition,
+			Statement body, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -321,8 +353,8 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Ty
 	public Statement createForEach(
 			String variableName,
 			jumpingalien.part3.programs.IProgramFactory.Kind variableKind,
-			Expression where,
-			Expression sort,
+			Expression<? extends Type<?>> where,
+			Expression<? extends Type<?>> sort,
 			jumpingalien.part3.programs.IProgramFactory.SortDirection sortDirection,
 			Statement body, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
@@ -336,27 +368,28 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Ty
 	}
 
 	@Override
-	public Statement createIf(Expression condition, Statement ifBody,
-			Statement elseBody, SourceLocation sourceLocation) {
+	public Statement createIf(Expression<? extends Type<?>> condition,
+			Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Statement createPrint(Expression value, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Statement createStartRun(Expression direction,
+	public Statement createPrint(Expression<? extends Type<?>> value,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Statement createStopRun(Expression direction,
+	public Statement createStartRun(Expression<? extends Type<?>> direction,
+			SourceLocation sourceLocation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Statement createStopRun(Expression<? extends Type<?>> direction,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
@@ -387,7 +420,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Ty
 	}
 
 	@Override
-	public Statement createWait(Expression duration,
+	public Statement createWait(Expression<? extends Type<?>> duration,
 			SourceLocation sourceLocation) {
 		// TODO Auto-generated method stub
 		return null;
@@ -407,34 +440,34 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Ty
 	}
 
 	@Override
-	public Type getDoubleType() {
+	public DoubleType getDoubleType() {
+		return new DoubleType(0.0);
+	}
+
+	@Override
+	public Bool getBoolType() {
+		return new Bool(false);
+	}
+
+	@Override
+	public Type<?> getGameObjectType() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Type getBoolType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Type getGameObjectType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Type getDirectionType() {
+	public Type<?> getDirectionType() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Program createProgram(Statement mainStatement,
-			Map<String, Type> globalVariables) {
+			Map<String, Type<?>> globalVariables) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 }

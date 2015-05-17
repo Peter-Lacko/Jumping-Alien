@@ -3,10 +3,11 @@ package jumpingalien.model.program.statement;
 import java.util.Iterator;
 
 import jumpingalien.model.program.expression.*;
+import jumpingalien.model.program.type.*;
 
 public class WhileLoop extends Statement {
 	
-	public WhileLoop(Expression<?> condition, Statement loopstatement){
+	public WhileLoop(Expression<Bool> condition, Statement loopstatement){
 		super();
 		this.condition = condition;
 		this.setLoopBody(loopstatement);
@@ -14,14 +15,14 @@ public class WhileLoop extends Statement {
 
 	@Override
 	public void execute() {
-		this.iterator();
+//		this.iterator();
 	}
 	
-	public Expression<?> getCondition(){
+	public Expression<Bool> getCondition(){
 		return this.condition;
 	}
 
-	private Expression<?> condition;
+	private Expression<Bool> condition;
 
 	public Statement getLoopBody() {
 		return loopBody;
@@ -34,9 +35,26 @@ public class WhileLoop extends Statement {
 	private Statement loopBody;
 
 	@Override
-	public Iterator iterator() {
-		if ((boolean)this.getCondition().compute())
-			return loopBody.iterator();
-		return null;
+	public Iterator<Statement> iterator() {
+//		if ((boolean)this.getCondition().compute())
+//			return loopBody.iterator();
+//		return null;
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				if (! conditionChecked)
+					return true;				
+			}
+
+			@Override
+			public Statement next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			private boolean conditionChecked = false;
+			
+		};
 	}
 }

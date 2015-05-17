@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <typeInfoHistroy>
-<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{Statement.java[Statement" modifiers="1025" timestamp="1431720609341"/>
-<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{ActionStatement.java[ActionStatement" modifiers="1025" timestamp="1431797217476"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{Statement.java[Statement" modifiers="1025" timestamp="1431870489565"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{ActionStatement.java[ActionStatement" modifiers="1025" timestamp="1431788261261"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.expression{Expression.java[Expression" modifiers="1025" timestamp="1431870482696"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.expression{ExpressionVariable.java[ExpressionVariable" modifiers="1025" timestamp="1431880770248"/>
 </typeInfoHistroy>

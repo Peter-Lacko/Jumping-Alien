@@ -1,0 +1,43 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.part3.programs.SourceLocation;
+import be.kuleuven.cs.som.annotate.*;
+
+public class Assignment extends Statement {
+
+	public Assignment(String name, Expression<?> value, SourceLocation sourceLocation){
+		super(sourceLocation);
+		this.expression = value;
+		this.variable = name;
+	}
+	
+	@Override
+	public void execute(){
+		this.getProgram().addValue(this.getVariable(), this.getExpression());
+		this.setDone(true);
+	}
+	
+	@Basic @Immutable
+	private String getVariable() {
+		return this.variable;
+	}
+	
+	private final String variable;
+	
+	@Basic @Immutable
+	private Expression getExpression() {
+		return this.expression;
+	}
+	
+	private final Expression expression;
+
+	@Override
+	public Iterator<Statement> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

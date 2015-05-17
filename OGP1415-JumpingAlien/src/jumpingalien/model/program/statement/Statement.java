@@ -1,28 +1,47 @@
 package jumpingalien.model.program.statement;
 
 import jumpingalien.model.program.Program;
+import jumpingalien.part3.programs.SourceLocation;
 
-public abstract class Statement implements Iterable {
+public abstract class Statement implements Iterable<Statement> {
 	
-	public Statement(){
+//	public Statement(){
+//	}
+	
+	public Statement(SourceLocation sourceLocation){
+		setSourceLocation(sourceLocation);
 	}
 	
+	private SourceLocation sourceLocation;
+	
+	public SourceLocation getSourceLocation() {
+		return sourceLocation;
+	}
+
+	public void setSourceLocation(SourceLocation sourceLocation) {
+		this.sourceLocation = sourceLocation;
+	}
+
 	public abstract void execute();
 	
 	public Program getProgram(){
 		return this.program;
 	}
 	
-	private Program program;
-
-	public boolean isDone() {
-		return done;
-	}
-
-	public void setDone(boolean done) {
-		this.done = done;
+	public void setProgram(Program program){
+		this.program = program;
 	}
 	
-	private boolean done;
+	private Program program;
+
+//	public boolean isDone() {
+//		return done;
+//	}
+//
+//	public void setDone(boolean done) {
+//		this.done = done;
+//	}
+//	
+//	private boolean done;
 
 }

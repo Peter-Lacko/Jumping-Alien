@@ -1,0 +1,25 @@
+package jumpingalien.model.program.expression.binary;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.Type;
+
+public abstract class Binary<T extends Type<?>> extends Expression<T>{
+		
+	public Binary(Expression<? extends Type<?>> operand1,Expression<? extends Type<?>> operand2){
+		this.expr1 = operand1;
+		this.expr2 = operand2;
+	}
+
+	public Expression<? extends Type<?>> getExpr1() {
+		return expr1;
+	}
+	
+	private final Expression<? extends Type<?>> expr1;
+	
+	public Expression<? extends Type<?>> getExpr2() {
+		return expr2;
+	}
+	
+	private final Expression<? extends Type<?>> expr2;
+	
+}

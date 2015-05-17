@@ -1,0 +1,57 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.*;
+
+public class WhileLoop extends Statement {
+	
+	public WhileLoop(Expression<?> condition, Statement loopstatement){
+		super();
+		this.condition = condition;
+		this.setLoopBody(loopstatement);
+	}
+
+	@Override
+	public void execute() {
+		this.iterator();
+	}
+	
+	public Expression<?> getCondition(){
+		return this.condition;
+	}
+
+	private Expression<?> condition;
+
+	public Statement getLoopBody() {
+		return loopBody;
+	}
+
+	public void setLoopBody(Statement loopBody) {
+		this.loopBody = loopBody;
+	}
+	
+	private Statement loopBody;
+
+	@Override
+	public Iterator<Statement> iterator() {
+//		if ((boolean)this.getCondition().compute())
+//			return loopBody.iterator();
+//		return null;
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public Statement next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		}
+	}
+}

@@ -1,21 +1,35 @@
 package jumpingalien.model.program.statement;
 
+import java.util.Iterator;
+
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.*;
+import jumpingalien.part3.programs.SourceLocation;
 import be.kuleuven.cs.som.annotate.*;
 
 public class Assignment extends Statement {
 
-	public Assignment(String name, Expression<?> value){
+	public Assignment(String name, Expression<? extends Type<?>> value, SourceLocation sourceLocation, Type<?> variableType){
+		super(sourceLocation);
 		this.expression = value;
 		this.variable = name;
+		this.type = variableType;
 	}
 	
 	@Override
 	public void execute(){
-		this.getProgram().addValue(this.getVariable(), this.getExpression());;
-		this.setDone(true);
+//		this.getProgram().addValue(this.getVariable(), this.getExpression());
+//		this.setDone(true);
+		if (this.getProgram().getGlobalVariables().get(getVariable()).getClass() == getType().getClass())
+			this.getProgram().getGlobalVariables().put(getVariable(), getExpression().compute());
 	}
 	
+	private final Type<?> type;
+	
+	public Type<?> getType() {
+		return type;
+	}
+
 	@Basic @Immutable
 	private String getVariable() {
 		return this.variable;
@@ -24,10 +38,16 @@ public class Assignment extends Statement {
 	private final String variable;
 	
 	@Basic @Immutable
-	private Expression getExpression() {
+	private Expression<? extends Type<?>> getExpression() {
 		return this.expression;
 	}
 	
-	private final Expression expression;
+	private final Expression<? extends Type<?>> expression;
+
+	@Override
+	public Iterator<Statement> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

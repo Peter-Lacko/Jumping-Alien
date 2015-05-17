@@ -28,8 +28,8 @@ public class StatementSequence extends Statement {
 	}
 
 	@Override
-	public Iterator iterator() {
-		return new Iterator(){
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {
@@ -70,9 +70,9 @@ public class StatementSequence extends Statement {
 				return currentIterator.next();
 			}
 
-			private Iterator newIterator;
+			private Iterator<Statement> newIterator;
 			
-			private Iterator currentIterator = null;
+			private Iterator<Statement> currentIterator = null;
 			
 			private int index = 1;
 

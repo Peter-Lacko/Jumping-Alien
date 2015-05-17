@@ -1,16 +1,20 @@
 package jumpingalien.model.program.expression.unary;
 
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.*;
+import jumpingalien.part3.programs.SourceLocation;
 
-public class Negation extends Unary<Boolean> {
+public class Negation extends Unary<Bool, Bool> {
 	
-	public Negation(Expression<Boolean> operand){
-		super(operand);
+	public Negation(Expression<Bool> operand, SourceLocation sourceLocation){
+		super(operand, sourceLocation);
 	}
 
 	@Override
-	public Object compute() {
-		return !((boolean) this.getExpr().compute());
+	public Bool compute() {
+//		return !((boolean) this.getExpr().compute());
+		boolean booleanResult = (! this.getExpr().compute().getValue());
+		Bool result = new Bool(booleanResult);
+		return result;
 	}
-
 }
