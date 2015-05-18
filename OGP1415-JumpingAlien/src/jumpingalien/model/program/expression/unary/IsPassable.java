@@ -2,20 +2,26 @@ package jumpingalien.model.program.expression.unary;
 
 import jumpingalien.model.*;
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+import jumpingalien.part3.programs.SourceLocation;
 
-public class IsPassable extends Unary<Object> {
+public class IsPassable extends Unary<Object ,Bool> {
 
-	public IsPassable(Expression<Object> unary) {
-		super(unary);
+	public IsPassable(Expression<Object> unary,SourceLocation sourceLocation) {
+		super(unary,sourceLocation);
 	}
 
 	@Override
-	public Object compute() {
-		if (this.getExpr().compute() instanceof Characters)
-			return false;
-		else if (this.getExpr().compute() instanceof Tile)
-			return ! (((Tile)this.getExpr().compute()).getGeo() == GeoFeature.GROUND);
-		return true;
+	public Bool compute() {
+		boolean b;
+		if (this.getExpr().compute().getValue() instanceof Characters)
+			b = false;
+		else if (this.getExpr().compute().getValue() instanceof Tile)
+			b= ! (((Tile)this.getExpr().compute().getValue()).getGeo() == GeoFeature.GROUND);
+		else
+			b = true;
+		return new Bool(b);
 	}
 
 }

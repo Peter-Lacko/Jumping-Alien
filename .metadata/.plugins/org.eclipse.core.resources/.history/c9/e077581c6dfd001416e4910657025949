@@ -25,26 +25,23 @@ public class isMoving extends Unary<Object,Bool> {
 	private DirectionType direction;
 
 	@Override
-	public Bool compute() {
-		boolean b;
-		if (!(this.getExpr().compute().getValue() instanceof Characters)){
-			b = false;
+	public Object compute() {
+		if (!(this.getExpr().compute() instanceof Characters)){
+			return false;
 		}
-		else if (this.getDirection() == Direction.UP){
-			b = ((Characters) this.getExpr().compute().getValue()).getVerticalVelocity() > 0;
+		if (this.getDirection() == Direction.UP){
+			return ((Characters) this.getExpr().compute()).getVerticalVelocity() > 0;
 		}
 		else if (this.getDirection() == Direction.DOWN){
-			b = ((Characters) this.getExpr().compute().getValue()).getVerticalVelocity() < 0;
+			return ((Characters) this.getExpr().compute()).getVerticalVelocity() < 0;
 		}
 		else if (this.getDirection() == Direction.LEFT){
-			b = ((Characters) this.getExpr().compute().getValue()).getHorizontalVelocity() < 0;
+			return ((Characters) this.getExpr().compute()).getHorizontalVelocity() < 0;
 		}
 		else if (this.getDirection() == Direction.RIGHT){
-			b = ((Characters) this.getExpr().compute().getValue()).getHorizontalVelocity() > 0;
+			return ((Characters) this.getExpr().compute()).getHorizontalVelocity() > 0;
 		}
-		else
-			b = false;
-		return new Bool(b);
+		return false;
 	}
 
 }

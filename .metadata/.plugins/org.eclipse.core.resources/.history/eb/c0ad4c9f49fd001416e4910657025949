@@ -7,20 +7,19 @@ import jumpingalien.model.program.type.*;
 import jumpingalien.model.program.type.Object;
 import jumpingalien.part3.programs.SourceLocation;
 
-public class IsMagma extends Unary<Object,Bool> {
-
-	public IsMagma(Expression<Object> unary,SourceLocation sourceLocation) {
+public class IsWater extends Unary<Object ,Bool> {
+ 
+	public IsWater(Expression<Object> unary,SourceLocation sourceLocation) {
 		super(unary,sourceLocation);
 	}
 
 	@Override
-	public Bool compute() {
+	public Object compute() {
 		boolean b;
 		if (! (this.getExpr().compute().getValue() instanceof Tile))
 			b = false;
 		else
-			b = ((Tile)this.getExpr().compute().getValue()).getGeo() == GeoFeature.WATER;
-		return new Bool(b);
+			boolean b((Tile)this.getExpr().compute()).getGeo() == GeoFeature.WATER;
 	}
 
 }
