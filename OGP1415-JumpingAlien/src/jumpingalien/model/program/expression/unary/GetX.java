@@ -1,17 +1,20 @@
 package jumpingalien.model.program.expression.unary;
 
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
 import jumpingalien.model.*;
+import jumpingalien.part3.programs.SourceLocation;
 
-public class GetX extends Unary<Object> {
+public class GetX extends Unary<Object,DoubleType> {
 
-	public GetX(Expression<Object> unary) {
-		super(unary);
+	public GetX(Expression<Object> unary,SourceLocation sourceLocation) {
+		super(unary,sourceLocation);
 	}
 
 	@Override
-	public Object compute() {
-		return  ((Characters) this.getExpr().compute()).getPositionAt(1);
+	public DoubleType compute() {
+		return new DoubleType(((Characters) this.getExpr().compute().getValue()).getPositionAt(1));
 	}
 
 }

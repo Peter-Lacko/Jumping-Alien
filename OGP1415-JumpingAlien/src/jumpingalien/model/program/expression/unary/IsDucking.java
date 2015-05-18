@@ -2,18 +2,24 @@ package jumpingalien.model.program.expression.unary;
 
 import jumpingalien.model.*;
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+import jumpingalien.part3.programs.SourceLocation;
 
-public class IsDucking extends Unary<Object> {
+public class IsDucking extends Unary<Object,Bool> {
 
-	public IsDucking(Expression<Object> unary) {
-		super(unary);
+	public IsDucking(Expression<Object> unary,SourceLocation sourceLocation) {
+		super(unary,sourceLocation);
 	}
 
 	@Override
-	public Object compute() {
-		if ( !(this.getExpr().compute() instanceof Aliens))
-			return false;
-		return ((Aliens) this.getExpr().compute()).isDucked();
+	public Bool compute() {
+		boolean b;
+		if ( !(this.getExpr().compute().getValue() instanceof Aliens))
+			b = false;
+		else
+			b = ((Aliens) this.getExpr().compute().getValue()).isDucked();
+		return new Bool(b);
 	}
 
 }

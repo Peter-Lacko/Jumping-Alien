@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <typeInfoHistroy>
-<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.expression{Expression.java[Expression" modifiers="1025" timestamp="1431948766613"/>
-<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.expression{ExpressionVariable.java[ExpressionVariable" modifiers="1025" timestamp="1431942136116"/>
-<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{Assignment.java[Assignment" modifiers="1" timestamp="1431948899278"/>
-<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{ActionStatement.java[ActionStatement" modifiers="1025" timestamp="1431948893983"/>
-<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{Statement.java[Statement" modifiers="1025" timestamp="1431948954411"/>
-<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{LoopStatement.java[LoopStatement" modifiers="1025" timestamp="1431948922770"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{Statement.java[Statement" modifiers="1025" timestamp="1431961028640"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.statement{ActionStatement.java[ActionStatement" modifiers="1025" timestamp="1431944852475"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.expression{Expression.java[Expression" modifiers="1025" timestamp="1431943264039"/>
+<typeInfo handle="=OGP1415-JumpingAlien/src&lt;jumpingalien.model.program.expression{ExpressionVariable.java[ExpressionVariable" modifiers="1025" timestamp="1431891669754"/>
 </typeInfoHistroy>

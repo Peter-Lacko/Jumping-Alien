@@ -1,0 +1,173 @@
+package jumpingalien.model.program.expression;
+
+import java.util.*;
+
+import jumpingalien.model.*;
+import jumpingalien.model.program.Program;
+import jumpingalien.part3.programs.IProgramFactory.Direction;
+import jumpingalien.part3.programs.SourceLocation;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+
+public class SearchObject extends Expression<Object>{
+
+	public SearchObject( SourceLocation sourceLocation , DirectionType direction){
+		super(sourceLocation);
+		this.setCharacter(this.getStatement().getProgram().getCharacter());
+		this.setWorld(this.getStatement().getProgram().getWorld());
+		this.setDirection(direction.getValue());
+	}
+
+	public int distanceUp(GameObject object){
+		if (object instanceof Characters){
+			if ((((Characters)object ).getIntPositionAt(2) > getCharacter().getIntPositionAt(2)) &&
+					(((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object).getSprite().getWidth()) &&
+					(((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
+				return ((Characters)object).getIntPositionAt(2) - getCharacter().getIntPositionAt(2);
+			else
+				return -1;
+		}
+		else if (object instanceof Tile){	
+			if ((((Tile)object).getPosition()[1] > getCharacter().getIntPositionAt(2)) &&
+					(((Tile)object).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tile)object).getTyleLength()) &&
+					(((Tile)object).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()) &&
+					(((Tile)object).getGeo() == GeoFeature.GROUND))
+				return ((Tile)object).getPosition()[1] - getCharacter().getIntPositionAt(2);
+			else 
+				return -1;
+		}
+		else
+			return -1;
+	}
+	
+	public int distanceDown(GameObject object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2)) &&
+					(((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object).getSprite().getWidth()) &&
+					(((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
+				return getCharacter().getIntPositionAt(2) - ((Characters)object).getIntPositionAt(2);
+			else
+				return -1;
+		}
+		else if (object instanceof Tile){	
+			if ((((Tile)object).getPosition()[1] < getCharacter().getIntPositionAt(2)) &&
+					(((Tile)object).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tile)object).getTyleLength()) &&
+					(((Tile)object).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth())&&
+					(((Tile)object).getGeo() == GeoFeature.GROUND))
+				return getCharacter().getIntPositionAt(2) - ((Tile)object).getPosition()[1];
+			else 
+				return -1;
+		}
+		else
+			return -1;
+	}
+	
+	public int distanceLeft(GameObject object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1)) &&
+					(((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object).getSprite().getHeight()) &&
+					(((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
+				return getCharacter().getIntPositionAt(1) - ((Characters)object).getIntPositionAt(1);
+			else
+				return -1;
+		}
+		else if (object instanceof Tile){	
+			if ((((Tile)object).getPosition()[0] < getCharacter().getIntPositionAt(1)) &&
+					(((Tile)object).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tile)object).getTyleLength()) &&
+					(((Tile)object).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
+					(((Tile)object).getGeo() == GeoFeature.GROUND))
+				return getCharacter().getIntPositionAt(1) - ((Tile)object).getPosition()[0];
+			else 
+				return -1;
+		}
+		else
+			return -1;
+	}
+	
+	public int distanceRight(GameObject object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1)) &&
+					(((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object).getSprite().getHeight()) &&
+					(((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
+				return ((Characters)object).getIntPositionAt(1) - getCharacter().getIntPositionAt(1);
+			else
+				return -1;
+		}
+		else if (object instanceof Tile){	
+			if ((((Tile)object).getPosition()[0] > getCharacter().getIntPositionAt(1)) &&
+					(((Tile)object).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tile)object).getTyleLength()) &&
+					(((Tile)object).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
+					(((Tile)object).getGeo() == GeoFeature.GROUND))
+				return ((Tile)object).getPosition()[0] - getCharacter().getIntPositionAt(1);
+			else 
+				return -1;
+		}
+		else
+			return -1;
+	}
+	
+	public Characters getCharacter(){
+		return this.character;
+	}
+	
+	public void setCharacter(Characters character){
+		this.character = character;
+	}
+	
+	private Characters character;
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+	
+	private World world;
+	
+	public Map<GameObject,Integer> getInDirection() {
+		return inDirection;
+	}
+	
+	private Map<GameObject,Integer> inDirection;
+	
+	public Direction getDirection(){
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+	
+	private Direction direction;
+	
+	@Override
+	public Object compute() {
+		if (getDirection() == Direction.UP)
+			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceUp((GameObject) object) != -1) {
+				this.getInDirection().put((GameObject) object,distanceUp((GameObject) object));}});
+		else if (getDirection() == Direction.DOWN)
+			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceDown((GameObject) object) != -1) {
+				this.getInDirection().put((GameObject) object,distanceDown((GameObject) object));}});
+		else if (getDirection() == Direction.LEFT)
+			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceLeft((GameObject) object) != -1) {
+				this.getInDirection().put((GameObject) object,distanceLeft((GameObject) object));}});
+		else if (getDirection() == Direction.RIGHT)
+			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceRight((GameObject) object) != -1) {
+				this.getInDirection().put((GameObject) object,distanceRight((GameObject) object));}});
+		Map<GameObject, Integer> objects = this.getInDirection();
+		Object closest = null;
+		int distance = 0;
+		for (Map.Entry<GameObject, Integer> entry : objects.entrySet()){
+			if ((closest == null) || (entry.getValue() < distance)){
+				distance = entry.getValue();
+				closest = entry.getKey();
+			}
+		}
+		return closest;
+	}
+
+	
+
+}

@@ -18,21 +18,21 @@ public class SearchObject extends Expression<Object>{
 		this.setDirection(direction.getValue());
 	}
 
-	public int distanceUp(Object object){
-		if (object.getValue() instanceof Characters){
-			if ((((Characters)object.getValue()).getIntPositionAt(2) > getCharacter().getIntPositionAt(2)) &&
-					(((Characters)object.getValue()).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object.getValue()).getSprite().getWidth()) &&
-					(((Characters)object.getValue()).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
-				return ((Characters)object.getValue()).getIntPositionAt(2) - getCharacter().getIntPositionAt(2);
+	public int distanceUp(GameObject object){
+		if (object instanceof Characters){
+			if ((((Characters)object ).getIntPositionAt(2) > getCharacter().getIntPositionAt(2)) &&
+					(((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object).getSprite().getWidth()) &&
+					(((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
+				return ((Characters)object).getIntPositionAt(2) - getCharacter().getIntPositionAt(2);
 			else
 				return -1;
 		}
-		else if (object.getValue() instanceof Tile){	
-			if ((((Tile)object.getValue()).getPosition()[1] > getCharacter().getIntPositionAt(2)) &&
-					(((Tile)object.getValue()).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tile)object.getValue()).getTyleLength()) &&
-					(((Tile)object.getValue()).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()) &&
-					(((Tile)object.getValue()).getGeo() == GeoFeature.GROUND))
-				return ((Tile)object.getValue()).getPosition()[1] - getCharacter().getIntPositionAt(2);
+		else if (object instanceof Tile){	
+			if ((((Tile)object).getPosition()[1] > getCharacter().getIntPositionAt(2)) &&
+					(((Tile)object).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tile)object).getTyleLength()) &&
+					(((Tile)object).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()) &&
+					(((Tile)object).getGeo() == GeoFeature.GROUND))
+				return ((Tile)object).getPosition()[1] - getCharacter().getIntPositionAt(2);
 			else 
 				return -1;
 		}
@@ -40,21 +40,21 @@ public class SearchObject extends Expression<Object>{
 			return -1;
 	}
 	
-	public int distanceDown(Object object){
-		if (object.getValue() instanceof Characters){
-			if ((((Characters)object.getValue()).getIntPositionAt(2) < getCharacter().getIntPositionAt(2)) &&
-					(((Characters)object.getValue()).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object.getValue()).getSprite().getWidth()) &&
-					(((Characters)object.getValue()).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
-				return getCharacter().getIntPositionAt(2) - ((Characters)object.getValue()).getIntPositionAt(2);
+	public int distanceDown(GameObject object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2)) &&
+					(((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1) - ((Characters)object).getSprite().getWidth()) &&
+					(((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth()))
+				return getCharacter().getIntPositionAt(2) - ((Characters)object).getIntPositionAt(2);
 			else
 				return -1;
 		}
-		else if (object.getValue() instanceof Tile){	
-			if ((((Tile)object.getValue()).getPosition()[1] < getCharacter().getIntPositionAt(2)) &&
-					(((Tile)object.getValue()).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tile)object.getValue()).getTyleLength()) &&
-					(((Tile)object.getValue()).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth())&&
-					(((Tile)object.getValue()).getGeo() == GeoFeature.GROUND))
-				return getCharacter().getIntPositionAt(2) - ((Tile)object.getValue()).getPosition()[1];
+		else if (object instanceof Tile){	
+			if ((((Tile)object).getPosition()[1] < getCharacter().getIntPositionAt(2)) &&
+					(((Tile)object).getPosition()[0] > getCharacter().getIntPositionAt(1) - ((Tile)object).getTyleLength()) &&
+					(((Tile)object).getPosition()[0] < getCharacter().getIntPositionAt(1) + getCharacter().getSprite().getWidth())&&
+					(((Tile)object).getGeo() == GeoFeature.GROUND))
+				return getCharacter().getIntPositionAt(2) - ((Tile)object).getPosition()[1];
 			else 
 				return -1;
 		}
@@ -62,21 +62,21 @@ public class SearchObject extends Expression<Object>{
 			return -1;
 	}
 	
-	public int distanceLeft(Object object){
-		if (object.getValue() instanceof Characters){
-			if ((((Characters)object.getValue()).getIntPositionAt(1) < getCharacter().getIntPositionAt(1)) &&
-					(((Characters)object.getValue()).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object.getValue()).getSprite().getHeight()) &&
-					(((Characters)object.getValue()).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
-				return getCharacter().getIntPositionAt(1) - ((Characters)object.getValue()).getIntPositionAt(1);
+	public int distanceLeft(GameObject object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(1) < getCharacter().getIntPositionAt(1)) &&
+					(((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object).getSprite().getHeight()) &&
+					(((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
+				return getCharacter().getIntPositionAt(1) - ((Characters)object).getIntPositionAt(1);
 			else
 				return -1;
 		}
-		else if (object.getValue() instanceof Tile){	
-			if ((((Tile)object.getValue()).getPosition()[0] < getCharacter().getIntPositionAt(1)) &&
-					(((Tile)object.getValue()).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tile)object.getValue()).getTyleLength()) &&
-					(((Tile)object.getValue()).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
-					(((Tile)object.getValue()).getGeo() == GeoFeature.GROUND))
-				return getCharacter().getIntPositionAt(1) - ((Tile)object.getValue()).getPosition()[0];
+		else if (object instanceof Tile){	
+			if ((((Tile)object).getPosition()[0] < getCharacter().getIntPositionAt(1)) &&
+					(((Tile)object).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tile)object).getTyleLength()) &&
+					(((Tile)object).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
+					(((Tile)object).getGeo() == GeoFeature.GROUND))
+				return getCharacter().getIntPositionAt(1) - ((Tile)object).getPosition()[0];
 			else 
 				return -1;
 		}
@@ -84,21 +84,21 @@ public class SearchObject extends Expression<Object>{
 			return -1;
 	}
 	
-	public int distanceRight(Object object){
-		if (object.getValue() instanceof Characters){
-			if ((((Characters)object.getValue()).getIntPositionAt(1) > getCharacter().getIntPositionAt(1)) &&
-					(((Characters)object.getValue()).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object.getValue()).getSprite().getHeight()) &&
-					(((Characters)object.getValue()).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
-				return ((Characters)object.getValue()).getIntPositionAt(1) - getCharacter().getIntPositionAt(1);
+	public int distanceRight(GameObject object){
+		if (object instanceof Characters){
+			if ((((Characters)object).getIntPositionAt(1) > getCharacter().getIntPositionAt(1)) &&
+					(((Characters)object).getIntPositionAt(2) > getCharacter().getIntPositionAt(2) - ((Characters)object).getSprite().getHeight()) &&
+					(((Characters)object).getIntPositionAt(2) < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getHeight()))
+				return ((Characters)object).getIntPositionAt(1) - getCharacter().getIntPositionAt(1);
 			else
 				return -1;
 		}
-		else if (object.getValue() instanceof Tile){	
-			if ((((Tile)object.getValue()).getPosition()[0] > getCharacter().getIntPositionAt(1)) &&
-					(((Tile)object.getValue()).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tile)object.getValue()).getTyleLength()) &&
-					(((Tile)object.getValue()).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
-					(((Tile)object.getValue()).getGeo() == GeoFeature.GROUND))
-				return ((Tile)object.getValue()).getPosition()[0] - getCharacter().getIntPositionAt(1);
+		else if (object instanceof Tile){	
+			if ((((Tile)object).getPosition()[0] > getCharacter().getIntPositionAt(1)) &&
+					(((Tile)object).getPosition()[1] > getCharacter().getIntPositionAt(2) - ((Tile)object).getTyleLength()) &&
+					(((Tile)object).getPosition()[1] < getCharacter().getIntPositionAt(2) + getCharacter().getSprite().getWidth())&&
+					(((Tile)object).getGeo() == GeoFeature.GROUND))
+				return ((Tile)object).getPosition()[0] - getCharacter().getIntPositionAt(1);
 			else 
 				return -1;
 		}
@@ -126,11 +126,11 @@ public class SearchObject extends Expression<Object>{
 	
 	private World world;
 	
-	public Map<Object,Integer> getInDirection() {
+	public Map<GameObject,Integer> getInDirection() {
 		return inDirection;
 	}
 	
-	private Map<Object,Integer> inDirection;
+	private Map<GameObject,Integer> inDirection;
 	
 	public Direction getDirection(){
 		return direction;
@@ -145,27 +145,27 @@ public class SearchObject extends Expression<Object>{
 	@Override
 	public Object compute() {
 		if (getDirection() == Direction.UP)
-			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceUp((Object) object) != -1) {
-				this.getInDirection().put((Object) object,distanceUp((Object) object));}});
+			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceUp((GameObject) object) != -1) {
+				this.getInDirection().put((GameObject) object,distanceUp((GameObject) object));}});
 		else if (getDirection() == Direction.DOWN)
-			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceDown((Object) object) != -1) {
-				this.getInDirection().put((Object) object,distanceDown((Object) object));}});
+			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceDown((GameObject) object) != -1) {
+				this.getInDirection().put((GameObject) object,distanceDown((GameObject) object));}});
 		else if (getDirection() == Direction.LEFT)
-			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceLeft((Object) object) != -1) {
-				this.getInDirection().put((Object) object,distanceLeft((Object) object));}});
+			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceLeft((GameObject) object) != -1) {
+				this.getInDirection().put((GameObject) object,distanceLeft((GameObject) object));}});
 		else if (getDirection() == Direction.RIGHT)
-			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceRight((Object) object) != -1) {
-				this.getInDirection().put((Object) object,distanceRight((Object) object));}});
-		Map<Object,Integer> objects = this.getInDirection();
-		Object closest = null;
+			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceRight((GameObject) object) != -1) {
+				this.getInDirection().put((GameObject) object,distanceRight((GameObject) object));}});
+		Map<GameObject, Integer> objects = this.getInDirection();
+		GameObject closest = null;
 		int distance = 0;
-		for (Map.Entry<Object, Integer> entry : objects.entrySet()){
+		for (Map.Entry<GameObject, Integer> entry : objects.entrySet()){
 			if ((closest == null) || (entry.getValue() < distance)){
-				distance = entry .getValue();
+				distance = entry.getValue();
 				closest = entry.getKey();
 			}
 		}
-		return closest;
+		return new Object(closest);
 	}
 
 	

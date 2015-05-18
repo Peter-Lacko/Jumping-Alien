@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="ObjectsE" key="selection"/>
+		<item value="getTiles" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="objectse"/>
-			<item value="getallobjectse"/>
-			<item value="getallobjectsa"/>
-			<item value="getallobjects"/>
-			<item value="gameobjects"/>
-			<item value="Tile"/>
-			<item value="duck"/>
-			<item value="endDuck"/>
+			<item value="getTiles"/>
+			<item value="getTi"/>
+			<item value="break"/>
+			<item value="createno"/>
+			<item value="assig"/>
+			<item value="addition"/>
+			<item value="createnot"/>
+			<item value="not"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Duck"/>
@@ -23,10 +23,10 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="305" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="444" key="DIALOG_HEIGHT"/>
-		<item value="1276" key="DIALOG_X_ORIGIN"/>
-		<item value="208" key="DIALOG_Y_ORIGIN"/>
+		<item value="353" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="513" key="DIALOG_HEIGHT"/>
+		<item value="1541" key="DIALOG_X_ORIGIN"/>
+		<item value="220" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

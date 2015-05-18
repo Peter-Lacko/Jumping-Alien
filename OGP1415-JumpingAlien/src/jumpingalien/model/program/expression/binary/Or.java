@@ -1,16 +1,18 @@
 package jumpingalien.model.program.expression.binary;
 
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.Bool;
+import jumpingalien.part3.programs.SourceLocation;
 
-public class Or extends Binary<Boolean> {
+public class Or extends Binary<Bool,Bool,Bool> {
 
-	public Or(Expression<Boolean> operand1, Expression<Boolean> operand2) {
-		super(operand1, operand2);
+	public Or(Expression<Bool> operand1, Expression<Bool> operand2,SourceLocation sourceLocation) {
+		super(operand1, operand2,sourceLocation);
 	}
 
 	@Override
-	public Object compute() {
-		return ((boolean)this.getExpr1().compute() || (boolean)this.getExpr2().compute());
+	public Bool compute() {
+		return new Bool(getExpr1().compute().getValue() || getExpr2().compute().getValue());
 	}
 
 }
