@@ -25,7 +25,7 @@ public class ForEachLoop extends LoopStatement {
 	
     public Stream<GameObject> stream() {
     	Stream.Builder builder = Stream.builder();
-    	for (GameObject element: getProgram().getCharacter().getWorld().getAllObjectsAndTiles())
+    	for (GameObject element: getProgram().getCharacter().getWorld().getAllObjectsEnTiles())
     		builder.accept(element);
     	return builder.build();    		
     }

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Change method &apos;public List&lt;Object&gt; jumpingalien.model.World.getAllObjectsEnTiles()&apos; to &apos;public List&lt;GameObject&gt; getAllObjectsAndTiles()&apos;&#x0D;&#x0A;- Original project: &apos;OGP1415-JumpingAlien&apos;&#x0D;&#x0A;- Original element: &apos;jumpingalien.model.World.getAllObjectsEnTiles()&apos;&#x0D;&#x0A;- New name: &apos;getAllObjectsAndTiles&apos;&#x0D;&#x0A;- New return type: &apos;List&lt;GameObject&gt;&apos;" delegate="false" deprecate="true" description="Change method &apos;getAllObjectsEnTiles&apos;" flags="589830" id="org.eclipse.jdt.ui.change.method.signature" input="/src&lt;jumpingalien.model{World.java[World~getAllObjectsEnTiles" name="getAllObjectsAndTiles" return="List&lt;GameObject&gt;" stamp="1431961231835" version="1.0"/>
+</session>

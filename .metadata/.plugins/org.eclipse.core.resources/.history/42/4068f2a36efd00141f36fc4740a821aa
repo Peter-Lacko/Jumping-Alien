@@ -989,8 +989,8 @@ public class World {
 		return list;
 	}
 
-	public List<GameObject> getAllObjectsAndTiles(){
-		List<GameObject> objects =  new LinkedList<GameObject>();
+	public List<Object> getAllObjectsEnTiles(){
+		List<Object> objects =  new LinkedList<Object>();
 		objects.addAll(this.getAllObjects());
 		objects.addAll(this.getTiles());
 		return objects;

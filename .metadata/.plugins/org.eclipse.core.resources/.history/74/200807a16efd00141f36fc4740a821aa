@@ -145,16 +145,16 @@ public class SearchObject extends Expression<Object>{
 	@Override
 	public Object compute() {
 		if (getDirection() == Direction.UP)
-			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceUp((Object) object) != -1) {
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (distanceUp((Object) object) != -1) {
 				this.getInDirection().put((Object) object,distanceUp((Object) object));}});
 		else if (getDirection() == Direction.DOWN)
-			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceDown((Object) object) != -1) {
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (distanceDown((Object) object) != -1) {
 				this.getInDirection().put((Object) object,distanceDown((Object) object));}});
 		else if (getDirection() == Direction.LEFT)
-			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceLeft((Object) object) != -1) {
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (distanceLeft((Object) object) != -1) {
 				this.getInDirection().put((Object) object,distanceLeft((Object) object));}});
 		else if (getDirection() == Direction.RIGHT)
-			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceRight((Object) object) != -1) {
+			this.getWorld().getAllObjectsEnTiles().forEach((object) ->{ if (distanceRight((Object) object) != -1) {
 				this.getInDirection().put((Object) object,distanceRight((Object) object));}});
 		Map<Object,Integer> objects = this.getInDirection();
 		Object closest = null;
