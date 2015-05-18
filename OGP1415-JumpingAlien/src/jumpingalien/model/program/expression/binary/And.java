@@ -12,7 +12,7 @@ public class And extends Binary<Bool,Bool,Bool> {
 
 	@Override
 	public Bool compute() {
-		return new Bool(getExpr1().compute().getValue() && getExpr2().compute().getValue());
+		return new Bool(getOperand1().compute().getValue() && getOperand2().compute().getValue());
 	}
 
 }

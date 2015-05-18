@@ -12,7 +12,7 @@ public class Division extends Binary<DoubleType, DoubleType, DoubleType> {
 
 	@Override
 	public DoubleType compute() {
-		return new DoubleType(this.getExpr1().compute().getValue() / this.getExpr2().compute().getValue());
+		return new DoubleType(this.getOperand1().compute().getValue() / this.getOperand2().compute().getValue());
 	}
 
 }

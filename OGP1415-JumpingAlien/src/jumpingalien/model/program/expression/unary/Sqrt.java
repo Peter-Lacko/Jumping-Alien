@@ -12,7 +12,7 @@ public class Sqrt extends Unary<DoubleType,DoubleType> {
 
 	@Override
 	public DoubleType compute() {
-		double d = Math.sqrt((double) this.getExpr().compute().getValue());
+		double d = Math.sqrt((double) this.getOperand().compute().getValue());
 		return new DoubleType(d);
 	}
 

@@ -1,1 +1,5 @@
 1431961231835	Change method 'getAllObjectsEnTiles'
+1431977563271	Rename method 'getOperand2'
+1431977580234	Rename method 'getExpr2'
+1431977602133	Rename method 'getExpr1'
+1431977635757	Rename method 'getExpr'

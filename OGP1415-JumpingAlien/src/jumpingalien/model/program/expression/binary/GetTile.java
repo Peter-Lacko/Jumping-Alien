@@ -16,7 +16,7 @@ public class GetTile extends Binary<DoubleType,DoubleType,Object>{
 	@Override
 	public Object compute() {
 		int[] pos =this.getStatement().getProgram().getWorld().getPixelOfTileContaining
-				((this.getExpr1().compute().getValue().intValue()), this.getExpr2().compute().getValue().intValue());
+				((this.getOperand1().compute().getValue().intValue()), this.getOperand2().compute().getValue().intValue());
 		for (Tile tile : this.getStatement().getProgram().getWorld().getTiles()){
 			if (tile.getPosition() == pos)
 				return new Object(tile);

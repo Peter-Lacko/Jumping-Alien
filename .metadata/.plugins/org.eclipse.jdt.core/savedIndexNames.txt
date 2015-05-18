@@ -10,11 +10,17 @@ INDEX VERSION 1.127+D:\college\OGP\Jumping-Alien\.metadata\.plugins\org.eclipse.
 358050146.index
 3963179895.index
 881895235.index
+<<<<<<< HEAD
 1204902419.index
 1522590495.index
 248351807.index
 3176364129.index
 2394392208.index
+=======
+1654984216.index
+1064238461.index
+358050146.index
+>>>>>>> 30f3e178c266235aa479ff6aed567ee248563124
 290714306.index
 881303192.index
 2448026493.index

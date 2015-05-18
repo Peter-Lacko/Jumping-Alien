@@ -14,7 +14,7 @@ public class IsTerrain extends Unary<Object,Bool> {
 
 	@Override
 	public Bool compute() {
-		return new Bool(this.getExpr().compute().getValue() instanceof Tile);
+		return new Bool(this.getOperand().compute().getValue() instanceof Tile);
 	}
 
 }

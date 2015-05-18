@@ -15,10 +15,10 @@ public class IsJumping extends Unary<Object,Bool> {
 	@Override
 	public Bool compute() {
 		boolean b;
-		if (this.getExpr().compute().getValue() instanceof Aliens)
-			b = ((Aliens) this.getExpr().compute().getValue()).isJumping();
-		else if  (this.getExpr().compute().getValue() instanceof Shark)
-			b = ((Shark) this.getExpr().compute().getValue()).isJumping();
+		if (this.getOperand().compute().getValue() instanceof Aliens)
+			b = ((Aliens) this.getOperand().compute().getValue()).isJumping();
+		else if  (this.getOperand().compute().getValue() instanceof Shark)
+			b = ((Shark) this.getOperand().compute().getValue()).isJumping();
 		else
 			b = false;
 		return new Bool(b);

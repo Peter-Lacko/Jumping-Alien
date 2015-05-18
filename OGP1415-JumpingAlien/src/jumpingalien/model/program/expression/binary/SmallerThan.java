@@ -13,7 +13,7 @@ public class SmallerThan extends Binary<DoubleType,DoubleType,Bool> {
 
 	@Override
 	public Bool compute() {
-		return new Bool(!(Util.fuzzyGreaterThanOrEqualTo(this.getExpr1().compute().getValue(), this.getExpr2().compute().getValue())));
+		return new Bool(!(Util.fuzzyGreaterThanOrEqualTo(this.getOperand1().compute().getValue(), this.getOperand2().compute().getValue())));
 	}
 
 }

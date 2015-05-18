@@ -14,7 +14,7 @@ public class GetHeight extends Unary<Object,DoubleType> {
 
 	@Override
 	public DoubleType compute() {
-		return new DoubleType(((Characters) this.getExpr().compute().getValue()).getSprite().getHeight());
+		return new DoubleType(((Characters) this.getOperand().compute().getValue()).getSprite().getHeight());
 	}
 
 }

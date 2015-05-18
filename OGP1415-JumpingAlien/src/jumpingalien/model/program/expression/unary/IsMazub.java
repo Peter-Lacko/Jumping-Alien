@@ -14,7 +14,7 @@ public class IsMazub extends Unary<Object,Bool> {
 
 	@Override
 	public Bool compute() {
-		return new Bool(this.getExpr().compute().getValue() instanceof Mazub) ; 
+		return new Bool(this.getOperand().compute().getValue() instanceof Mazub) ; 
 	}
 
 }

@@ -14,7 +14,7 @@ public class GetY extends Unary<Object,DoubleType> {
 
 	@Override
 	public DoubleType compute() {
-		return new DoubleType(((Characters) this.getExpr().compute().getValue()).getPositionAt(2));
+		return new DoubleType(((Characters) this.getOperand().compute().getValue()).getPositionAt(2));
 	}
 
 }

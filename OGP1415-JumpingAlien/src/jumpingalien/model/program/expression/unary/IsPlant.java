@@ -14,7 +14,7 @@ public class IsPlant extends Unary<Object,Bool> {
 
 	@Override
 	public Bool compute() {
-		return new Bool(this.getExpr().compute().getValue() instanceof Plant) ; 
+		return new Bool(this.getOperand().compute().getValue() instanceof Plant) ; 
 	}
 
 }
