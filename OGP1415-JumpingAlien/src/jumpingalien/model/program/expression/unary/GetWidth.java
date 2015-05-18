@@ -14,7 +14,7 @@ public class GetWidth extends Unary<Object,DoubleType> {
 
 	@Override
 	public DoubleType compute() {
-		return new DoubleType(((Characters) this.getExpr().compute().getValue()).getSprite().getWidth());
+		return new DoubleType(((Characters) this.getOperand().compute().getValue()).getSprite().getWidth());
 	}
 
 }

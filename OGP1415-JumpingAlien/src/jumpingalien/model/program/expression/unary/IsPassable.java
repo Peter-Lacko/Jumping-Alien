@@ -15,10 +15,10 @@ public class IsPassable extends Unary<Object ,Bool> {
 	@Override
 	public Bool compute() {
 		boolean b;
-		if (this.getExpr().compute().getValue() instanceof Characters)
+		if (this.getOperand().compute().getValue() instanceof Characters)
 			b = false;
-		else if (this.getExpr().compute().getValue() instanceof Tile)
-			b= ! (((Tile)this.getExpr().compute().getValue()).getGeo() == GeoFeature.GROUND);
+		else if (this.getOperand().compute().getValue() instanceof Tile)
+			b= ! (((Tile)this.getOperand().compute().getValue()).getGeo() == GeoFeature.GROUND);
 		else
 			b = true;
 		return new Bool(b);

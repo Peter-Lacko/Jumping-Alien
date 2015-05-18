@@ -15,10 +15,10 @@ public class IsDucking extends Unary<Object,Bool> {
 	@Override
 	public Bool compute() {
 		boolean b;
-		if ( !(this.getExpr().compute().getValue() instanceof Aliens))
+		if ( !(this.getOperand().compute().getValue() instanceof Aliens))
 			b = false;
 		else
-			b = ((Aliens) this.getExpr().compute().getValue()).isDucked();
+			b = ((Aliens) this.getOperand().compute().getValue()).isDucked();
 		return new Bool(b);
 	}
 

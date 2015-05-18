@@ -12,7 +12,7 @@ public class Addition extends Binary<DoubleType, DoubleType, DoubleType> {
 
 	@Override
 	public DoubleType compute() {
-		double doubleResult = this.getExpr1().compute().getValue() + this.getExpr2().compute().getValue();
+		double doubleResult = this.getOperand1().compute().getValue() + this.getOperand2().compute().getValue();
 		DoubleType result = new DoubleType(doubleResult);
 		return result;
 	}

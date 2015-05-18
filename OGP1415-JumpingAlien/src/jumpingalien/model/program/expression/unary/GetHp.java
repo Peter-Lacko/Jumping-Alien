@@ -14,7 +14,7 @@ public class GetHp extends Unary<Object,DoubleType> {
 
 	@Override
 	public DoubleType compute() {
-		return new DoubleType(((Characters) this.getExpr().compute().getValue()).getHitPoints());
+		return new DoubleType(((Characters) this.getOperand().compute().getValue()).getHitPoints());
 	}
 
 }

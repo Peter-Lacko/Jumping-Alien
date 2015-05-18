@@ -15,10 +15,10 @@ public class IsDead extends Unary<Object,Bool> {
 	@Override
 	public Bool compute() {
 		boolean b;
-		if (! (this.getExpr().compute().getValue() instanceof Characters))
+		if (! (this.getOperand().compute().getValue() instanceof Characters))
 			b = false;
 		else
-			b = ((Characters)this.getExpr().compute().getValue()).isTerminated();
+			b = ((Characters)this.getOperand().compute().getValue()).isTerminated();
 		return new Bool(b);
 	}
 

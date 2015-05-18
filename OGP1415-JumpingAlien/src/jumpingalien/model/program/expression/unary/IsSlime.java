@@ -14,7 +14,7 @@ public class IsSlime extends Unary<Object,Bool> {
 
 	@Override
 	public Bool compute() {
-		return new Bool(this.getExpr().compute().getValue() instanceof Slime); 
+		return new Bool(this.getOperand().compute().getValue() instanceof Slime); 
 	}
 
 }

@@ -13,7 +13,7 @@ public class Negation extends Unary<Bool, Bool> {
 	@Override
 	public Bool compute() {
 //		return !((boolean) this.getExpr().compute());
-		boolean booleanResult = (! this.getExpr().compute().getValue());
+		boolean booleanResult = (! this.getOperand().compute().getValue());
 		Bool result = new Bool(booleanResult);
 		return result;
 	}

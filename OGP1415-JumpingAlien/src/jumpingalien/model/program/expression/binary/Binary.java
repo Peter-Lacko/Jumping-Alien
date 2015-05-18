@@ -8,20 +8,20 @@ public abstract class Binary<R extends Type<?>,S extends Type<?>,T extends Type<
 		
 	public Binary(Expression<R> operand1, Expression<S> operand2, SourceLocation sourceLocation){
 		super(sourceLocation);
-		this.expr1 = operand1;
-		this.expr2 = operand2;
+		this.operand1 = operand1;
+		this.operand2 = operand2;
 	}
 
-	public Expression<R> getExpr1() {
-		return expr1;
+	public Expression<R> getOperand1() {
+		return operand1;
 	}
 	
-	private final Expression<R> expr1;
+	private final Expression<R> operand1;
 	
-	public Expression<S> getExpr2() {
-		return expr2;
+	public Expression<S> getOperand2() {
+		return operand2;
 	}
 	
-	private final Expression<S> expr2;
+	private final Expression<S> operand2;
 	
 }
