@@ -2,16 +2,19 @@ package jumpingalien.model.program.expression.unary;
 
 import jumpingalien.model.Shark;
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+import jumpingalien.part3.programs.SourceLocation;
 
-public class IsShark extends Unary<Object> {
+public class IsShark extends Unary<Object,Bool> {
 
-	public IsShark(Expression<Object> unary) {
-		super(unary);
+	public IsShark(Expression<Object> unary,SourceLocation sourceLocation) {
+		super(unary,sourceLocation);
 	}
 
 	@Override
-	public Object compute() {
-		return this.getExpr().compute() instanceof Shark ; 
+	public Bool compute() {
+		return new Bool(this.getExpr().compute().getValue() instanceof Shark) ; 
 	}
 
 }

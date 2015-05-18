@@ -106,6 +106,12 @@ public class SearchObject extends Expression<Object>{
 			return -1;
 	}
 	
+	public Program getProgram(){
+		return this.program;
+	}
+	
+	private Program program;
+	
 	public Characters getCharacter(){
 		return this.character;
 	}
