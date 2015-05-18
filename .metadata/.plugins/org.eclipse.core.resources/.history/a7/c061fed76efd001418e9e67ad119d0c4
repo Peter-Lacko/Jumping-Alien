@@ -4,6 +4,8 @@
 package jumpingalien.model;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import jumpingalien.util.Util;
 import be.kuleuven.cs.som.annotate.Basic;

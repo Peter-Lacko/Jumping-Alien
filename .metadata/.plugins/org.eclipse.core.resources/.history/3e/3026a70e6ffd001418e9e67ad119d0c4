@@ -2,7 +2,6 @@ package jumpingalien.model.program.statement;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
 
 import jumpingalien.model.GameObject;
 import jumpingalien.model.program.expression.Expression;
@@ -24,22 +23,8 @@ public class ForEachLoop extends LoopStatement {
 		return this;
 	}
 	
-	private final Expression<DoubleType> sortExpression = null;
-	
-	private final SortDirection sortDirection = null;
-	
-	private Stream<GameObject> currentStream = null;
-	
-    public Stream<GameObject> getCurrentStream() {
-		return currentStream;
-	}
-
-	public void setCurrentStream(Stream<GameObject> currentStream) {
-		this.currentStream = currentStream;
-	}
-
-	public Stream<GameObject> stream() {
-    	Builder<GameObject> builder = Stream.builder();
+    public Stream<GameObject> stream() {
+    	Stream.Builder builder = Stream.builder();
     	for (GameObject element: getProgram().getCharacter().getWorld().getAllObjectsAndTiles())
     		builder.accept(element);
     	return builder.build();    		

@@ -24,10 +24,6 @@ public class ForEachLoop extends LoopStatement {
 		return this;
 	}
 	
-	private final Expression<DoubleType> sortExpression = null;
-	
-	private final SortDirection sortDirection = null;
-	
 	private Stream<GameObject> currentStream = null;
 	
     public Stream<GameObject> getCurrentStream() {

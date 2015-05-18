@@ -145,7 +145,16 @@
         <tags>org.eclipse.e4.primaryDataStack</tags>
         <tags>EditorStack</tags>
         <tags>active</tags>
+<<<<<<< HEAD
         <children xsi:type="basic:Part" xmi:id="_lov5HP2UEeSQx6qEb_epSQ" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="ProgramFactory.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.gif" closeable="true">
+=======
+<<<<<<< HEAD
+        <children xsi:type="basic:Part" xmi:id="_aQtd4P1uEeSz56g2W6hxJg" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="ForEachLoop.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.gif" closeable="true">
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;ForEachLoop.java&quot; partName=&quot;ForEachLoop.java&quot; title=&quot;ForEachLoop.java&quot; tooltip=&quot;OGP1415-JumpingAlien/src/jumpingalien/model/program/statement/ForEachLoop.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/OGP1415-JumpingAlien/src/jumpingalien/model/program/statement/ForEachLoop.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;928&quot; selectionTopPixel=&quot;0&quot;/>&#xD;&#xA;&lt;/editor>"/>
+=======
+        <tags>noFocus</tags>
+        <children xsi:type="basic:Part" xmi:id="_TQq9Sv2OEeSQx6qEb_epSQ" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="ProgramFactory.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.gif" closeable="true">
+>>>>>>> 24b70494c8acaba3c406b34e9a267ea9b05be615
           <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;ProgramFactory.java&quot; partName=&quot;ProgramFactory.java&quot; title=&quot;ProgramFactory.java&quot; tooltip=&quot;OGP1415-JumpingAlien/src/jumpingalien/model/program/ProgramFactory.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/OGP1415-JumpingAlien/src/jumpingalien/model/program/ProgramFactory.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;7362&quot; selectionTopPixel=&quot;5204&quot;/>&#xD;&#xA;&lt;/editor>"/>
           <tags>Editor</tags>
           <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
@@ -267,7 +276,35 @@
           <tags>Editor</tags>
           <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
           <tags>removeOnHide</tags>
+<<<<<<< HEAD
           <menus xsi:type="menu:PopupMenu" xmi:id="_lov5Mv2UEeSQx6qEb_epSQ" elementId="#CompilationUnitEditorContext">
+=======
+          <menus xsi:type="menu:PopupMenu" xmi:id="_TQq9YP2OEeSQx6qEb_epSQ" elementId="#CompilationUnitEditorContext">
+            <tags>menuContribution:popup</tags>
+            <tags>popup:#CompilationUnitEditorContext</tags>
+            <tags>popup:org.eclipse.jdt.ui.CompilationUnitEditor.EditorContext</tags>
+            <tags>popup:#AbstractTextEditorContext</tags>
+          </menus>
+          <menus xsi:type="menu:PopupMenu" xmi:id="_TQq9Yf2OEeSQx6qEb_epSQ" elementId="#CompilationUnitRulerContext">
+            <tags>menuContribution:popup</tags>
+            <tags>popup:#CompilationUnitRulerContext</tags>
+            <tags>popup:org.eclipse.jdt.ui.CompilationUnitEditor.RulerContext</tags>
+            <tags>popup:#AbstractTextEditorRulerContext</tags>
+          </menus>
+          <menus xsi:type="menu:PopupMenu" xmi:id="_TQq9Yv2OEeSQx6qEb_epSQ" elementId="#OverviewRulerContext">
+            <tags>menuContribution:popup</tags>
+            <tags>popup:#OverviewRulerContext</tags>
+          </menus>
+        </children>
+        <children xsi:type="basic:Part" xmi:id="_TQq9Y_2OEeSQx6qEb_epSQ" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="GetTile.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.gif" closeable="true">
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;GetTile.java&quot; partName=&quot;GetTile.java&quot; title=&quot;GetTile.java&quot; tooltip=&quot;OGP1415-JumpingAlien/src/jumpingalien/model/program/expression/binary/GetTile.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/OGP1415-JumpingAlien/src/jumpingalien/model/program/expression/binary/GetTile.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;11&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;740&quot; selectionTopPixel=&quot;0&quot;/>&#xD;&#xA;&lt;/editor>"/>
+>>>>>>> c92b6c8161503249b0194b8364a8228525e6ff82
+          <tags>Editor</tags>
+          <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
+          <tags>removeOnHide</tags>
+          <tags>active</tags>
+          <menus xsi:type="menu:PopupMenu" xmi:id="_TQq9ZP2OEeSQx6qEb_epSQ" elementId="#CompilationUnitEditorContext">
+>>>>>>> 24b70494c8acaba3c406b34e9a267ea9b05be615
             <tags>menuContribution:popup</tags>
             <tags>popup:#CompilationUnitEditorContext</tags>
             <tags>popup:org.eclipse.jdt.ui.CompilationUnitEditor.EditorContext</tags>
@@ -418,7 +455,14 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_lov5e_2UEeSQx6qEb_epSQ" elementId="org.eclipse.ui.workbench.file">
         <tags>Draggable</tags>
+<<<<<<< HEAD
         <children xsi:type="menu:DirectToolItem" xmi:id="_lov5fP2UEeSQx6qEb_epSQ" elementId="new.group">
+=======
+<<<<<<< HEAD
+        <children xsi:type="menu:HandledToolItem" xmi:id="_9jhoQP2PEeS8kPv5HS-uXQ" elementId="print" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.png" tooltip="Print" enabled="false" command="_Wsko4P1uEeSz56g2W6hxJg"/>
+=======
+        <children xsi:type="menu:DirectToolItem" xmi:id="_TQq9rv2OEeSQx6qEb_epSQ" elementId="new.group">
+>>>>>>> 24b70494c8acaba3c406b34e9a267ea9b05be615
           <tags>Opaque</tags>
         </children>
         <children xsi:type="menu:DirectToolItem" xmi:id="_lov5ff2UEeSQx6qEb_epSQ" elementId="newWizardDropDown">
@@ -455,6 +499,7 @@
         <children xsi:type="menu:DirectToolItem" xmi:id="_lov5iP2UEeSQx6qEb_epSQ" elementId="org.eclipse.wb.core.wizards.actions.NewDesignerTypeDropDownAction">
           <tags>Opaque</tags>
         </children>
+>>>>>>> c92b6c8161503249b0194b8364a8228525e6ff82
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_lov5if2UEeSQx6qEb_epSQ" elementId="additions" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -620,6 +665,10 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_lowfGf2UEeSQx6qEb_epSQ" elementId="org.eclipse.jdt.ui.CompilationUnitEditor">
         <tags>Draggable</tags>
+<<<<<<< HEAD
+        <children xsi:type="menu:HandledToolItem" xmi:id="_9jmgw_2PEeS8kPv5HS-uXQ" elementId="org.eclipse.ui.window.pinEditor" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.png" tooltip="Pin Editor" type="Check" command="_Wsizmv1uEeSz56g2W6hxJg"/>
+=======
+>>>>>>> c92b6c8161503249b0194b8364a8228525e6ff82
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_lowfGv2UEeSQx6qEb_epSQ" elementId="group.editor" toBeRendered="false">
         <tags>toolbarSeparator</tags>
