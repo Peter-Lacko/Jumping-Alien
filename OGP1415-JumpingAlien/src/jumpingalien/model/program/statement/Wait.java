@@ -13,6 +13,7 @@ public class Wait extends ActionStatement {
 	public Wait(Expression<DoubleType> expression, SourceLocation sourceLocation){
 		super(sourceLocation);
 		this.expression = expression;
+		expression.setStatement(this);
 	}
 	
 	private final Expression<DoubleType> expression;
