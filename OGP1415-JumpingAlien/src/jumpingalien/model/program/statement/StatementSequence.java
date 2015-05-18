@@ -12,8 +12,11 @@ public class StatementSequence extends Statement {
 		super(sourceLocation);
 		if (statements == null)
 			this.statements = new Statement[] {};
-		else
+		else{
 			this.statements = statements;
+			for (Statement statement : statements)
+				statement.setEnclosingStatement(this);
+		}
 	}
 
 	private final Statement[] statements;

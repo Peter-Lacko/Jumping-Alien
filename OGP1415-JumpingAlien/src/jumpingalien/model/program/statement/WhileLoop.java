@@ -12,6 +12,7 @@ public class WhileLoop extends LoopStatement {
 	public WhileLoop(Expression<Bool> condition, Statement loopStatement, SourceLocation sourceLocation){
 		super(sourceLocation, loopStatement);
 		this.condition = condition;
+		condition.setStatement(this);
 	}
 
 	@Override

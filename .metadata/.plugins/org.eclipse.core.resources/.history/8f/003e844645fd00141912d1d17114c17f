@@ -1,0 +1,81 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.Bool;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class IfThenElse extends Statement {
+
+	public IfThenElse(Expression<Bool> ifCondition, Statement ifStatement, Statement elseStatement,
+			SourceLocation sourceLocation) {
+		super(sourceLocation);
+		this.condition = ifCondition;
+		this.ifStatement = ifStatement;
+		this.elseStatement = elseStatement;
+	}
+	
+	private boolean conditionStatus = false;
+	
+	public boolean isConditionStatus() {
+		return conditionStatus;
+	}
+
+	public void setConditionStatus(boolean conditionStatus) {
+		this.conditionStatus = conditionStatus;
+	}
+
+	public Statement getIfStatement() {
+		return ifStatement;
+	}
+
+	public Statement getElseStatement() {
+		return elseStatement;
+	}
+
+	public Expression<Bool> getCondition(){
+		return this.condition;
+	}
+
+	private final Expression<Bool> condition;
+	
+	private final Statement ifStatement;
+	
+	private final Statement elseStatement;
+
+	@Override
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				if (! conditionChecked)
+					return true;
+				else{
+					return currentIterator.hasNext();
+				}
+			}
+
+			@Override
+			public Statement next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			private Iterator<Statement> currentIterator = getElseStatement().iterator();
+			
+			private boolean conditionChecked = false;
+			
+		};
+	}
+
+	@Override
+	public void execute() {
+		if (getCondition().compute().getValue())
+			setConditionStatus(true);
+		else
+			setConditionStatus(false);
+	}
+
+}

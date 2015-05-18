@@ -5,12 +5,12 @@
 <fullyQualifiedTypeName name="jumpingalien.model.program.expression.ExpressionBasic"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.type.Type"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.Bool"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.type.DoubleType"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.expression.Expression"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.type.DirectionType"/>
 <fullyQualifiedTypeName name="jumpingalien.part3.programs.SourceLocation"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.Direction"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.expression.Expression"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.type.Bool"/>
 <fullyQualifiedTypeName name="java.util.NoSuchElementException"/>
 </qualifiedTypeNameHistroy>

@@ -13,6 +13,7 @@ public class StartRun extends ActionStatement {
 	public StartRun(Expression<DirectionType> expression, SourceLocation sourceLocation){
 		super(sourceLocation);
 		this.expression = expression;
+		expression.setStatement(this);
 	}
 	
 	private final Expression<DirectionType> expression;

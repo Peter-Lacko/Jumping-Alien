@@ -13,10 +13,11 @@ public abstract class LoopStatement extends Statement {
 			//(condition is standard set to false, stream is empty.
 			for(Statement statement : loopStatement){
 				if (statement instanceof Break)
-					((Break) loopStatement).setLoopStatement(this);
+					((Break) statement).setLoopStatement(this);
 			}
 		}
 		this.loopBody = loopStatement;
+		loopStatement.setEnclosingStatement(this);
 	}
 
 	public Statement getLoopBody() {

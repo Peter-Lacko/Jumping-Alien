@@ -13,6 +13,7 @@ public class Assignment<T extends Type<?>> extends Statement {
 	public Assignment(String name, Expression<T> value, SourceLocation sourceLocation, T type){
 		super(sourceLocation);
 		this.expression = value;
+		value.setStatement(this);
 		this.variable = name;
 	}
 	

@@ -25,6 +25,9 @@ public abstract class Statement implements Iterable<Statement> {
 	public abstract void execute();
 	
 	public Program getProgram(){
+		if (this.program == null){
+			setProgram(getTopStatement().getProgram());
+		}
 		return this.program;
 	}
 	
@@ -32,7 +35,25 @@ public abstract class Statement implements Iterable<Statement> {
 		this.program = program;
 	}
 	
-	private Program program;
+	private Program program = null;
+	
+	private Statement enclosingStatement;
+
+	public Statement getEnclosingStatement() {
+		return enclosingStatement;
+	}
+
+	public void setEnclosingStatement(Statement enclosingStatement) {
+		this.enclosingStatement = enclosingStatement;
+	}
+	
+	public Statement getTopStatement(){
+		Statement superStatement = this;
+		if (getProgram() == null){
+			superStatement = getEnclosingStatement().getTopStatement();
+		}
+		return superStatement;
+	}
 
 //	public boolean isDone() {
 //		return done;
