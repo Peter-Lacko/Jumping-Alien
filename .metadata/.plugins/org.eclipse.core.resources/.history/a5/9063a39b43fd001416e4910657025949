@@ -4,6 +4,7 @@ import java.util.*;
 
 import jumpingalien.model.Characters;
 import jumpingalien.model.World;
+import jumpingalien.model.program.expression.*;
 import jumpingalien.model.program.statement.*;
 import jumpingalien.model.program.type.Type;
 import be.kuleuven.cs.som.annotate.*;
@@ -61,22 +62,18 @@ public class Program implements Iterable<Statement>{
 //
 //	private Map<String, Type> globalType;
 	
-	public jumpingalien.model.program.type.Object getObject() {
-		return object;
+	public jumpingalien.model.program.type.Object getCharacter() {
+		return character;
 	}
 
-	public void setObject( jumpingalien.model.program.type.Object object) {
-		this.object = object;
+	public void setCharacter( jumpingalien.model.program.type.Object character) {
+		this.character = character;
 	}
 
-	private  jumpingalien.model.program.type.Object object;
+	private  jumpingalien.model.program.type.Object character;
 
 	public World getWorld() {
 		return world;
-	}
-	
-	public Characters getCharacter(){
-		return (Characters)this.getObject().getValue();
 	}
 
 	public void setWorld(World world) {

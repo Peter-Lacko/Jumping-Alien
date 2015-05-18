@@ -7,17 +7,20 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class ExpressionRandomDouble extends ExpressionBasic<DoubleType> {
 
-	public ExpressionRandomDouble(DoubleType maxValue, SourceLocation sourceLocation){
+	public ExpressionRandomDouble(double maxValue, SourceLocation sourceLovation){
 		super(maxValue , sourceLocation);
 	}
 	
+	public double getMaxValue() {
+		return maxValue;
+	}
 	
+	private double maxValue;
 	
 	@Override
 	public DoubleType compute() {
 		Random r = new Random(); 
-		DoubleType d = new DoubleType(r.nextDouble()*getValue().getValue());
-		return d;
+		return r.nextDouble()*getMaxValue();
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.*;
 
 import jumpingalien.model.Characters;
 import jumpingalien.model.World;
+import jumpingalien.model.program.expression.*;
 import jumpingalien.model.program.statement.*;
 import jumpingalien.model.program.type.Type;
 import be.kuleuven.cs.som.annotate.*;
