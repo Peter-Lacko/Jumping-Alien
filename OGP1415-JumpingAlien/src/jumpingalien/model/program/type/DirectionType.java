@@ -8,4 +8,8 @@ public class DirectionType extends Type<Direction> {
 		super(value);
 	}
 
+	@Override
+	public String toString(){
+		return getValue().toString();
+	}
 }

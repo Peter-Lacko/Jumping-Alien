@@ -1,0 +1,26 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.part3.programs.SourceLocation;
+
+public class ForEachLoop extends LoopStatement {
+
+	public ForEachLoop(SourceLocation sourceLocation, Statement loopStatement) {
+		super(sourceLocation, loopStatement);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public Iterator<Statement> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,19 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+public class StopRun extends ActionStatement {
+
+	@Override
+	public Iterator<Statement> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

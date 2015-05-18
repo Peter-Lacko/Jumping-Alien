@@ -26,5 +26,10 @@ public class Object extends Type<GameObject> {
 		else
 			return Kind.ANY;
 	}
+	
+	@Override
+	public String toString(){
+		return getKind().toString();
+	}
 
 }

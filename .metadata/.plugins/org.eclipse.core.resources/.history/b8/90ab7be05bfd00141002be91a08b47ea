@@ -1,0 +1,28 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.Type;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class Print extends Statement {
+
+	public Print(Expression<? extends Type<?>> expression, SourceLocation sourceLocation) {
+		super(sourceLocation);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public Iterator<Statement> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

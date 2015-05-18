@@ -6,4 +6,8 @@ public class DoubleType extends Type<Double> {
 		super(value);
 	}
 	
+	@Override
+	public String toString(){
+		return getValue().toString();
+	}
 }

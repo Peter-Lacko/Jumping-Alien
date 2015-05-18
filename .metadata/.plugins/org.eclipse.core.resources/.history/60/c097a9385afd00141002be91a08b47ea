@@ -1,0 +1,29 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.DirectionType;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class StopRun extends ActionStatement {
+
+	public StopRun(Expression<DirectionType> expression, SourceLocation sourceLocation){
+		super(sourceLocation);
+		this.expression = expression;
+		expression.setStatement(this);
+	}
+
+	@Override
+	public Iterator<Statement> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}
