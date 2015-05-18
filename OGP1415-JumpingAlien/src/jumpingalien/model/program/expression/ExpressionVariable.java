@@ -6,14 +6,9 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public abstract class ExpressionVariable<T extends Type<?>> extends Expression<T> {
 
-	public ExpressionVariable(SourceLocation sourceLocation, Program program, String name) {
-		super(sourceLocation);
-		setProgram(program);
-		setName(name);
-	}
-	
 	public ExpressionVariable(SourceLocation sourceLocation, String name) {
-		this(sourceLocation, null, name);
+		super(sourceLocation);
+		setName(name);
 	}
 
 	private String name;
@@ -26,20 +21,10 @@ public abstract class ExpressionVariable<T extends Type<?>> extends Expression<T
 		this.name = name;
 	}
 
-	private Program program;
-	
-	public Program getProgram() {
-		return program;
-	}
-
-	public void setProgram(Program program) {
-		this.program = program;
-	}
-
 //	@Override
 //	public T compute() {
-//		T result = (T) getProgram().getGlobalVariables().get(getName());
-//		return null;
+//		T result = (T) getStatement().getProgram().getGlobalVariables().get(getName());
+//		return result;
 //	}
 
 	// hoe ben je zeker dat er een programma bij staat?

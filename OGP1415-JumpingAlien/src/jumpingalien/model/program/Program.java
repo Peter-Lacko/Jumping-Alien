@@ -62,15 +62,15 @@ public class Program implements Iterable<Statement>{
 //
 //	private Map<String, Type> globalType;
 	
-	public Characters getCharacter() {
+	public jumpingalien.model.program.type.Object getCharacter() {
 		return character;
 	}
 
-	public void setCharacter(Characters character) {
+	public void setCharacter( jumpingalien.model.program.type.Object character) {
 		this.character = character;
 	}
 
-	private Characters character;
+	private  jumpingalien.model.program.type.Object character;
 
 	public World getWorld() {
 		return world;

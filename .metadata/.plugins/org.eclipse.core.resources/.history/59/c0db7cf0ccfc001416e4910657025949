@@ -1,0 +1,13 @@
+package jumpingalien.model.program.expression;
+
+import jumpingalien.model.program.type.Type;
+
+public class ExpressionVariableBoolean extends ExpressionVariable {
+
+	@Override
+	public Type compute() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

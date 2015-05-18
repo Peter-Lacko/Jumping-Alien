@@ -7,6 +7,7 @@ import jumpingalien.model.program.expression.unary.*;
 import jumpingalien.model.program.expression.binary.*;
 import jumpingalien.model.program.statement.*;
 import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
 import jumpingalien.part3.programs.IProgramFactory;
 import jumpingalien.part3.programs.SourceLocation;
 
@@ -17,10 +18,10 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	public Expression<? extends Type<?>> createReadVariable(
 			String variableName, Type<?> variableType,
 			SourceLocation sourceLocation) {
-		// waar moet ik juist variableType gebruiken?
-		// --> if else if else if enz
-		Expression<? extends Type<?>> result = new ExpressionVariable<Type<?>>(sourceLocation, variableName);
-		return result;
+		if (variableType instanceof Bool){
+			ExpressionVariableBoolean result = new ExpressionVariableBoolean(sourceLocation,variableName); 
+		}
+		else if ()
 	}
 
 	@Override
@@ -47,8 +48,8 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	@Override
 	public Expression<? extends Type<?>> createNull(
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		ExpressionBasic<Object> result = new ExpressionBasic<Object>(new Object(null), sourceLocation);
+		return result;
 	}
 
 	@Override

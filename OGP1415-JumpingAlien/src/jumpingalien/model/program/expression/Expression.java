@@ -1,29 +1,26 @@
 package jumpingalien.model.program.expression;
 
+import jumpingalien.model.program.statement.Statement;
 import jumpingalien.model.program.type.Type;
 import jumpingalien.part3.programs.SourceLocation;
 
 public abstract class Expression<T extends Type<?>> {
 
-//	public Expression() {
-////		this.column = column;
-////		this.line = line;
-//	}
 	public Expression(SourceLocation sourceLocation){
 		setSourceLocation(sourceLocation);
 	}
 	
 	private SourceLocation sourceLocation;
 	
-//	public T getType(){
-//		return this.type;
-//	}
+	public Statement getStatement(){
+		return this.statement;
+	}
+	 
+	public void setStatement(Statement statement){
+		this.statement = statement;
+	}
 //	 
-//	public void setType(T type){
-//		this.type = type;
-//	}
-//	 
-//	private T type ;
+	private Statement statement;
 	 
 	public SourceLocation getSourceLocation() {
 		return sourceLocation;

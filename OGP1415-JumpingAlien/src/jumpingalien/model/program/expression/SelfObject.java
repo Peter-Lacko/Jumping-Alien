@@ -2,13 +2,13 @@ package jumpingalien.model.program.expression;
 
 import jumpingalien.model.*;
 import jumpingalien.model.program.Program;
+import jumpingalien.part3.programs.SourceLocation;
 
 public class SelfObject extends Expression<Object> {
 
 
-	public SelfObject(Program program){
-		super();
-		this.character = program.getCharacter();
+	public SelfObject(SourceLocation sourceLocation){
+		super(sourceLocation);
 	}
 
 	@Override

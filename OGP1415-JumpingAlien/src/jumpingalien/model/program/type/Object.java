@@ -5,7 +5,7 @@ import jumpingalien.part3.programs.IProgramFactory.Kind;
 
 public class Object extends Type<GameObject> {
 
-	protected Object(GameObject value) {
+	public Object(GameObject value) {
 		super(value);
 	}
 	
