@@ -24,21 +24,7 @@ public class ForEachLoop extends LoopStatement {
 		return this;
 	}
 	
-	private final Expression<DoubleType> sortExpression = null;
-	
-	private final SortDirection sortDirection = null;
-	
-	private Stream<GameObject> currentStream = null;
-	
-    public Stream<GameObject> getCurrentStream() {
-		return currentStream;
-	}
-
-	public void setCurrentStream(Stream<GameObject> currentStream) {
-		this.currentStream = currentStream;
-	}
-
-	public Stream<GameObject> stream() {
+    public Stream<GameObject> stream() {
     	Builder<GameObject> builder = Stream.builder();
     	for (GameObject element: getProgram().getCharacter().getWorld().getAllObjectsAndTiles())
     		builder.accept(element);
