@@ -1,0 +1,30 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.Bool;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class AssignmentBool extends Assignment<Bool> {
+
+	public AssignmentBool(String name, Expression<Bool> value,
+			SourceLocation sourceLocation) {
+		super(name, value, sourceLocation);
+	}
+
+	private
+	
+	@Override
+	public Iterator<Statement> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

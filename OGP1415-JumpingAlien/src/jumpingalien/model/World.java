@@ -1324,5 +1324,14 @@ public class World {
 		}
 		return buzams;
 	}
+	
+	public Collection<Characters> getAllObjectsOfType(Class type){
+		Collection<Characters> result = new LinkedList<Characters>();
+		for (Characters object : getAllObjects()){
+			if (type.isInstance(object))
+				result.add(object);
+		}
+		return result;
+	}
 
 }

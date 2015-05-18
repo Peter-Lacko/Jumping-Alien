@@ -1,0 +1,20 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.part3.programs.SourceLocation;
+
+public abstract class LoopStatement extends Statement {
+
+	public LoopStatement(SourceLocation sourceLocation, Statement loopStatement) {
+		super(sourceLocation);
+		this.loopBody = loopStatement;
+	}
+
+	public Statement getLoopBody() {
+		return loopBody;
+	}
+	
+	private final Statement loopBody;
+	
+}

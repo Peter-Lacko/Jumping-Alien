@@ -3,10 +3,13 @@ package jumpingalien.model.program.statement;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import jumpingalien.part3.programs.SourceLocation;
+
 //while loop argument: must become a StatementSequence?
 public class StatementSequence extends Statement {
 
-	public StatementSequence(Statement... statements){
+	public StatementSequence(SourceLocation sourceLocation, Statement... statements){
+		super(sourceLocation);
 		if (statements == null)
 			this.statements = new Statement[] {};
 		else

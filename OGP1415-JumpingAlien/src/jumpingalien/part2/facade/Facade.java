@@ -217,7 +217,7 @@ public class Facade implements IFacadePart2 {
 	}
 
 	public Collection<Shark> getSharks(World world){
-		return world.getAllSharks()
+		return world.getAllSharks();
 	}
 
 	public int[] getLocation(Characters shark){

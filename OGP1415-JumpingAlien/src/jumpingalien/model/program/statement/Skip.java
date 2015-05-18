@@ -3,19 +3,21 @@ package jumpingalien.model.program.statement;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import jumpingalien.part3.programs.SourceLocation;
+
 public class Skip extends ActionStatement {
 
-	public Skip(){
-		super();
+	public Skip(SourceLocation sourceLocation){
+		super(sourceLocation);
 	}
 	
-	public Skip getSkip(){
+	private Skip getSkip(){
 		return this;
 	}
 	
 	@Override
-	public Iterator iterator() {
-		return new Iterator(){
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {
@@ -23,7 +25,7 @@ public class Skip extends ActionStatement {
 			}
 
 			@Override
-			public Object next() throws NoSuchElementException{
+			public Skip next() throws NoSuchElementException{
 				if (! hasNext())
 					throw new NoSuchElementException();
 				executed = true;
@@ -37,7 +39,7 @@ public class Skip extends ActionStatement {
 
 	@Override
 	public void execute() {
-		//er gebeurt niets
+		//nothing happens
 
 	}
 

@@ -1,0 +1,45 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.DoubleType;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class AssignmentDouble extends Assignment<DoubleType> {
+
+	public AssignmentDouble(String name, Expression<DoubleType> value,
+			SourceLocation sourceLocation) {
+		super(name, value, sourceLocation);
+	}
+
+	public AssignmentDouble getAssignmentDouble(){
+		return this;
+	}
+	
+	@Override
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				return (! executed);
+			}
+
+			@Override
+			public Statement next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			private boolean executed = false;
+			
+		};
+	}
+
+	@Override
+	public void execute() {
+		this.getProgram().getGlobalVariables().put(getVariable(), getExpression().compute());
+	}
+
+}

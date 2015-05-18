@@ -1,53 +1,72 @@
 package jumpingalien.model.program.statement;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expression.Expression;
 import jumpingalien.model.program.type.*;
 import jumpingalien.part3.programs.SourceLocation;
 import be.kuleuven.cs.som.annotate.*;
 
-public class Assignment extends Statement {
+public class Assignment<T extends Type<?>> extends Statement {
 
-	public Assignment(String name, Expression<? extends Type<?>> value, SourceLocation sourceLocation, Type<?> variableType){
+	public Assignment(String name, Expression<T> value, SourceLocation sourceLocation, T type){
 		super(sourceLocation);
 		this.expression = value;
 		this.variable = name;
-		this.type = variableType;
 	}
 	
-	@Override
-	public void execute(){
-//		this.getProgram().addValue(this.getVariable(), this.getExpression());
-//		this.setDone(true);
-		if (this.getProgram().getGlobalVariables().get(getVariable()).getClass() == getType().getClass())
-			this.getProgram().getGlobalVariables().put(getVariable(), getExpression().compute());
-	}
-	
-	private final Type<?> type;
-	
-	public Type<?> getType() {
-		return type;
-	}
-
+//	@Override
+//	public void execute(){
+////		this.getProgram().addValue(this.getVariable(), this.getExpression());
+////		this.setDone(true);
+//		if (this.getProgram().getGlobalVariables().get(getVariable()).getClass() == getType().getClass())
+//			this.getProgram().getGlobalVariables().put(getVariable(), getExpression().compute());
+//	}
+//	
 	@Basic @Immutable
-	private String getVariable() {
+	public String getVariable() {
 		return this.variable;
 	}
 	
 	private final String variable;
 	
 	@Basic @Immutable
-	private Expression<? extends Type<?>> getExpression() {
+	public Expression<T> getExpression() {
 		return this.expression;
 	}
 	
-	private final Expression<? extends Type<?>> expression;
+	private final Expression<T> expression;
+	
+	@Override
+	public void execute() {
+		this.getProgram().getGlobalVariables().put(getVariable(), getExpression().compute());
+	}
 
+	private Assignment<T> getAssignment(){
+		return this;
+	}
+	
 	@Override
 	public Iterator<Statement> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				return (! executed);
+			}
+
+			@Override
+			public Assignment<T> next() throws NoSuchElementException {
+				if (! hasNext())
+					throw new NoSuchElementException();
+				executed = true;
+				return getAssignment();
+			}
+			
+			private boolean executed = false;
+			
+		};
 	}
 
 }
