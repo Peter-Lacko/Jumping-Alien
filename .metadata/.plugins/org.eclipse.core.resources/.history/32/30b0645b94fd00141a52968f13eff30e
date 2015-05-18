@@ -6,7 +6,6 @@ import java.util.stream.Stream.Builder;
 
 import jumpingalien.model.GameObject;
 import jumpingalien.model.program.expression.Expression;
-import jumpingalien.model.program.expression.unary.*;
 import jumpingalien.model.program.type.*;
 import jumpingalien.model.program.type.Object;
 import jumpingalien.part3.programs.IProgramFactory.*;
@@ -14,8 +13,8 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public class ForEachLoop extends LoopStatement {
 
-	public ForEachLoop(String name, Kind kind, Unary<Object,Bool> whereExpression,
-			Unary<Object,DoubleType> sortExpression, SortDirection sortDirection,
+	public ForEachLoop(String name, Kind kind, Expression<Bool> whereExpression,
+			Expression<DoubleType> sortExpression, SortDirection sortDirection,
 			SourceLocation sourceLocation, Statement loopStatement) {
 		super(sourceLocation, loopStatement);
 		// TODO Auto-generated constructor stub
