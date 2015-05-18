@@ -11,13 +11,16 @@ public class ExpressionRandomDouble extends ExpressionBasic<DoubleType> {
 		super(maxValue , sourceLocation);
 	}
 	
+	public double getMaxValue() {
+		return maxValue;
+	}
 	
+	private double maxValue;
 	
 	@Override
 	public DoubleType compute() {
 		Random r = new Random(); 
-		DoubleType d = new DoubleType(r.nextDouble()*getValue().getValue());
-		return d;
+		return r.nextDouble()*getMaxValue();
 	}
 
 }

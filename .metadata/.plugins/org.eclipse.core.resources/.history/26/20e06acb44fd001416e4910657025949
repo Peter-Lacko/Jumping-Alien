@@ -10,7 +10,7 @@ public abstract class Expression<T extends Type<?>> {
 		setSourceLocation(sourceLocation);
 	}
 	
-	protected SourceLocation sourceLocation;
+	private SourceLocation sourceLocation;
 	
 	public Statement getStatement(){
 		return this.statement;

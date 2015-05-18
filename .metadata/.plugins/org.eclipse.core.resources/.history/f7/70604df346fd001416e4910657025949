@@ -13,8 +13,8 @@ public class SearchObject extends Expression<Object>{
 
 	public SearchObject( SourceLocation sourceLocation , DirectionType direction){
 		super(sourceLocation);
-		this.setCharacter(this.getStatement().getProgram().getCharacter());
-		this.setWorld(this.getStatement().getProgram().getWorld());
+		this.setCharacter(this.getProgram().getCharacter());
+		this.setWorld(this.getProgram().getWorld());
 		this.setDirection(direction.getValue());
 	}
 

@@ -2,6 +2,7 @@ package jumpingalien.model.program.expression;
 
 import jumpingalien.part3.programs.SourceLocation;
 import jumpingalien.model.program.statement.Statement;
+import jumpingalien.model.program.type.Bool;
 import jumpingalien.model.program.type.Object;
 
 public class SelfObject extends Expression<Object> {
