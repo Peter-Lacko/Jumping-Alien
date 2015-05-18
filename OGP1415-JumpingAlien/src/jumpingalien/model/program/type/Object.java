@@ -4,7 +4,7 @@ import jumpingalien.model.*;
 
 public class Object extends Type<GameObject> {
 
-	protected Object(GameObject value) {
+	public Object(GameObject value) {
 		super(value);
 	}
 
