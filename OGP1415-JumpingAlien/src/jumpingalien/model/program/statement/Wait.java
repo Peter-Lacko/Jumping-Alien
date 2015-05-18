@@ -1,24 +1,51 @@
 package jumpingalien.model.program.statement;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.DoubleType;
+import jumpingalien.part3.programs.SourceLocation;
 
 public class Wait extends ActionStatement {
 
 	//moet did een double of een expression zijn?
-	public Wait(Expression expression){
-		super();
+	public Wait(Expression<DoubleType> expression, SourceLocation sourceLocation){
+		super(sourceLocation);
+		this.expression = expression;
 	}
 	
-	public Wait getWait(){
+	private final Expression<DoubleType> expression;
+	
+	public Expression<DoubleType> getExpression() {
+		return expression;
+	}
+
+	private Wait getWait(){
 		return this;
 	}
 	
 	@Override
-	public Iterator iterator() {
-		// TODO Auto-generated method stub
-		return null;
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				return (index < iterations);
+			}
+
+			@Override
+			public Wait next() throws NoSuchElementException{
+				if (! hasNext())
+					throw new NoSuchElementException();
+				index++;
+				return getWait();
+			}
+			
+			private int index = 0;
+			
+			private int iterations = (int) ((getExpression().compute().getValue()/0.001)+1);
+		};
 	}
 
 	@Override

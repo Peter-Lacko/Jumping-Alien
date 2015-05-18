@@ -1,0 +1,80 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import jumpingalien.model.program.expression.*;
+import jumpingalien.model.program.type.*;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class WhileLoop extends Statement {
+	
+	public WhileLoop(Expression<Bool> condition, Statement loopstatement, SourceLocation sourceLocation){
+		super(sourceLocation);
+		this.condition = condition;
+		this.setLoopBody(loopstatement);
+	}
+
+	@Override
+	public void execute() {
+		if (getCondition().compute().getValue())
+			setConditionStatus(true);
+		else
+			setConditionStatus(false);
+	}
+	
+	private boolean conditionStatus = false;
+	
+	public boolean isConditionStatus() {
+		return conditionStatus;
+	}
+
+	public void setConditionStatus(boolean conditionStatus) {
+		this.conditionStatus = conditionStatus;
+	}
+
+	public Expression<Bool> getCondition(){
+		return this.condition;
+	}
+
+	private Expression<Bool> condition;
+
+	public Statement getLoopBody() {
+		return loopBody;
+	}
+
+	public void setLoopBody(Statement loopBody) {
+		this.loopBody = loopBody;
+	}
+	
+	private Statement loopBody;
+
+	private WhileLoop getWhileLoop(){
+		return this;
+	}
+	
+	@Override
+	public Iterator<Statement> iterator() {
+//		if ((boolean)this.getCondition().compute())
+//			return loopBody.iterator();
+//		return null;
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				if (! conditionChecked)
+					return true;				
+			}
+
+			@Override
+			public Statement next() throws NoSuchElementException{
+				if (! hasNext())
+					throw new NoSuchElementException();
+				return null;
+			}
+			
+			private boolean conditionChecked = false;
+			
+		};
+	}
+}

@@ -1,39 +1,47 @@
 package jumpingalien.model.program.statement;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expression.*;
 import jumpingalien.model.program.type.*;
+import jumpingalien.part3.programs.SourceLocation;
 
-public class WhileLoop extends Statement {
+public class WhileLoop extends LoopStatement {
 	
-	public WhileLoop(Expression<Bool> condition, Statement loopstatement){
-		super();
+	public WhileLoop(Expression<Bool> condition, Statement loopStatement, SourceLocation sourceLocation){
+		super(sourceLocation, loopStatement);
 		this.condition = condition;
-		this.setLoopBody(loopstatement);
 	}
 
 	@Override
 	public void execute() {
-//		this.iterator();
+		if (getCondition().compute().getValue())
+			setConditionStatus(true);
+		else
+			setConditionStatus(false);
 	}
 	
+	private boolean conditionStatus = false;
+	
+	public boolean isConditionStatus() {
+		return conditionStatus;
+	}
+
+	public void setConditionStatus(boolean conditionStatus) {
+		this.conditionStatus = conditionStatus;
+	}
+
 	public Expression<Bool> getCondition(){
 		return this.condition;
 	}
 
-	private Expression<Bool> condition;
+	private final Expression<Bool> condition;
 
-	public Statement getLoopBody() {
-		return loopBody;
-	}
-
-	public void setLoopBody(Statement loopBody) {
-		this.loopBody = loopBody;
+	private WhileLoop getWhileLoop(){
+		return this;
 	}
 	
-	private Statement loopBody;
-
 	@Override
 	public Iterator<Statement> iterator() {
 //		if ((boolean)this.getCondition().compute())
@@ -43,15 +51,36 @@ public class WhileLoop extends Statement {
 
 			@Override
 			public boolean hasNext() {
-				if (! conditionChecked)
-					return true;				
+				if (isBreak())
+					return false;
+				else if (! conditionChecked)
+					return true;
+				else if (isConditionStatus() == false)
+					return false;
+				else
+					return true;
 			}
 
 			@Override
-			public Statement next() {
-				// TODO Auto-generated method stub
-				return null;
+			public Statement next() throws NoSuchElementException{
+				if (! hasNext())
+					throw new NoSuchElementException();
+				if (! conditionChecked){
+					conditionChecked = true;
+					return getWhileLoop();
+				}
+				else{
+					// can throw exceptions if loopBody is empty
+					Statement nextStatement = currentIterator.next();
+					if (! currentIterator.hasNext()){
+						currentIterator = getLoopBody().iterator();
+						conditionChecked = false;
+					}
+					return nextStatement;
+				}
 			}
+			
+			private Iterator<Statement> currentIterator = getLoopBody().iterator();
 			
 			private boolean conditionChecked = false;
 			

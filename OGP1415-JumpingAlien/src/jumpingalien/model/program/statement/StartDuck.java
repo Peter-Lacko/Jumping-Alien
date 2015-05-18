@@ -3,19 +3,21 @@ package jumpingalien.model.program.statement;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import jumpingalien.part3.programs.SourceLocation;
+
 public class StartDuck extends ActionStatement {
 
-	public StartDuck(){
-		super();
+	public StartDuck(SourceLocation sourceLocation){
+		super(sourceLocation);
 	}
 	
-	public StartDuck getStartDuck(){
+	private StartDuck getStartDuck(){
 		return this;
 	}
 	
 	@Override
-	public Iterator iterator() {
-		return new Iterator(){
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {

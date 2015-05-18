@@ -3,19 +3,21 @@ package jumpingalien.model.program.statement;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import jumpingalien.part3.programs.SourceLocation;
+
 public class EndJump extends ActionStatement {
 
-	public EndJump(){
-		super();
+	public EndJump(SourceLocation sourceLocation){
+		super(sourceLocation);
 	}
 	
-	public EndJump getEndJump(){
+	private EndJump getEndJump(){
 		return this;
 	}
 	
 	@Override
-	public Iterator iterator() {
-		return new Iterator(){
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {

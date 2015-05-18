@@ -1,0 +1,46 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.DoubleType;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class Wait extends ActionStatement {
+
+	//moet did een double of een expression zijn?
+	public Wait(Expression<DoubleType> expression, SourceLocation sourceLocation){
+		super(sourceLocation);
+	}
+	
+	private Wait getWait(){
+		return this;
+	}
+	
+	@Override
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public Statement next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
+	}
+
+	@Override
+	public void execute() {
+		// er gebeurt niets voor deze statement.
+		//VRAAG: als bvb een startJump() voor een Wait is, moet er dan niets gebeuren in die Wait? 
+		//of startJump?
+	}
+
+}

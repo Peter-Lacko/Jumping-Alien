@@ -1,0 +1,30 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+
+import jumpingalien.part3.programs.SourceLocation;
+
+public class Break extends Statement {
+
+	public Break(SourceLocation sourceLocation) {
+		super(sourceLocation);
+		// TODO Auto-generated constructor stub
+	}
+
+	private Break getBreak(){
+		return this;
+	}
+	
+	@Override
+	public Iterator<Statement> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

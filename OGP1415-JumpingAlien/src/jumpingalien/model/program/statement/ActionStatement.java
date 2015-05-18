@@ -2,10 +2,12 @@ package jumpingalien.model.program.statement;
 
 import java.util.Iterator;
 
+import jumpingalien.part3.programs.SourceLocation;
+
 public abstract class ActionStatement extends Statement {
 
-	public ActionStatement(){
-		super();
+	public ActionStatement(SourceLocation sourceLocation){
+		super(sourceLocation);
 	}
 	//moet nog hier iets?
 	
