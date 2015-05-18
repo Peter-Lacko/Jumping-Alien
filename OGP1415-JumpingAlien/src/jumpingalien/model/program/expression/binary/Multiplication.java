@@ -1,16 +1,19 @@
 package jumpingalien.model.program.expression.binary;
 
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.type.DoubleType;
+import jumpingalien.part3.programs.SourceLocation;
 
-public class Multiplication extends Binary<Double> {
+public class Multiplication extends Binary<DoubleType, DoubleType, DoubleType> {
 
-	public Multiplication(Expression<Double> operand1, Expression<Double> operand2) {
-		super(operand1, operand2);
+	public Multiplication(Expression<DoubleType> operand1, Expression<DoubleType> operand2, SourceLocation sourceLocation) {
+		super(operand1, operand2, sourceLocation);
 	}
 
 	@Override
-	public Object compute() {
-		return (double)this.getExpr1().compute() * (double)this.getExpr2().compute();
+	public DoubleType compute() {
+		double doubleResult = this.getExpr1().compute().getValue() * this.getExpr2().compute().getValue();
+		DoubleType result = new DoubleType(doubleResult);
+		return result;
 	}
-
 }

@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.util.Iterator"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.expression.Expression"/>
+<fullyQualifiedTypeName name="java.util.NoSuchElementException"/>
 <fullyQualifiedTypeName name="jumpingalien.model.Characters"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.expression.unary.Negation"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.expression.ExpressionBasic"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.DoubleType"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.DirectionType"/>
-<fullyQualifiedTypeName name="jumpingalien.part3.programs.SourceLocation"/>
-<fullyQualifiedTypeName name="java.util.Iterator"/>
-<fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.Direction"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.Bool"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.type.Type"/>
-<fullyQualifiedTypeName name="java.util.NoSuchElementException"/>
 <fullyQualifiedTypeName name="jumpingalien.model.GameObject"/>
-<fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.Kind"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.expression.Expression"/>
-<fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.SortDirection"/>
-<fullyQualifiedTypeName name="java.util.stream.Stream"/>
+<fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.Direction"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Statement"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.type.DoubleType"/>
+<fullyQualifiedTypeName name="jumpingalien.part3.programs.SourceLocation"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.type.Bool"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.type.DirectionType"/>
 </qualifiedTypeNameHistroy>
