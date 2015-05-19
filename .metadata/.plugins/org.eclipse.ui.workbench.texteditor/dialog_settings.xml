@@ -2,13 +2,21 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
+<<<<<<< HEAD
 		<item value="" key="selection"/>
+=======
+		<item value="jumping" key="selection"/>
+>>>>>>> 9f925ab9a6db1f1d539666c2d033c8a48c9a298d
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+<<<<<<< HEAD
 			<item value="getValue"/>
+=======
+			<item value="jumping"/>
+>>>>>>> 9f925ab9a6db1f1d539666c2d033c8a48c9a298d
 			<item value="getTiles"/>
 			<item value="getTi"/>
 			<item value="break"/>
@@ -24,9 +32,9 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="353" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="513" key="DIALOG_HEIGHT"/>
+		<item value="305" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="444" key="DIALOG_HEIGHT"/>
 		<item value="1541" key="DIALOG_X_ORIGIN"/>
 		<item value="220" key="DIALOG_Y_ORIGIN"/>
 	</section>

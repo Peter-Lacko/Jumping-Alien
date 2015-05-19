@@ -15,5 +15,11 @@
 <fullyQualifiedTypeName name="jumpingalien.model.program.type.Bool"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.type.DoubleType"/>
 <fullyQualifiedTypeName name="jumpingalien.part3.programs.SourceLocation"/>
+<<<<<<< HEAD
 <fullyQualifiedTypeName name="jumpingalien.part3.programs.internal.generated.JumpingAlienProgParser.GetExprContext"/>
+=======
+<fullyQualifiedTypeName name="jumpingalien.model.program.type.Bool"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.type.DirectionType"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.expression.unary.Unary"/>
+>>>>>>> 9f925ab9a6db1f1d539666c2d033c8a48c9a298d
 </qualifiedTypeNameHistroy>
