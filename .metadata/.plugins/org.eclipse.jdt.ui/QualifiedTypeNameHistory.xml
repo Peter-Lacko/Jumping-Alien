@@ -5,5 +5,10 @@
 <fullyQualifiedTypeName name="jumpingalien.model.program.expression.ExpressionVariableGameObject"/>
 <fullyQualifiedTypeName name="java.util.Comparator"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.expression.ExpressionBasic"/>
+<fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.Iterator"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Statement"/>
 <fullyQualifiedTypeName name="jumpingalien.util.Util"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Skip"/>
 </qualifiedTypeNameHistroy>

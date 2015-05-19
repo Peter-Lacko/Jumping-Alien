@@ -72,6 +72,7 @@ public class WhileLoop extends LoopStatement {
 				}
 				else{
 					// can throw exceptions if loopBody is empty
+					// the loopBody of a while loop must be filled, otherwise infinite loop.
 					Statement nextStatement = currentIterator.next();
 					if (! currentIterator.hasNext()){
 						currentIterator = getLoopBody().iterator();

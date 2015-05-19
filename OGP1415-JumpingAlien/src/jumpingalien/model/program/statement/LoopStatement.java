@@ -10,7 +10,8 @@ public abstract class LoopStatement extends Statement {
 			((Break) loopStatement).setLoopStatement(this);
 		else if (loopStatement instanceof StatementSequence){
 			//while and foreach statements do no go through their body if they aren't executed first
-			//(condition is standard set to false, stream is empty.
+			//(condition is standard set to false, array is empty.)
+			//if-then-else go through both bodies
 			for(Statement statement : loopStatement){
 				if (statement instanceof Break)
 					((Break) statement).setLoopStatement(this);

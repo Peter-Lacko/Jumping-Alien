@@ -5,6 +5,7 @@ import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
 import jumpingalien.model.program.Program;
 import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
 
 public class Buzam extends Aliens implements OtherCharacters {
 
@@ -318,15 +319,24 @@ public class Buzam extends Aliens implements OtherCharacters {
 	 */
 	@Override
 	public void advanceTime(double duration)throws IllegalArgumentException{
-		if (! this.isTerminated()){
-			if (getTimeSinceStartMovement() < getMovementDuration()){
-				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
-			}
-			else{
-				selectMovements();
+		if(getProgram() != null){
+			for(double i=0.0; (! Util.fuzzyGreaterThanOrEqualTo(i, duration)); i+= 0.001){
+				double newDuration = Math.min(0.001, duration-i);
+				advanceTimeWithProgram();
+				super.advanceTime(newDuration);
 			}
 		}
-		super.advanceTime(duration);
+		else{
+			if (! this.isTerminated()){
+				if (getTimeSinceStartMovement() < getMovementDuration()){
+					setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
+				}
+				else{
+					selectMovements();
+				}
+			}
+			super.advanceTime(duration);
+		}
 	}
 	
 	/**

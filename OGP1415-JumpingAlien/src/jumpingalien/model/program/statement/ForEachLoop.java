@@ -1,5 +1,6 @@
 package jumpingalien.model.program.statement;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -69,14 +70,22 @@ public class ForEachLoop extends LoopStatement {
 
 	private final SortDirection sortDirection;
 	
-	private Stream<Object> currentStream = null;
+	private Object[] currentArray = {};
+
+	public Object getCurrentArrayObjectAt(int index) throws IndexOutOfBoundsException{
+		return this.currentArray[index-1];
+	}
 	
-    public Stream<Object> getCurrentStream() {
-		return currentStream;
+	public Object[] getCurrentArray() {
+		return currentArray;
 	}
 
-	public void setCurrentStream(Stream<Object> currentStream) {
-		this.currentStream = currentStream;
+	public void setCurrentArray(Object[] currentArray) {
+		this.currentArray = currentArray;
+	}
+	
+	public int getCurrentArrayLength(){
+		return this.currentArray.length;
 	}
 
 	public Stream<Object> stream() {
@@ -94,15 +103,65 @@ public class ForEachLoop extends LoopStatement {
 
 			@Override
 			public boolean hasNext() {
-				// TODO Auto-generated method stub
-				return false;
+				if (isBreak())
+					return false;
+				else if (! arraySet)
+					return true;
+				else if (getCurrentArrayLength() == 0)
+					return false;
+				else if (arrayIndex < getCurrentArrayLength())
+					return true;
+				else{
+					if (! variableAssigned)
+						return true;
+					else
+						return currentIterator.hasNext();
+				}
 			}
 
 			@Override
 			public Statement next() throws NoSuchElementException{
-				// TODO Auto-generated method stub
-				return null;
+				if (! hasNext())
+					throw new NoSuchElementException();
+				if (! arraySet){
+					arraySet = true;
+					return getForEachLoop();
+				}
+				else if (! variableAssigned){
+					expressionBasic = new ExpressionBasic<Object>(getCurrentArrayObjectAt(arrayIndex),
+							getSourceLocation());
+					assignment = new Assignment<Object>(getName(), expressionBasic, getSourceLocation(),
+							new Object(null));
+					variableAssigned = true;
+					if (! currentIterator.hasNext() && (arrayIndex < getCurrentArrayLength())){
+						currentIterator = getLoopBody().iterator();
+						variableAssigned = false;
+						arrayIndex++;
+					}
+					return assignment;
+				}
+				else{
+					Statement nextValue = currentIterator.next();
+					if ((! currentIterator.hasNext()) && (arrayIndex < getCurrentArrayLength())){
+						currentIterator = getLoopBody().iterator();
+						variableAssigned = false;
+						arrayIndex++;
+					}
+					return nextValue;
+				}
 			}
+			
+			private ExpressionBasic<Object> expressionBasic = null;
+			
+			private Assignment<Object> assignment = null;
+			
+			private boolean variableAssigned = false;
+			
+			private boolean arraySet = false;
+			
+			private int arrayIndex = 1;
+			
+			private Iterator<Statement> currentIterator = getLoopBody().iterator();
 			
 		};
 	}
@@ -184,7 +243,8 @@ public class ForEachLoop extends LoopStatement {
 							return 0;}
 					);
 		}
-		setCurrentStream(result);
+		java.lang.Object[] resultArray = result.toArray();
+		setCurrentArray(Arrays.copyOf(resultArray, resultArray.length, Object[].class));
 	}
 
 }

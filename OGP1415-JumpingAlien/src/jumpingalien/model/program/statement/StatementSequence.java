@@ -1,19 +1,23 @@
 package jumpingalien.model.program.statement;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
+import jumpingalien.model.program.type.Object;
 import jumpingalien.part3.programs.SourceLocation;
 
 //while loop argument: must become a StatementSequence?
 public class StatementSequence extends Statement {
 
-	public StatementSequence(SourceLocation sourceLocation, Statement... statements){
+	public StatementSequence(SourceLocation sourceLocation, List<Statement> statements){
 		super(sourceLocation);
 		if (statements == null)
 			this.statements = new Statement[] {};
 		else{
-			this.statements = statements;
+			java.lang.Object[] resultArray = statements.toArray();
+			this.statements = Arrays.copyOf(resultArray, resultArray.length, Statement[].class);
 			for (Statement statement : statements)
 				statement.setEnclosingStatement(this);
 		}
