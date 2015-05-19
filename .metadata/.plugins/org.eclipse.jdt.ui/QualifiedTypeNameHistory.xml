@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.util.Iterator"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.expression.Expression"/>
 <fullyQualifiedTypeName name="java.util.NoSuchElementException"/>
-<fullyQualifiedTypeName name="jumpingalien.model.Characters"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.expression.unary.Negation"/>
+<fullyQualifiedTypeName name="java.util.function.Predicate"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.expression.ExpressionVariableGameObject"/>
+<fullyQualifiedTypeName name="java.util.Comparator"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.expression.ExpressionBasic"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.Type"/>
-<fullyQualifiedTypeName name="jumpingalien.model.GameObject"/>
-<fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.Direction"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Statement"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.DirectionType"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.Bool"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.DoubleType"/>
-<fullyQualifiedTypeName name="jumpingalien.part3.programs.SourceLocation"/>
-<<<<<<< HEAD
-<fullyQualifiedTypeName name="jumpingalien.part3.programs.internal.generated.JumpingAlienProgParser.GetExprContext"/>
-=======
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.Bool"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.type.DirectionType"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.expression.unary.Unary"/>
->>>>>>> 9f925ab9a6db1f1d539666c2d033c8a48c9a298d
+<fullyQualifiedTypeName name="jumpingalien.util.Util"/>
 </qualifiedTypeNameHistroy>

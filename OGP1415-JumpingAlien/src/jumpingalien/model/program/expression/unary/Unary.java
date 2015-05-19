@@ -8,14 +8,18 @@ public abstract class Unary<S extends Type<?>, T extends Type<?>> extends Expres
 
 	public Unary(Expression<S> operand, SourceLocation sourceLocation){
 		super(sourceLocation);
-		this.operand = operand;
+		setOperand(operand);
 	}
 	
 	public Expression<S> getOperand() {
 		return operand;
 	}
-
+	
 	private Expression<S> operand;
+
+	public void setOperand(Expression<S> operand) {
+		this.operand = operand;
+	}
 	
 //	public static ExpressionBasic<Bool> negate(Expression<Bool> expression, SourceLocation sourceLocation){
 //		boolean booleanResult = expression.compute().getValue();

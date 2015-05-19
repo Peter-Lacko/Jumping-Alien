@@ -1,16 +1,22 @@
 package jumpingalien.model.program.statement;
 
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
 
 import jumpingalien.model.GameObject;
 import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.expression.ExpressionBasic;
+import jumpingalien.model.program.expression.ExpressionVariableGameObject;
 import jumpingalien.model.program.expression.unary.*;
 import jumpingalien.model.program.type.*;
 import jumpingalien.model.program.type.Object;
 import jumpingalien.part3.programs.IProgramFactory.*;
 import jumpingalien.part3.programs.SourceLocation;
+import jumpingalien.util.Util;
 
 public class ForEachLoop extends LoopStatement {
 
@@ -18,31 +24,67 @@ public class ForEachLoop extends LoopStatement {
 			Unary<Object,DoubleType> sortExpression, SortDirection sortDirection,
 			SourceLocation sourceLocation, Statement loopStatement) {
 		super(sourceLocation, loopStatement);
-		// TODO Auto-generated constructor stub
+		this.name = name;
+		this.kind = kind;
+		this.sortDirection = sortDirection;
+		this.whereExpression = whereExpression;
+		if (whereExpression != null)
+			whereExpression.setStatement(this);
+		this.sortExpression = sortExpression;
+		if (sortExpression != null)
+			sortExpression.setStatement(this);
+	}
+
+	private final String name;
+	
+	public String getName() {
+		return name;
 	}
 
 	private ForEachLoop getForEachLoop(){
 		return this;
 	}
 	
-	private final Expression<DoubleType> sortExpression = null;
+	private final Kind kind;
 	
-	private final SortDirection sortDirection = null;
+	public Kind getKind() {
+		return kind;
+	}
+
+	private final Unary<Object,Bool> whereExpression;
 	
-	private Stream<GameObject> currentStream = null;
+	private final Unary<Object,DoubleType> sortExpression;
 	
-    public Stream<GameObject> getCurrentStream() {
+	public Unary<Object, Bool> getWhereExpression() {
+		return whereExpression;
+	}
+
+	public Unary<Object, DoubleType> getSortExpression() {
+		return sortExpression;
+	}
+
+	public SortDirection getSortDirection() {
+		return sortDirection;
+	}
+
+	private final SortDirection sortDirection;
+	
+	private Stream<Object> currentStream = null;
+	
+    public Stream<Object> getCurrentStream() {
 		return currentStream;
 	}
 
-	public void setCurrentStream(Stream<GameObject> currentStream) {
+	public void setCurrentStream(Stream<Object> currentStream) {
 		this.currentStream = currentStream;
 	}
 
-	public Stream<GameObject> stream() {
-    	Builder<GameObject> builder = Stream.builder();
-    	for (GameObject element: getProgram().getCharacter().getWorld().getAllObjectsAndTiles())
-    		builder.accept(element);
+	public Stream<Object> stream() {
+    	Builder<Object> builder = Stream.builder();
+    	for (GameObject element: getProgram().getCharacter().getWorld().getAllObjectsAndTiles()){
+    		Object resultElement = new Object(element);
+    		builder.accept(resultElement);
+    	}
     	return builder.build();    		
     }
 	
@@ -57,7 +99,7 @@ public class ForEachLoop extends LoopStatement {
 			}
 
 			@Override
-			public Statement next() {
+			public Statement next() throws NoSuchElementException{
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -67,8 +109,82 @@ public class ForEachLoop extends LoopStatement {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-
+//		Stream<Object> result = this.stream().filter(new Predicate<Object>(){
+//			public boolean test(Object o) {
+//				return (o.getKind() == getForEachLoop().getKind());
+//			}});
+		Stream<Object> result = this.stream().filter(o -> o.getKind() == getForEachLoop().getKind());
+		if (getWhereExpression() != null){
+			result = result.filter(
+//					new Predicate<Object>(){
+//				public boolean test(Object o) {
+//					ExpressionBasic<Object> e = new ExpressionBasic<Object>(o, getSourceLocation());
+//					getWhereExpression().setOperand(e);
+//					if (getWhereExpression().compute().getValue())
+//						return true;
+//					return false;
+//				}}
+					o -> {
+					ExpressionBasic<Object> e = new ExpressionBasic<Object>(o, getSourceLocation());
+					getWhereExpression().setOperand(e);
+					if (getWhereExpression().compute().getValue())
+						return true;
+					return false;}
+					);
+		}
+		if ((getSortExpression() != null) && (getSortDirection() != null)){
+			result = result.sorted(
+//					new Comparator<Object>(){
+//				public int compare(Object o1, Object o2) {
+//					double computed1;
+//					double computed2;
+//					ExpressionBasic<Object> e1 = new ExpressionBasic<Object>(o1, getSourceLocation());
+//					ExpressionBasic<Object> e2 = new ExpressionBasic<Object>(o2, getSourceLocation());
+//					getSortExpression().setOperand(e1);
+//					computed1 = getSortExpression().compute().getValue();
+//					getSortExpression().setOperand(e2);
+//					computed2 = getSortExpression().compute().getValue();
+//					if(! Util.fuzzyLessThanOrEqualTo(computed1, computed2)){
+//						if (getSortDirection() == SortDirection.ASCENDING)
+//							return 1;
+//						else
+//							return -1;
+//					}
+//					else if(! Util.fuzzyLessThanOrEqualTo(computed2, computed1)){
+//						if (getSortDirection() == SortDirection.ASCENDING)
+//							return -1;
+//						else
+//							return 1;
+//					}
+//					else
+//						return 0;
+//				}}
+					(o1, o2) ->{
+						double computed1;
+						double computed2;
+						ExpressionBasic<Object> e1 = new ExpressionBasic<Object>(o1, getSourceLocation());
+						ExpressionBasic<Object> e2 = new ExpressionBasic<Object>(o2, getSourceLocation());
+						getSortExpression().setOperand(e1);
+						computed1 = getSortExpression().compute().getValue();
+						getSortExpression().setOperand(e2);
+						computed2 = getSortExpression().compute().getValue();
+						if(! Util.fuzzyLessThanOrEqualTo(computed1, computed2)){
+							if (getSortDirection() == SortDirection.ASCENDING)
+								return 1;
+							else
+								return -1;
+						}
+						else if(! Util.fuzzyLessThanOrEqualTo(computed2, computed1)){
+							if (getSortDirection() == SortDirection.ASCENDING)
+								return -1;
+							else
+								return 1;
+						}
+						else
+							return 0;}
+					);
+		}
+		setCurrentStream(result);
 	}
 
 }

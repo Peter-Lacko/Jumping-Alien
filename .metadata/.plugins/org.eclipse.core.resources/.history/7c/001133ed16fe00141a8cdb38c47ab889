@@ -1,0 +1,76 @@
+package jumpingalien.model.program.statement;
+
+import java.util.Iterator;
+import java.util.stream.Stream;
+import java.util.stream.Stream.Builder;
+
+import jumpingalien.model.GameObject;
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.expression.unary.*;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+import jumpingalien.part3.programs.IProgramFactory.*;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class ForEachLoop extends LoopStatement {
+
+	public ForEachLoop(String name, Kind kind, Unary<Object,Bool> whereExpression,
+			Unary<Object,DoubleType> sortExpression, SortDirection sortDirection,
+			SourceLocation sourceLocation, Statement loopStatement) {
+		super(sourceLocation, loopStatement);
+		// TODO Auto-generated constructor stub
+	}
+
+	private ForEachLoop getForEachLoop(){
+		return this;
+	}
+	
+	private final Unary<Object,Bool> whereExpression = null;
+	
+	private final Unary<Object,DoubleType> sortExpression = null;
+	
+	private final SortDirection sortDirection = null;
+	
+	private Stream<GameObject> currentStream = null;
+	
+    public Stream<GameObject> getCurrentStream() {
+		return currentStream;
+	}
+
+	public void setCurrentStream(Stream<GameObject> currentStream) {
+		this.currentStream = currentStream;
+	}
+
+	public Stream<GameObject> stream() {
+    	Builder<GameObject> builder = Stream.builder();
+    	for (GameObject element: getProgram().getCharacter().getWorld().getAllObjectsAndTiles())
+    		builder.accept(element);
+    	return builder.build();    		
+    }
+	
+	@Override
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public Statement next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
+	}
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}
