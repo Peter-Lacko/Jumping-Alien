@@ -19,9 +19,17 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 			String variableName, Type<?> variableType,
 			SourceLocation sourceLocation) {
 		if (variableType instanceof Bool){
-			ExpressionVariableBoolean result = new ExpressionVariableBoolean(sourceLocation,variableName); 
+			return new ExpressionVariableBoolean(sourceLocation,variableName); 
 		}
-		else if ()
+		else if (variableType instanceof DoubleType) {
+			return new ExpressionVariableDouble(sourceLocation,variableName);
+		}
+		else if (variableType instanceof DirectionType) {
+			return new ExpressionVariableDirection(sourceLocation,variableName);
+		}
+		else  {
+			return new ExpressionVariableGameObject(sourceLocation,variableName);
+		}
 	}
 
 	@Override
@@ -55,23 +63,23 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	@Override
 	public Expression<? extends Type<?>> createSelf(
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		SelfObject self = new SelfObject(sourceLocation);
+		return self;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createDirectionConstant(
 			jumpingalien.part3.programs.IProgramFactory.Direction value,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		ExpressionBasic<DirectionType> result = new ExpressionBasic<DirectionType>(new DirectionType(value), sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<DoubleType> createAddition(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-//		Expression<DoubleType> result = new Addition(left, right, sourceLoction);
+//		Expression<DoubleType> result = new Addition(left, right, sourceLocation);
 //		return result;
 		Expression<DoubleType> result = new Addition((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
 		return result;
@@ -81,55 +89,55 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	public Expression<? extends Type<?>> createSubtraction(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new Subtraction((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createMultiplication(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new Multiplication((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createDivision(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new Division((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createSqrt(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new Sqrt((Expression<DoubleType>)expr,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createRandom(
 			Expression<? extends Type<?>> maxValue,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new ExpressionRandomDouble((Expression<DoubleType>)maxValue,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createAnd(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new And((Expression<Bool>) left, (Expression<Bool>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createOr(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new Or((Expression<Bool>) left, (Expression<Bool>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
@@ -143,169 +151,169 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	public Expression<? extends Type<?>> createLessThan(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new SmallerThan((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createLessThanOrEqualTo(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new SmallerThanOrEqual((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createGreaterThan(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new GreaterThan((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createGreaterThanOrEqualTo(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new GreaterThanOrEqual((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createEquals(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new Equal((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createNotEquals(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new NotEqual((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createGetX(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new GetX((Expression<Object>)expr,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createGetY(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new GetY((Expression<Object>)expr,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createGetWidth(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new GetWidth((Expression<Object>)expr,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createGetHeight(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new GetHeight((Expression<Object>)expr,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createGetHitPoints(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<DoubleType> result = new GetHp((Expression<Object>)expr,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createGetTile(
 			Expression<? extends Type<?>> x, Expression<? extends Type<?>> y,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Object> result = new GetTile((Expression<DoubleType>) x, (Expression<DoubleType>) y, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createSearchObject(
 			Expression<? extends Type<?>> direction,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Object> result = new SearchObject((Expression<DirectionType>)direction ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsMazub(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsMazub((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsShark(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsShark((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsSlime(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsSlime((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsPlant(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsPlant((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsDead(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsDead((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsTerrain(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsTerrain((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsPassable(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsPassable((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsWater(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsWater((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsMagma(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsMagma((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsAir(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsAir((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
@@ -313,22 +321,22 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 			Expression<? extends Type<?>> expr,
 			Expression<? extends Type<?>> direction,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsMoving((Expression<Object>)expr,(Expression<DirectionType>) direction ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsDucking(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsDucking((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Expression<? extends Type<?>> createIsJumping(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Expression<Bool> result = new IsJumping((Expression<Object>)expr ,sourceLocation);
+		return result;
 	}
 
 	@Override

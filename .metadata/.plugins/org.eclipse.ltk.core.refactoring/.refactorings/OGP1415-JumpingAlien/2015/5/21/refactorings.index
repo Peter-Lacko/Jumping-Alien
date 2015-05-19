@@ -3,3 +3,7 @@
 1431977580234	Rename method 'getExpr2'
 1431977602133	Rename method 'getExpr1'
 1431977635757	Rename method 'getExpr'
+1432027525364	Move compilation unit
+1432030849593	Move compilation unit
+1432031877710	Move compilation unit
+1432032134539	Rename type 'isMoving'
