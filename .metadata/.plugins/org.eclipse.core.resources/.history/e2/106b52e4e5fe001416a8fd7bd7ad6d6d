@@ -109,7 +109,7 @@ public class Program implements Iterable<Statement>{
 			}
 			else{
 				b = this.isWellFormed(statement);
-				break;
+				break
 			}
 		}
 		return b;

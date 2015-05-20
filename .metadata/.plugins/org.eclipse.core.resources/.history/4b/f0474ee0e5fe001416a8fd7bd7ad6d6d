@@ -96,42 +96,16 @@ public class Program implements Iterable<Statement>{
 	
 	public boolean isWellFormed(Program program){
 		Iterator<Statement> iterator =  program.iterator();
-		boolean b = true;
 		while (iterator.hasNext()){
 			Statement statement = iterator.next();
 			if ((statement instanceof Break) && (! inLoopStatment(statement))){
-				b = false;
-				break;
+				return false;
 			}
 			if ((statement instanceof ActionStatement) && (inForEach(statement))){
-				b= false;
-				break;
-			}
-			else{
-				b = this.isWellFormed(statement);
-				break;
+				return false;
 			}
 		}
-		return b;
-	}
-	
-	public boolean isWellFormed(Statement statement){
-		Iterator<Statement> iterator =  statement.iterator();
-		boolean b = true;
-		while (iterator.hasNext()){
-			Statement statement2 = iterator.next();
-			if ((statement2 instanceof Break) && (! inLoopStatment(statement))){
-				b = false;
-			}
-			else if ((statement2 instanceof ActionStatement) && (inForEach(statement))){
-				b = false;
-			}
-			else{
-				b = this.isWellFormed(statement2);
-				break;
-			}
-		}
-		return b;
+		return true;
 	}
 
 	private boolean inForEach(Statement statement) {
