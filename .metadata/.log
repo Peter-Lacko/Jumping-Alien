@@ -9840,6 +9840,7 @@ org.eclipse.recommenders.utils.Logs$LogTraceException
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:648)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:603)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1465)
+<<<<<<< HEAD
 !SESSION 2015-05-19 15:45:47.268 -----------------------------------------------
 eclipse.buildId=4.4.1.M20140925-0400
 java.version=1.8.0_31
@@ -9849,6 +9850,17 @@ Framework arguments:  -product org.eclipse.epp.package.java.product
 Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
 
 !ENTRY org.eclipse.m2e.logback.configuration 2 0 2015-05-19 15:45:52.446
+=======
+!SESSION 2015-05-19 17:10:19.189 -----------------------------------------------
+eclipse.buildId=4.4.1.M20140925-0400
+java.version=1.8.0_31
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.m2e.logback.configuration 2 0 2015-05-19 17:10:32.303
+>>>>>>> ba8c1885dde26e33a3fa145607edae71d79caa72
 !MESSAGE Exception while setting up logging:org.eclipse.osgi.internal.framework.EquinoxConfiguration$1 cannot be cast to java.lang.String
 !STACK 0
 java.lang.ClassCastException: org.eclipse.osgi.internal.framework.EquinoxConfiguration$1 cannot be cast to java.lang.String
@@ -9860,6 +9872,7 @@ java.lang.ClassCastException: org.eclipse.osgi.internal.framework.EquinoxConfigu
 	at java.util.TimerThread.mainLoop(Unknown Source)
 	at java.util.TimerThread.run(Unknown Source)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.egit.ui 2 0 2015-05-19 15:46:25.397
 !MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
 user global configuration and to define the default location to store repositories: 'C:\Users\ik'. If this is
@@ -9892,10 +9905,24 @@ java.lang.ClassCastException: org.eclipse.osgi.internal.framework.EquinoxConfigu
 !ENTRY org.eclipse.egit.ui 2 0 2015-05-19 16:12:08.939
 !MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
 user global configuration and to define the default location to store repositories: 'C:\Users\ik'. If this is
+=======
+!ENTRY org.eclipse.egit.ui 2 0 2015-05-19 17:10:42.982
+!MESSAGE Warning: EGit couldn't detect the installation path "gitPrefix" of native Git. Hence EGit can't respect system level
+Git settings which might be configured in ${gitPrefix}/etc/gitconfig under the native Git installation directory.
+The most important of these settings is core.autocrlf. Git for Windows by default sets this parameter to true in
+this system level configuration. The Git installation location can be configured on the
+Team > Git > Configuration preference page's 'System Settings' tab.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.egit.ui 2 0 2015-05-19 17:10:42.985
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Peter'. If this is
+>>>>>>> ba8c1885dde26e33a3fa145607edae71d79caa72
 not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
 EGit might behave differently since they see different configuration options.
 This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.recommenders.rcp 4 5 2015-05-19 20:32:12.440
 !MESSAGE Failed to resolve selection in ‘=OGP1415-JumpingAlien/src<jumpingalien.model.program{Program.java’ at offset 2.258
 !STACK 0
@@ -10102,6 +10129,10 @@ org.eclipse.recommenders.utils.Logs$LogTraceException
 
 !ENTRY org.eclipse.recommenders.calls.rcp 4 2 2015-05-19 21:17:15.437
 !MESSAGE Proposal matching failed for [METHOD_REF]{completion:hasNext(), declSign:LObject;, sign:()Z, declKey:, key:, name:hasNext, replace:[1777,1777], token:[1777,1777], relevance:35}.
+=======
+!ENTRY org.eclipse.recommenders.calls.rcp 4 2 2015-05-19 17:43:01.885
+!MESSAGE Proposal matching failed for [METHOD_REF]{completion:clone(), declSign:[Ljava.lang.Object;, sign:()[Ljava.lang.Object;, declKey:, key:, name:clone, replace:[5923,5923], token:[5923,5923], relevance:35}.
+>>>>>>> ba8c1885dde26e33a3fa145607edae71d79caa72
 !STACK 0
 org.eclipse.recommenders.utils.Logs$LogTraceException
 	at org.eclipse.recommenders.utils.Logs$LogTraceException.newTrace(Logs.java:377)
@@ -10146,6 +10177,7 @@ org.eclipse.recommenders.utils.Logs$LogTraceException
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:603)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1465)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.recommenders.calls.rcp 4 2 2015-05-19 21:17:15.439
 !MESSAGE Proposal matching failed for [METHOD_REF]{completion:setMainIterator(), declSign:LObject;, sign:(Ljava.util.Iterator<Ljumpingalien.model.program.statement.Statement;>;)V, declKey:, key:, name:setMainIterator, replace:[1777,1777], token:[1777,1777], relevance:30}.
 !STACK 0
@@ -10166,6 +10198,55 @@ org.eclipse.recommenders.utils.Logs$LogTraceException
 	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
 	at org.eclipse.jface.text.contentassist.CompletionProposalPopup.showProposals(CompletionProposalPopup.java:499)
 	at org.eclipse.jface.text.contentassist.ContentAssistant$2.run(ContentAssistant.java:378)
+=======
+!ENTRY org.eclipse.jdt.core 4 4 2015-05-19 20:11:57.315
+!MESSAGE Could not retrieve declared methods
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.jdt.internal.compiler.lookup.TypeSystem.getWildcard(TypeSystem.java:250)
+	at org.eclipse.jdt.internal.compiler.lookup.AnnotatableTypeSystem.getWildcard(AnnotatableTypeSystem.java:195)
+	at org.eclipse.jdt.internal.compiler.lookup.LookupEnvironment.getTypeFromVariantTypeSignature(LookupEnvironment.java:1491)
+	at org.eclipse.jdt.internal.compiler.lookup.LookupEnvironment.getTypeArgumentsFromSignature(LookupEnvironment.java:1170)
+	at org.eclipse.jdt.internal.compiler.lookup.LookupEnvironment.getTypeFromTypeSignature(LookupEnvironment.java:1436)
+	at org.eclipse.jdt.internal.compiler.lookup.BinaryTypeBinding.createMethod(BinaryTypeBinding.java:703)
+	at org.eclipse.jdt.internal.compiler.lookup.BinaryTypeBinding.createMethods(BinaryTypeBinding.java:816)
+	at org.eclipse.jdt.internal.compiler.lookup.BinaryTypeBinding.cachePartsFrom(BinaryTypeBinding.java:474)
+	at org.eclipse.jdt.internal.compiler.lookup.LookupEnvironment.createBinaryTypeFrom(LookupEnvironment.java:696)
+	at org.eclipse.jdt.internal.compiler.lookup.LookupEnvironment.createBinaryTypeFrom(LookupEnvironment.java:679)
+	at org.eclipse.jdt.internal.compiler.Compiler.accept(Compiler.java:299)
+	at org.eclipse.jdt.internal.compiler.lookup.LookupEnvironment.askForType(LookupEnvironment.java:164)
+	at org.eclipse.jdt.internal.compiler.lookup.PackageBinding.getTypeOrPackage(PackageBinding.java:201)
+	at org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope.findImport(CompilationUnitScope.java:468)
+	at org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope.findSingleImport(CompilationUnitScope.java:522)
+	at org.eclipse.jdt.internal.compiler.lookup.CompilationUnitScope.resolveSingleImport(CompilationUnitScope.java:735)
+	at org.eclipse.jdt.internal.compiler.lookup.Scope.getTypeOrPackage(Scope.java:3310)
+	at org.eclipse.jdt.internal.compiler.lookup.Scope.getType(Scope.java:3042)
+	at org.eclipse.jdt.internal.compiler.ast.ParameterizedSingleTypeReference.internalResolveLeafType(ParameterizedSingleTypeReference.java:174)
+	at org.eclipse.jdt.internal.compiler.ast.ParameterizedSingleTypeReference.internalResolveType(ParameterizedSingleTypeReference.java:146)
+	at org.eclipse.jdt.internal.compiler.ast.ParameterizedSingleTypeReference.resolveType(ParameterizedSingleTypeReference.java:361)
+	at org.eclipse.jdt.internal.compiler.ast.TypeReference.resolveType(TypeReference.java:559)
+	at org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding.resolveTypesFor(SourceTypeBinding.java:1912)
+	at org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding.methods(SourceTypeBinding.java:1464)
+	at org.eclipse.jdt.internal.compiler.lookup.ReferenceBinding.availableMethods(ReferenceBinding.java:229)
+	at org.eclipse.jdt.core.dom.TypeBinding.getDeclaredMethods(TypeBinding.java:289)
+	at org.eclipse.jdt.internal.ui.text.correction.UnresolvedElementsSubProcessor.getConstructorProposals(UnresolvedElementsSubProcessor.java:1766)
+	at org.eclipse.jdt.internal.ui.text.correction.QuickFixProcessor.process(QuickFixProcessor.java:343)
+	at org.eclipse.jdt.internal.ui.text.correction.QuickFixProcessor.getCorrections(QuickFixProcessor.java:312)
+	at org.eclipse.jdt.internal.ui.text.correction.JavaCorrectionProcessor$SafeCorrectionCollector.safeRun(JavaCorrectionProcessor.java:378)
+	at org.eclipse.jdt.internal.ui.text.correction.JavaCorrectionProcessor$SafeCorrectionProcessorAccess.run(JavaCorrectionProcessor.java:339)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.jdt.internal.ui.text.correction.JavaCorrectionProcessor$SafeCorrectionProcessorAccess.process(JavaCorrectionProcessor.java:335)
+	at org.eclipse.jdt.internal.ui.text.correction.JavaCorrectionProcessor.collectCorrections(JavaCorrectionProcessor.java:468)
+	at org.eclipse.jdt.internal.ui.text.java.hover.ProblemHover$ProblemInfo.getJavaAnnotationFixes(ProblemHover.java:225)
+	at org.eclipse.jdt.internal.ui.text.java.hover.ProblemHover$ProblemInfo.getCompletionProposals(ProblemHover.java:199)
+	at org.eclipse.jdt.internal.ui.text.java.hover.AbstractAnnotationHover$AnnotationInformationControl.deferredCreateContent(AbstractAnnotationHover.java:285)
+	at org.eclipse.jdt.internal.ui.text.java.hover.AbstractAnnotationHover$AnnotationInformationControl.setInput(AbstractAnnotationHover.java:186)
+	at org.eclipse.jface.text.AbstractInformationControlManager.internalShowInformationControl(AbstractInformationControlManager.java:1181)
+	at org.eclipse.jface.text.AbstractInformationControlManager.presentInformation(AbstractInformationControlManager.java:1150)
+	at org.eclipse.jface.text.AbstractHoverInformationControlManager.presentInformation(AbstractHoverInformationControlManager.java:902)
+	at org.eclipse.jface.text.TextViewerHoverManager.doPresentInformation(TextViewerHoverManager.java:243)
+	at org.eclipse.jface.text.TextViewerHoverManager$5.run(TextViewerHoverManager.java:233)
+>>>>>>> ba8c1885dde26e33a3fa145607edae71d79caa72
 	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
 	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:136)
 	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4147)
@@ -10192,15 +10273,27 @@ org.eclipse.recommenders.utils.Logs$LogTraceException
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:603)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1465)
 
+<<<<<<< HEAD
 !ENTRY org.eclipse.recommenders.calls.rcp 4 2 2015-05-19 21:17:15.444
 !MESSAGE Proposal matching failed for [METHOD_REF]{completion:next(), declSign:LObject;, sign:()Ljumpingalien.model.program.statement.Statement;, declKey:, key:, name:next, replace:[1777,1777], token:[1777,1777], relevance:35}.
+=======
+!ENTRY org.eclipse.recommenders.calls.rcp 2 1 2015-05-19 21:01:26.880
+!MESSAGE Cannot obtain JDT’s lookup environment (debug only).
+>>>>>>> ba8c1885dde26e33a3fa145607edae71d79caa72
 !STACK 0
 org.eclipse.recommenders.utils.Logs$LogTraceException
 	at org.eclipse.recommenders.utils.Logs$LogTraceException.newTrace(Logs.java:377)
 	at org.eclipse.recommenders.utils.Logs.log(Logs.java:130)
+<<<<<<< HEAD
 	at org.eclipse.recommenders.internal.calls.rcp.CallCompletionSessionProcessor.process(CallCompletionSessionProcessor.java:209)
 	at org.eclipse.recommenders.completion.rcp.processable.IntelligentCompletionProposalComputer.fireProcessProposal(IntelligentCompletionProposalComputer.java:243)
 	at org.eclipse.recommenders.completion.rcp.processable.IntelligentCompletionProposalComputer.computeCompletionProposals(IntelligentCompletionProposalComputer.java:143)
+=======
+	at org.eclipse.recommenders.utils.Logs.log(Logs.java:122)
+	at org.eclipse.recommenders.internal.calls.rcp.CallCompletionSessionProcessor.startSession(CallCompletionSessionProcessor.java:104)
+	at org.eclipse.recommenders.completion.rcp.processable.IntelligentCompletionProposalComputer.fireStartSession(IntelligentCompletionProposalComputer.java:229)
+	at org.eclipse.recommenders.completion.rcp.processable.IntelligentCompletionProposalComputer.computeCompletionProposals(IntelligentCompletionProposalComputer.java:131)
+>>>>>>> ba8c1885dde26e33a3fa145607edae71d79caa72
 	at org.eclipse.jdt.internal.ui.text.java.CompletionProposalComputerDescriptor.computeCompletionProposals(CompletionProposalComputerDescriptor.java:333)
 	at org.eclipse.jdt.internal.ui.text.java.CompletionProposalCategory.computeCompletionProposals(CompletionProposalCategory.java:337)
 	at org.eclipse.jdt.internal.ui.text.java.ContentAssistProcessor.collectProposals(ContentAssistProcessor.java:325)
@@ -10237,6 +10330,7 @@ org.eclipse.recommenders.utils.Logs$LogTraceException
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:648)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:603)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1465)
+<<<<<<< HEAD
 
 !ENTRY org.eclipse.recommenders.calls.rcp 4 2 2015-05-19 21:17:15.450
 !MESSAGE Proposal matching failed for [METHOD_REF]{completion:getMainIterator(), declSign:LObject;, sign:()Ljava.util.Iterator<Ljumpingalien.model.program.statement.Statement;>;, declKey:, key:, name:getMainIterator, replace:[1777,1777], token:[1777,1777], relevance:65}.
@@ -10845,3 +10939,5 @@ user global configuration and to define the default location to store repositori
 not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
 EGit might behave differently since they see different configuration options.
 This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+=======
+>>>>>>> ba8c1885dde26e33a3fa145607edae71d79caa72

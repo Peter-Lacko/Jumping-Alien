@@ -33,21 +33,21 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	}
 
 	@Override
-	public Expression<DoubleType> createDoubleConstant(double value,
+	public Expression<? extends Type<?>> createDoubleConstant(double value,
 			SourceLocation sourceLocation) {
 		ExpressionBasic<DoubleType> result = new ExpressionBasic<DoubleType>(new DoubleType(value), sourceLocation);
 		return result;
 	}
 
 	@Override
-	public Expression<Bool> createTrue(
+	public Expression<? extends Type<?>> createTrue(
 			SourceLocation sourceLocation) {
 		ExpressionBasic<Bool> result = new ExpressionBasic<Bool>(new Bool(true), sourceLocation);
 		return result;
 	}
 
 	@Override
-	public Expression<Bool> createFalse(
+	public Expression<? extends Type<?>> createFalse(
 			SourceLocation sourceLocation) {
 		ExpressionBasic<Bool> result = new ExpressionBasic<Bool>(new Bool(false), sourceLocation);
 		return result;
@@ -76,7 +76,7 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	}
 
 	@Override
-	public Expression<DoubleType> createAddition(
+	public Expression<? extends Type<?>> createAddition(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
 //		Expression<DoubleType> result = new Addition(left, right, sourceLocation);
@@ -141,7 +141,7 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	}
 
 	@Override
-	public Expression<Bool> createNot(
+	public Expression<? extends Type<?>> createNot(
 			Expression<? extends Type<?>> expr, SourceLocation sourceLocation) {
 		Expression<Bool> result = new Negation((Expression<Bool>) expr, sourceLocation);
 		return result;
@@ -354,8 +354,8 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	@Override
 	public Statement createWhile(Expression<? extends Type<?>> condition,
 			Statement body, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new WhileLoop((Expression<Bool>) condition, body, sourceLocation);
+		return result;
 	}
 
 	@Override
@@ -366,86 +366,87 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 			Expression<? extends Type<?>> sort,
 			jumpingalien.part3.programs.IProgramFactory.SortDirection sortDirection,
 			Statement body, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new ForEachLoop(variableName, variableKind, (Unary<Object,Bool>)where, 
+				(Unary<Object,DoubleType>)sort, sortDirection, sourceLocation, body);
+		return result;
 	}
 
 	@Override
 	public Statement createBreak(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new Break(sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createIf(Expression<? extends Type<?>> condition,
 			Statement ifBody, Statement elseBody, SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new IfThenElse((Expression<Bool>) condition, ifBody, elseBody, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createPrint(Expression<? extends Type<?>> value,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new Print(value, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createStartRun(Expression<? extends Type<?>> direction,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new StartRun((Expression<DirectionType>) direction, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createStopRun(Expression<? extends Type<?>> direction,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new StopRun((Expression<DirectionType>) direction, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createStartJump(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new StartJump(sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createStopJump(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new EndJump(sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createStartDuck(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new StartDuck(sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createStopDuck(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new EndDuck(sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createWait(Expression<? extends Type<?>> duration,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new Wait((Expression<DoubleType>) duration, sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createSkip(SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new Skip(sourceLocation);
+		return result;
 	}
 
 	@Override
 	public Statement createSequence(List<Statement> statements,
 			SourceLocation sourceLocation) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement result = new StatementSequence(sourceLocation, statements);
+		return result;
 	}
 
 	@Override
@@ -460,14 +461,12 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 
 	@Override
 	public Type<?> getGameObjectType() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DirectionType(null);
 	}
 
 	@Override
 	public Type<?> getDirectionType() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Object(null);
 	}
 
 	@Override

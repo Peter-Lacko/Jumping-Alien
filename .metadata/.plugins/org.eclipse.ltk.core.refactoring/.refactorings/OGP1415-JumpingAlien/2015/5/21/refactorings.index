@@ -7,4 +7,11 @@
 1432030849593	Move compilation unit
 1432031877710	Move compilation unit
 1432032134539	Rename type 'isMoving'
+<<<<<<< HEAD
 1432062908035	Encapsulate field 'mainIterator'
+=======
+1432058916701	Infer generic type arguments
+1432059679952	Delete element
+1432059686916	Delete element
+1432059727855	Infer generic type arguments
+>>>>>>> ba8c1885dde26e33a3fa145607edae71d79caa72

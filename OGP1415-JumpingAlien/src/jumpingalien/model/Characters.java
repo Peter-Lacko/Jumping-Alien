@@ -1,9 +1,12 @@
 package jumpingalien.model;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import jumpingalien.model.program.Program;
+import jumpingalien.model.program.statement.Skip;
+import jumpingalien.model.program.statement.Statement;
 import jumpingalien.util.*;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -112,6 +115,9 @@ public abstract class Characters extends GameObject{
 		this.setinitVerticalVelocity(init_ver_vel);
 		this.setHitPoints(hitPoints);
 		this.program = behavior;
+		if(behavior != null){
+			setProgramIterator(program.iterator());
+		}
 	}
 	
 	/**
@@ -138,6 +144,26 @@ public abstract class Characters extends GameObject{
 	
 	private final Program program;
 	
+	private Iterator<Statement> programIterator = null;
+	
+	public Iterator<Statement> getProgramIterator() {
+		return programIterator;
+	}
+
+	public void setProgramIterator(Iterator<Statement> programIterator) {
+		this.programIterator = programIterator;
+	}
+
+	private boolean isProgramWithError = false;
+	
+	public boolean isProgramWithError() {
+		return isProgramWithError;
+	}
+
+	public void setProgramWithError(boolean isProgramWithError) {
+		this.isProgramWithError = isProgramWithError;
+	}
+
 	/**
 	 * A getter method for the variable isTerminated
 	 */
@@ -548,6 +574,18 @@ public abstract class Characters extends GameObject{
 		}
 	}
 
+	protected void advanceTimeWithProgram(){
+		if (! getProgramIterator().hasNext())
+			setProgramIterator(getProgram().iterator());
+		try{
+			getProgramIterator().next().execute();
+		}
+		catch(Exception e){
+			getProgram().setStatement(new Skip(null));
+			setProgramIterator(getProgram().iterator());
+		}
+	}
+	
 	/**
 	 * A more specific (detailed) method to advance time.
 	 * @param duration
