@@ -11,12 +11,32 @@ import be.kuleuven.cs.som.annotate.*;
 public class Program implements Iterable<Statement>{
 	
 	public Program(Statement mainStatement, Map<String , Type<?>> globalVariables){
-		if ((mainStatement == null) || (! mainStatement.iterator().hasNext()))
+		if ((mainStatement == null) || (! mainStatement.iterator().hasNext())){
 			this.setStatement(new Skip(null));
+		}
 		else
 			this.setStatement(mainStatement);
 		this.globalVariables = globalVariables;
 		this.setMainIterator(getStatement().iterator());
+		Iterator<Statement> iterator = mainStatement.iterator();
+		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
+		while(iterator.hasNext()){
+			Statement nextStatement = iterator.next();
+			if (nextStatement instanceof LoopStatement)
+				loopList.add((LoopStatement) nextStatement);
+			nextStatement.setProgram(this);
+		}
+		while(loopList.size() > 0){
+			LoopStatement currentLoop = loopList.get(0);
+			Iterator<Statement> loopBodyIterator = currentLoop.getLoopBody().iterator();
+			while(loopBodyIterator.hasNext()){
+				Statement nextStatement = loopBodyIterator.next();
+				if (nextStatement instanceof LoopStatement)
+					loopList.add((LoopStatement) nextStatement);
+				nextStatement.setProgram(this);
+			}
+			loopList.remove(currentLoop);
+		}
 	}
 	
 	private final Map<String, Type<?>> globalVariables;
@@ -36,6 +56,8 @@ public class Program implements Iterable<Statement>{
 	
 	public void setStatement(Statement statement){
 		this.statement = statement;
+		if (statement != null)
+			statement.setProgram(this);
 	}
 
 	/**
@@ -99,11 +121,11 @@ public class Program implements Iterable<Statement>{
 	}
 	
 	public boolean isWellFormed(){
-		Iterator<Statement> mainIterator = this.iterator();
+		Iterator<Statement> iterator = this.iterator();
 		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
 		//check if a break is outside of a loop statement
-		while(mainIterator.hasNext()){
-			Statement nextStatement = mainIterator.next();
+		while(iterator.hasNext()){
+			Statement nextStatement = iterator.next();
 			if (nextStatement instanceof Break)
 				return false;
 			else if (nextStatement instanceof LoopStatement)

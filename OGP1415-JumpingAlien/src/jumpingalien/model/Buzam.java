@@ -208,6 +208,9 @@ public class Buzam extends Aliens implements OtherCharacters {
 				eat(((Plant)other));
 		}
 		else if (other instanceof Buzam){}
+		else if (other instanceof Slime){}
+		else if (other instanceof Shark){}
+		else if (other instanceof Mazub){}
 		else
 			other.collision(this);
 	}
@@ -245,6 +248,9 @@ public class Buzam extends Aliens implements OtherCharacters {
 			collision(other);
 		}
 		else if (other instanceof Buzam){}
+		else if (other instanceof Slime){}
+		else if (other instanceof Shark){}
+		else if (other instanceof Mazub){}
 		else
 			other.collisionNoDamageTo(this);
 	}
@@ -285,6 +291,9 @@ public class Buzam extends Aliens implements OtherCharacters {
 			collision(other);
 		}
 		else if (other instanceof Buzam){}
+		else if (other instanceof Slime){}
+		else if (other instanceof Shark){}
+		else if (other instanceof Mazub){}
 		else
 			other.collisionNoDamageFrom(this);
 	}

@@ -332,7 +332,7 @@ public class Facade implements IFacadePart3 {
 
 	@Override
 	public boolean isWellFormed(Program program) {
-		return program.isWellFormed(program);
+		return program.isWellFormed();
 	}
 
 	@Override

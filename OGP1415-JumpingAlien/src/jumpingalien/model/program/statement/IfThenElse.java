@@ -17,9 +17,11 @@ public class IfThenElse extends Statement {
 		this.condition = ifCondition;
 		ifCondition.setStatement(this);
 		this.ifStatement = ifStatement;
-		ifStatement.setEnclosingStatement(this);
+		if (ifStatement != null)
+			ifStatement.setEnclosingStatement(this);
 		this.elseStatement = elseStatement;
-		elseStatement.setEnclosingStatement(this);
+		if (elseStatement != null)
+			elseStatement.setEnclosingStatement(this);
 	}
 
 	private IfThenElse getIfThenElse(){
@@ -103,6 +105,7 @@ public class IfThenElse extends Statement {
 							list.add(getIfStatement());
 							list.add(getElseStatement());
 							Statement newStatement = new StatementSequence(getSourceLocation(), list);
+							newStatement.setEnclosingStatement(getIfThenElse());
 							currentIterator = newStatement.iterator();
 						}
 						else if (isCanDoIfStatement())

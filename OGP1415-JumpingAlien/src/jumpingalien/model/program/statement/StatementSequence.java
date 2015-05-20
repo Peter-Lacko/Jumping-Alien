@@ -18,8 +18,10 @@ public class StatementSequence extends Statement {
 		else{
 			java.lang.Object[] resultArray = statements.toArray();
 			this.statements = Arrays.copyOf(resultArray, resultArray.length, Statement[].class);
-			for (Statement statement : statements)
-				statement.setEnclosingStatement(this);
+			for (Statement statement : statements){
+				if (statement != null)
+					statement.setEnclosingStatement(this);
+			}
 		}
 	}
 
@@ -54,9 +56,11 @@ public class StatementSequence extends Statement {
 						return true;
 					else{
 						for (int i=1; i <= (getNbStatements()-index); i++){
-							newIterator = getStatementAt(index+i).iterator();
-							if (newIterator.hasNext())
-								return true;
+							if (getStatementAt(index+i) != null){
+								newIterator = getStatementAt(index+i).iterator();
+								if (newIterator.hasNext())
+									return true;
+							}
 						}
 						return false;
 					}
