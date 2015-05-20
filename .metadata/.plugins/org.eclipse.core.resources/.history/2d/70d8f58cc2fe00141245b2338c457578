@@ -93,20 +93,4 @@ public class Program implements Iterable<Statement>{
 			
 		};
 	}
-	
-	public boolean isWellFormed(Program program){
-		Iterator<Statement> iterator = program.getMainIterator();
-		while (iterator.hasNext()){
-			Statement statement = iterator.next();
-			if ((statement instanceof Break) && (! inLoopStatment(statement))){
-				return false;
-			}
-			if ((statement instanceof Action) )
-		}
-	}
-
-	private boolean inLoopStatment(Statement statement2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

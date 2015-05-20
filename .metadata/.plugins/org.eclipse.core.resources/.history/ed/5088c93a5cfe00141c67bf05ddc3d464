@@ -13,7 +13,6 @@ public class Program implements Iterable<Statement>{
 	public Program(Statement mainStatement, Map<String , Type<?>> globalVariables){
 		this.statement = mainStatement;
 		this.globalVariables = globalVariables;
-		this.setMainIterator(getStatement().iterator());
 	}
 	
 	private final Map<String, Type<?>> globalVariables;
@@ -30,15 +29,37 @@ public class Program implements Iterable<Statement>{
 	public Statement getStatement(){
 		return this.statement;
 	}
-	
-	public void setStatement(Statement statement){
-		this.statement = statement;
-	}
 
 	/**
 	 * A variable containing to a statement.
 	 */
-	private Statement statement;
+	private final Statement statement;
+	
+//	/**
+//	 * Return the globalValues of this program
+//	 *		globalTypes is a map with all global variables in the program an their value.
+//	 */
+//	@Basic
+//	public Map<String, Object> getGlobalValue(){
+//		Map<String , Object> copy;
+//		copy = new HashMap<String, Object>(globalValue);
+//		return copy;
+//	}
+//	
+//	public void addValue(String name, Expression<?> value){
+//		this.globalValue.put(name, value.compute());
+//	}
+//	
+//	/**
+//	 * A variable referencing to the values of the global variables.
+//	 */
+//	private Map<String, Object> globalValue;
+//
+//	public Map<String, Type> getGlobalType() {
+//		return globalType;
+//	}
+//
+//	private Map<String, Type> globalType;
 	
 	public jumpingalien.model.program.type.Object getObject() {
 		return object;
@@ -63,50 +84,10 @@ public class Program implements Iterable<Statement>{
 	}
 	
 	private World world;
-	
-	public Iterator<Statement> getMainIterator() {
-		return mainIterator;
-	}
-
-	public void setMainIterator(Iterator<Statement> mainIterator) {
-		this.mainIterator = mainIterator;
-	}
-
-	private Iterator<Statement> mainIterator;
 
 	@Override
 	public Iterator<Statement> iterator() {
-		return new Iterator<Statement>(){
-
-			@Override
-			public boolean hasNext() {
-				return getMainIterator().hasNext();
-			}
-
-			@Override
-			public Statement next() {
-				if (! hasNext())
-					throw new NoSuchElementException();
-				return getMainIterator().next();
-			}
-			
-			
-		};
-	}
-	
-	public boolean isWellFormed(Program program){
-		Iterator<Statement> iterator = program.getMainIterator();
-		while (iterator.hasNext()){
-			Statement statement = iterator.next();
-			if ((statement instanceof Break) && (! inLoopStatment(statement))){
-				return false;
-			}
-			if ((statement instanceof Action) )
-		}
-	}
-
-	private boolean inLoopStatment(Statement statement2) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 }
