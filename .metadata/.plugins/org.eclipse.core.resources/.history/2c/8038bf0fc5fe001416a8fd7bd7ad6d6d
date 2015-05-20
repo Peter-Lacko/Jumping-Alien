@@ -108,23 +108,13 @@ public class Program implements Iterable<Statement>{
 		return true;
 	}
 
-	private boolean inForEach(Statement statement) {
-		Statement statement2 = statement.getEnclosingStatement();
-		if (statement2 == null)
-			return false;
-		else if (statement2 instanceof ForEachLoop)
-			return true;
-		else 
-			return inForEach(statement2);
+	private boolean inForEach(Statement statement2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	private boolean inLoopStatment(Statement statement) {
-		Statement statement2 = statement.getEnclosingStatement();
-		if (statement2 == null)
-			return false;
-		else if (statement2 instanceof LoopStatement)
-			return true;
-		else
-			return inLoopStatment(statement2);
+	private boolean inLoopStatment(Statement statement2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
