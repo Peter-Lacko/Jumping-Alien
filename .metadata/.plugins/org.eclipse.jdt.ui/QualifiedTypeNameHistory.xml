@@ -11,4 +11,5 @@
 <fullyQualifiedTypeName name="jumpingalien.model.program.statement.Statement"/>
 <fullyQualifiedTypeName name="jumpingalien.util.Util"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.statement.Skip"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
 </qualifiedTypeNameHistroy>

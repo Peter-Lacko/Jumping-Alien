@@ -115,6 +115,9 @@ public abstract class Characters extends GameObject{
 		this.setinitVerticalVelocity(init_ver_vel);
 		this.setHitPoints(hitPoints);
 		this.program = behavior;
+		if(behavior != null){
+			setProgramIterator(program.iterator());
+		}
 	}
 	
 	/**
@@ -140,6 +143,26 @@ public abstract class Characters extends GameObject{
 	}
 	
 	private final Program program;
+	
+	private Iterator<Statement> programIterator = null;
+	
+	public Iterator<Statement> getProgramIterator() {
+		return programIterator;
+	}
+
+	public void setProgramIterator(Iterator<Statement> programIterator) {
+		this.programIterator = programIterator;
+	}
+
+	private boolean isProgramWithError = false;
+	
+	public boolean isProgramWithError() {
+		return isProgramWithError;
+	}
+
+	public void setProgramWithError(boolean isProgramWithError) {
+		this.isProgramWithError = isProgramWithError;
+	}
 
 	/**
 	 * A getter method for the variable isTerminated
@@ -552,15 +575,14 @@ public abstract class Characters extends GameObject{
 	}
 
 	protected void advanceTimeWithProgram(){
-		Program program = getProgram();
-		if (! program.getMainIterator().hasNext())
-			program.setMainIterator(getProgram().iterator());
+		if (! getProgramIterator().hasNext())
+			setProgramIterator(getProgram().iterator());
 		try{
-			program.getMainIterator().next().execute();
+			getProgramIterator().next().execute();
 		}
 		catch(Exception e){
 			getProgram().setStatement(new Skip(null));
-			program.setMainIterator(getProgram().iterator());
+			setProgramIterator(getProgram().iterator());
 		}
 	}
 	

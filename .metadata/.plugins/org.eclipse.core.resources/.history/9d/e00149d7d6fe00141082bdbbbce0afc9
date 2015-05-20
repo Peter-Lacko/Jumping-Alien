@@ -1,8 +1,6 @@
 package jumpingalien.model.program.statement;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import jumpingalien.model.program.expression.Expression;
@@ -99,10 +97,8 @@ public class IfThenElse extends Statement {
 				else{
 					if (currentIterator == null){
 						if (isCanDoIfStatement() && isCanDoElseStatement()){
-							List<Statement> list = new ArrayList<Statement>();
-							list.add(getIfStatement());
-							list.add(getElseStatement());
-							Statement newStatement = new StatementSequence(getSourceLocation(), list);
+							Statement newStatement = new StatementSequence(
+									null, getIfStatement(), getElseStatement());
 							currentIterator = newStatement.iterator();
 						}
 						else if (isCanDoIfStatement())
