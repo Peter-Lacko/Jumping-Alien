@@ -101,7 +101,6 @@ public class Program implements Iterable<Statement>{
 	public boolean isWellFormed(){
 		Iterator<Statement> mainIterator = this.iterator();
 		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
-		//check if a break is outside of a loop statement
 		while(mainIterator.hasNext()){
 			Statement nextStatement = mainIterator.next();
 			if (nextStatement instanceof Break)

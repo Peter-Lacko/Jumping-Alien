@@ -347,7 +347,7 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 		//nu kan je (denk ik) door assignment variablen van type veranderen -> MAG NIET!
 		// hoe zou je hier detecteren of je een type-fout maakt in een assignment?
 		// zoals expressionVariable: 4 verschillende assignments?
-		Statement result = new Assignment(variableName, value, sourceLocation, variableType);
+		Statement result = new Assignment<variableType>(variableName, value, sourceLocation);
 		return result;
 	}
 
@@ -472,8 +472,8 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	@Override
 	public Program createProgram(Statement mainStatement,
 			Map<String, Type<?>> globalVariables) {
-		Program result = new Program(mainStatement, globalVariables);
-		return result;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

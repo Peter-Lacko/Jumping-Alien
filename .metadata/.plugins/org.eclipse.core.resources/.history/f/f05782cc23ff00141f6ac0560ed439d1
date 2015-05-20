@@ -472,8 +472,8 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	@Override
 	public Program createProgram(Statement mainStatement,
 			Map<String, Type<?>> globalVariables) {
-		Program result = new Program(mainStatement, globalVariables);
-		return result;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

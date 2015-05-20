@@ -101,7 +101,6 @@ public class Program implements Iterable<Statement>{
 	public boolean isWellFormed(){
 		Iterator<Statement> mainIterator = this.iterator();
 		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
-		//check if a break is outside of a loop statement
 		while(mainIterator.hasNext()){
 			Statement nextStatement = mainIterator.next();
 			if (nextStatement instanceof Break)
@@ -109,7 +108,6 @@ public class Program implements Iterable<Statement>{
 			else if (nextStatement instanceof LoopStatement)
 				loopList.add((LoopStatement) nextStatement);
 		}
-		//check if an action statement is in a ForEach, or a nested ForEach
 		while(loopList.size() > 0){
 			LoopStatement currentLoop = loopList.get(0);
 			Iterator<Statement> loopBodyIterator = currentLoop.getLoopBody().iterator();
@@ -119,12 +117,11 @@ public class Program implements Iterable<Statement>{
 					if (Program.inForEach(nextStatement))
 						return false;
 				}
-				else if (nextStatement instanceof LoopStatement)
+				else if (nextStatement instanceof LoopStatement){
 					loopList.add((LoopStatement) nextStatement);
+				}
 			}
-			loopList.remove(currentLoop);
 		}
-		return true;
 	}
 	
 //	public boolean isWellFormed(Program program){
