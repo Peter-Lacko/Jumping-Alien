@@ -115,6 +115,9 @@ public abstract class Characters extends GameObject{
 		this.setinitVerticalVelocity(init_ver_vel);
 		this.setHitPoints(hitPoints);
 		this.program = behavior;
+		if(behavior != null){
+			setProgramIterator(program.iterator());
+		}
 	}
 	
 	/**
@@ -552,15 +555,14 @@ public abstract class Characters extends GameObject{
 	}
 
 	protected void advanceTimeWithProgram(){
-		Program program = getProgram();
-		if (! program.getMainIterator().hasNext())
-			program.setMainIterator(getProgram().iterator());
+		if (! getProgramIterator().hasNext())
+			setProgramIterator(getProgram().iterator());
 		try{
-			program.getMainIterator().next().execute();
+			getProgramIterator().next().execute();
 		}
 		catch(Exception e){
 			getProgram().setStatement(new Skip(null));
-			program.setMainIterator(getProgram().iterator());
+			setProgramIterator(getProgram().iterator());
 		}
 	}
 	
