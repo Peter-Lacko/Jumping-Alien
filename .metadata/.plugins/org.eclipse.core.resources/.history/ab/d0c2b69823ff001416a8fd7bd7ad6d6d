@@ -120,7 +120,7 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	public Expression<? extends Type<?>> createRandom(
 			Expression<? extends Type<?>> maxValue,
 			SourceLocation sourceLocation) {
-		Expression<DoubleType> result = new jumpingalien.model.program.expression.unary.ExpressionRandomDouble((Expression<DoubleType>)maxValue,sourceLocation);
+		Expression<DoubleType> result = new ExpressionRandomDouble((Expression<DoubleType>)maxValue,sourceLocation);
 		return result;
 	}
 
