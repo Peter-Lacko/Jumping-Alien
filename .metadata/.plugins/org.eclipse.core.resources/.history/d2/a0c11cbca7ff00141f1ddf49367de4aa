@@ -191,9 +191,7 @@ public class ForEachLoop extends LoopStatement {
 //				}}
 					o -> {
 					ExpressionBasic<Object> e = new ExpressionBasic<Object>(o, getSourceLocation());
-//					getWhereExpression().setOperand(e);
-					Object d = new Object(null);
-					Assignment<Object> a = new Assignment<Object>(getName(),e,e.getSourceLocation(),d);
+					getWhereExpression().setOperand(e);
 					if (getWhereExpression().compute().getValue())
 						return true;
 					return false;}
@@ -231,13 +229,9 @@ public class ForEachLoop extends LoopStatement {
 						double computed2;
 						ExpressionBasic<Object> e1 = new ExpressionBasic<Object>(o1, getSourceLocation());
 						ExpressionBasic<Object> e2 = new ExpressionBasic<Object>(o2, getSourceLocation());
-						Object d1 = new Object(null);
-						Assignment<Object> a1 = new Assignment<Object>(getName(),e1,e1.getSourceLocation(),d1);
-//						getSortExpression().setOperand(e1);
+						getSortExpression().setOperand(e1);
 						computed1 = getSortExpression().compute().getValue();
-						Object d2 = new Object(null);
-						Assignment<Object> a2 = new Assignment<Object>(getName(),e2,e2.getSourceLocation(),d1);
-//						getSortExpression().setOperand(e2);
+						getSortExpression().setOperand(e2);
 						computed2 = getSortExpression().compute().getValue();
 						if(! Util.fuzzyLessThanOrEqualTo(computed1, computed2)){
 							if (getSortDirection() == SortDirection.ASCENDING)
