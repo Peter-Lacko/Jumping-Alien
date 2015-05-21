@@ -10,8 +10,6 @@ public abstract class Binary<R extends Type<?>,S extends Type<?>,T extends Type<
 		super(sourceLocation);
 		this.operand1 = operand1;
 		this.operand2 = operand2;
-		operand1.setEnclosingExpression(this);
-		operand2.setEnclosingExpression(this);
 	}
 
 	public Expression<R> getOperand1() {

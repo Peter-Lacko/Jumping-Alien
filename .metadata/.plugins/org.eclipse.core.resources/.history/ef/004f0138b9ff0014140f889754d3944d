@@ -12,17 +12,10 @@ public abstract class Expression<T extends Type<?>> {
 	
 	protected SourceLocation sourceLocation;
 	
-	private Statement getBasicStatement(){
+	public Statement getStatement(){
 		return this.statement;
 	}
 	 
-	public Statement getStatement(){
-		if (this.statement == null){
-			setStatement(getTopExpression().getStatement());
-		}
-		return this.statement;
-	}
-	
 	public void setStatement(Statement statement){
 		this.statement = statement;
 	}
@@ -50,14 +43,6 @@ public abstract class Expression<T extends Type<?>> {
 		this.enclosingExpression = enclosingExpression;
 	}
 
-	public Expression<? extends Type<?>> getTopExpression(){
-		Expression<? extends Type<?>> superExpression = this;
-		if (getBasicStatement() == null){
-			superExpression = getEnclosingExpression().getTopExpression();
-		}
-		return superExpression;
-	}
-	
 //		public int getLine(){
 //			return this.line;
 //		}

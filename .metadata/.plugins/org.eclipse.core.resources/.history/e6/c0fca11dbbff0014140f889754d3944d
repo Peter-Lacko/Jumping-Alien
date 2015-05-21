@@ -18,6 +18,8 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	public Expression<? extends Type<?>> createReadVariable(
 			String variableName, Type<?> variableType,
 			SourceLocation sourceLocation) {
+		System.out.println("name: " + variableName);
+		System.out.println("class: " + variableType.getClass());
 		if (variableType instanceof Bool){
 			return new ExpressionVariableBoolean(sourceLocation,variableName); 
 		}
