@@ -192,7 +192,7 @@ public class ForEachLoop extends LoopStatement {
 					o -> {
 					ExpressionBasic<Object> e = new ExpressionBasic<Object>(o, getSourceLocation());
 //					getWhereExpression().setOperand(e);
-					Object d = new Object(null);
+					Object d;
 					Assignment<Object> a = new Assignment<Object>(getName(),e,e.getSourceLocation(),d);
 					if (getWhereExpression().compute().getValue())
 						return true;

@@ -21,8 +21,8 @@ import jumpingalien.util.Util;
 
 public class ForEachLoop extends LoopStatement {
 
-	public ForEachLoop(String name, Kind kind, Expression<Bool> whereExpression,
-			Expression<DoubleType> sortExpression, SortDirection sortDirection,
+	public ForEachLoop(String name, Kind kind, Unary<Object,Bool> whereExpression,
+			Unary<Object,DoubleType> sortExpression, SortDirection sortDirection,
 			SourceLocation sourceLocation, Statement loopStatement) {
 		super(sourceLocation, loopStatement);
 		this.name = name;
@@ -52,15 +52,15 @@ public class ForEachLoop extends LoopStatement {
 		return kind;
 	}
 
-	private final Expression<Bool> whereExpression;
+	private final Unary<Object,Bool> whereExpression;
 	
-	private final Expression<DoubleType> sortExpression;
+	private final Unary<Object,DoubleType> sortExpression;
 	
-	public Expression<Bool> getWhereExpression() {
+	public Unary<Object, Bool> getWhereExpression() {
 		return whereExpression;
 	}
 
-	public Expression<DoubleType> getSortExpression() {
+	public Unary<Object, DoubleType> getSortExpression() {
 		return sortExpression;
 	}
 
@@ -172,13 +172,7 @@ public class ForEachLoop extends LoopStatement {
 //			public boolean test(Object o) {
 //				return (o.getKind() == getForEachLoop().getKind());
 //			}});
-		Stream<Object> result = null;
-		if (!(getForEachLoop().getKind() == kind.ANY)){
-			result = this.stream().filter( o -> o.getKind() == getForEachLoop().getKind());
-		}
-		else{
-			result = this.stream();
-		}
+		Stream<Object> result = this.stream().filter(o -> o.getKind() == getForEachLoop().getKind());
 		if (getWhereExpression() != null){
 			result = result.filter(
 //					new Predicate<Object>(){
@@ -191,9 +185,7 @@ public class ForEachLoop extends LoopStatement {
 //				}}
 					o -> {
 					ExpressionBasic<Object> e = new ExpressionBasic<Object>(o, getSourceLocation());
-//					getWhereExpression().setOperand(e);
-					Object d = new Object(null);
-					Assignment<Object> a = new Assignment<Object>(getName(),e,e.getSourceLocation(),d);
+					getWhereExpression().setOperand(e);
 					if (getWhereExpression().compute().getValue())
 						return true;
 					return false;}
@@ -231,13 +223,9 @@ public class ForEachLoop extends LoopStatement {
 						double computed2;
 						ExpressionBasic<Object> e1 = new ExpressionBasic<Object>(o1, getSourceLocation());
 						ExpressionBasic<Object> e2 = new ExpressionBasic<Object>(o2, getSourceLocation());
-						Object d1 = new Object(null);
-						Assignment<Object> a1 = new Assignment<Object>(getName(),e1,e1.getSourceLocation(),d1);
-//						getSortExpression().setOperand(e1);
+						getSortExpression().setOperand(e1);
 						computed1 = getSortExpression().compute().getValue();
-						Object d2 = new Object(null);
-						Assignment<Object> a2 = new Assignment<Object>(getName(),e2,e2.getSourceLocation(),d1);
-//						getSortExpression().setOperand(e2);
+						getSortExpression().setOperand(e2);
 						computed2 = getSortExpression().compute().getValue();
 						if(! Util.fuzzyLessThanOrEqualTo(computed1, computed2)){
 							if (getSortDirection() == SortDirection.ASCENDING)
