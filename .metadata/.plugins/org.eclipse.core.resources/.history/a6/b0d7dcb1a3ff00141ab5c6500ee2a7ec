@@ -16,8 +16,7 @@ public class Program implements Iterable<Statement>{
 		}
 		else
 			this.setStatement(mainStatement);
-		this.fixedGlobalVariables = globalVariables;
-		this.setGlobalVariables(globalVariables);
+		this.globalVariables = globalVariables;
 		this.setMainIterator(getStatement().iterator());
 //		Iterator<Statement> iterator = mainStatement.iterator();
 //		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
@@ -40,17 +39,7 @@ public class Program implements Iterable<Statement>{
 //		}
 	}
 	
-	private final Map<String, Type<?>> fixedGlobalVariables;
-	
-	public Map<String, Type<?>> getFixedGlobalVariables() {
-		return fixedGlobalVariables;
-	}
-
-	public void setGlobalVariables(Map<String, Type<?>> globalVariables) {
-		this.globalVariables = globalVariables;
-	}
-
-	private Map<String, Type<?>> globalVariables;
+	private final Map<String, Type<?>> globalVariables;
 	
 	public Map<String, Type<?>> getGlobalVariables() {
 		return globalVariables;
@@ -105,8 +94,6 @@ public class Program implements Iterable<Statement>{
 	}
 
 	public void setMainIterator(Iterator<Statement> mainIterator) {
-		this.getGlobalVariables().clear();
-		this.getGlobalVariables().putAll(getFixedGlobalVariables());
 		this.mainIterator = mainIterator;
 	}
 
