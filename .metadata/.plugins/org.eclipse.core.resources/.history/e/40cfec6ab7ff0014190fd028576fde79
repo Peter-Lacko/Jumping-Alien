@@ -558,7 +558,7 @@ public abstract class Characters extends GameObject{
 		Program program = getProgram();
 		if (! program.getMainIterator().hasNext())
 			program.setMainIterator(getProgram().iterator());
-		if ((this instanceof Shark) || (this instanceof Buzam)){
+		if (!(this instanceof Plant)){
 			try{
 				Statement nextStatement = program.getMainIterator().next();
 				//			System.out.println(nextStatement);

@@ -558,22 +558,15 @@ public abstract class Characters extends GameObject{
 		Program program = getProgram();
 		if (! program.getMainIterator().hasNext())
 			program.setMainIterator(getProgram().iterator());
-		if ((this instanceof Shark) || (this instanceof Buzam)){
-			try{
-				Statement nextStatement = program.getMainIterator().next();
-				//			System.out.println(nextStatement);
-				nextStatement.execute();
-			}
-			catch(Exception e){
-				getProgram().setStatement(new Skip(null));
-				program.setMainIterator(getProgram().iterator());
-			}
-		}
-		else{
+//		try{
 			Statement nextStatement = program.getMainIterator().next();
 			//			System.out.println(nextStatement);
 			nextStatement.execute();
-		}
+//		}
+//		catch(Exception e){
+//			getProgram().setStatement(new Skip(null));
+//			program.setMainIterator(getProgram().iterator());
+//		}
 	}
 	
 	/**

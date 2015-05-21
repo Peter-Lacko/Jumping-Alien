@@ -115,9 +115,6 @@ public abstract class Characters extends GameObject{
 		this.setinitVerticalVelocity(init_ver_vel);
 		this.setHitPoints(hitPoints);
 		this.program = behavior;
-		if (behavior != null){
-			behavior.setObject(new jumpingalien.model.program.type.Object(this));
-		}
 	}
 	
 	/**
@@ -558,21 +555,12 @@ public abstract class Characters extends GameObject{
 		Program program = getProgram();
 		if (! program.getMainIterator().hasNext())
 			program.setMainIterator(getProgram().iterator());
-		if ((this instanceof Shark) || (this instanceof Buzam)){
-			try{
-				Statement nextStatement = program.getMainIterator().next();
-				//			System.out.println(nextStatement);
-				nextStatement.execute();
-			}
-			catch(Exception e){
-				getProgram().setStatement(new Skip(null));
-				program.setMainIterator(getProgram().iterator());
-			}
+		try{
+			program.getMainIterator().next().execute();
 		}
-		else{
-			Statement nextStatement = program.getMainIterator().next();
-			//			System.out.println(nextStatement);
-			nextStatement.execute();
+		catch(Exception e){
+			getProgram().setStatement(new Skip(null));
+			program.setMainIterator(getProgram().iterator());
 		}
 	}
 	
