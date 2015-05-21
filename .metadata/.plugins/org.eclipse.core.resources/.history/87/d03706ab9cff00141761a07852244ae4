@@ -1,0 +1,63 @@
+package jumpingalien.part3.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import jumpingalien.model.program.Program;
+import jumpingalien.model.program.ProgramFactory;
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.statement.*;
+import jumpingalien.model.program.type.Type;
+import jumpingalien.part3.programs.ParseOutcome;
+import jumpingalien.part3.programs.ProgramParser;
+
+import org.junit.Test;
+
+public class ProgramTest {
+
+	@Test
+	public void test() {
+		List<Statement> statementList = new ArrayList<>();
+		Statement subStatement1 = new StartJump(null);
+		Statement subStatement2 = new Skip(null);
+		Statement subStatement3 = new EndJump(null);
+		statementList.add(subStatement1);
+		statementList.add(subStatement2);
+		statementList.add(subStatement3);
+		Statement mainStatement = new StatementSequence(null,statementList);
+		Map<String,Type<?>> variableMap = new HashMap<>();
+		Program program = new Program(mainStatement,variableMap);
+		assert(mainStatement.getProgram() == program);
+		assert(subStatement1.getProgram() == program);
+		assert(subStatement2.getProgram() == program);
+		assert(subStatement3.getProgram() == program);
+	}
+	
+	public void test2(){
+		ProgramFactory factory = new ProgramFactory();
+		ProgramParser<Expression<? extends Type<?>>, Statement, Type<?>, Program> parser = new ProgramParser(factory);
+		Optional<Program> parse = parser.parseString(
+				"double t; double d; direction dir; while true do   t := -1;   d := -1;   while (t < 2) do     t := random 6;   done   d := random 2;   if (d <= 1) then     dir := left;   else     dir := right;   fi   start_run dir;   wait t;   stop_run dir; done"
+				);
+		if (parse.isPresent())
+			return ParseOutcome.success(parse.get());
+		else 
+			return ParseOutcome.failure(parser.getErrors());
+	}
+
+	public ParseOutcome<?> parse(String text) {
+		ProgramFactory factory = new ProgramFactory();
+		ProgramParser<Expression<?>, Statement, Type, Program> parser = new ProgramParser(factory);
+		Optional<Program> parse = parser.parseString(text);
+		if (parse.isPresent())
+			return ParseOutcome.success(parse.get());
+		else 
+			return ParseOutcome.failure(parser.getErrors());
+	}
+	
+}

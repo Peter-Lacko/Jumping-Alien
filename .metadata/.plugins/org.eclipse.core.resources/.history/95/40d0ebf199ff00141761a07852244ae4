@@ -1,0 +1,24 @@
+package jumpingalien.part3.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import jumpingalien.model.program.Program;
+import jumpingalien.model.program.statement.*;
+import jumpingalien.model.program.type.Type;
+
+import org.junit.Test;
+
+public class ProgramTest {
+
+	@Test
+	public void test() {
+		Statement mainStatement = new Skip(null);
+		Map<String,Type<?>> variableMap = new HashMap<>();
+		Program program = new Program(mainStatement,variableMap);
+		assert(mainStatement.getProgram() == program);
+	}
+
+}

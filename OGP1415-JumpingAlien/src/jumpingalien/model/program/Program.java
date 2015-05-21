@@ -18,25 +18,25 @@ public class Program implements Iterable<Statement>{
 			this.setStatement(mainStatement);
 		this.globalVariables = globalVariables;
 		this.setMainIterator(getStatement().iterator());
-		Iterator<Statement> iterator = mainStatement.iterator();
-		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
-		while(iterator.hasNext()){
-			Statement nextStatement = iterator.next();
-			if (nextStatement instanceof LoopStatement)
-				loopList.add((LoopStatement) nextStatement);
-			nextStatement.setProgram(this);
-		}
-		while(loopList.size() > 0){
-			LoopStatement currentLoop = loopList.get(0);
-			Iterator<Statement> loopBodyIterator = currentLoop.getLoopBody().iterator();
-			while(loopBodyIterator.hasNext()){
-				Statement nextStatement = loopBodyIterator.next();
-				if (nextStatement instanceof LoopStatement)
-					loopList.add((LoopStatement) nextStatement);
-				nextStatement.setProgram(this);
-			}
-			loopList.remove(currentLoop);
-		}
+//		Iterator<Statement> iterator = mainStatement.iterator();
+//		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
+//		while(iterator.hasNext()){
+//			Statement nextStatement = iterator.next();
+//			if (nextStatement instanceof LoopStatement)
+//				loopList.add((LoopStatement) nextStatement);
+//			nextStatement.setProgram(this);
+//		}
+//		while(loopList.size() > 0){
+//			LoopStatement currentLoop = loopList.get(0);
+//			Iterator<Statement> loopBodyIterator = currentLoop.getLoopBody().iterator();
+//			while(loopBodyIterator.hasNext()){
+//				Statement nextStatement = loopBodyIterator.next();
+//				if (nextStatement instanceof LoopStatement)
+//					loopList.add((LoopStatement) nextStatement);
+//				nextStatement.setProgram(this);
+//			}
+//			loopList.remove(currentLoop);
+//		}
 	}
 	
 	private final Map<String, Type<?>> globalVariables;

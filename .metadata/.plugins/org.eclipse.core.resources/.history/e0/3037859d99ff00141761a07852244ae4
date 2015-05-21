@@ -1,0 +1,15 @@
+package jumpingalien.part3.tests;
+
+import static org.junit.Assert.*;
+import jumpingalien.model.program.statement.*;
+
+import org.junit.Test;
+
+public class ProgramTest {
+
+	@Test
+	public void test() {
+		Statement mainStatement = new Skip(null);
+	}
+
+}

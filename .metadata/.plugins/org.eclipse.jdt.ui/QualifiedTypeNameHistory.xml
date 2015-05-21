@@ -6,11 +6,14 @@
 <fullyQualifiedTypeName name="java.util.Comparator"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.expression.ExpressionBasic"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Skip"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Statement"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.type.Type"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Statement"/>
 <fullyQualifiedTypeName name="jumpingalien.util.Util"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Skip"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
 </qualifiedTypeNameHistroy>

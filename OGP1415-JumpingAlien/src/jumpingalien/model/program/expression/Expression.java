@@ -20,7 +20,7 @@ public abstract class Expression<T extends Type<?>> {
 		this.statement = statement;
 	}
 	
-	protected Statement statement;
+	protected Statement statement = null;
 	 
 	public SourceLocation getSourceLocation() {
 		return sourceLocation;

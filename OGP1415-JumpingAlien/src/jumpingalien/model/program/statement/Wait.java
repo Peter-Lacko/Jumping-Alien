@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import jumpingalien.model.program.expression.Expression;
 import jumpingalien.model.program.type.DoubleType;
 import jumpingalien.part3.programs.SourceLocation;
+import jumpingalien.util.Util;
 
 public class Wait extends ActionStatement {
 
@@ -26,34 +27,47 @@ public class Wait extends ActionStatement {
 		return this;
 	}
 	
+	private double timeToWait = 0.001;
+	
+	public double getTimeToWait() {
+		return timeToWait;
+	}
+
+	public void setTimeToWait(double timeToWait) {
+		this.timeToWait = timeToWait;
+	}
+
 	@Override
 	public Iterator<Statement> iterator() {
 		return new Iterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {
-				return (index < iterations);
+				return (! Util.fuzzyGreaterThanOrEqualTo(timeWaited, getTimeToWait()));
 			}
 
 			@Override
-			public Wait next() throws NoSuchElementException{
+			public Statement next() throws NoSuchElementException{
 				if (! hasNext())
 					throw new NoSuchElementException();
-				index++;
-				return getWait();
+				timeWaited += 0.001;
+				if (Util.fuzzyEquals(timeWaited, 0.001))
+					return getWait();
+				else{
+					Skip skip = new Skip(getSourceLocation());
+					skip.setEnclosingStatement(getWait());
+					return skip;
+				}
+				
 			}
 			
-			private int index = 0;
-			
-			private int iterations = (int) ((getExpression().compute().getValue()/0.001)+1);
+			private double timeWaited = 0.0;
 		};
 	}
 
 	@Override
 	public void execute() {
-		// er gebeurt niets voor deze statement.
-		//VRAAG: als bvb een startJump() voor een Wait is, moet er dan niets gebeuren in die Wait? 
-		//of startJump?
+		setTimeToWait(getExpression().compute().getValue());
 	}
 
 }

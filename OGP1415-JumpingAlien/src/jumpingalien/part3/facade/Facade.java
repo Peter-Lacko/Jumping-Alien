@@ -322,7 +322,7 @@ public class Facade implements IFacadePart3 {
 	@Override
 	public ParseOutcome<?> parse(String text) {
 		ProgramFactory factory = new ProgramFactory();
-		ProgramParser<Expression<?>, Statement, Type, Program> parser = new ProgramParser(factory);
+		ProgramParser<Expression<? extends Type<?>>, Statement, Type<?>, Program> parser = new ProgramParser<>(factory);
 		Optional<Program> parse = parser.parseString(text);
 		if (parse.isPresent())
 			return ParseOutcome.success(parse.get());
