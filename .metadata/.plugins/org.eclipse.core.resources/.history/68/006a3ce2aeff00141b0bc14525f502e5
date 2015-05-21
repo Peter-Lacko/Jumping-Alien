@@ -267,9 +267,8 @@ public class ForEachLoop extends LoopStatement {
 		}
 		java.lang.Object[] resultArray = result.toArray();
 		setCurrentArray(Arrays.copyOf(resultArray, resultArray.length, Object[].class));
-		Assignment<Object> finalAssignment = new Assignment<Object>(getName(),originalValue,
+		Assignment<Object> finalAssignment = new Assignement<Object>(getName(),originalValue,
 				getSourceLocation(), new Object(null));
-		finalAssignment.execute();
 	}
 
 }

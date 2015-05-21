@@ -174,7 +174,7 @@ public class ForEachLoop extends LoopStatement {
 //			}});
 		ExpressionVariableGameObject originalVariable = new ExpressionVariableGameObject(getSourceLocation(),
 				getName());
-		Object originalObject = new Object(originalVariable.compute().getValue());
+		Object originalObject = new Object()
 		ExpressionBasic<Object> originalValue = new ExpressionBasic<Object>(originalObject,getSourceLocation());
 		Stream<Object> result = null;
 		if (!(getForEachLoop().getKind() == Kind.ANY)){
@@ -267,9 +267,6 @@ public class ForEachLoop extends LoopStatement {
 		}
 		java.lang.Object[] resultArray = result.toArray();
 		setCurrentArray(Arrays.copyOf(resultArray, resultArray.length, Object[].class));
-		Assignment<Object> finalAssignment = new Assignment<Object>(getName(),originalValue,
-				getSourceLocation(), new Object(null));
-		finalAssignment.execute();
 	}
 
 }

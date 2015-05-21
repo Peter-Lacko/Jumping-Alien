@@ -172,12 +172,8 @@ public class ForEachLoop extends LoopStatement {
 //			public boolean test(Object o) {
 //				return (o.getKind() == getForEachLoop().getKind());
 //			}});
-		ExpressionVariableGameObject originalVariable = new ExpressionVariableGameObject(getSourceLocation(),
-				getName());
-		Object originalObject = new Object(originalVariable.compute().getValue());
-		ExpressionBasic<Object> originalValue = new ExpressionBasic<Object>(originalObject,getSourceLocation());
 		Stream<Object> result = null;
-		if (!(getForEachLoop().getKind() == Kind.ANY)){
+		if (!(getForEachLoop().getKind() == kind.ANY)){
 			result = this.stream().filter( o -> o.getKind() == getForEachLoop().getKind());
 		}
 		else{
@@ -197,9 +193,7 @@ public class ForEachLoop extends LoopStatement {
 					ExpressionBasic<Object> e = new ExpressionBasic<Object>(o, getSourceLocation());
 //					getWhereExpression().setOperand(e);
 					Object d = new Object(null);
-					Assignment<Object> a = new Assignment<Object>(getName(),e,getSourceLocation(),d);
-					a.setEnclosingStatement(this);
-					a.execute();
+					Assignment<Object> a = new Assignment<Object>(getName(),e,e.getSourceLocation(),d);
 					if (getWhereExpression().compute().getValue())
 						return true;
 					return false;}
@@ -238,16 +232,12 @@ public class ForEachLoop extends LoopStatement {
 						ExpressionBasic<Object> e1 = new ExpressionBasic<Object>(o1, getSourceLocation());
 						ExpressionBasic<Object> e2 = new ExpressionBasic<Object>(o2, getSourceLocation());
 						Object d1 = new Object(null);
-						Assignment<Object> a1 = new Assignment<Object>(getName(),e1,getSourceLocation(),d1);
+						Assignment<Object> a1 = new Assignment<Object>(getName(),e1,e1.getSourceLocation(),d1);
 //						getSortExpression().setOperand(e1);
-						a1.setEnclosingStatement(this);
-						a1.execute();
 						computed1 = getSortExpression().compute().getValue();
 						Object d2 = new Object(null);
-						Assignment<Object> a2 = new Assignment<Object>(getName(),e2,getSourceLocation(),d2);
+						Assignment<Object> a2 = new Assignment<Object>(getName(),e2,e2.getSourceLocation(),d1);
 //						getSortExpression().setOperand(e2);
-						a2.setEnclosingStatement(this);
-						a2.execute();
 						computed2 = getSortExpression().compute().getValue();
 						if(! Util.fuzzyLessThanOrEqualTo(computed1, computed2)){
 							if (getSortDirection() == SortDirection.ASCENDING)
@@ -267,9 +257,6 @@ public class ForEachLoop extends LoopStatement {
 		}
 		java.lang.Object[] resultArray = result.toArray();
 		setCurrentArray(Arrays.copyOf(resultArray, resultArray.length, Object[].class));
-		Assignment<Object> finalAssignment = new Assignment<Object>(getName(),originalValue,
-				getSourceLocation(), new Object(null));
-		finalAssignment.execute();
 	}
 
 }

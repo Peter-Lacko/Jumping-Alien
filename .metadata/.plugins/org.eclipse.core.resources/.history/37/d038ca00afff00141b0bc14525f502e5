@@ -366,8 +366,8 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 			Expression<? extends Type<?>> sort,
 			jumpingalien.part3.programs.IProgramFactory.SortDirection sortDirection,
 			Statement body, SourceLocation sourceLocation) {
-		Statement result = new ForEachLoop(variableName, variableKind, (Expression<Bool>)where, 
-				(Expression<DoubleType>)sort, sortDirection, sourceLocation, body);
+		Statement result = new ForEachLoop(variableName, variableKind, (Unary<Object,Bool>)where, 
+				(Unary<Object,DoubleType>)sort, sortDirection, sourceLocation, body);
 		return result;
 	}
 
