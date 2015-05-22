@@ -24,7 +24,7 @@ public abstract class Statement implements Iterable<Statement> {
 
 	public abstract void execute();
 	
-	private Program getBasicProgram(){
+	public Program getBasicProgram(){
 		return this.program;
 	}
 	

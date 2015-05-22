@@ -461,12 +461,12 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 
 	@Override
 	public Type<?> getGameObjectType() {
-		return new Object(null);
+		return new DirectionType(null);
 	}
 
 	@Override
 	public Type<?> getDirectionType() {
-		return new DirectionType(null);
+		return new Object(null);
 	}
 
 	@Override

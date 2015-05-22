@@ -9,7 +9,6 @@ public abstract class Unary<S extends Type<?>, T extends Type<?>> extends Expres
 	public Unary(Expression<S> operand, SourceLocation sourceLocation){
 		super(sourceLocation);
 		setOperand(operand);
-		operand.setEnclosingExpression(this);
 	}
 	
 	public Expression<S> getOperand() {
