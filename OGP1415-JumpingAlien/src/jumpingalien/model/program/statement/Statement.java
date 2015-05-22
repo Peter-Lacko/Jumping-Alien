@@ -5,9 +5,6 @@ import jumpingalien.part3.programs.SourceLocation;
 
 public abstract class Statement implements Iterable<Statement> {
 	
-//	public Statement(){
-//	}
-	
 	public Statement(SourceLocation sourceLocation){
 		setSourceLocation(sourceLocation);
 	}
@@ -58,15 +55,5 @@ public abstract class Statement implements Iterable<Statement> {
 		}
 		return superStatement;
 	}
-
-//	public boolean isDone() {
-//		return done;
-//	}
-//
-//	public void setDone(boolean done) {
-//		this.done = done;
-//	}
-//	
-//	private boolean done;
 
 }

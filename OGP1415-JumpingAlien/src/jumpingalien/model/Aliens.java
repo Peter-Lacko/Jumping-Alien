@@ -388,6 +388,9 @@ public abstract class Aliens extends Characters {
 	 * 			|		if (getWorld().getGeoFeatureAt(getWorld().getPixelOfTileContaining(pos[0], pos[1])[0]
 	 * 			|			, getWorld().getPixelOfTileContaining(pos[0], pos[1])[1]) == GeoFeature.GROUND)
 	 * 			|			then result == false
+	 * 			|pos =  {getIntPositionAt(1) + getSprite().getWidth(), getIntPositionAt(2) + getSprite().getHeight() + nbPixelsHeight}
+	 * 			|if getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND
+	 * 			|	then result == false
 	 * 			|else result == true
 	 */
 	protected boolean canEndDuck(){
@@ -398,13 +401,18 @@ public abstract class Aliens extends Characters {
 		int nbPixelsHeight = standingSprite.getHeight() - getSprite().getHeight();
 		int tileLength = getWorld().getTileLength();
 		for (int j=1;j <=nbPixelsHeight; j = j + tileLength){
-			for (int i = 1; i <=getSprite().getWidth(); i = i +tileLength){
+			for (int i = 1; i <=getSprite().getWidth(); i = i + tileLength){
 				int[] pos = new int[] {getIntPositionAt(1) +i, getIntPositionAt(2) + getSprite().getHeight() +j};
 				pos = getWorld().getPixelOfTileContaining(pos[0], pos[1]);
 				if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
 					return false;
 				}
 			}
+		}
+		int[] pos = new int[] {getIntPositionAt(1) + getSprite().getWidth(), getIntPositionAt(2) + getSprite().getHeight() + nbPixelsHeight};
+		pos = getWorld().getPixelOfTileContaining(pos[0], pos[1]);
+		if (getWorld().getGeoFeatureAt(pos[0], pos[1]) == GeoFeature.GROUND){
+			return false;
 		}
 		return true;
 	}

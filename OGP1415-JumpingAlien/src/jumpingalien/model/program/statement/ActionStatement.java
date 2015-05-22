@@ -9,6 +9,5 @@ public abstract class ActionStatement extends Statement {
 	public ActionStatement(SourceLocation sourceLocation){
 		super(sourceLocation);
 	}
-	//moet nog hier iets?
 	
 }

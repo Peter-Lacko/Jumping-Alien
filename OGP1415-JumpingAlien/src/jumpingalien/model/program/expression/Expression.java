@@ -57,17 +57,4 @@ public abstract class Expression<T extends Type<?>> {
 		}
 		return superExpression;
 	}
-	
-//		public int getLine(){
-//			return this.line;
-//		}
-	//	
-//		private final int line;
-	//	
-//		public int getColumn(){
-//			return this.column;
-//		}
-	//	
-//		private final int column;
-
 }

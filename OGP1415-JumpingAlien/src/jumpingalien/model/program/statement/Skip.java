@@ -39,7 +39,6 @@ public class Skip extends ActionStatement {
 
 	@Override
 	public void execute() {
-		//nothing happens
 
 	}
 

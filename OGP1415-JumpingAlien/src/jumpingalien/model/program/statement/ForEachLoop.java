@@ -168,10 +168,6 @@ public class ForEachLoop extends LoopStatement {
 
 	@Override
 	public void execute() {
-//		Stream<Object> result = this.stream().filter(new Predicate<Object>(){
-//			public boolean test(Object o) {
-//				return (o.getKind() == getForEachLoop().getKind());
-//			}});
 		ExpressionVariableGameObject originalVariable = new ExpressionVariableGameObject(getSourceLocation(),
 				getName());
 		Object originalObject = new Object(originalVariable.compute().getValue());
@@ -185,17 +181,8 @@ public class ForEachLoop extends LoopStatement {
 		}
 		if (getWhereExpression() != null){
 			result = result.filter(
-//					new Predicate<Object>(){
-//				public boolean test(Object o) {
-//					ExpressionBasic<Object> e = new ExpressionBasic<Object>(o, getSourceLocation());
-//					getWhereExpression().setOperand(e);
-//					if (getWhereExpression().compute().getValue())
-//						return true;
-//					return false;
-//				}}
 					o -> {
 					ExpressionBasic<Object> e = new ExpressionBasic<Object>(o, getSourceLocation());
-//					getWhereExpression().setOperand(e);
 					Object d = new Object(null);
 					Assignment<Object> a = new Assignment<Object>(getName(),e,getSourceLocation(),d);
 					a.setEnclosingStatement(this);
@@ -207,31 +194,6 @@ public class ForEachLoop extends LoopStatement {
 		}
 		if ((getSortExpression() != null) && (getSortDirection() != null)){
 			result = result.sorted(
-//					new Comparator<Object>(){
-//				public int compare(Object o1, Object o2) {
-//					double computed1;
-//					double computed2;
-//					ExpressionBasic<Object> e1 = new ExpressionBasic<Object>(o1, getSourceLocation());
-//					ExpressionBasic<Object> e2 = new ExpressionBasic<Object>(o2, getSourceLocation());
-//					getSortExpression().setOperand(e1);
-//					computed1 = getSortExpression().compute().getValue();
-//					getSortExpression().setOperand(e2);
-//					computed2 = getSortExpression().compute().getValue();
-//					if(! Util.fuzzyLessThanOrEqualTo(computed1, computed2)){
-//						if (getSortDirection() == SortDirection.ASCENDING)
-//							return 1;
-//						else
-//							return -1;
-//					}
-//					else if(! Util.fuzzyLessThanOrEqualTo(computed2, computed1)){
-//						if (getSortDirection() == SortDirection.ASCENDING)
-//							return -1;
-//						else
-//							return 1;
-//					}
-//					else
-//						return 0;
-//				}}
 					(o1, o2) ->{
 						double computed1;
 						double computed2;
@@ -239,13 +201,11 @@ public class ForEachLoop extends LoopStatement {
 						ExpressionBasic<Object> e2 = new ExpressionBasic<Object>(o2, getSourceLocation());
 						Object d1 = new Object(null);
 						Assignment<Object> a1 = new Assignment<Object>(getName(),e1,getSourceLocation(),d1);
-//						getSortExpression().setOperand(e1);
 						a1.setEnclosingStatement(this);
 						a1.execute();
 						computed1 = getSortExpression().compute().getValue();
 						Object d2 = new Object(null);
 						Assignment<Object> a2 = new Assignment<Object>(getName(),e2,getSourceLocation(),d2);
-//						getSortExpression().setOperand(e2);
 						a2.setEnclosingStatement(this);
 						a2.execute();
 						computed2 = getSortExpression().compute().getValue();

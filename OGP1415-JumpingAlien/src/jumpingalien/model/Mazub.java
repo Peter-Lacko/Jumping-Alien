@@ -104,8 +104,9 @@ public class Mazub extends Aliens {
 			this.getWorld().checkIfWin(this);
 			this.immune(duration);
 		}
-		else
+		else if (!(this.getWorld() == null)){
 			getWorld().removeAsObject(this);
+		}
 	}
 	
 	/**

@@ -45,9 +45,6 @@ public class WhileLoop extends LoopStatement {
 	
 	@Override
 	public Iterator<Statement> iterator() {
-//		if ((boolean)this.getCondition().compute())
-//			return loopBody.iterator();
-//		return null;
 		return new Iterator<Statement>(){
 
 			@Override

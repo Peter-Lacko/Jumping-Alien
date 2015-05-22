@@ -16,15 +16,7 @@ public class Assignment<T extends Type<?>> extends Statement {
 		value.setStatement(this);
 		this.variable = name;
 	}
-	
-//	@Override
-//	public void execute(){
-////		this.getProgram().addValue(this.getVariable(), this.getExpression());
-////		this.setDone(true);
-//		if (this.getProgram().getGlobalVariables().get(getVariable()).getClass() == getType().getClass())
-//			this.getProgram().getGlobalVariables().put(getVariable(), getExpression().compute());
-//	}
-//	
+		
 	@Basic @Immutable
 	public String getVariable() {
 		return this.variable;

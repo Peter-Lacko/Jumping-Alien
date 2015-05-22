@@ -9,7 +9,6 @@ public class Break extends Statement {
 
 	public Break(SourceLocation sourceLocation) {
 		super(sourceLocation);
-		// TODO Auto-generated constructor stub
 	}
 
 	private LoopStatement loopStatement;

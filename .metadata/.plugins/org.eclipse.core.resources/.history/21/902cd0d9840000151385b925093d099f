@@ -1,0 +1,325 @@
+package jumpingalien.model;
+import jumpingalien.util.Util;
+import be.kuleuven.cs.som.annotate.*;
+import jumpingalien.model.Characters;
+
+
+@Value
+public class PositionCalculator {
+	
+	/**
+	 * A method to determine what actions should be taken if the character is moving in two directions
+	 * (when both keys are pushed). The character will not move in such a case.
+	 * @post if the character is moving in both directions, the new character is moving in both directions
+	 * 		| if (isMovingLeft() && isMovingRight())
+	 * 		|	new.movingInTwoDirections() == true
+	 * 		otherwise the new character is not moving in both directions.
+	 * 		| else
+	 * 		| 	new.movingInTwoDirections() == false
+	 * @post 	if the character is not moving in both directions, and is moving right, then the new character
+	 * 			has moved right.
+	 * 			|if (! (isMovingLeft() && isMovingRight())) && isMovingRight()
+	 * 			|	new.getHasMovedIn() == MovementDirection.RIGHT
+	 * @post 	if the character is not moving in both directions, and is moving right, then no time has 
+	 * 			passed since the new character stopped.
+	 * 			|if (! (isMovingLeft() && isMovingRight())) && isMovingRight()
+	 * 			|	new.getTimeSinceEndMove() == 0.0
+	 * @post 	if the character is not moving in both directions, and is moving left, then the new character
+	 * 			has moved left.
+	 * 			|if (! (isMovingLeft() && isMovingRight())) && isMovingLeft()
+	 * 			|	new.getHasMovedIn() == MovementDirection.LEFT
+	 * @post 	if the character is not moving in both directions, and is moving left, then no time has 
+	 * 			passed since the new character stopped.
+	 * 			|if (! (isMovingLeft() && isMovingRight())) && isMovingLeft()
+	 * 			|	new.getTimeSinceEndMove() == 0.0
+	 */
+	@Model
+	private void determineDoubleDirections() {
+		if (isMovingLeft() && isMovingRight())
+			this.setMovingInTwoDirections(true);
+		else {
+			this.setMovingInTwoDirections(false);
+			if (this.isMovingRight()){
+				this.sethasMovedIn(MovementDirection.RIGHT);
+				setTimeSinceEndMove(0.0);
+			}
+			else if (this.isMovingLeft()){
+				this.sethasMovedIn(MovementDirection.LEFT);
+				setTimeSinceEndMove(0.0);
+			}
+		}
+	}
+	
+	/**
+	 * Compute the new horizontal position after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new horizontal position.
+	 * @post 	If the character is accelerating and if the newly calculated position is valid, the new 
+	 * 			character is at that position.
+	 * 			|newPositionAccelerating = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity() 
+	 * 			|				+ 100*0.5*getHorizontalAcceleration()*duration²
+	 * 			|if (isAccelerating() && isValidPositionAt(newPositionAccelerating,1))
+	 * 			|	new.getPositionAt(1) = newPositionAccelerating
+	 * 			otherwise, if the character is not accelerating and if the newly calculated position is
+	 * 			valid, the new character is at that position.
+	 * 			|newPosition = this.getPositionAt(1) +100*duration*this.getHorizontalVelocity()
+	 * 			|if ((! isAccelerating()) && isValidPositionAt(newPositionAccelerating,1))
+	 * 			|	new.getPositionAt(1) = newPosition
+	 * 			otherwise, if the character is accelerating, the newly calculated position is not
+	 * 			valid and the new position is smaller than the smallest possible position, the new
+	 * 			character is at the smallest possible position.
+	 * 			|if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)) &&
+	 * 			|	((int)newPositionAccelerating < X_MIN))
+	 * 			|	new.getPositionAt(1) = (double)X_MIN
+	 * 			otherwise, if the character is accelerating, the newly calculated position is not
+	 * 			valid, the new character is at the highest possible position.
+	 * 			|else if (isAccelerating() && (! isValidPositionAt(newPositionAccelerating,1)))
+	 * 			|	new.getPositionAt(1) = (double)X_MAX
+	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
+	 * 			valid and the new position is smaller than the smallest possible position, the new
+	 * 			character is at the smallest possible position.
+	 * 			|if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)) &&
+	 * 			|	((int)newPositionAccelerating < X_MIN))
+	 * 			|	new.getPositionAt(1) = (double)X_MIN
+	 * 			otherwise, if the character is not accelerating, the newly calculated position is not
+	 * 			valid, the new character is at the highest possible position.
+	 * 			|else if ((! isAccelerating()) && (! isValidPositionAt(newPositionAccelerating,1)))
+	 * 			|	new.getPositionAt(1) = (double)X_MAX
+	 * @effect	if the new position is at the lowest position, the character stops moving left.
+	 * 			| if (new.getPositionAt(1) == (double)X_MIN)
+	 * 			|	this.endMove("left")
+	 * @effect	if the new position is at the highest position, the character stops moving right.
+	 * 			| if (new.getPositionAt(1) == (double)X_MAX)
+	 * 			|	this.endMove("right")
+	 */
+	private void computeNewHorizontalPositionAfter(double duration) {
+		if (this.movingInTwoDirections())
+			this.setPositionAt(this.getPositionAt(1),1);
+		else{
+			double newPosition;
+			newPosition = this.getPositionAt(1) + 100*duration*this.getHorizontalVelocity();
+			if (this.isAccelerating())
+				newPosition += 100*0.5*getHorizontalAcceleration()*duration*duration;
+			if (isValidPositionAt(newPosition,1))
+				this.setPositionAt(newPosition, 1);
+			else if ((int)newPosition < X_MIN){
+				this.setPositionAt((double)X_MIN, 1);
+				this.endMove("left");
+			}
+			else {
+				this.setPositionAt((double)X_MAX, 1);
+				this.endMove("right");
+			}
+		}
+	}
+
+	/**
+	 * Compute the new horizontal velocity after a given duration
+	 * @param duration
+	 * 			the duration after which to calculate the new horizontal velocity.
+	 * @effect if the character is actually moving, compute the new velocity while it is moving
+	 * 			| if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections()))
+	 * 			| 	computeNewHorizontalVelocityMoving(duration)
+	 * @post if the character isn't actually moving, the new horizontal velocity is 0
+	 * 			| if (! ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())))
+	 * 			|	new.getHorizontalVelocity == 0.0
+	 * @post	if the character's horizontal velocity is between 0 and the maximum horizontal velocity 
+	 * 			then the character is accelerating
+	 * 			| If ((new.getHorizontalVelocity != 0) && (new.getHorizontalVelocity < getMaxHorizontalVelocity())
+	 * 			|	then new.isAccelerating() == true
+	 * 			Otherwise he is not accelerating.
+	 * 			| Else
+	 * 			|	new.isAccelerating() == false
+	 */
+	private void computeNewHorizontalVelocityAfter(double duration) {
+		double newVelocity = 0.0;
+		if ((this.isMovingLeft() || this.isMovingRight()) && (! movingInTwoDirections())){
+			newVelocity = computeNewHorizontalVelocityMoving(duration);
+		}
+		else {
+			newVelocity = 0.0;
+			setHorizontalVelocity(newVelocity);
+		}
+		if ((! Util.fuzzyEquals(newVelocity, 0.0)) && (! Util.fuzzyGreaterThanOrEqualTo(
+				Math.abs(newVelocity),getMaxHorizontalVelocity()))){
+			this.setAccelerating(true);
+		}
+		else
+			this.setAccelerating(false);
+	}
+	
+	/**
+	 * Calculate the new horizontal velocity when the character is moving.
+	 * @param duration
+	 * 			the duration after which to calculate the new horizontal velocity.
+	 * @post	If the character is moving left, it has a negative velocity.
+	 * 			| If (direction == "left")
+	 * 			|	then directionModifier == -1
+	 * 			| Else directionModifier == 1	
+	 * 			If the absolute value of the current speed is lower than the absolute value of the 
+	 * 			initial speed, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
+	 * 			|	then (new.getHorizontalVelocity == 
+	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * 			Otherwise, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the current horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
+	 * 			|	then (new.getHorizontalVelocity == 
+	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * @return Returns the newly calculated velocity.
+	 *			If the character is moving left, it has a negative velocity.
+	 * 			| If (direction == "left")
+	 * 			|	then directionModifier == -1
+	 * 			| Else directionModifier == 1	
+	 * 			If the absolute value of the current speed is lower than the absolute value of the 
+	 * 			initial speed, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the initial horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) < getInitHorizontalVelocity())
+	 * 			|	then (result == 
+	 * 			|	directionModifier*Math.min(Math.abs(getInitHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 * 			Otherwise, the new speed is calculated as the smallest value between 
+	 * 				1) the absolute value of the current horizontal velocity plus the duration 
+	 * 					times horizontal acceleration. 
+	 * 				or 2) the maximal horizontal velocity.
+	 * 			| If (Math.abs(getHorizontalVelocity()) >= getInitHorizontalVelocity())
+	 * 			|	then (result == 
+	 * 			|	directionModifier*Math.min(Math.abs(getHorizontalVelocity()
+	 * 			|	+ duration*getHorizontalAcceleration()),getMaxHorizontalVelocity()))
+	 */
+	@Model
+	private double computeNewHorizontalVelocityMoving(double duration){
+		double newVelocity = 0.0;
+		if (! Util.fuzzyGreaterThanOrEqualTo(Math.abs(getHorizontalVelocity()), 
+				Math.abs(getInitHorizontalVelocity()))){
+			newVelocity = getInitHorizontalVelocity() + 
+					duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+		}
+		else {
+			newVelocity = getHorizontalVelocity() + duration*getHorizontalAcceleration();
+			newVelocity = Math.min(Math.abs(newVelocity),getMaxHorizontalVelocity());
+		}
+		if (isMovingLeft())
+			newVelocity = -1.0*newVelocity;
+//		setHorizontalVelocity(newVelocity);
+		return newVelocity;
+	}
+	
+	
+	/**
+	 * A method to return the current horizontal acceleration. The acceleration is negative if the 
+	 * character is moving left, positive if the character is moving right, and 0.0 if the character is
+	 * not moving horizontally.
+	 */
+	@Basic
+	public double getHorizontalAcceleration() {
+		if (this.isAccelerating() && this.isMovingLeft() && (! this.movingInTwoDirections()))
+			return -Character2.getHorizontalAcceleration();
+		else if (this.isAccelerating() && this.isMovingRight() && (! this.movingInTwoDirections()))
+			return Character.HORIZONTAL_ACCELERATION;
+		else
+			return 0.0;
+	}
+	
+	/**
+	 * Compute the new vertical position after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical position.
+	 * @post    if the character is in the air and and the calculated position is 
+	 * 			a possible height then that is the new height. if it's too high the new
+	 * 			height is the maximal height. if it's too low the new height is the minimal 
+	 * 			height. if the character is not in the air but it is jumping, the new height
+	 * 			is calculated.
+	 * 			|if isInAir()
+	 * 			|	then newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+	 *			|						100*0.5*getVerticalAcceleration()*duration*duration;
+	 * 			|	if isValidPositionAt(newYPosition,2)
+	 * 			|		then new.getPositionAt(2) = newYPosition
+	 * 			|	else if (int)newYPosition < Y_MIN
+	 * 			|		then new.getPositionAt(2) = (double)Y_MIN
+	 *			|	else
+	 *			|		then new.verticalPosition = (double)Y_MAX
+	 *			|else
+	 *			|	if isJumping()
+	 *			|		then new.getPositionAt(2) = this.getPositionAt(2) + 100*duration
+	 *			|									*this.getVerticalVelocity()
+	 *			|									+ 100*0.5*getVerticalAcceleration()*duration*duration;
+	 */
+	public void computeNewVerticalPositionAfter(double duration){
+		double newYPosition;
+		if (isInAir()){
+			newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity() + 
+					100*0.5*getVerticalAcceleration()*duration*duration;
+			if (isValidPositionAt(newYPosition,2)){
+				this.setPositionAt(newYPosition, 2);
+			}
+			else if ((int)newYPosition < Y_MIN){
+				this.setPositionAt((double)Y_MIN, 2);
+			}
+			else {
+				this.setPositionAt((double)Y_MAX, 2);
+			}
+		}
+		else{
+			if (isJumping()){
+				newYPosition = this.getPositionAt(2) + 100*duration*this.getVerticalVelocity()+ 
+						100*0.5*getVerticalAcceleration()*duration*duration;
+				this.setPositionAt(newYPosition, 2);
+			}
+		}
+	}
+	
+	/**
+	 * Compute the new vertical speed after a given duration.
+	 * @param duration
+	 * 			The duration after after which to calculate the new vertical speed.
+	 * @effect if the character is in the air, not jumping and the vertical velocity is bigger than 0,
+	 * 			the vertical velocity is set to 0
+	 * 			| if (isInAir() && (! isJumping()) && (0.0 < getVerticalVelocity()))
+	 * 			|	setVerticalVelocity(0.0)
+	 * 			otherwise, if the character is in the air, the velocity is set to the calculated velocity
+	 * 			| if (isInAir())
+	 * 			|	setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration)
+	 * 			otherwise, if the character is not in the air, and is jumping, set the velocity to
+	 * 			the initial vertical velocity
+	 * 			| if ((! isInAir()) && isJumping())
+	 * 			|	setVerticalVelocity(getInitVerticalVelocity())
+	 * 			otherwise, set the vertical velocity to 0
+	 * 			| else
+	 * 			| setVerticalVelocity(0.0)
+	 */
+	public void computeNewVerticalVelocityAfter(double duration) throws IllegalArgumentException{
+		try{
+			if (isInAir()){
+				if ((! isJumping()) && (! Util.fuzzyGreaterThanOrEqualTo(0.0, getVerticalVelocity()))){
+					setVerticalVelocity(0.0);
+				}
+				else{
+					setVerticalVelocity(getVerticalVelocity()+getVerticalAcceleration()*duration);
+				}
+			}
+			else{
+				if (isJumping()){
+					setVerticalVelocity(getInitVerticalVelocity());
+				}
+				else{
+					setVerticalVelocity(0.0);
+				}
+			}
+		}
+		catch (IllegalArgumentException exc){
+			throw exc;
+		}
+	}
+
+}
