@@ -14,8 +14,6 @@ public class SearchObject extends Unary<DirectionType,Object>{
 
 	public SearchObject( Expression<DirectionType> direction, SourceLocation sourceLocation){
 		super(direction,sourceLocation);
-//		this.setCharacter(this.getStatement().getProgram().getCharacter());
-//		this.setWorld(this.getStatement().getProgram().getWorld());
 		this.setDirection(direction.compute().getValue());
 	}
 	

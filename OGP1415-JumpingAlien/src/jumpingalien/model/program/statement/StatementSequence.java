@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 import jumpingalien.model.program.type.Object;
 import jumpingalien.part3.programs.SourceLocation;
 
-//while loop argument: must become a StatementSequence?
 public class StatementSequence extends Statement {
 
 	public StatementSequence(SourceLocation sourceLocation, List<Statement> statements){
@@ -66,11 +65,7 @@ public class StatementSequence extends Statement {
 					}
 				}
 			}
-
-			// watch out! what if: statements is empty?
-			// what if: statements has 1 statement: an empty StatementSequence?
-			// what if: statements has multiple statements, an empty StatementSequence being one or more of
-			//		them (or even the last one)?
+			
 			@Override
 			public Statement next() throws NoSuchElementException{
 				if (! hasNext())
@@ -95,8 +90,7 @@ public class StatementSequence extends Statement {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		//hier gebeurd niets? is dat ok?
+
 	}
 
 }

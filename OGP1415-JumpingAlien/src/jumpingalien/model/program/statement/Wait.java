@@ -10,7 +10,6 @@ import jumpingalien.util.Util;
 
 public class Wait extends ActionStatement {
 
-	//moet did een double of een expression zijn?
 	public Wait(Expression<DoubleType> expression, SourceLocation sourceLocation){
 		super(sourceLocation);
 		this.expression = expression;

@@ -79,8 +79,6 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	public Expression<? extends Type<?>> createAddition(
 			Expression<? extends Type<?>> left,
 			Expression<? extends Type<?>> right, SourceLocation sourceLocation) {
-//		Expression<DoubleType> result = new Addition(left, right, sourceLocation);
-//		return result;
 		Expression<DoubleType> result = new Addition((Expression<DoubleType>) left, (Expression<DoubleType>) right, sourceLocation);
 		return result;
 	}
@@ -343,10 +341,6 @@ public class ProgramFactory implements IProgramFactory<Expression<? extends Type
 	public Statement createAssignment(String variableName,
 			Type<?> variableType, Expression<? extends Type<?>> value,
 			SourceLocation sourceLocation) {
-		//waar moet ik HIER variableType gebruiken??!!
-		//nu kan je (denk ik) door assignment variablen van type veranderen -> MAG NIET!
-		// hoe zou je hier detecteren of je een type-fout maakt in een assignment?
-		// zoals expressionVariable: 4 verschillende assignments?
 		Statement result = new Assignment(variableName, value, sourceLocation, variableType);
 		return result;
 	}

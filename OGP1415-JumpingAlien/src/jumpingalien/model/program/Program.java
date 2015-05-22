@@ -19,25 +19,6 @@ public class Program implements Iterable<Statement>{
 		this.fixedGlobalVariables = globalVariables;
 		this.setGlobalVariables(globalVariables);
 		this.setMainIterator(getStatement().iterator());
-//		Iterator<Statement> iterator = mainStatement.iterator();
-//		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
-//		while(iterator.hasNext()){
-//			Statement nextStatement = iterator.next();
-//			if (nextStatement instanceof LoopStatement)
-//				loopList.add((LoopStatement) nextStatement);
-//			nextStatement.setProgram(this);
-//		}
-//		while(loopList.size() > 0){
-//			LoopStatement currentLoop = loopList.get(0);
-//			Iterator<Statement> loopBodyIterator = currentLoop.getLoopBody().iterator();
-//			while(loopBodyIterator.hasNext()){
-//				Statement nextStatement = loopBodyIterator.next();
-//				if (nextStatement instanceof LoopStatement)
-//					loopList.add((LoopStatement) nextStatement);
-//				nextStatement.setProgram(this);
-//			}
-//			loopList.remove(currentLoop);
-//		}
 	}
 	
 	private final Map<String, Type<?>> fixedGlobalVariables;
@@ -163,46 +144,6 @@ public class Program implements Iterable<Statement>{
 		}
 		return true;
 	}
-	
-//	public boolean isWellFormed(Program program){
-//		Iterator<Statement> iterator =  program.iterator();
-//		boolean b = true;
-//		while (iterator.hasNext()){
-//			Statement statement = iterator.next();
-//			if ((statement instanceof Break) && (! inLoopStatment(statement))){
-//				b = false;
-//				break;
-//			}
-//			if ((statement instanceof ActionStatement) && (inForEach(statement))){
-//				b= false;
-//				break;
-//			}
-//			else{
-//				b = this.isWellFormed(statement);
-//				break;
-//			}
-//		}
-//		return b;
-//	}
-//	
-//	public boolean isWellFormed(Statement statement){
-//		Iterator<Statement> iterator =  statement.iterator();
-//		boolean b = true;
-//		while (iterator.hasNext()){
-//			Statement statement2 = iterator.next();
-//			if ((statement2 instanceof Break) && (! inLoopStatment(statement))){
-//				b = false;
-//			}
-//			else if ((statement2 instanceof ActionStatement) && (inForEach(statement))){
-//				b = false;
-//			}
-//			else{
-//				b = this.isWellFormed(statement2);
-//				break;
-//			}
-//		}
-//		return b;
-//	}
 
 	private static boolean inForEach(Statement statement) {
 		Statement statement2 = statement.getEnclosingStatement();

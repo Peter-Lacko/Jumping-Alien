@@ -1,0 +1,66 @@
+package jumpingalien.model;
+
+import jumpingalien.util.Sprite;
+import jumpingalien.util.Util;
+
+import java.util.Random;
+
+import be.kuleuven.cs.som.annotate.Basic;
+
+public abstract class WeakOtherCharacters extends Characters {
+
+	public WeakOtherCharacters(int x_pos, int y_pos, Sprite[] sprites,double hor_acc, double max_hor_vel, 
+			double init_hor_vel, double init_ver_vel,int hitPoints) throws IllegalArgumentException {
+		super(x_pos, y_pos, sprites, hor_acc, max_hor_vel, init_hor_vel, init_ver_vel, hitPoints);
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| leftOrRightSprite(0)
+	 */
+	@Override
+	public Sprite getCurrentSprite() {
+		return leftOrRightSprite(0);
+	}
+
+	@Override
+	public Sprite leftOrRightSprite(int number){
+		assert (number >= 0);
+		assert (number + 1 < getNbImages());
+		if ((this.getHorizontalVelocity() < 0) || (getHasMovedIn() == MovementDirection.LEFT)){
+			return getImageAt(number + 1);
+		} else{
+			return getImageAt(number + 2);
+		}
+	}
+
+	/**
+	 * ...
+	 * @return	...
+	 * 			| result == (number == 2)
+	 */
+	@Override
+	public boolean isValidNbImages(int nbImages) {
+		return (nbImages == 2);
+	}
+
+
+
+	/**
+	 * A double containing the time since the start of a movement
+	 */
+	private double timeSinceStartMovement = 0.0;
+
+	/**
+	 * A double containing the movement duration
+	 */
+	private double movementDuration;
+
+	/**
+	 * A double containing the terminate time
+	 */
+	private double terminateTime = 0.0;
+
+
+}

@@ -144,15 +144,6 @@ public class Slime extends Characters implements OtherCharacters {
 	@Override
 	protected void advanceTimeLong(double duration){
 		super.advanceTimeLong(duration);
-//		if (! this.isTerminated()){
-//			if (getTimeSinceStartMovement() < getMovementDuration()){
-//				setTimeSinceStartMovement(getTimeSinceStartMovement() + duration);
-//			}
-//			else{
-//				selectMovements();
-//			}
-//		}
-//		else{
 		if (isTerminated()){
 			this.setTerminateTime(getTerminateTime()+duration);
 			if ((this.getTerminateTime() > 0.6) && (! (this.getWorld() == null))){
