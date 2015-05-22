@@ -4,12 +4,11 @@ import static jumpingalien.tests.util.TestUtils.*;
 import static org.junit.Assert.*;
 
 import java.beans.Statement;
-import java.util.HashMap;
-import java.util.Map;
 
 import jumpingalien.model.*;
 import jumpingalien.model.program.*;
 import jumpingalien.model.program.expression.*;
+import jumpingalien.model.program.expression.ExpressionRandomDouble;
 import jumpingalien.model.program.expression.binary.*;
 import jumpingalien.model.program.expression.unary.*;
 import jumpingalien.model.program.statement.*;
@@ -17,7 +16,6 @@ import jumpingalien.model.program.type.*;
 import jumpingalien.model.program.type.Object;
 import jumpingalien.part3.programs.IProgramFactory.Direction;
 import jumpingalien.part3.programs.SourceLocation;
-
 
 
 
@@ -34,8 +32,6 @@ public class ExpressionTest {
 	
 	private static Plant plant1;
 	
-	private Map<String,Type<?>> globalVariables2 = new HashMap<>();
-	
 	@Before
 	public void setUpMutableFixture(){
 		worldStandard = new World(70, 300, 300, 500, 500, 150, 150);
@@ -48,8 +44,6 @@ public class ExpressionTest {
 		mazub = new Mazub(100, 100, spriteArrayForSize(10, 10));
 		worldStandard.addMazub(mazub);
 		worldStandard.addAsObject(plant1);
-		globalVariables2.put("p", new Object(null));
-		globalVariables2.put("y", new DoubleType(0.0));
 	}
 	
 	@Test
@@ -88,8 +82,7 @@ public class ExpressionTest {
 	@Test
 	public void randomDoubleTest(){
 		DoubleType d = new DoubleType(10.0);
-		ExpressionBasic<DoubleType> expr = new ExpressionBasic<DoubleType>(d,loc);
-		ExpressionRandomDouble ran = new ExpressionRandomDouble(expr,loc);
+		ExpressionRandomDouble ran = new ExpressionRandomDouble(d,loc);
 		// bijna altijd, niet <= genomen omdat het dan zou werken als random gewoon maxvalue teruggaf
 		assert(ran.compute().getValue() < 10.0);
 	}
@@ -225,8 +218,9 @@ public class ExpressionTest {
 		SearchObject s1 = new SearchObject(d1, loc);
 		SearchObject s2 = new SearchObject(d2, loc);
 		Print<DirectionType> print = new Print<DirectionType>(d1,loc);
-		Program p = new Program(print, globalVariables2);
+		Program p = new Program(print, null);
 		p.setObject(new Object(mazub));
+		p.setWorld(worldStandard);
 		s1.setStatement(print);
 		s2.setStatement(print);
 		print.setProgram(p);
