@@ -98,12 +98,21 @@ public class ForEachLoop extends LoopStatement {
     }
 	
 	@Override
+	public void setBreak(boolean isBreak){
+		super.setBreak(isBreak);
+		if (isBreak)
+			setCurrentArray(new Object[]{});
+	}
+	
+	@Override
 	public Iterator<Statement> iterator() {
 		return new Iterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {
-				if (isBreak())
+				if(firstIteration)
+					return true;
+				else if (isBreak())
 					return false;
 				else if (! arraySet)
 					return true;
@@ -123,6 +132,10 @@ public class ForEachLoop extends LoopStatement {
 			public Statement next() throws NoSuchElementException{
 				if (! hasNext())
 					throw new NoSuchElementException();
+				if (firstIteration){
+					firstIteration = false;
+					setBreak(false);
+				}
 				if (! arraySet){
 					arraySet = true;
 					return getForEachLoop();
@@ -132,6 +145,8 @@ public class ForEachLoop extends LoopStatement {
 							getSourceLocation());
 					assignment = new Assignment<Object>(getName(), expressionBasic, getSourceLocation(),
 							new Object(null));
+					expressionBasic.setStatement(getForEachLoop());
+					assignment.setEnclosingStatement(getForEachLoop());
 					variableAssigned = true;
 					if (! currentIterator.hasNext() && (arrayIndex < getCurrentArrayLength())){
 						currentIterator = getLoopBody().iterator();
@@ -150,6 +165,8 @@ public class ForEachLoop extends LoopStatement {
 					return nextValue;
 				}
 			}
+			
+			private boolean firstIteration = true;
 			
 			private ExpressionBasic<Object> expressionBasic = null;
 			
@@ -170,6 +187,7 @@ public class ForEachLoop extends LoopStatement {
 	public void execute() {
 		ExpressionVariableGameObject originalVariable = new ExpressionVariableGameObject(getSourceLocation(),
 				getName());
+		originalVariable.setStatement(this);
 		Object originalObject = new Object(originalVariable.compute().getValue());
 		ExpressionBasic<Object> originalValue = new ExpressionBasic<Object>(originalObject,getSourceLocation());
 		Stream<Object> result = null;
@@ -229,6 +247,7 @@ public class ForEachLoop extends LoopStatement {
 		setCurrentArray(Arrays.copyOf(resultArray, resultArray.length, Object[].class));
 		Assignment<Object> finalAssignment = new Assignment<Object>(getName(),originalValue,
 				getSourceLocation(), new Object(null));
+		finalAssignment.setEnclosingStatement(this);
 		finalAssignment.execute();
 	}
 

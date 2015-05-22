@@ -16,15 +16,15 @@ public class Program implements Iterable<Statement>{
 		}
 		else
 			this.setStatement(mainStatement);
-		this.fixedGlobalVariables = globalVariables;
-		this.setGlobalVariables(globalVariables);
 		this.setMainIterator(getStatement().iterator());
+		this.fixedGlobalVariables = new HashMap<String, Type<?>>(globalVariables);
+		this.setGlobalVariables(globalVariables);
 	}
 	
-	private final Map<String, Type<?>> fixedGlobalVariables;
+	private final HashMap<String, Type<?>> fixedGlobalVariables;
 	
-	public Map<String, Type<?>> getFixedGlobalVariables() {
-		return fixedGlobalVariables;
+	public HashMap<String, Type<?>> getFixedGlobalVariables() {
+		return new HashMap<String, Type<?>>(fixedGlobalVariables);
 	}
 
 	public void setGlobalVariables(Map<String, Type<?>> globalVariables) {
@@ -68,18 +68,12 @@ public class Program implements Iterable<Statement>{
 	private  jumpingalien.model.program.type.Object object;
 
 	public World getWorld() {
-		return world;
+		return getCharacter().getWorld();
 	}
 	
 	public Characters getCharacter(){
 		return (Characters)this.getObject().getValue();
 	}
-
-	public void setWorld(World world) {
-		this.world = world;
-	}
-	
-	private World world;
 	
 	public Iterator<Statement> getMainIterator() {
 		return mainIterator;

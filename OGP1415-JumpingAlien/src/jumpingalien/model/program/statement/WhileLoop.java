@@ -44,12 +44,21 @@ public class WhileLoop extends LoopStatement {
 	}
 	
 	@Override
+	public void setBreak(boolean isBreak){
+		super.setBreak(isBreak);
+		if (isBreak)
+			setConditionStatus(false);
+	}
+	
+	@Override
 	public Iterator<Statement> iterator() {
 		return new Iterator<Statement>(){
 
 			@Override
 			public boolean hasNext() {
-				if (isBreak())
+				if(firstIteration)
+					return true;
+				else if (isBreak())
 					return false;
 				else if (! conditionChecked)
 					return true;
@@ -63,6 +72,10 @@ public class WhileLoop extends LoopStatement {
 			public Statement next() throws NoSuchElementException{
 				if (! hasNext())
 					throw new NoSuchElementException();
+				if (firstIteration){
+					firstIteration = false;
+					setBreak(false);
+				}
 				if (! conditionChecked){
 					conditionChecked = true;
 					return getWhileLoop();
@@ -80,6 +93,8 @@ public class WhileLoop extends LoopStatement {
 			}
 			
 			private Iterator<Statement> currentIterator = getLoopBody().iterator();
+			
+			private boolean firstIteration = true;
 			
 			private boolean conditionChecked = false;
 			

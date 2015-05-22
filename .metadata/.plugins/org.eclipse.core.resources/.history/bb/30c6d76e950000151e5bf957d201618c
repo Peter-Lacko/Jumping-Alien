@@ -1,0 +1,167 @@
+package jumpingalien.model.program;
+
+import java.util.*;
+
+import jumpingalien.model.Characters;
+import jumpingalien.model.World;
+import jumpingalien.model.program.statement.*;
+import jumpingalien.model.program.type.Type;
+import be.kuleuven.cs.som.annotate.*;
+
+public class Program implements Iterable<Statement>{
+	
+	public Program(Statement mainStatement, Map<String , Type<?>> globalVariables){
+		if ((mainStatement == null) || (! mainStatement.iterator().hasNext())){
+			this.setStatement(new Skip(null));
+		}
+		else
+			this.setStatement(mainStatement);
+		this.fixedGlobalVariables = globalVariables;
+		this.setGlobalVariables(globalVariables);
+		this.setMainIterator(getStatement().iterator());
+	}
+	
+	private final Map<String, Type<?>> fixedGlobalVariables;
+	
+	public Map<String, Type<?>> getFixedGlobalVariables() {
+		return fixedGlobalVariables;
+	}
+
+	public void setGlobalVariables(Map<String, Type<?>> globalVariables) {
+		this.globalVariables = globalVariables;
+	}
+
+	private Map<String, Type<?>> globalVariables;
+	
+	public Map<String, Type<?>> getGlobalVariables() {
+		return globalVariables;
+	}
+
+	/**
+	 * Return the statement of this program
+	 * 		The statement references to which statement the program should execute.
+	 */
+	@Basic
+	public Statement getStatement(){
+		return this.statement;
+	}
+	
+	public void setStatement(Statement statement){
+		this.statement = statement;
+		if (statement != null)
+			statement.setProgram(this);
+	}
+
+	/**
+	 * A variable containing to a statement.
+	 */
+	private Statement statement;
+	
+	public jumpingalien.model.program.type.Object getObject() {
+		return object;
+	}
+
+	public void setObject( jumpingalien.model.program.type.Object object) {
+		this.object = object;
+	}
+
+	private  jumpingalien.model.program.type.Object object;
+
+	public World getWorld() {
+		return world;
+	}
+	
+	public Characters getCharacter(){
+		return (Characters)this.getObject().getValue();
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+	
+	private World world;
+	
+	public Iterator<Statement> getMainIterator() {
+		return mainIterator;
+	}
+
+	public void setMainIterator(Iterator<Statement> mainIterator) {
+		if (!(getGlobalVariables() == null)){
+			this.getGlobalVariables().clear();
+			this.getGlobalVariables().putAll(getFixedGlobalVariables());
+		}
+		this.mainIterator = mainIterator;
+	}
+
+	private Iterator<Statement> mainIterator;
+
+	@Override
+	public Iterator<Statement> iterator() {
+		return new Iterator<Statement>(){
+
+			@Override
+			public boolean hasNext() {
+				return currentIterator.hasNext();
+			}
+
+			@Override
+			public Statement next() throws NoSuchElementException{
+				if (! hasNext())
+					throw new NoSuchElementException();
+				return currentIterator.next();
+			}
+			
+			private Iterator<Statement> currentIterator = getStatement().iterator();
+			
+		};
+	}
+	
+	public boolean isWellFormed(){
+		Iterator<Statement> iterator = this.iterator();
+		List<LoopStatement> loopList = new ArrayList<LoopStatement>();
+		//check if a break is outside of a loop statement
+		while(iterator.hasNext()){
+			Statement nextStatement = iterator.next();
+			if (nextStatement instanceof Break)
+				return false;
+			else if (nextStatement instanceof LoopStatement)
+				loopList.add((LoopStatement) nextStatement);
+		}
+		//check if an action statement is in a ForEach, or a nested ForEach
+		while(loopList.size() > 0){
+			LoopStatement currentLoop = loopList.get(0);
+			Iterator<Statement> loopBodyIterator = currentLoop.getLoopBody().iterator();
+			while(loopBodyIterator.hasNext()){
+				Statement nextStatement = loopBodyIterator.next();
+				if (nextStatement instanceof ActionStatement){
+					if (Program.inForEach(nextStatement))
+						return false;
+				}
+				else if (nextStatement instanceof LoopStatement)
+					loopList.add((LoopStatement) nextStatement);
+			}
+			loopList.remove(currentLoop);
+		}
+		return true;
+	}
+
+	private static boolean inForEach(Statement statement) {
+		Statement statement2 = statement.getEnclosingStatement();
+		if (statement2 == null)
+			return false;
+		else if (statement2 instanceof ForEachLoop)
+			return true;
+		else 
+			return inForEach(statement2);
+	}
+
+	private static boolean inLoopStatment(Statement statement) {
+		Statement statement2 = statement.getEnclosingStatement();
+		if (statement2 == null)
+			return false;
+		else if (statement2 instanceof LoopStatement)
+			return true;
+		else
+			return inLoopStatment(statement2);
+	}
+}

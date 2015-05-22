@@ -22,8 +22,6 @@
 <fullyQualifiedTypeName name="java.beans.Statement"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.statement.Print"/>
 <fullyQualifiedTypeName name="jumpingalien.model.Buzam"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
-<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Statement"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="jumpingalien.model.program.type.Type"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
@@ -34,4 +32,7 @@
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="jumpingalien.part3.programs.IProgramFactory.Kind"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.statement.Statement"/>
+<fullyQualifiedTypeName name="jumpingalien.model.program.Program"/>
+<fullyQualifiedTypeName name="jumpingalien.model.World"/>
 </qualifiedTypeNameHistroy>

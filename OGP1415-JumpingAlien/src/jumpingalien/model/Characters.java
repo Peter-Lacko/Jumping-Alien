@@ -561,7 +561,6 @@ public abstract class Characters extends GameObject{
 		if ((this instanceof Shark) || (this instanceof Buzam)){
 			try{
 				Statement nextStatement = program.getMainIterator().next();
-				//			System.out.println(nextStatement);
 				nextStatement.execute();
 			}
 			catch(Exception e){
@@ -571,7 +570,6 @@ public abstract class Characters extends GameObject{
 		}
 		else{
 			Statement nextStatement = program.getMainIterator().next();
-			//			System.out.println(nextStatement);
 			nextStatement.execute();
 		}
 	}

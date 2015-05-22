@@ -1,0 +1,34 @@
+package jumpingalien.model.program.expression.binary;
+
+import jumpingalien.model.Tile;
+import jumpingalien.model.World;
+import jumpingalien.model.program.Program;
+import jumpingalien.model.program.expression.Expression;
+import jumpingalien.model.program.statement.Statement;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+import jumpingalien.part3.programs.SourceLocation;
+
+public class GetTile extends Binary<DoubleType,DoubleType,Object>{
+
+	public GetTile(Expression<DoubleType> operand1, Expression<DoubleType> operand2, 
+			SourceLocation sourceLocation) {
+		super(operand1, operand2,sourceLocation);
+	}
+
+	@Override
+	public Object compute() {
+		Statement s = this.getStatement();
+		Program p = s.getProgram();
+		World w = p.getWorld();
+		int[] pos = p.getWorld().getPixelOfTileContaining
+				((this.getOperand1().compute().getValue().intValue()), this.getOperand2().compute().getValue().intValue());
+			for (Tile tile : this.getStatement().getProgram().getWorld().getTiles()){
+			if ((tile.getPosition()[0] == pos[0]) && (tile.getPosition()[1] == pos[1])){
+				return new Object(tile);
+			}
+		}
+		return new Object(null);
+	}
+
+}

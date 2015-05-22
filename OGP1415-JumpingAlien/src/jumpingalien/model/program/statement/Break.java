@@ -49,7 +49,6 @@ public class Break extends Statement {
 	@Override
 	public void execute() {
 		getLoopStatement().setBreak(true);
-
 	}
 
 }

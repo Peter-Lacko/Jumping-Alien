@@ -1,0 +1,192 @@
+package jumpingalien.part3.tests;
+
+import static jumpingalien.tests.util.TestUtils.spriteArrayForSize;
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import jumpingalien.model.Buzam;
+import jumpingalien.model.Mazub;
+import jumpingalien.model.Plant;
+import jumpingalien.model.World;
+import jumpingalien.model.program.Program;
+import jumpingalien.model.program.expression.*;
+import jumpingalien.model.program.expression.binary.*;
+import jumpingalien.model.program.expression.unary.*;
+import jumpingalien.model.program.statement.*;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+import jumpingalien.part3.programs.SourceLocation;
+import jumpingalien.part3.programs.IProgramFactory.Direction;
+import jumpingalien.part3.programs.IProgramFactory.Kind;
+import jumpingalien.util.Util;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class StatementTest {
+
+	private SourceLocation loc = new SourceLocation(0, 0);
+	
+	private static World worldStandard;
+	
+	private static Mazub mazub;
+	
+	private static Buzam buzam1;
+	
+	private static Buzam buzam2;
+	
+	private static Plant plant1;
+	
+	private static Plant plant2;
+	
+	private static Program program1;
+	
+	private static Program program2;
+	
+	@Before
+	public void setUpMutableFixture(){
+		worldStandard = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			worldStandard.setGeoFeatureAtWithInt(i, 0, 1);
+			worldStandard.setGeoFeatureAtWithInt(0, i, 1);
+			worldStandard.setGeoFeatureAtWithInt(299, i, 2);
+		}
+		plant1 = new Plant(500, 80, spriteArrayForSize(10, 10));
+		plant2 = new Plant(4000, 3000, spriteArrayForSize(10, 10));
+		mazub = new Mazub(100, 80, spriteArrayForSize(10, 10));
+		Map<String,Type<?>> globalVariables1 = new HashMap<>();
+		globalVariables1.put("t", new Object(null));
+		//Statements and expressions must usually be completely initialized for each program. 
+		//It is not advised	to re-use statements or expressions.
+		Expression<DirectionType> expressionRight1a = new ExpressionBasic<DirectionType>(
+				new DirectionType(Direction.RIGHT), loc);
+		Expression<DirectionType> expressionRight1c = new ExpressionBasic<DirectionType>(
+				new DirectionType(Direction.RIGHT), loc);
+		Statement subStatement1a = new StartRun(expressionRight1a, loc);
+		Statement subStatement1b = new Wait(new ExpressionBasic<DoubleType>(new DoubleType(0.01), loc),loc);
+		Statement subStatement1c = new StopRun(expressionRight1c, loc);
+		Expression<DoubleType> tilePos = new ExpressionBasic<DoubleType>(new DoubleType(0.0), loc);
+		Statement subStatement1d = new Assignment<Object>("t", new GetTile(tilePos,tilePos,loc), 
+				loc, new Object(null));
+		ExpressionVariableGameObject variable1 = new ExpressionVariableGameObject(loc, "t");
+		Statement subStatement1e = new Wait(new GetHp(variable1,loc),loc);
+		List<Statement> statementList1 = new ArrayList<>();
+		statementList1.add(subStatement1a);
+		statementList1.add(subStatement1b);
+		statementList1.add(subStatement1c);
+		statementList1.add(subStatement1d);
+		statementList1.add(subStatement1e);
+		Statement mainStatement1 = new StatementSequence(loc, statementList1);
+		//program1:						timeStamp:
+		//	object t
+		//
+		//	startRun(right)				0.001
+		//	wait(0.01)					0.002
+		//	stopRun(right)				0.012
+		//	t = getTile(0.0,0.0)		0.013
+		//	wait(getHP(t))				0.014
+		program1 = new Program(mainStatement1, globalVariables1);
+		Map<String,Type<?>> globalVariables2 = new HashMap<>();
+		globalVariables2.put("p", new Object(null));
+		globalVariables2.put("y", new DoubleType(0.0));
+		Expression<Object> variable2aa = new ExpressionVariableGameObject(loc, "p");
+		Expression<Object> variable2ab = new ExpressionVariableGameObject(loc, "p");
+		Expression<Object> variable2ac = new ExpressionVariableGameObject(loc, "p");
+		Expression<DoubleType> variable2b = new ExpressionVariableDouble(loc, "y");
+		Expression<DoubleType> pX = new GetX(variable2aa, loc);
+		Expression<DoubleType> selfX = new GetX(new SelfObject(loc),loc);
+		Expression<Bool> whereExpression = new SmallerThan(pX, selfX, loc);
+		Statement subsubStatement2a = new Print<DoubleType>(new GetHp(variable2ab, loc), loc);
+		Statement subsubStatement2b = new Assignment<DoubleType>("y", new GetY(variable2ac, loc), 
+				loc, new DoubleType(0.0));
+		List<Statement> loopList2a = new ArrayList<>();
+		loopList2a.add(subsubStatement2a);
+		loopList2a.add(subsubStatement2b);
+		Statement loopStatement2a = new StatementSequence(loc, loopList2a);
+		Statement subStatement2a = new ForEachLoop("p", Kind.PLANT, whereExpression, null, null, loc, 
+				loopStatement2a);
+		Statement subStatement2b = new StartDuck(loc);
+		Statement subStatement2c = new Wait(new ExpressionBasic<DoubleType>(new DoubleType(0.01), loc),loc);
+		Statement subStatement2d = new EndDuck(loc);
+		Statement subsubStatement2c = new StartJump(loc);
+		Statement subsubStatement2d = new Wait(new ExpressionBasic<DoubleType>(new DoubleType(0.1), loc),loc);
+		Statement subsubStatement2e = new EndJump(loc);
+		Expression<Object> self = new SelfObject(loc);
+		Expression<Bool> ifCondition = new GreaterThan(new GetY(self,loc),variable2b,loc);
+		Statement ifStatement = new Break(loc);
+		Statement elseStatement = new StatementSequence(loc,new ArrayList<Statement>());
+		Statement subsubStatement2f = new IfThenElse(ifCondition, ifStatement, elseStatement, loc);
+		List<Statement> loopList2b = new ArrayList<>();
+		loopList2b.add(subsubStatement2c);
+		loopList2b.add(subsubStatement2d);
+		loopList2b.add(subsubStatement2e);
+		loopList2b.add(subsubStatement2f);
+		Statement loopStatement2b = new StatementSequence(loc, loopList2b);
+		Statement subStatement2e = new WhileLoop(new ExpressionBasic<Bool>(new Bool(true),loc), 
+				loopStatement2b, loc);
+		List<Statement> statementList2 = new ArrayList<>();
+		statementList2.add(subStatement2a);
+		statementList2.add(subStatement2b);
+		statementList2.add(subStatement2c);
+		statementList2.add(subStatement2d);
+		statementList2.add(subStatement2e);
+		Statement mainStatement2 = new StatementSequence(loc, statementList2);
+		//program2:													timeStamp:
+		//	object p
+		//	double y
+		//
+		//	ForEach(plant, p) where (getx(p) < getx(self)) do		0.001
+		//		print(getHP(p))										0.003 (implicit assignment)
+		//		y := getY(p)										0.004
+		//	done													
+		//	startDuck												0.005 (one such plant)
+		//	Wait(0.01)												0.006
+		//	endDuck													0.016
+		//	while true do											0.017
+		//		startJump											0.018
+		//		wait(0.1)											0.019
+		//		endJump												0.119
+		//		if(gety(self) > y)									0.120
+		//			break											0.121
+		//		fi													
+		//	done
+		program2 = new Program(mainStatement2, globalVariables2);
+		buzam1 = new Buzam(1000, 80, spriteArrayForSize(10, 10), program1);
+		buzam2 = new Buzam(3000, 80, spriteArrayForSize(10, 10), program2);
+		worldStandard.addMazub(mazub);
+		worldStandard.addAsObject(buzam1);
+		worldStandard.addAsObject(buzam2);
+		worldStandard.addAsObject(plant1);
+		worldStandard.addAsObject(plant2);
+	}
+	
+//	@Test
+//	public void failedProgramTest(){
+//		assertFalse(buzam1.isMovingRight());
+//		worldStandard.advanceTime(0.002);
+//		assertTrue(buzam1.isMovingRight());
+//		worldStandard.advanceTime(0.01);
+//		assertFalse(buzam1.isMovingRight());
+//		//If the program was correct, Buzam1 would be moving in one of the next 2 times
+//		worldStandard.advanceTime(0.005);
+//		assertFalse(buzam1.isMovingRight());
+//		worldStandard.advanceTime(0.005);
+//		assertFalse(buzam1.isMovingRight());
+//	}
+	
+	@Test
+	public void workingProgramTest(){
+		worldStandard.advanceTime(0.01);
+		assertEquals(buzam2.getMaxHorizontalVelocity(), 1.0, Util.DEFAULT_EPSILON);
+	}
+	
+//	@Test
+//	public void notWellFormed_ActionInForEach(){
+//		
+//	}
+
+}
