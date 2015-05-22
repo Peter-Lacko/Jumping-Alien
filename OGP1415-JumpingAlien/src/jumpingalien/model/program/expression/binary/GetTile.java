@@ -17,9 +17,10 @@ public class GetTile extends Binary<DoubleType,DoubleType,Object>{
 	public Object compute() {
 		int[] pos =this.getStatement().getProgram().getWorld().getPixelOfTileContaining
 				((this.getOperand1().compute().getValue().intValue()), this.getOperand2().compute().getValue().intValue());
-		for (Tile tile : this.getStatement().getProgram().getWorld().getTiles()){
-			if (tile.getPosition() == pos)
+			for (Tile tile : this.getStatement().getProgram().getWorld().getTiles()){
+			if ((tile.getPosition()[0] == pos[0]) && (tile.getPosition()[1] == pos[1])){
 				return new Object(tile);
+			}
 		}
 		return new Object(null);
 	}

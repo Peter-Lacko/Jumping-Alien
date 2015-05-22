@@ -1,0 +1,232 @@
+package jumpingalien.part3.tests;
+
+import static jumpingalien.tests.util.TestUtils.*;
+import static org.junit.Assert.*;
+
+import java.beans.Statement;
+
+import jumpingalien.model.*;
+import jumpingalien.model.program.*;
+import jumpingalien.model.program.expression.*;
+import jumpingalien.model.program.expression.binary.*;
+import jumpingalien.model.program.expression.unary.*;
+import jumpingalien.model.program.statement.*;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+import jumpingalien.part3.programs.IProgramFactory.Direction;
+import jumpingalien.part3.programs.SourceLocation;
+
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class ExpressionTest {
+	
+	private SourceLocation loc = new SourceLocation(0, 0);
+	
+	private static World worldStandard;
+	
+	private static Mazub mazub;
+	
+	private static Plant plant1;
+	
+	@Before
+	public void setUpMutableFixture(){
+		worldStandard = new World(70, 300, 300, 500, 500, 150, 150);
+		for (int i = 0; i <= 299; i++){
+			worldStandard.setGeoFeatureAtWithInt(i, 0, 1);
+			worldStandard.setGeoFeatureAtWithInt(0, i, 1);
+			worldStandard.setGeoFeatureAtWithInt(299, i, 2);
+		}
+		plant1 = new Plant(500, 100, spriteArrayForSize(10, 10));
+		mazub = new Mazub(100, 100, spriteArrayForSize(10, 10));
+		worldStandard.addMazub(mazub);
+		worldStandard.addAsObject(plant1);
+	}
+	
+	@Test
+	public void booleanTest(){
+		Bool b = new Bool(true);
+		ExpressionBasic<Bool> expr = new ExpressionBasic<Bool>(b,loc);
+		assertTrue(expr.compute().getValue());
+		b = new Bool(false);
+		expr = new ExpressionBasic<Bool>(b,loc);
+		assertTrue(! expr.compute().getValue());
+	}
+	
+	@Test
+	public void doubleTest(){
+		DoubleType d = new DoubleType(10.0);
+		ExpressionBasic<DoubleType> expr = new ExpressionBasic<DoubleType>(d,loc);
+		assert(expr.compute().getValue() == 10.0);
+	}
+
+	@Test
+	public void directionTest(){
+		DirectionType d = new DirectionType(Direction.DOWN);
+		ExpressionBasic<DirectionType> expr = new ExpressionBasic<DirectionType>(d,loc);
+		assert(expr.compute().getValue() == Direction.DOWN);
+	}
+	
+	@Test
+	public void objectTest(){
+		Mazub m = new Mazub(1,1,spriteArrayForSize(2, 2));
+		Object alien = new Object(m);
+		ExpressionBasic<Object> expr = new ExpressionBasic<Object>(alien,loc);
+		assert(expr.compute().getValue() instanceof Mazub);
+		assertArrayEquals(intArray(1,1),((Mazub)expr.compute().getValue()).getIntPosition());
+	}
+	
+	@Test
+	public void randomDoubleTest(){
+		DoubleType d = new DoubleType(10.0);
+		ExpressionBasic<DoubleType> expr = new ExpressionBasic<DoubleType>(d,loc);
+		ExpressionRandomDouble ran = new ExpressionRandomDouble(expr,loc);
+		// bijna altijd, niet <= genomen omdat het dan zou werken als random gewoon maxvalue teruggaf
+		assert(ran.compute().getValue() < 10.0);
+	}
+	
+	@Test
+	public void characterProperties(){
+		Mazub m = new Mazub(1,2,spriteArrayForSize(2, 5));
+		Object alien = new Object(m);
+		ExpressionBasic<Object> expr = new ExpressionBasic<Object>(alien,loc);
+		GetWidth w = new GetWidth(expr,loc);
+		GetHeight h = new GetHeight(expr,loc);
+		GetX x = new GetX(expr,loc);
+		GetY y = new GetY(expr,loc);
+		GetHp hp = new GetHp(expr,loc);
+		assert(w.compute().getValue() == 2);
+		assert(h.compute().getValue() == 5);
+		assert(x.compute().getValue() == 1);
+		assert(y.compute().getValue() == 2);
+		assert(hp.compute().getValue() == 100);
+	}
+	
+	@Test
+	public void tileProperties(){
+		Tile tile = new Tile();
+		Object ti = new Object(tile);
+		ExpressionBasic<Object> expr = new ExpressionBasic<Object>(ti,loc);
+		IsAir a = new IsAir(expr,loc);
+		IsMagma m = new IsMagma(expr,loc);
+		IsWater w = new IsWater(expr,loc);
+		IsTerrain t = new IsTerrain(expr,loc);
+		tile.setGeo(GeoFeature.AIR);
+		assertTrue(a.compute().getValue());
+		tile.setGeo(GeoFeature.MAGMA);
+		assertTrue(m.compute().getValue());
+		tile.setGeo(GeoFeature.WATER);
+		assertTrue(w.compute().getValue());
+		assertTrue(t.compute().getValue());
+	}
+	
+	public void mazubProperties(){
+		Mazub m = new Mazub(1,2,spriteArrayForSize(2, 5));
+		Object alien = new Object(m);
+		ExpressionBasic<Object> expr = new ExpressionBasic<Object>(alien,loc);
+		ExpressionBasic<DirectionType> dir = new ExpressionBasic<DirectionType>(new DirectionType(Direction.RIGHT),loc);
+		IsDucking d = new IsDucking(expr,loc);
+		IsJumping j = new IsJumping(expr,loc);
+		IsMazub ma = new IsMazub(expr,loc);
+		IsMoving mo = new IsMoving(expr,dir,loc);
+		IsDead i = new IsDead(expr,loc);
+		m.startDuck();
+		m.startJump();
+		m.startMove("right");
+		m.advanceTime(0.15);
+		assertTrue(ma.compute().getValue());
+		assertTrue(mo.compute().getValue());
+		assertTrue(d.compute().getValue());
+		assertTrue(j.compute().getValue());
+		assertTrue(! i.compute().getValue());
+		}
+	
+	@Test
+	public void checkKind(){
+		Plant plant = new Plant(0, 0, spriteArrayForSize(2, 2));
+		Shark shark = new Shark(0, 0, spriteArrayForSize(2, 2));
+		Slime slime = new Slime(0, 0, spriteArrayForSize(2, 2), null);
+		ExpressionBasic<Object> expr1 = new ExpressionBasic<Object>(new Object(plant),loc);
+		ExpressionBasic<Object> expr2 = new ExpressionBasic<Object>(new Object(shark),loc);
+		ExpressionBasic<Object> expr3 = new ExpressionBasic<Object>(new Object(slime),loc);
+		IsPlant p = new IsPlant(expr1,loc);
+		IsShark sh = new IsShark(expr2,loc);
+		IsSlime sl = new IsSlime(expr3,loc);
+		assertTrue(p.compute().getValue());
+		assertTrue(sh.compute().getValue());
+		assertTrue(sl.compute().getValue());
+
+	}
+	
+	@Test
+	public void TestSimpleUnary(){
+		ExpressionBasic<Bool> expr = new ExpressionBasic<Bool>(new Bool(false),loc);
+		Negation n = new Negation(expr,loc);
+		assertTrue(n.compute().getValue());
+		ExpressionBasic<DoubleType> expr2 = new ExpressionBasic<DoubleType>(new DoubleType(9),loc);
+		Sqrt sqrt = new Sqrt(expr2,loc);
+		assert(sqrt.compute().getValue() == 3.0);
+	}
+	
+	@Test
+	public void testSimpleBinary(){
+		ExpressionBasic<DoubleType> expr1 = new ExpressionBasic<DoubleType>(new DoubleType(10),loc);
+		ExpressionBasic<DoubleType> expr2 = new ExpressionBasic<DoubleType>(new DoubleType(6),loc);
+		Addition add = new Addition(expr1,expr2,loc);
+		Subtraction sub = new Subtraction(expr1,expr2,loc);
+		Division div = new Division(expr1,expr2,loc);
+		Multiplication mul = new Multiplication(expr1,expr2,loc);
+		assert(add.compute().getValue() == 16);
+		assert(sub.compute().getValue() == 4);
+		assert(div.compute().getValue() == 10/6);
+		assert(mul.compute().getValue() == 60);
+		ExpressionBasic<Bool> expr3 = new ExpressionBasic<Bool>(new Bool(true),loc);
+		ExpressionBasic<Bool> expr4 = new ExpressionBasic<Bool>(new Bool(false),loc);
+		And and = new And(expr3,expr4,loc);
+		Or or = new Or(expr3,expr4,loc);
+		assertTrue(! and.compute().getValue());
+		assertTrue(or.compute().getValue());
+	}
+	
+	@Test
+	public void testComparison(){
+		ExpressionBasic<DoubleType> expr1 = new ExpressionBasic<DoubleType>(new DoubleType(10),loc);
+		ExpressionBasic<DoubleType> expr2 = new ExpressionBasic<DoubleType>(new DoubleType(6),loc);
+		ExpressionBasic<DoubleType> expr3 = new ExpressionBasic<DoubleType>(new DoubleType(10),loc);
+		Equal e = new Equal(expr1,expr3,loc);
+		GreaterThan g = new GreaterThan(expr1,expr2,loc);
+		GreaterThanOrEqual goe1 = new GreaterThanOrEqual(expr1,expr2,loc);
+		GreaterThanOrEqual goe2 = new GreaterThanOrEqual(expr1,expr3,loc);
+		NotEqual ne = new NotEqual(expr1,expr2,loc);
+		SmallerThan s = new SmallerThan(expr2,expr1,loc);
+		SmallerThanOrEqual soe1 = new SmallerThanOrEqual(expr2,expr1,loc);
+		SmallerThanOrEqual soe2 = new SmallerThanOrEqual(expr1,expr3,loc);
+		assertTrue(e.compute().getValue());
+		assertTrue(ne.compute().getValue());
+		assertTrue(g.compute().getValue());
+		assertTrue(s.compute().getValue());
+		assertTrue(goe1.compute().getValue() && goe2.compute().getValue());
+		assertTrue(soe1.compute().getValue() && soe2.compute().getValue());
+	}
+	
+	@Test
+	public void testSearchObject(){
+		ExpressionBasic<DirectionType> d1 = new ExpressionBasic<DirectionType>(new DirectionType(Direction.RIGHT),loc);
+		ExpressionBasic<DirectionType> d2 = new ExpressionBasic<DirectionType>(new DirectionType(Direction.DOWN),loc);
+		SearchObject s1 = new SearchObject(d1, loc);
+		SearchObject s2 = new SearchObject(d2, loc);
+		Print<DirectionType> print = new Print<DirectionType>(d1,loc);
+		Program p = new Program(print, null);
+		p.setObject(new Object(mazub));
+		p.setWorld(worldStandard);
+		s1.setStatement(print);
+		s2.setStatement(print);
+		print.setProgram(p);
+		assert(s1.compute().getValue() instanceof Plant);
+		assert(s2.compute().getValue() instanceof Tile);
+		GetTile t = new GetTile(new ExpressionBasic(new DoubleType(75),loc), new ExpressionBasic(new DoubleType(200), loc),loc);
+		t.setStatement(print);
+		assert(t.compute().getValue() instanceof Tile);
+	}
+}

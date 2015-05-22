@@ -16,7 +16,7 @@ public class IsPassable extends Unary<Object ,Bool> {
 	public Bool compute() {
 		boolean b;
 		if (this.getOperand().compute().getValue() instanceof Characters)
-			b = false;
+			b = this.getStatement().getProgram().getCharacter().collide((Characters) this.getOperand().compute().getValue());
 		else if (this.getOperand().compute().getValue() instanceof Tile)
 			b= ! (((Tile)this.getOperand().compute().getValue()).getGeo() == GeoFeature.GROUND);
 		else

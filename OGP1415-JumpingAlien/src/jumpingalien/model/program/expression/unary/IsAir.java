@@ -19,7 +19,7 @@ public class IsAir extends Unary<Object,Bool> {
 		if (! (this.getOperand().compute().getValue() instanceof Tile))
 			b = false;
 		else
-			b = ((Tile)this.getOperand().compute().getValue()).getGeo() == GeoFeature.WATER;
+			b = ((Tile)this.getOperand().compute().getValue()).getGeo() == GeoFeature.AIR;
 		return new Bool(b);
 	}
 }

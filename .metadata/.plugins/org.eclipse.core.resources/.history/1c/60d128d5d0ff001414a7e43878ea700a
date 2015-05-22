@@ -1,0 +1,31 @@
+package jumpingalien.part3.tests;
+
+import static org.junit.Assert.*;
+import jumpingalien.model.program.expression.*;
+import jumpingalien.model.program.type.*;
+import jumpingalien.part3.programs.SourceLocation;
+
+import org.junit.Test;
+
+public class ExpressionTest {
+	
+	private SourceLocation loc = new SourceLocation(0, 0);
+	
+	@Test
+	public void booleanTest(){
+		Bool b = new Bool(true);
+		ExpressionBasic<Bool> expr = new ExpressionBasic<Bool>(b,loc);
+		assertTrue(expr.compute().getValue());
+		b = new Bool(false);
+		expr = new ExpressionBasic<Bool>(b,loc);
+		assertTrue(! expr.compute().getValue());
+	}
+	
+	@Test
+	public void DoubleTest(){
+		DoubleType d = new DoubleType(10.0);
+		ExpressionBasic<DoubleType> expr = new ExpressionBasic<DoubleType>(d,loc);
+		assert(expr.compute().getValue() == 10.0);
+	}
+
+}

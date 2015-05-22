@@ -105,8 +105,10 @@ public class Program implements Iterable<Statement>{
 	}
 
 	public void setMainIterator(Iterator<Statement> mainIterator) {
-		this.getGlobalVariables().clear();
-		this.getGlobalVariables().putAll(getFixedGlobalVariables());
+		if (!(getGlobalVariables() == null)){
+			this.getGlobalVariables().clear();
+			this.getGlobalVariables().putAll(getFixedGlobalVariables());
+		}
 		this.mainIterator = mainIterator;
 	}
 

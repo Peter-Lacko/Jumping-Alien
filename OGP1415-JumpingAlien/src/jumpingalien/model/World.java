@@ -976,7 +976,7 @@ public class World {
 		for (int i = 0; i < this.getWindowWidth() ; i = i+getTileLength()){
 			for (int j = 0 ; j < this.getWindowHeight() ; j = j+getTileLength()){
 				Tile tyle = new Tile();
-				int[] pos = getTilePosition(i, j);
+				int[] pos = getPixelOfTileContaining(i, j);
 				tyle.setPosition(pos);
 				tyle.setWorld(this);
 				tyle.setGeo(this.getGeoFeatureAt(pos[0], pos[1]));

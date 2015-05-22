@@ -1,0 +1,107 @@
+package jumpingalien.part3.tests;
+
+import static jumpingalien.tests.util.TestUtils.*;
+import static org.junit.Assert.*;
+import jumpingalien.model.*;
+import jumpingalien.model.program.expression.*;
+import jumpingalien.model.program.expression.binary.*;
+import jumpingalien.model.program.expression.unary.*;
+import jumpingalien.model.program.type.*;
+import jumpingalien.model.program.type.Object;
+import jumpingalien.part3.programs.IProgramFactory.Direction;
+import jumpingalien.part3.programs.SourceLocation;
+
+import org.junit.Test;
+
+public class ExpressionTest {
+	
+	private SourceLocation loc = new SourceLocation(0, 0);
+	
+	@Test
+	public void booleanTest(){
+		Bool b = new Bool(true);
+		ExpressionBasic<Bool> expr = new ExpressionBasic<Bool>(b,loc);
+		assertTrue(expr.compute().getValue());
+		b = new Bool(false);
+		expr = new ExpressionBasic<Bool>(b,loc);
+		assertTrue(! expr.compute().getValue());
+	}
+	
+	@Test
+	public void doubleTest(){
+		DoubleType d = new DoubleType(10.0);
+		ExpressionBasic<DoubleType> expr = new ExpressionBasic<DoubleType>(d,loc);
+		assert(expr.compute().getValue() == 10.0);
+	}
+
+	@Test
+	public void directionTest(){
+		DirectionType d = new DirectionType(Direction.DOWN);
+		ExpressionBasic<DirectionType> expr = new ExpressionBasic<DirectionType>(d,loc);
+		assert(expr.compute().getValue() == Direction.DOWN);
+	}
+	
+	@Test
+	public void objectTest(){
+		Mazub m = new Mazub(1,1,spriteArrayForSize(2, 2));
+		Object alien = new Object(m);
+		ExpressionBasic<Object> expr = new ExpressionBasic<Object>(alien,loc);
+		assert(expr.compute().getValue() instanceof Mazub);
+		assertArrayEquals(intArray(1,1),((Mazub)expr.compute().getValue()).getIntPosition());
+	}
+	
+	@Test
+	public void randomDoubleTest(){
+		DoubleType d = new DoubleType(10.0);
+		ExpressionBasic<DoubleType> expr = new ExpressionBasic<DoubleType>(d,loc);
+		ExpressionRandomDouble ran = new ExpressionRandomDouble(expr,loc);
+		// bijna altijd niet <= genomen omdat het dan zou werken als random gewoon maxvalue teruggaf
+		assert(ran.compute().getValue() < 10.0);
+	}
+	
+	@Test
+	public void characterProperties(){
+		Mazub m = new Mazub(1,2,spriteArrayForSize(2, 5));
+		Object alien = new Object(m);
+		ExpressionBasic<Object> expr = new ExpressionBasic<Object>(alien,loc);
+		GetWidth w = new GetWidth(expr,loc);
+		GetHeight h = new GetHeight(expr,loc);
+		GetX x = new GetX(expr,loc);
+		GetY y = new GetY(expr,loc);
+		GetHp hp = new GetHp(expr,loc);
+		assert(w.compute().getValue() == 2);
+		assert(h.compute().getValue() == 5);
+		assert(x.compute().getValue() == 1);
+		assert(y.compute().getValue() == 2);
+		assert(hp.compute().getValue() == 100);
+	}
+	
+	@Test
+	public void tileProperties(){
+		Tile tile = new Tile();
+		Object ti = new Object(tile);
+		ExpressionBasic<Object> expr = new ExpressionBasic<Object>(ti,loc);
+		IsAir a = new IsAir(expr,loc);
+		IsMagma m = new IsMagma(expr,loc);
+		IsWater w = new IsWater(expr,loc);
+		IsTerrain t = new IsTerrain(expr,loc);
+		tile.setGeo(GeoFeature.AIR);
+		assertTrue(a.compute().getValue());
+		tile.setGeo(GeoFeature.MAGMA);
+		assertTrue(m.compute().getValue());
+		tile.setGeo(GeoFeature.WATER);
+		assertTrue(w.compute().getValue());
+		assertTrue(t.compute().getValue());
+	}
+	
+	public void mazubProperties(){
+		Mazub m = new Mazub(1,2,spriteArrayForSize(2, 5));
+		Object alien = new Object(m);
+		ExpressionBasic<Object> expr = new ExpressionBasic<Object>(alien,loc);
+		IsDucking d = new IsDucking(expr,loc);
+		IsJumping j = new IsJumping(expr,loc);
+		IsMazub ma = new IsMazub(expr,loc);
+		IsMoving mo = new IsMoving(expr,loc);
+		IsDead i = new IsDead(expr,loc);
+	}
+}

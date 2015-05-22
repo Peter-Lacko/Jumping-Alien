@@ -14,8 +14,8 @@ public class SearchObject extends Unary<DirectionType,Object>{
 
 	public SearchObject( Expression<DirectionType> direction, SourceLocation sourceLocation){
 		super(direction,sourceLocation);
-		this.setCharacter(this.getStatement().getProgram().getCharacter());
-		this.setWorld(this.getStatement().getProgram().getWorld());
+//		this.setCharacter(this.getStatement().getProgram().getCharacter());
+//		this.setWorld(this.getStatement().getProgram().getWorld());
 		this.setDirection(direction.compute().getValue());
 	}
 	
@@ -23,6 +23,8 @@ public class SearchObject extends Unary<DirectionType,Object>{
 	public void setStatement(Statement statement) {
 		this.statement = statement;
 		this.setCharacter(this.getStatement().getProgram().getCharacter());
+		this.setWorld(this.getStatement().getProgram().getWorld());
+
 	}
 
 	public int distanceUp(GameObject object){
@@ -137,7 +139,7 @@ public class SearchObject extends Unary<DirectionType,Object>{
 		return inDirection;
 	}
 	
-	private Map<GameObject,Integer> inDirection;
+	private Map<GameObject,Integer> inDirection = new HashMap<GameObject,Integer>();
 	
 	public Direction getDirection(){
 		return direction;
@@ -162,7 +164,7 @@ public class SearchObject extends Unary<DirectionType,Object>{
 				this.getInDirection().put((GameObject) object,distanceLeft((GameObject) object));}});
 		else if (getDirection() == Direction.RIGHT)
 			this.getWorld().getAllObjectsAndTiles().forEach((object) ->{ if (distanceRight((GameObject) object) != -1) {
-				this.getInDirection().put((GameObject) object,distanceRight((GameObject) object));}});
+				this.getInDirection().put((GameObject) object, distanceRight((GameObject) object));}});
 		Map<GameObject, Integer> objects = this.getInDirection();
 		GameObject closest = null;
 		int distance = 0;
@@ -172,6 +174,7 @@ public class SearchObject extends Unary<DirectionType,Object>{
 				closest = entry.getKey();
 			}
 		}
+		this.getInDirection().clear();
 		return new Object(closest);
 	}
 
